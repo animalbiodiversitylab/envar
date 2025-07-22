@@ -1,8 +1,8 @@
-Package: enviRget
+Package: envar
 Type: Package
 Title: Download and Process Environmental Variables for SDM
 Version: 0.1.0
-Authors@R: person("Your", "Name", email = "your.email@example.com", role = c("aut", "cre"))
+Authors@R: person("Andrea", "Simoncini", email = "your.email@example.com", role = c("aut", "cre"))
 Description: Download environmental variables from databases like CHELSA and WorldClim
     and integrate them into Species Distribution Modeling workflows.
 License: GPL-3
