@@ -24,50 +24,87 @@
 var_get <- function(extent,
                     source = "worldclim",
                     resolution = "1km",
-                    variables = "bioclim",
+                    variables = NULL,
                     buffer_km = 0,
                     output_file = NULL,
                     ...) {
   
-  # 1. Validate inputs
-  validate_inputs(extent, source, resolution, variables)
+  # 1. Validazione input base
+  if (is.null(variables)) {
+    cli::cli_abort("You must specify `variables`.")
+  }
   
-  # 2. Process extent and create target grid
+  # Se una sola source: trasformo variables in lista named
+  if (length(source) == 1) {
+    if (!is.list(variables)) {
+      variables <- setNames(list(variables), source)
+    } else if (is.null(names(variables))) {
+      cli::cli_abort("If `variables` is a list, it must be named with source names.")
+    }
+  } else {
+    # Più source: variables deve essere lista named
+    if (!is.list(variables) || is.null(names(variables))) {
+      cli::cli_abort("When multiple sources are specified, `variables` must be a named list.")
+    }
+    if (!all(source %in% names(variables))) {
+      cli::cli_abort("Each source in `source` must have a corresponding entry in `variables`.")
+    }
+  }
+  
+  # 2. Processa extent e griglia target
   extent_info <- process_extent(extent, buffer_km)
   target_grid <- create_target_grid(extent_info$bbox, resolution)
-
-  # 3. Create temp directory for downloads
+  
+  # 3. Crea dir temporanea
   temp_dir <- fs::path_temp("envar", format(Sys.time(), "%Y%m%d_%H%M%S"))
   fs::dir_create(temp_dir)
   on.exit(cleanup_temp(temp_dir), add = TRUE)
   
-  # 4. Download data based on source
-  cli::cli_progress_step("Downloading {.val {source}} data...")
+  results <- list()
   
-  raw_files <- switch(tolower(source),
-                      "worldclim" = var_get_worldclim(extent_info$bbox, resolution, variables, temp_dir),
-                      "chelsa" = var_get_chelsa(extent_info$bbox, resolution, variables, temp_dir),
-                      cli::cli_abort("Unknown source: {.val {source}}")
-  )
-  
-  # 5. Process downloaded files
-  cli::cli_progress_step("Processing environmental layers...")
-  
-  processed_stack <- process_layers(
-    files = raw_files, 
-    target_grid, 
-    extent_info$mask,
-    extent_info$type,
-    extent_info$points
-  )
-
-  # 6. Save if requested
-  if (!is.null(output_file)) {
-    cli::cli_progress_step("Saving to {.path {output_file}}...")
-    terra::writeRaster(processed_stack, output_file, overwrite = TRUE)
+  # 4. Cicla sulle source
+  for (src in source) {
+    cli::cli_h2("Processing source: {.val {src}}")
+    cli::cli_progress_step("Downloading {.val {src}} data...")
+    
+    raw_files <- switch(tolower(src),
+                        "worldclim" = var_get_worldclim(extent_info$bbox, resolution, variables[[src]], temp_dir),
+                        "chelsa"    = var_get_chelsa(extent_info$bbox, resolution, variables[[src]], temp_dir),
+                        cli::cli_abort("Unknown source: {.val {src}}")
+    )
+    
+    cli::cli_progress_step("Processing environmental layers...")
+    
+    processed_stack <- process_layers(
+      files = raw_files,
+      target_grid = target_grid,
+      mask = extent_info$mask,
+      extent_type = extent_info$type,
+      points = extent_info$points
+    )
+    
+    # 5. Salva se richiesto
+    if (!is.null(output_file)) {
+      if (length(source) == 1 && is.character(output_file)) {
+        out_path <- output_file
+      } else if (is.list(output_file) && !is.null(output_file[[src]])) {
+        out_path <- output_file[[src]]
+      } else {
+        out_path <- fs::path_ext_set(fs::path(temp_dir, paste0("output_", src)), ".tif")
+        cli::cli_alert_info("No output file provided for {.val {src}}. Saving temporarily to {.path {out_path}}")
+      }
+      cli::cli_progress_step("Saving to {.path {out_path}}...")
+      terra::writeRaster(processed_stack, out_path, overwrite = TRUE)
+    }
+    
+    results[[src]] <- processed_stack
   }
   
-  cli::cli_success("Successfully processed {.val {terra::nlyr(processed_stack)}} layers")
+  cli::cli_success("Successfully processed {.val {length(unlist(results))}} layers from {.val {length(results)}} source(s).")
   
-  return(processed_stack)
+  if (length(results) == 1) {
+    return(results[[1]])
+  } else {
+    return(results)
+  }
 }
