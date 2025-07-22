@@ -15,4 +15,4 @@ source("C:/Users/andre/Desktop/ENVAR/envar/R/var_get_chelsa.R")
 source("C:/Users/andre/Desktop/ENVAR/envar/R/var_get_worldclim.R")
 source("C:/Users/andre/Desktop/ENVAR/envar/R/zzz.R")
 
-var_get(extent = "Europe", source = "worldclim")
+var_get(extent = "italy", source = "worldclim")

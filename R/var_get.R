@@ -54,13 +54,13 @@ var_get <- function(extent,
   cli::cli_progress_step("Processing environmental layers...")
   
   processed_stack <- process_layers(
-    raw_files, 
+    files = raw_files, 
     target_grid, 
     extent_info$mask,
     extent_info$type,
     extent_info$points
   )
-  
+
   # 6. Save if requested
   if (!is.null(output_file)) {
     cli::cli_progress_step("Saving to {.path {output_file}}...")
