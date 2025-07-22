@@ -1,0 +1,18 @@
+install.packages("sf")
+install.packages("rnaturalearth")
+install.packages("rnaturalearthdata")
+install.packages("exactextractr")
+
+source("C:/Users/andre/Desktop/ENVAR/R/cleanup_temp.R")
+source("C:/Users/andre/Desktop/ENVAR/R/create_target_grid.R")
+source("C:/Users/andre/Desktop/ENVAR/R/download_file.R")
+source("C:/Users/andre/Desktop/ENVAR/R/extract_layer_name.R")
+source("C:/Users/andre/Desktop/ENVAR/R/process_extent.R")
+source("C:/Users/andre/Desktop/ENVAR/R/process_layers.R")
+source("C:/Users/andre/Desktop/ENVAR/R/validate_inputs.R")
+source("C:/Users/andre/Desktop/ENVAR/R/var_explore.R")
+source("C:/Users/andre/Desktop/ENVAR/R/var_get_chelsa.R")
+source("C:/Users/andre/Desktop/ENVAR/R/var_get_worldclim.R")
+source("C:/Users/andre/Desktop/ENVAR/R/zzz.R")
+
+var_get(extent = "Europe", source = "worldclim")

@@ -9,7 +9,7 @@ process_layers <- function(files, target_grid, mask, extent_type, points) {
     
     # Read raster
     r <- terra::rast(file)
-    
+
     # 1. Crop to target extent
     r_cropped <- terra::crop(r, target_grid)
     
