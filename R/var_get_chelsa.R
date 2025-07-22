@@ -2,7 +2,7 @@
 #' Download CHELSA data
 #' @noRd
 var_get_chelsa <- function(bbox, resolution, variables, temp_dir, ...) {
-  base_url <- "https://os.zhdk.cloud.switch.ch/envicloud/chelsa/chelsa_V2/GLOBAL/climatologies/1981-2010"
+  base_url <- "https://os.zhdk.cloud.switch.ch/chelsav2/GLOBAL/climatologies/1981-2010"
   
   downloaded_files <- character()
   
