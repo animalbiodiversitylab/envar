@@ -1,0 +1,32 @@
+install.packages("sf")
+install.packages("rnaturalearth")
+install.packages("rnaturalearthdata")
+install.packages("exactextractr")
+
+<<<<<<< HEAD
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\cleanup_temp.R")
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\create_target_grid.R")
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\download_file.R")
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\extract_layer_name.R")
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\process_extent.R")
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\process_layers.R")
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\validate_inputs.R")
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\var_explore.R")
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\var_get_chelsa.R")
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\var_get_worldclim.R")
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\zzz.R")
+=======
+source("C:/Users/andre/Desktop/ENVAR/envar/R/cleanup_temp.R")
+source("C:/Users/andre/Desktop/ENVAR/envar/R/create_target_grid.R")
+source("C:/Users/andre/Desktop/ENVAR/envar/R/download_file.R")
+source("C:/Users/andre/Desktop/ENVAR/envar/R/extract_layer_name.R")
+source("C:/Users/andre/Desktop/ENVAR/envar/R/process_extent.R")
+source("C:/Users/andre/Desktop/ENVAR/envar/R/process_layers.R")
+source("C:/Users/andre/Desktop/ENVAR/envar/R/validate_inputs.R")
+source("C:/Users/andre/Desktop/ENVAR/envar/R/var_explore.R")
+source("C:/Users/andre/Desktop/ENVAR/envar/R/var_get_chelsa.R")
+source("C:/Users/andre/Desktop/ENVAR/envar/R/var_get_worldclim.R")
+source("C:/Users/andre/Desktop/ENVAR/envar/R/zzz.R")
+>>>>>>> 2201dcb3e7772b5dc617d504de935d393081f206
+
+var_get(extent = "italy", source = "worldclim")

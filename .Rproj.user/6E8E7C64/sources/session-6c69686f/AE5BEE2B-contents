@@ -1,0 +1,18 @@
+install.packages("sf")
+install.packages("rnaturalearth")
+install.packages("rnaturalearthdata")
+install.packages("exactextractr")
+
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\cleanup_temp.R")
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\create_target_grid.R")
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\download_file.R")
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\extract_layer_name.R")
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\process_extent.R")
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\process_layers.R")
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\validate_inputs.R")
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\var_explore.R")
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\var_get_chelsa.R")
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\var_get_worldclim.R")
+source("C:\Users\ilari\Desktop\ProgettiGit\envar\R\zzz.R")
+
+var_get(extent = "Europe", source = "worldclim")
