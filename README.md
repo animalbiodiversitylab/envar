@@ -2,11 +2,11 @@
 
 # 
 
-# <img src="envar/logo.svg" width="200" alt="enviRget logo">
+# <img src="envar/logo.svg" width="200" alt="envar logo">
 
 # 
 
-# \# enviRget
+# \# envar
 
 # 
 
@@ -14,9 +14,9 @@
 
 # 
 
-# \[!\[R-CMD-check](https://github.com/yourusername/enviRget/workflows/R-CMD-check/badge.svg)](https://github.com/yourusername/enviRget/actions)
+# \[!\[R-CMD-check](https://github.com/yourusername/envar/workflows/R-CMD-check/badge.svg)](https://github.com/yourusername/envar/actions)
 
-# \[!\[CRAN status](https://www.r-pkg.org/badges/version/enviRget)](https://CRAN.R-project.org/package=enviRget)
+# \[!\[CRAN status](https://www.r-pkg.org/badges/version/envar)](https://CRAN.R-project.org/package=envar)
 
 # \[!\[License: GPL-3](https://img.shields.io/badge/License-GPL%203-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
@@ -80,7 +80,7 @@
 
 # 
 
-# \*\*enviRget\*\* is a comprehensive R package designed to streamline the acquisition and processing of environmental variables for Species Distribution Modeling (SDM) and ecological research. It provides a unified interface to access multiple global environmental datasets, automatically handling downloading, cropping, resampling, and standardization.
+# \*\*envar\*\* is a comprehensive R package designed to streamline the acquisition and processing of environmental variables for Species Distribution Modeling (SDM) and ecological research. It provides a unified interface to access multiple global environmental datasets, automatically handling downloading, cropping, resampling, and standardization.
 
 # 
 
@@ -112,7 +112,7 @@
 
 # ```r
 
-# install.packages("enviRget")
+# install.packages("envar")
 
 # ```
 
@@ -124,7 +124,7 @@
 
 # \# install.packages("remotes")
 
-# remotes::install\_github("yourusername/enviRget")
+# remotes::install\_github("yourusername/envar")
 
 # ```
 
@@ -162,7 +162,7 @@
 
 # ```r
 
-# library(enviRget)
+# library(envar)
 
 # 
 
@@ -608,7 +608,7 @@
 
 # 
 
-# enviRget accepts multiple formats for defining your area of interest:
+# envar accepts multiple formats for defining your area of interest:
 
 # 
 
@@ -902,7 +902,7 @@
 
 # \### Reporting Issues
 
-# \- Use \[GitHub Issues](https://github.com/yourusername/enviRget/issues)
+# \- Use \[GitHub Issues](https://github.com/yourusername/envar/issues)
 
 # \- Include a minimal reproducible example
 
@@ -928,21 +928,21 @@
 
 # 
 
-# If you use enviRget in your research, please cite:
+# If you use envar in your research, please cite:
 
 # 
 
 # ```bibtex
 
-# @software{enviRget,
+# @software{envar,
 
 # &nbsp; author = {Your Name},
 
-# &nbsp; title = {enviRget: Download and Process Environmental Variables for SDM},
+# &nbsp; title = {envar: Download and Process Environmental Variables for SDM},
 
 # &nbsp; year = {2024},
 
-# &nbsp; url = {https://github.com/yourusername/enviRget},
+# &nbsp; url = {https://github.com/yourusername/envar},
 
 # &nbsp; version = {0.1.0}
 
@@ -1000,11 +1000,11 @@
 
 # 
 
-# \*\*enviRget\*\* - Making environmental data accessible for ecological research
+# \*\*envar\*\* - Making environmental data accessible for ecological research
 
 # 
 
-# \[Report Bug](https://github.com/yourusername/enviRget/issues) • \[Request Feature](https://github.com/yourusername/enviRget/issues) • \[Documentation](https://yourusername.github.io/enviRget/)
+# \[Report Bug](https://github.com/yourusername/envar/issues) • \[Request Feature](https://github.com/yourusername/envar/issues) • \[Documentation](https://yourusername.github.io/envar/)
 
 # 
 
