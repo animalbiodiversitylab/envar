@@ -68,8 +68,18 @@ var_get <- function(extent,
     cli::cli_progress_step("Downloading {.val {src}} data...")
     
     raw_files <- switch(tolower(src),
-                        "worldclim" = var_get_worldclim(extent_info$bbox, resolution, variables[[src]], temp_dir),
-                        "chelsa"    = var_get_chelsa(extent_info$bbox, resolution, variables[[src]], temp_dir),
+                        "worldclim" = var_get_worldclim(
+                          bbox = extent_info$bbox,
+                          resolution = resolution, 
+                          variables = variables[[src]], 
+                          temp_dir = temp_dir
+                        ),
+                        "chelsa" = var_get_chelsa(
+                          bbox = extent_info$bbox,
+                          resolution = resolution,
+                          variables = variables[[src]],
+                          temp_dir = temp_dir
+                        ),
                         cli::cli_abort("Unknown source: {.val {src}}")
     )
     
