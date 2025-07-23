@@ -186,7 +186,8 @@ var_get <- function(extent,
                           bbox = extent_info$bbox,
                           resolution = resolution,
                           variables = variables[[src]],
-                          temp_dir = temp_dir
+                          temp_dir = temp_dir,
+                          month = if (is.null(extra_args$month)) NULL else extra_args$month
                         ),
                         "wind" = var_get_wind(
                           bbox = extent_info$bbox,

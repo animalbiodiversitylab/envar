@@ -53,36 +53,54 @@ var_get_freshwater <- function(variables, temp_dir, ...) {
     "quality_control" = "quality_control.nc"
   )
   
+  # Progress tracking setup
+  cli::cli_h2("Downloading freshwater environmental variables")
+  valid_vars <- variables[variables %in% names(freshwater_vars)]
+  invalid_vars <- variables[!variables %in% names(freshwater_vars)]
+  
+  # Report invalid variables
+  if (length(invalid_vars) > 0) {
+    cli::cli_alert_warning("Skipping unrecognized variables: {.val {invalid_vars}}")
+  }
+  
+  if (length(valid_vars) == 0) {
+    cli::cli_alert_danger("No valid variables to download")
+    return(character())
+  }
+  
+  cli::cli_alert_info("Found {length(valid_vars)} variable{?s} to download")
+  
   downloaded_files <- character()
   
-  for (var in variables) {
-    if (var %in% names(freshwater_vars)) {
-      # Get the filename from our mapping list
-      filename <- freshwater_vars[[var]]
-      url <- paste0(base_url, filename)
-      dest_file <- file.path(temp_dir, filename)
-      
-      # Check if file already exists to avoid re-downloading
-      if (file.exists(dest_file)) {
-        message(sprintf("File '%s' already exists in temp_dir. Skipping download.", filename))
-        downloaded_files <- c(downloaded_files, dest_file)
-        next # Move to the next variable
-      }
-      
-      # Using R's built-in download.file function
-      # The original function used a custom 'download_file', this is a standard equivalent.
-      tryCatch({
-        message(sprintf("Downloading '%s'...", filename))
-        download.file(url, dest_file, mode = "wb", quiet = TRUE)
-        downloaded_files <- c(downloaded_files, dest_file)
-        message("Download complete.")
-      }, error = function(e) {
-        warning(sprintf("Failed to download %s. Error: %s", url, e$message))
-      })
-      
-    } else {
-      warning(sprintf("Variable '%s' is not recognized. Check available names. Skipping.", var))
+  # Download each variable with progress tracking
+  for (i in seq_along(valid_vars)) {
+    var <- valid_vars[i]
+    filename <- freshwater_vars[[var]]
+    url <- paste0(base_url, filename)
+    dest_file <- file.path(temp_dir, filename)
+    
+    # Progress step for current download
+    cli::cli_progress_step("Downloading {.val {var}} ({i}/{length(valid_vars)})")
+    
+    # Check if file already exists to avoid re-downloading
+    if (file.exists(dest_file)) {
+      cli::cli_alert_info("File {.file {filename}} already exists, skipping download")
+      downloaded_files <- c(downloaded_files, dest_file)
+      next # Move to the next variable
     }
+    
+    # Use the robust download_file function that handles retries, timeouts, and progress
+    # Pass '...' to the download function for additional arguments
+    if (download_file(url, dest_file, ...)) {
+      downloaded_files <- c(downloaded_files, dest_file)
+    }
+  }
+  
+  # Summary of downloads
+  if (length(downloaded_files) > 0) {
+    cli::cli_alert_success("Successfully downloaded {length(downloaded_files)} file{?s}")
+  } else {
+    cli::cli_alert_warning("No files were downloaded")
   }
   
   # The function no longer needs bbox or resolution for the download part,
