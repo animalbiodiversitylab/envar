@@ -1,7 +1,16 @@
-R/untitled.R
+# R project files
+.Rproj.user/
+*.Rproj
+
+# Untitled files
+untitled*
+R/untitled*
+
+# Data and temp files
 wc2.1_30s_bio.zip/
 temp/
-R.Rproj/
-R.Rproj
-.Rproj.user/
 *.zip
+
+# R specific
+.RData
+.Rhistory
