@@ -1,8 +1,6 @@
 <div align="center">
 <img src="assets/logo.svg" width="200" alt="envar logo">
 
-# envar
-
 **Download and Process Environmental Variables for Species Distribution Modeling**
 </div>
 
