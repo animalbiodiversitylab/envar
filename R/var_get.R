@@ -79,7 +79,99 @@ var_get <- function(extent,
                           resolution = resolution,
                           variables = variables[[src]],
                           temp_dir = temp_dir
-                        ),
+                          "chelsa_cmip5" = var_get_chelsa_cmip5(
+                            bbox = extent_info$bbox,
+                            resolution = resolution,
+                            variables = variables[[src]],
+                            model = list(...)$model %||% "ACCESS1-3",
+                            scenario = list(...)$scenario %||% "rcp85",
+                            period = list(...)$period %||% "2061-2080",
+                            temp_dir = temp_dir
+                          ),
+                          "chelsa_bioclimplus" = var_get_chelsa_bioclimplus(
+                            bbox = extent_info$bbox,
+                            resolution = resolution,
+                            variables = variables[[src]],
+                            temp_dir = temp_dir
+                          ),
+                          "climate_stability" = var_get_climate_stability(
+                            bbox = extent_info$bbox,
+                            resolution = resolution,
+                            variables = variables[[src]],
+                            temp_dir = temp_dir
+                          ),
+                          "cloud" = var_get_cloud(
+                            bbox = extent_info$bbox,
+                            resolution = resolution,
+                            variables = variables[[src]],
+                            temp_dir = temp_dir
+                          ),
+                          "topography" = var_get_topography(
+                            bbox = extent_info$bbox,
+                            resolution = resolution,
+                            variables = variables[[src]],
+                            source = list(...)$topo_source %||% "gmted2010",
+                            temp_dir = temp_dir
+                          ),
+                          "esa_landcover" = var_get_esa_landcover(
+                            bbox = extent_info$bbox,
+                            resolution = resolution,
+                            variables = variables[[src]],
+                            year = list(...)$year %||% 2020,
+                            temp_dir = temp_dir
+                          ),
+                          "consensus_landcover" = var_get_consensus_landcover(
+                            bbox = extent_info$bbox,
+                            resolution = resolution,
+                            variables = variables[[src]],
+                            temp_dir = temp_dir
+                          ),
+                          "spectre" = var_get_spectre(
+                            bbox = extent_info$bbox,
+                            resolution = resolution,
+                            variables = variables[[src]],
+                            temp_dir = temp_dir
+                          ),
+                          "heterogeneity" = var_get_heterogeneity(
+                            bbox = extent_info$bbox,
+                            resolution = resolution,
+                            variables = variables[[src]],
+                            indices = list(...)$indices %||% "ndvi",
+                            temp_dir = temp_dir
+                          ),
+                          "freshwater" = var_get_freshwater(
+                            bbox = extent_info$bbox,
+                            resolution = resolution,
+                            variables = variables[[src]],
+                            temp_dir = temp_dir
+                          ),
+                          "hwsd" = var_get_hwsd(
+                            bbox = extent_info$bbox,
+                            resolution = resolution,
+                            variables = variables[[src]],
+                            temp_dir = temp_dir
+                          ),
+                          "aridity" = var_get_aridity(
+                            bbox = extent_info$bbox,
+                            resolution = resolution,
+                            variables = variables[[src]],
+                            temp_dir = temp_dir
+                          ),
+                          "wind" = var_get_wind(
+                            bbox = extent_info$bbox,
+                            resolution = resolution,
+                            variables = variables[[src]],
+                            height = list(...)$height %||% "50",
+                            temp_dir = temp_dir
+                          ),
+                          "ndvi" = var_get_ndvi(
+                            bbox = extent_info$bbox,
+                            resolution = resolution,
+                            variables = variables[[src]],
+                            source = list(...)$ndvi_source %||% "modis",
+                            year = list(...)$year %||% 2022,
+                            temp_dir = temp_dir
+                          ),
                         cli::cli_abort("Unknown source: {.val {src}}")
     )
     
