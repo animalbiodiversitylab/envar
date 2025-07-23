@@ -141,6 +141,58 @@ var_get <- function(extent,
                           variables = variables[[src]], temp_dir = temp_dir,
                           year = extra_args$year %||% 2020
                         ),
+                        "cloud" = var_get_cloud(
+                          bbox = extent_info$bbox,
+                          resolution = resolution,
+                          variables = variables[[src]],
+                          temp_dir = temp_dir
+                        ),
+                        "consensus_landcover" = var_get_consensus_landcover(
+                          bbox = extent_info$bbox,
+                          resolution = resolution,
+                          variables = variables[[src]],
+                          temp_dir = temp_dir
+                        ),
+                        "spectre" = var_get_spectre(
+                          bbox = extent_info$bbox,
+                          resolution = resolution,
+                          variables = variables[[src]],
+                          temp_dir = temp_dir
+                        ),
+                        "heterogeneity" = var_get_heterogeneity(
+                          bbox = extent_info$bbox,
+                          resolution = resolution,
+                          variables = variables[[src]],
+                          indices = list(...)$indices %||% "ndvi",
+                          temp_dir = temp_dir
+                        ),
+                        "hwsd" = var_get_hwsd(
+                          bbox = extent_info$bbox,
+                          resolution = resolution,
+                          variables = variables[[src]],
+                          temp_dir = temp_dir
+                        ),
+                        "aridity" = var_get_aridity(
+                          bbox = extent_info$bbox,
+                          resolution = resolution,
+                          variables = variables[[src]],
+                          temp_dir = temp_dir
+                        ),
+                        "wind" = var_get_wind(
+                          bbox = extent_info$bbox,
+                          resolution = resolution,
+                          variables = variables[[src]],
+                          height = list(...)$height %||% "50",
+                          temp_dir = temp_dir
+                        ),
+                        "ndvi" = var_get_ndvi(
+                          bbox = extent_info$bbox,
+                          resolution = resolution,
+                          variables = variables[[src]],
+                          source = list(...)$ndvi_source %||% "modis",
+                          year = list(...)$year %||% 2022,
+                          temp_dir = temp_dir
+                        ),
                         cli::cli_abort("Unknown source: {.val {src}}")
     )
     
