@@ -157,11 +157,12 @@ var_get <- function(extent,
                           variables = variables[[src]],
                           temp_dir = temp_dir
                         ),
-                        "consensus_landcover" = var_get_consensus_landcover(
-                          bbox = extent_info$bbox,
-                          resolution = resolution,
-                          variables = variables[[src]],
-                          temp_dir = temp_dir
+                        "consensus_landcover" = var_get_consensus_landcover( 
+                          bbox = extent_info$bbox, 
+                          resolution = resolution, 
+                          variables = variables[[src]], 
+                          temp_dir = temp_dir, 
+                          discover = if (is.null(extra_args$discover)) FALSE else extra_args$discover 
                         ),
                         "spectre" = var_get_spectre(
                           bbox = extent_info$bbox,
