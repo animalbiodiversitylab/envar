@@ -2,7 +2,7 @@
 #' Download and process environmental variables
 #'
 #' @param extent Spatial extent (sf object, country name, continent name, or coordinate points)
-#' @param source Data source ("worldclim", "chelsa", "worldclim_future", "chelsa_cmip5", etc.)
+#' @param source Data source ("worldclim", "chelsa", "worldclim_future", "chelsa_cmip5", "freshwater", etc.)
 #' @param resolution Spatial resolution ("30s", "1km", "2.5m", "5m", "10m")
 #' @param variables Variables to download ("bioclim", "tmean", "prec", etc.)
 #' @param buffer_km Buffer in kilometers around extent
@@ -31,16 +31,12 @@
 #'   time_period = "2021-2040"
 #' )
 #' 
-#' # The same arguments can be used for chelsa_cmip5 for consistency
-#' # Note: For CMIP5, 'ssp' corresponds to 'scenario' (e.g., "rcp85")
-#' chelsa_future <- var_get(
-#'   extent = "Spain",
-#'   source = "chelsa_cmip5",
-#'   resolution = "30s",
-#'   variables = "bioclim",
-#'   gcm = "ACCESS1-3",
-#'   ssp = "rcp85",
-#'   time_period = "2061-2080"
+#' # Download freshwater variables for a specific region
+#' # Note: The data is downloaded globally but cropped/masked to the extent.
+#' freshwater_vars <- var_get(
+#'   extent = "Madagascar",
+#'   source = "freshwater",
+#'   variables = c("elevation", "flow_accumulation", "tmin_monthly_avg")
 #' )
 #' }
 var_get <- function(extent,
@@ -90,7 +86,6 @@ var_get <- function(extent,
     cli::cli_h2("Processing source: {.val {src}}")
     cli::cli_progress_step("Downloading {.val {src}} data...")
     
-    # Gli argomenti in '...' sono ancora disponibili per altre funzioni
     extra_args <- list(...)
     
     raw_files <- switch(tolower(src),
@@ -117,23 +112,25 @@ var_get <- function(extent,
                           )
                         },
                         "chelsa_cmip5" = {
-                          # L'operatore %||% imposta un default solo se l'argomento è NULL.
                           var_get_chelsa_cmip5(
                             bbox = extent_info$bbox,
                             resolution = resolution,
                             variables = variables[[src]],
                             temp_dir = temp_dir,
-                            model = gcm %||% "ACCESS1-3", # Usa gcm, altrimenti il default
-                            scenario = ssp %||% "rcp85", # Usa ssp, altrimenti il default
-                            period = time_period %||% "2061-2080" # Usa time_period, altrimenti il default
+                            model = gcm %||% "ACCESS1-3",
+                            scenario = ssp %||% "rcp85",
+                            period = time_period %||% "2061-2080"
                           )
                         },
-                        # --- Tutte le altre 'source' rimangono invariate ---
+                        "freshwater" = var_get_freshwater(
+                          variables = variables[[src]],
+                          temp_dir = temp_dir
+                          # bbox e resolution non sono necessari per il download globale
+                        ),
                         "chelsa_bioclimplus" = var_get_chelsa_bioclimplus(
                           bbox = extent_info$bbox, resolution = resolution,
                           variables = variables[[src]], temp_dir = temp_dir
                         ),
-                        # ... (tutti gli altri case come prima) ...
                         "topography" = var_get_topography(
                           bbox = extent_info$bbox, resolution = resolution,
                           variables = variables[[src]], temp_dir = temp_dir,
@@ -144,7 +141,6 @@ var_get <- function(extent,
                           variables = variables[[src]], temp_dir = temp_dir,
                           year = extra_args$year %||% 2020
                         ),
-                        # ... etc ...
                         cli::cli_abort("Unknown source: {.val {src}}")
     )
     
@@ -170,6 +166,8 @@ var_get <- function(extent,
     
     results[[src]] <- processed_stack
   }
+  
+  cli::cli_alert_success("Successfully processed {.val {length(unlist(results))}} layers from {.val {length(results)}} source(s).")
   
   if (length(results) == 1) {
     return(results[[1]])
