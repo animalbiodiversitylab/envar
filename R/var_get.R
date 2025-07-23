@@ -203,8 +203,6 @@ var_get <- function(extent,
     results[[src]] <- processed_stack
   }
   
-  cli::cli_success("Successfully processed {.val {length(unlist(results))}} layers from {.val {length(results)}} source(s).")
-  
   if (length(results) == 1) {
     return(results[[1]])
   } else {
