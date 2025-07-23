@@ -95,7 +95,9 @@ var_get <- function(extent,
                         ),
                         "chelsa" = var_get_chelsa(
                           bbox = extent_info$bbox, resolution = resolution,
-                          variables = variables[[src]], temp_dir = temp_dir
+                          variables = variables[[src]], temp_dir = temp_dir,
+                          gcm = gcm, ssp = ssp, time_period = time_period,
+                          month = extra_args$month, year = extra_args$year
                         ),
                         "worldclim_future" = {
                           if (is.na(numeric_resolution)) {
