@@ -79,6 +79,7 @@ var_get <- function(extent,
                           resolution = resolution,
                           variables = variables[[src]],
                           temp_dir = temp_dir
+                        ),  
                           "chelsa_cmip5" = var_get_chelsa_cmip5(
                             bbox = extent_info$bbox,
                             resolution = resolution,
