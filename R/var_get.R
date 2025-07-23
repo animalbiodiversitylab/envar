@@ -126,7 +126,8 @@ var_get <- function(extent,
                         },
                         "freshwater" = var_get_freshwater(
                           variables = variables[[src]],
-                          temp_dir = temp_dir
+                          temp_dir = temp_dir,
+                          method = method
                           # bbox e resolution non sono necessari per il download globale
                         ),
                         "chelsa_bioclimplus" = var_get_chelsa_bioclimplus(
@@ -212,6 +213,7 @@ var_get <- function(extent,
     
     # Il resto della funzione rimane invariato
     cli::cli_progress_step("Processing environmental layers...")
+    
     processed_stack <- process_layers(
       files = raw_files, target_grid = target_grid, mask = extent_info$mask,
       extent_type = extent_info$type, points = extent_info$points

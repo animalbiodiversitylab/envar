@@ -9,7 +9,7 @@
 #' @param ... Additional arguments (not used in this function but kept for consistency).
 #' @return A character vector with the full paths to the downloaded files.
 #' @noRd
-var_get_freshwater <- function(variables, temp_dir, ...) {
+var_get_freshwater <- function(variables, method, temp_dir, ...) {
   # Base URL for EarthEnv streams data
   base_url <- "https://data.earthenv.org/streams/"
   
@@ -103,8 +103,6 @@ var_get_freshwater <- function(variables, temp_dir, ...) {
     cli::cli_alert_warning("No files were downloaded")
   }
   
-  # The function no longer needs bbox or resolution for the download part,
-  # as these are global files. These arguments might be used later for cropping/processing.
-  
+  # downloaded_files <- terra::rast(downloaded_files)
   return(downloaded_files)
 }
