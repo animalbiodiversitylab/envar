@@ -210,6 +210,7 @@ var_get <- function(extent,
     
     # Il resto della funzione rimane invariato
     cli::cli_progress_step("Processing environmental layers...")
+    
     processed_stack <- process_layers(
       files = raw_files, target_grid = target_grid, mask = extent_info$mask,
       extent_type = extent_info$type, points = extent_info$points

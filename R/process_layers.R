@@ -11,16 +11,35 @@ process_layers <- function(files, target_grid, mask, extent_type, points) {
     r <- terra::rast(file)
 
     # 1. Crop to target extent
+    if (terra::crs(r)!=terra::crs(target_grid)){
+      
+      target_grid_1 <- terra::project(target_grid, terra::crs(r))
+      r_cropped <- terra::crop(r, target_grid_1)
+      r_resampled <- terra::resample(r_cropped, target_grid, method = "bilinear")
+      
+      # 3. Apply mask if polygon/admin
+      if (extent_type %in% c("polygon", "admin") && !is.null(mask)) {
+        mask_1 <- sf::st_transform(mask, terra::crs(r))
+        mask_vect_1 <- terra::vect(mask_1)
+        r_resampled <- terra::mask(r_resampled, mask_vect_1)
+        
+        r_resampled <- terra::project(r_resampled, terra::crs(target_grid))
+      }
+      
+      } else {
+    
     r_cropped <- terra::crop(r, target_grid)
     
     # 2. Resample to target grid
     r_resampled <- terra::resample(r_cropped, target_grid, method = "bilinear")
+    
     
     # 3. Apply mask if polygon/admin
     if (extent_type %in% c("polygon", "admin") && !is.null(mask)) {
       mask_vect <- terra::vect(mask)
       r_resampled <- terra::mask(r_resampled, mask_vect)
     }
+      }
     
     # Add to list with meaningful name
     layer_name <- extract_layer_name(basename(file))

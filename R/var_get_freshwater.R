@@ -103,8 +103,6 @@ var_get_freshwater <- function(variables, temp_dir, ...) {
     cli::cli_alert_warning("No files were downloaded")
   }
   
-  # The function no longer needs bbox or resolution for the download part,
-  # as these are global files. These arguments might be used later for cropping/processing.
-  
+  # downloaded_files <- terra::rast(downloaded_files)
   return(downloaded_files)
 }
