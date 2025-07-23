@@ -1,7 +1,7 @@
 <div align="center">
-<img src="assets/logo.svg" width="200" alt="envar logo">
-
-**Download and Process Environmental Variables for Species Distribution Modeling**
+<img src="assets/logo.svg" width="250" alt="envar logo">
+<br><br>
+<strong>Download and Process Environmental Variables for Species Distribution Modeling</strong>
 </div>
 
 [![R-CMD-check](https://github.com/yourusername/envar/workflows/R-CMD-check/badge.svg)](https://github.com/yourusername/envar/actions/workflows/R-CMD-check.yaml)
@@ -11,7 +11,7 @@
 
 ---
 
-**Navigation:** [Installazione](#installazione) • [Guida Rapida](#guida-rapida) • [Fonti dei Dati](#fonti-dei-dati) • [Esempi](#esempi) • [Citazione](#citazione)
+**Navigation:** [Installazione](#installazione) • [Guida Rapida](#guida-rapida) • [Fonti dei Dati](#fonti-dei-dati) • [Utilizzo Dettagliato](#utilizzo-dettagliato) • [Citazione](#citazione)
 
 ---
 
