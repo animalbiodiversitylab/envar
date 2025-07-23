@@ -4,7 +4,7 @@
 <strong>Download and Process Environmental Variables for Species Distribution Modeling</strong>
 </div>
 
-[![R-CMD-check](https://github.com/MBertoncini/envar/workflows/R-CMD-check/badge.svg)](https://github.com/MBertoncini/envar/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/yourusername/envar/workflows/R-CMD-check/badge.svg)](https://github.com/yourusername/envar/actions/workflows/R-CMD-check.yaml)
 [![CRAN status](https://www.r-pkg.org/badges/version/envar)](https://CRAN.R-project.org/package=envar)
 [![License: GPL-3](https://img.shields.io/badge/License-GPL%203-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.XXXXXXX.svg)](https://doi.org/10.5281/zenodo.XXXXXXX)
