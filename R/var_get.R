@@ -117,9 +117,9 @@ var_get <- function(extent,
                             resolution = resolution,
                             variables = variables[[src]],
                             temp_dir = temp_dir,
-                            model = gcm %||% "ACCESS1-3",
-                            scenario = ssp %||% "rcp85",
-                            period = time_period %||% "2061-2080"
+                            model = if (is.null(gcm)) "ACCESS1-3" else gcm,
+                            scenario = if (is.null(ssp)) "rcp85" else ssp,
+                            period = if (is.null(time_period)) "2061-2080" else time_period
                           )
                         },
                         "freshwater" = var_get_freshwater(
@@ -131,15 +131,25 @@ var_get <- function(extent,
                           bbox = extent_info$bbox, resolution = resolution,
                           variables = variables[[src]], temp_dir = temp_dir
                         ),
-                        "topography" = var_get_topography(
-                          bbox = extent_info$bbox, resolution = resolution,
-                          variables = variables[[src]], temp_dir = temp_dir,
-                          source = extra_args$topo_source %||% "gmted2010"
-                        ),
+                        "topography" = {
+                          # Estrai argomenti specifici per la topografia da '...' o usa default
+                          topo_source <- if (is.null(extra_args$topo_source)) "GMTED" else extra_args$topo_source
+                          aggregation <- if (is.null(extra_args$aggregation)) "md" else extra_args$aggregation
+                          
+                          # Chiama la funzione helper con i nuovi argomenti
+                          var_get_topography(
+                            bbox = extent_info$bbox,
+                            resolution = resolution, # `resolution` è un argomento standard di var_get
+                            variables = variables[[src]],
+                            temp_dir = temp_dir,
+                            topo_source = topo_source,
+                            aggregation = aggregation
+                          )
+                        },
                         "esa_landcover" = var_get_esa_landcover(
                           bbox = extent_info$bbox, resolution = resolution,
                           variables = variables[[src]], temp_dir = temp_dir,
-                          year = extra_args$year %||% 2020
+                          year = if (is.null(extra_args$year)) 2020 else extra_args$year
                         ),
                         "cloud" = var_get_cloud(
                           bbox = extent_info$bbox,
@@ -163,7 +173,7 @@ var_get <- function(extent,
                           bbox = extent_info$bbox,
                           resolution = resolution,
                           variables = variables[[src]],
-                          indices = list(...)$indices %||% "ndvi",
+                          indices = if (is.null(list(...)$indices)) "ndvi" else list(...)$indices,
                           temp_dir = temp_dir
                         ),
                         "hwsd" = var_get_hwsd(
@@ -182,15 +192,15 @@ var_get <- function(extent,
                           bbox = extent_info$bbox,
                           resolution = resolution,
                           variables = variables[[src]],
-                          height = list(...)$height %||% "50",
+                          height = if (is.null(list(...)$height)) "50" else list(...)$height,
                           temp_dir = temp_dir
                         ),
                         "ndvi" = var_get_ndvi(
                           bbox = extent_info$bbox,
                           resolution = resolution,
                           variables = variables[[src]],
-                          source = list(...)$ndvi_source %||% "modis",
-                          year = list(...)$year %||% 2022,
+                          source = if (is.null(list(...)$ndvi_source)) "modis" else list(...)$ndvi_source,
+                          year = if (is.null(list(...)$year)) 2022 else list(...)$year,
                           temp_dir = temp_dir
                         ),
                         cli::cli_abort("Unknown source: {.val {src}}")
