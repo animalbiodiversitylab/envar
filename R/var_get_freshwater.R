@@ -9,7 +9,7 @@
 #' @param ... Additional arguments (not used in this function but kept for consistency).
 #' @return A character vector with the full paths to the downloaded files.
 #' @noRd
-var_get_freshwater <- function(variables, temp_dir, ...) {
+var_get_freshwater <- function(variables, method, temp_dir, ...) {
   # Base URL for EarthEnv streams data
   base_url <- "https://data.earthenv.org/streams/"
   
