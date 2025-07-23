@@ -1,6 +1,10 @@
+<div align="center">
+<img src="assets/logo.svg" width="200" alt="envar logo">
+
 # envar
 
 **Download and Process Environmental Variables for Species Distribution Modeling**
+</div>
 
 [![R-CMD-check](https://github.com/yourusername/envar/workflows/R-CMD-check/badge.svg)](https://github.com/yourusername/envar/actions/workflows/R-CMD-check.yaml)
 [![CRAN status](https://www.r-pkg.org/badges/version/envar)](https://CRAN.R-project.org/package=envar)
