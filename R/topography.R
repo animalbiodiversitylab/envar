@@ -20,9 +20,19 @@
 topography <- function(x, variables, algorithm, topo_source) {
 
   par_list = get_par(x)
+  
+  if (par_list$type=="point") {
+    
+    points <- par_list$mask
+    bbox_points <- par_list$bbox
+    
+  } else {
+    
   grid = par_list$grid
   mask = par_list$mask
   res = par_list$res
+  
+  }
   
   # Vettore per memorizzare i percorsi dei file scaricati
   downloaded_files <- character()
@@ -32,7 +42,7 @@ topography <- function(x, variables, algorithm, topo_source) {
 
 
   #mask = sf::st_read(paste0(temp_dir, "/mask.shp"))
-  extent = terra::ext(grid)
+  # extent = terra::ext(grid)
   
   # --- 1. Validazione e Normalizzazione dell'Input ---
   
@@ -49,7 +59,7 @@ topography <- function(x, variables, algorithm, topo_source) {
   
   # Itera su ogni variabile richiesta dall'utente
   
-  #a causa di errore per cui i 
+  #a causa di errore nei nomi
   for (var in variables) {
     if (var == "elevation") {
       if (algorithm == "max") {
@@ -94,6 +104,20 @@ topography <- function(x, variables, algorithm, topo_source) {
   }
   
   
+  if (par_list$type=="point"){
+    
+    
+    extracted <- data.frame(process_points(file = downloaded_files, points = points_sf))
+    
+    if (inherits(x, "data.frame")) {
+      extracted <- data.frame(merge(x, extracted[, c(1, 4)], by = "ID"))
+      
+    }
+    
+    return(extracted)
+    
+  } else {
+    
   processed_stack <- process_layers(
     files = downloaded_files, target_grid = grid, mask = mask,
     extent_type = extent_info$type, points = extent_info$points, res=res
@@ -107,4 +131,7 @@ topography <- function(x, variables, algorithm, topo_source) {
   # Restituisce il vettore di percorsi ai file scaricati con successo.
   # La funzione `var_get` principale si occuperà di processare questi file.
   return(processed_stack)
+  
+  }
+  
 }

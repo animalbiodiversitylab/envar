@@ -47,11 +47,15 @@ var_get <- function(shape=NULL,
                     path = NULL
                     ) {
   
+  if (!((sf::st_geometry_type(shape)=="POINT")[1] & buffer ==0)) {
+    
   if (is.null(res) || !is.numeric(res) || res < 1 || res != as.integer(res)) {
     stop("Risoluzione non valida. Per favore scegli un intero positivo maggiore di 1.")
   } else {
     res = res
-  }  
+  } 
+    
+  }
   
   # 2. Processa extent e griglia target (invariato)
   
@@ -62,6 +66,7 @@ var_get <- function(shape=NULL,
     buffer = buffer
   )
   
+  if (extent_info$type=="polygon") {
   target_grid <- create_target_grid(extent_info$bbox, res)
   
     # 3. Crea dir temporanea (invariato)
@@ -75,5 +80,14 @@ var_get <- function(shape=NULL,
   #vecchio da modificare:
   # cli::cli_alert_success("Successfully processed {.val {length(unlist(results))}} layers from {.val {length(results)}} source(s).")
  return(list(target_grid, extent_info$mask, res))
+  
+  }
+  
+  if (extent_info$type=="point") {
+   
+    return(extent_info)
+    
+  }
+  
    
 }

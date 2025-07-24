@@ -3,7 +3,7 @@
 #' @noRd
 process_extent <- function(shape = NULL, country = NULL, continent = NULL, buffer = 0) {
   
-  extent_info <- list(type = NULL, bbox = NULL, mask = NULL, points = NULL)
+  extent_info <- list(type = NULL, bbox = NULL, mask = NULL)
   
   # ---- Input validation & priority resolution ----
   input_sources <- list(
@@ -24,6 +24,25 @@ process_extent <- function(shape = NULL, country = NULL, continent = NULL, buffe
       cli::cli_abort("Il parametro `shape` deve essere un oggetto `sf` o `sfc`.")
     }
     
+    if ((sf::st_geometry_type(shape) =="POINT")[[1]]) {
+
+      
+      if (buffer > 0){
+       
+        extent_info$type = "polygon"
+        extent_buffered <- sf::st_buffer(shape, dist = buffer * 1000)
+        extent_info$bbox <- sf::st_bbox(extent_buffered)
+        extent_info$mask <- extent_buffered
+        
+      } else {
+        
+        extent_info$type <- "point"
+        extent_info$bbox <- sf::st_bbox(shape)
+        extent_info$mask <- shape
+      }
+      
+    } else {
+    
     extent_info$type <- "polygon"
     extent_info$mask <- shape
     
@@ -32,6 +51,7 @@ process_extent <- function(shape = NULL, country = NULL, continent = NULL, buffe
       extent_info$bbox <- sf::st_bbox(extent_buffered)
     } else {
       extent_info$bbox <- sf::st_bbox(shape)
+    }
     }
     
     return(extent_info)
@@ -52,9 +72,11 @@ process_extent <- function(shape = NULL, country = NULL, continent = NULL, buffe
     })
     
     if (buffer > 0) {
+
       extent_buffered <- sf::st_buffer(extent_info$mask, dist = buffer * 1000)
       extent_info$bbox <- sf::st_bbox(extent_buffered)
     } else {
+      
       extent_info$bbox <- sf::st_bbox(extent_info$mask)
     }
     
@@ -76,6 +98,7 @@ process_extent <- function(shape = NULL, country = NULL, continent = NULL, buffe
     })
     
     if (buffer > 0) {
+
       extent_buffered <- sf::st_buffer(extent_info$mask, dist = buffer * 1000)
       extent_info$bbox <- sf::st_bbox(extent_buffered)
     } else {
