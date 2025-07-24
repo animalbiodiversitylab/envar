@@ -199,21 +199,15 @@ var_explore(what = "resolutions")
 
 I contributi sono benvenuti! Per favore, consulta le nostre [Linee Guida per i Contributi](CONTRIBUTING.md) per maggiori dettagli.
 
-## Citazione
+## Citation
 
-Se usi envar nella tua ricerca, per favore cita:
+When using envar cite:
 
 ```bibtex
-@software{envar,
-  author = {Your Name},
-  title = {envar: Download and Process Environmental Variables for SDM},
-  year = {2024},
-  url = {https://github.com/yourusername/envar},
-  version = {0.1.0}
-}
+Simoncini, A., Bertoncini, M., Cerofolini, A., Falaschi, M., Ficetola, G.F.F., Lo Parrino, E. (2025) envar: An R package to streamline the retrieval and download of environmental variables. Submitted to Methods in Ecology and Evolution.
 ```
 
-Quando si utilizzano fonti di dati specifiche, si prega di citare anche i fornitori originali come WorldClim 2.1, CHELSA, etc.
+When downloading variables, please also cite the original sources. 
 
 ## Licenza
 
