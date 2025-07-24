@@ -2,7 +2,12 @@
 #' Download Consensus Land Cover data 
 #' @param discover A boolean to select the version with DISCover. Defaults to FALSE. 
 #' @noRd 
-var_get_consensus_landcover <- function(bbox, resolution, variables, temp_dir, discover = FALSE, ...) { 
+consensus_landcover <- function(x, variables, discover = TRUE, ...) { 
+  
+  par_list = get_par(x)
+  grid = par_list$grid
+  mask = par_list$mask
+  res = par_list$res
   
   if (discover) { 
     # The full version integrates GlobCover, MODIS, GLC2000, and DISCover. [2] 
@@ -62,5 +67,17 @@ var_get_consensus_landcover <- function(bbox, resolution, variables, temp_dir, d
     cli::cli_abort("No valid variables were specified for Consensus Land Cover.") 
   } 
   
-  return(downloaded_files) 
+  processed_stack <- process_layers(
+    files = downloaded_files, target_grid = grid, mask = mask,
+    extent_type = extent_info$type, points = extent_info$points, res=res
+  )
+  
+  if (inherits(x, "SpatRaster")) {
+    processed_stack <- c(x, processed_stack)
+    
+  }
+  
+  # Restituisce il vettore di percorsi ai file scaricati con successo.
+  # La funzione `var_get` principale si occuperà di processare questi file.
+  return(processed_stack)
 } 

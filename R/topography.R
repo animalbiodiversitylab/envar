@@ -18,10 +18,11 @@
 #' @return Un vettore di caratteri contenente i percorsi completi dei file scaricati con successo.
 #' @noRd
 topography <- function(x, variables, algorithm, topo_source) {
-  
-  grid <- x[[1]]
-  mask <- x[[2]]
-  res <- x[[3]]
+
+  par_list = get_par(x)
+  grid = par_list$grid
+  mask = par_list$mask
+  res = par_list$res
   
   # Vettore per memorizzare i percorsi dei file scaricati
   downloaded_files <- character()
@@ -47,8 +48,14 @@ topography <- function(x, variables, algorithm, topo_source) {
   # --- 2. Loop sulle Variabili e Download ---
   
   # Itera su ogni variabile richiesta dall'utente
+  
+  #a causa di errore per cui i 
   for (var in variables) {
-    
+    if (var == "elevation") {
+      if (algorithm == "max") {
+        algorithm = "ma"
+      }
+    }
     # --- 2a. Costruzione Dinamica del Nome del File ---
     
     # La parte del nome del file relativa alla fonte cambia a seconda che sia GMTED o SRTM
@@ -92,6 +99,10 @@ topography <- function(x, variables, algorithm, topo_source) {
     extent_type = extent_info$type, points = extent_info$points, res=res
   )
   
+  if (inherits(x, "SpatRaster")) {
+    processed_stack <- c(x, processed_stack)
+
+  }
   
   # Restituisce il vettore di percorsi ai file scaricati con successo.
   # La funzione `var_get` principale si occuperà di processare questi file.

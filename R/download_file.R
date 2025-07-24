@@ -2,9 +2,7 @@
 #' Download file with progress
 #' @noRd
 download_file <- function(url, dest_file, max_retries = 3) {
-  # Il messaggio di avvio viene mostrato una sola volta
-  cli::cli_progress_step("Downloading {.file {basename(dest_file)}}")
-  
+
   for (i in 1:max_retries) {
     # Definiamo un User-Agent per simulare un browser e non essere bloccati
     user_agent_string <- "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
