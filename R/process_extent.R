@@ -1,73 +1,90 @@
 # R/process_extent.R
 #' Process extent input
 #' @noRd
-process_extent <- function(extent, buffer_km) {
+process_extent <- function(shape = NULL, country = NULL, continent = NULL, buffer = 0) {
+  
   extent_info <- list(type = NULL, bbox = NULL, mask = NULL, points = NULL)
   
-  # Handle different input types
-  if (inherits(extent, "sf") || inherits(extent, "sfc")) {
-    # Shapefile or sf object
-    extent_info$type <- "polygon"
-    extent_info$mask <- extent
-    if (buffer_km > 0) {
-      extent_buffered <- sf::st_buffer(extent, dist = buffer_km * 1000)
-      extent_info$bbox <- sf::st_bbox(extent_buffered)
-    } else {
-      extent_info$bbox <- sf::st_bbox(extent)
+  # ---- Input validation & priority resolution ----
+  input_sources <- list(
+    shape = !is.null(shape),
+    country = !is.null(country),
+    continent = !is.null(continent)
+  )
+  
+  active_sources <- names(Filter(identity, input_sources))
+  
+  if (length(active_sources) > 1) {
+    cli::cli_alert_warning("Hai specificato più sorgenti di extent: {paste(active_sources, collapse = ', ')}. Verrà usata la seguente priorità: shape > country > continent.")
+  }
+  
+  # ---- 1. SHAPE (highest priority) ----
+  if (!is.null(shape)) {
+    if (!inherits(shape, "sf") && !inherits(shape, "sfc")) {
+      cli::cli_abort("Il parametro `shape` deve essere un oggetto `sf` o `sfc`.")
     }
     
-  } else if (is.character(extent)) {
-    # Country or continent name
+    extent_info$type <- "polygon"
+    extent_info$mask <- shape
+    
+    if (buffer > 0) {
+      extent_buffered <- sf::st_buffer(shape, dist = buffer * 1000)
+      extent_info$bbox <- sf::st_bbox(extent_buffered)
+    } else {
+      extent_info$bbox <- sf::st_bbox(shape)
+    }
+    
+    return(extent_info)
+  }
+  
+  # ---- 2. COUNTRY (second priority) ----
+  if (!is.null(country)) {
     extent_info$type <- "admin"
     
-    # Try country first
     tryCatch({
       extent_info$mask <- rnaturalearth::ne_countries(
-        country = extent, 
+        country = country,
         returnclass = "sf",
         scale = "medium"
       )
     }, error = function(e) {
-      # Try continent
-      extent_info$mask <- rnaturalearth::ne_countries(
-        continent = extent,
-        returnclass = "sf",
-        scale = "medium"
-      )
+      cli::cli_abort("Paese non trovato: {.val {country}}.")
     })
     
-    if (is.null(extent_info$mask) || nrow(extent_info$mask) == 0) {
-      cli::cli_abort("Could not find country or continent: {.val {extent}}")
-    }
-    
-    if (buffer_km > 0) {
-      extent_buffered <- sf::st_buffer(extent_info$mask, dist = buffer_km * 1000)
+    if (buffer > 0) {
+      extent_buffered <- sf::st_buffer(extent_info$mask, dist = buffer * 1000)
       extent_info$bbox <- sf::st_bbox(extent_buffered)
     } else {
       extent_info$bbox <- sf::st_bbox(extent_info$mask)
     }
     
-  } else if (is.matrix(extent) || is.data.frame(extent)) {
-    # Points (for extraction)
-    extent_info$type <- "points"
-    extent_info$points <- sf::st_as_sf(
-      as.data.frame(extent), 
-      coords = c(1, 2), 
-      crs = 4326
-    )
-    
-    if (buffer_km > 0) {
-      extent_buffered <- sf::st_buffer(extent_info$points, dist = buffer_km * 1000)
-      extent_info$bbox <- sf::st_bbox(extent_buffered)
-    } else {
-      # Add small buffer for point extraction
-      extent_buffered <- sf::st_buffer(extent_info$points, dist = 10000) # 10km default
-      extent_info$bbox <- sf::st_bbox(extent_buffered)
-    }
-    
-  } else {
-    cli::cli_abort("Extent must be an sf object, country/continent name, or coordinate matrix")
+    return(extent_info)
   }
   
-  return(extent_info)
+  # ---- 3. CONTINENT (lowest priority) ----
+  if (!is.null(continent)) {
+    extent_info$type <- "admin"
+    
+    tryCatch({
+      extent_info$mask <- rnaturalearth::ne_countries(
+        continent = continent,
+        returnclass = "sf",
+        scale = "medium"
+      )
+    }, error = function(e) {
+      cli::cli_abort("Continente non trovato: {.val {continent}}.")
+    })
+    
+    if (buffer > 0) {
+      extent_buffered <- sf::st_buffer(extent_info$mask, dist = buffer * 1000)
+      extent_info$bbox <- sf::st_bbox(extent_buffered)
+    } else {
+      extent_info$bbox <- sf::st_bbox(extent_info$mask)
+    }
+    
+    return(extent_info)
+  }
+  
+  # ---- 4. Missing input fallback ----
+  cli::cli_abort("Devi specificare almeno uno tra: `shape`, `country`, `continent`.")
 }

@@ -1,4 +1,4 @@
-# R/var_get_topography.R
+# R/topography.R
 
 #' Scarica i dati topografici da EarthEnv
 #'
@@ -17,13 +17,21 @@
 #'
 #' @return Un vettore di caratteri contenente i percorsi completi dei file scaricati con successo.
 #' @noRd
-var_get_topography <- function(bbox, resolution, variables, temp_dir, topo_source, aggregation, ...) {
+topography <- function(x, variables, algorithm, topo_source) {
+  
+  grid <- x[[1]]
+  mask <- x[[2]]
+  res <- x[[3]]
   
   # Vettore per memorizzare i percorsi dei file scaricati
   downloaded_files <- character()
   
   # URL di base per tutti i dati topografici di EarthEnv
   base_url <- "https://data.earthenv.org/topography/"
+
+
+  #mask = sf::st_read(paste0(temp_dir, "/mask.shp"))
+  extent = terra::ext(grid)
   
   # --- 1. Validazione e Normalizzazione dell'Input ---
   
@@ -47,17 +55,17 @@ var_get_topography <- function(bbox, resolution, variables, temp_dir, topo_sourc
     # Se è GMTED, aggiunge l'aggregazione (es. "GMTEDmd")
     # Se è SRTM, è semplicemente "SRTM"
     source_filename_part <- if (source_upper == "GMTED") {
-      paste0(source_upper, aggregation)
+      paste0(source_upper, algorithm)
     } else {
       source_upper
     }
     
     # Assembla il nome del file completo seguendo lo schema:
-    # {variabile}_{risoluzione}{aggregazione}_{parte_fonte}.tif
+    # {variabile}_{risoluzione}{algoritmo}_{parte_fonte}.tif
     # Esempi:
     # - elevation_1KMmd_GMTEDmd.tif
     # - roughness_5KMsd_SRTM.tif
-    file_name <- paste0(var, "_", resolution, aggregation, "_", source_filename_part, ".tif")
+    file_name <- paste0(var, "_1KM", algorithm, "_", source_filename_part, ".tif")
     
     # Costruisce l'URL completo e il percorso di destinazione
     url <- paste0(base_url, file_name)
@@ -78,7 +86,14 @@ var_get_topography <- function(bbox, resolution, variables, temp_dir, topo_sourc
     }
   }
   
+  
+  processed_stack <- process_layers(
+    files = downloaded_files, target_grid = grid, mask = mask,
+    extent_type = extent_info$type, points = extent_info$points, res=res
+  )
+  
+  
   # Restituisce il vettore di percorsi ai file scaricati con successo.
   # La funzione `var_get` principale si occuperà di processare questi file.
-  return(downloaded_files)
+  return(processed_stack)
 }

@@ -1,7 +1,7 @@
 # R/process_layers.R
 #' Process downloaded layers
 #' @noRd
-process_layers <- function(files, target_grid, mask, extent_type, points) {
+process_layers <- function(files, target_grid, mask, extent_type, points, res) {
   processed_layers <- list()
   
   for (file in files) {
@@ -25,7 +25,9 @@ process_layers <- function(files, target_grid, mask, extent_type, points) {
         
         r_resampled <- terra::project(r_resampled, terra::crs(target_grid))
       }
-      
+      if (res > 1) {
+        r_resampled = terra::aggregate(r_resampled, res)
+      }
       } else {
     
     r_cropped <- terra::crop(r, target_grid)
@@ -40,6 +42,9 @@ process_layers <- function(files, target_grid, mask, extent_type, points) {
       r_resampled <- terra::mask(r_resampled, mask_vect)
     }
       }
+    if (res > 1) {
+      r_resampled = terra::aggregate(r_resampled, res)
+    }
     
     # Add to list with meaningful name
     layer_name <- extract_layer_name(basename(file))

@@ -39,207 +39,41 @@
 #'   variables = c("elevation", "flow_accumulation", "tmin_monthly_avg")
 #' )
 #' }
-var_get <- function(extent,
-                    source = "worldclim",
-                    resolution = "1km",
-                    variables = NULL,
-                    buffer_km = 0,
-                    output_file = NULL,
-                    gcm = NULL,
-                    ssp = NULL,
-                    time_period = NULL,
-                    ...) {
+var_get <- function(shape=NULL,
+                    country=NULL,
+                    continent=NULL,
+                    buffer=0,
+                    res = NULL,
+                    path = NULL
+                    ) {
   
-  # 1. Validazione input base (invariato)
-  if (is.null(variables)) {
-    cli::cli_abort("You must specify `variables`.")
-  }
-  if (length(source) == 1) {
-    if (!is.list(variables)) {
-      variables <- setNames(list(variables), source)
-    } else if (is.null(names(variables))) {
-      cli::cli_abort("If `variables` is a list, it must be named with source names.")
-    }
+  if (is.null(res) || !is.numeric(res) || res < 1 || res != as.integer(res)) {
+    stop("Risoluzione non valida. Per favore scegli un intero positivo maggiore di 1.")
   } else {
-    if (!is.list(variables) || is.null(names(variables))) {
-      cli::cli_abort("When multiple sources are specified, `variables` must be a named list.")
-    }
-    if (!all(source %in% names(variables))) {
-      cli::cli_abort("Each source in `source` must have a corresponding entry in `variables`.")
-    }
-  }
+    res = res
+  }  
   
   # 2. Processa extent e griglia target (invariato)
-  extent_info <- process_extent(extent, buffer_km)
-  numeric_resolution <- switch(resolution, "1km" = 30, "30s" = 30, "2.5m" = 150, "5m" = 300, "10m" = 600, NA)
-  target_grid <- create_target_grid(extent_info$bbox, resolution)
   
-  # 3. Crea dir temporanea (invariato)
-  temp_dir <- fs::path_temp("envar", format(Sys.time(), "%Y%m%d_%H%M%S"))
-  fs::dir_create(temp_dir)
-  on.exit(cleanup_temp(temp_dir), add = TRUE)
+  extent_info <- process_extent(
+    shape = shape,
+    country = country,
+    continent = continent,
+    buffer = buffer
+  )
   
-  results <- list()
+  target_grid <- create_target_grid(extent_info$bbox, res)
   
-  # 4. Cicla sulle source
-  for (src in source) {
-    cli::cli_h2("Processing source: {.val {src}}")
-    cli::cli_progress_step("Downloading {.val {src}} data...")
-    
-    extra_args <- list(...)
-    
-    raw_files <- switch(tolower(src),
-                        "worldclim" = var_get_worldclim(
-                          bbox = extent_info$bbox, resolution = resolution, 
-                          variables = variables[[src]], temp_dir = temp_dir
-                        ),
-                        "chelsa" = var_get_chelsa(
-                          bbox = extent_info$bbox, resolution = resolution,
-                          variables = variables[[src]], temp_dir = temp_dir,
-                          gcm = gcm, ssp = ssp, time_period = time_period,
-                          month = extra_args$month, year = extra_args$year
-                        ),
-                        "worldclim_future" = {
-                          if (is.na(numeric_resolution)) {
-                            cli::cli_abort("For 'worldclim_future', resolution must be one of '30s', '2.5m', '5m', '10m'.")
-                          }
-                          var_get_worldclimfuture(
-                            bbox = extent_info$bbox,
-                            resolution = numeric_resolution,
-                            variables = variables[[src]],
-                            temp_dir = temp_dir,
-                            gcm = gcm,
-                            ssp = ssp,
-                            time_period = time_period
-                          )
-                        },
-                        "chelsa_cmip5" = {
-                          var_get_chelsa_cmip5(
-                            bbox = extent_info$bbox,
-                            resolution = resolution,
-                            variables = variables[[src]],
-                            temp_dir = temp_dir,
-                            model = if (is.null(gcm)) "ACCESS1-3" else gcm,
-                            scenario = if (is.null(ssp)) "rcp85" else ssp,
-                            period = if (is.null(time_period)) "2061-2080" else time_period
-                          )
-                        },
-                        "freshwater" = var_get_freshwater(
-                          variables = variables[[src]],
-                          temp_dir = temp_dir,
-                          method = method
-                          # bbox e resolution non sono necessari per il download globale
-                        ),
-                        "chelsa_bioclimplus" = var_get_chelsa_bioclimplus(
-                          bbox = extent_info$bbox, resolution = resolution,
-                          variables = variables[[src]], temp_dir = temp_dir
-                        ),
-                        "topography" = {
-                          # Estrai argomenti specifici per la topografia da '...' o usa default
-                          topo_source <- if (is.null(extra_args$topo_source)) "GMTED" else extra_args$topo_source
-                          aggregation <- if (is.null(extra_args$aggregation)) "md" else extra_args$aggregation
-                          
-                          # Chiama la funzione helper con i nuovi argomenti
-                          var_get_topography(
-                            bbox = extent_info$bbox,
-                            resolution = resolution, # `resolution` è un argomento standard di var_get
-                            variables = variables[[src]],
-                            temp_dir = temp_dir,
-                            topo_source = topo_source,
-                            aggregation = aggregation
-                          )
-                        },
-                        "esa_landcover" = var_get_esa_landcover(
-                          bbox = extent_info$bbox, resolution = resolution,
-                          variables = variables[[src]], temp_dir = temp_dir,
-                          year = if (is.null(extra_args$year)) 2020 else extra_args$year
-                        ),
-                        "cloud" = var_get_cloud(
-                          bbox = extent_info$bbox,
-                          resolution = resolution,
-                          variables = variables[[src]],
-                          temp_dir = temp_dir
-                        ),
-                        "consensus_landcover" = var_get_consensus_landcover( 
-                          bbox = extent_info$bbox, 
-                          resolution = resolution, 
-                          variables = variables[[src]], 
-                          temp_dir = temp_dir, 
-                          discover = if (is.null(extra_args$discover)) FALSE else extra_args$discover 
-                        ),
-                        "spectre" = var_get_spectre(
-                          bbox = extent_info$bbox,
-                          resolution = resolution,
-                          variables = variables[[src]],
-                          temp_dir = temp_dir
-                        ),
-                        "heterogeneity" = var_get_heterogeneity(
-                          bbox = extent_info$bbox,
-                          resolution = resolution,
-                          variables = variables[[src]],
-                          indices = if (is.null(list(...)$indices)) "ndvi" else list(...)$indices,
-                          temp_dir = temp_dir
-                        ),
-                        "hwsd" = var_get_hwsd(
-                          bbox = extent_info$bbox,
-                          resolution = resolution,
-                          variables = variables[[src]],
-                          temp_dir = temp_dir
-                        ),
-                        "aridity" = var_get_aridity(
-                          bbox = extent_info$bbox,
-                          resolution = resolution,
-                          variables = variables[[src]],
-                          temp_dir = temp_dir,
-                          month = if (is.null(extra_args$month)) NULL else extra_args$month
-                        ),
-                        "wind" = var_get_wind(
-                          bbox = extent_info$bbox,
-                          resolution = resolution,
-                          variables = variables[[src]],
-                          height = if (is.null(list(...)$height)) "50" else list(...)$height,
-                          temp_dir = temp_dir
-                        ),
-                        "ndvi" = var_get_ndvi(
-                          bbox = extent_info$bbox,
-                          resolution = resolution,
-                          variables = variables[[src]],
-                          source = if (is.null(list(...)$ndvi_source)) "modis" else list(...)$ndvi_source,
-                          year = if (is.null(list(...)$year)) 2022 else list(...)$year,
-                          temp_dir = temp_dir
-                        ),
-                        cli::cli_abort("Unknown source: {.val {src}}")
-    )
-    
-    # Il resto della funzione rimane invariato
-    cli::cli_progress_step("Processing environmental layers...")
-    
-    processed_stack <- process_layers(
-      files = raw_files, target_grid = target_grid, mask = extent_info$mask,
-      extent_type = extent_info$type, points = extent_info$points
-    )
-    
-    if (!is.null(output_file)) {
-      if (length(source) == 1 && is.character(output_file)) {
-        out_path <- output_file
-      } else if (is.list(output_file) && !is.null(output_file[[src]])) {
-        out_path <- output_file[[src]]
-      } else {
-        out_path <- fs::path_ext_set(fs::path(temp_dir, paste0("output_", src)), ".tif")
-        cli::cli_alert_info("No output file provided for {.val {src}}. Saving temporarily to {.path {out_path}}")
-      }
-      cli::cli_progress_step("Saving to {.path {out_path}}...")
-      terra::writeRaster(processed_stack, out_path, overwrite = TRUE)
-    }
-    
-    results[[src]] <- processed_stack
-  }
+    # 3. Crea dir temporanea (invariato)
+  # temp_dir <- fs::path_temp("envar/grids")
+  # fs::dir_create(temp_dir)
+  # terra::values(target_grid) <- NA
   
-  cli::cli_alert_success("Successfully processed {.val {length(unlist(results))}} layers from {.val {length(results)}} source(s).")
+  # terra::writeRaster(target_grid, paste0(temp_dir, "/grid.tif"), overwrite = TRUE)
+  # sf::st_write(extent_info$mask, paste0(temp_dir, "/mask.shp"), append = FALSE)
   
-  if (length(results) == 1) {
-    return(results[[1]])
-  } else {
-    return(results)
-  }
+  #vecchio da modificare:
+  # cli::cli_alert_success("Successfully processed {.val {length(unlist(results))}} layers from {.val {length(results)}} source(s).")
+ return(list(target_grid, extent_info$mask, res))
+   
 }
