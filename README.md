@@ -48,19 +48,23 @@
 - **Flessibile**: Supporto per molteplici formati spaziali (sf, terra, coordinate)
 - **Integrazione Multi-sorgente**: Combina variabili da diverse fonti senza soluzione di continuità
 
-## Installazione
+## Installation
 
-### Da CRAN (quando disponibile)
-
+### From CRAN 
 ```r
 install.packages("envar")
 ```
 
-### Versione di sviluppo da GitHub
+### Development version from GitHub (recommended)
 
 ```r
 # install.packages("remotes")
-remotes::install_github("yourusername/envar")
+remotes::install_github("Andreacerofolini/envar")
+
+#alternatively
+# install.packages("devtools")
+# devtools::install_github("Andreacerofolini/envar")
+
 ```
 
 ## Guida Rapida
