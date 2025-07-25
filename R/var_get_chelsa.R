@@ -1,8 +1,7 @@
 # R/var_get_chelsa.R
 #' Download CHELSA data
 #' @noRd
-var_get_chelsa <- function(bbox, resolution, variables, temp_dir, 
-                           gcm = NULL, ssp = NULL, time_period = NULL, 
+var_get_chelsa <- function(variables, gcm = NULL, ssp = NULL, time_period = NULL, 
                            month = NULL, year = NULL, ...) {
   base_url <- "https://os.zhdk.cloud.switch.ch/chelsav2/GLOBAL"
   downloaded_files <- character()

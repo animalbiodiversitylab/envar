@@ -547,10 +547,10 @@ if __name__ == "__main__":
     # oppure cambia csv_file con il nome del tuo file CSV
     
     # Genera l'albero HTML
-    generate_html_tree(csv_file, "navigatore_variabili.html")
+    generate_html_tree(csv_file, "navigator.html")
     
     print("\n🌳 Generazione completata!")
-    print("📁 Apri 'navigatore_variabili.html' nel browser per vedere l'albero")
+    print("📁 Apri 'navigator.html' nel browser per vedere l'albero")
     print("🔍 Usa la barra di ricerca per trovare rapidamente le variabili")
     print("📤 Carica il file HTML su GitHub per condividerlo con altri utenti")
     print("\n💡 Suggerimenti:")
