@@ -1,10 +1,12 @@
 # R/process_layers.R
 #' Process downloaded layers
 #' @noRd
-process_layers <- function(files, target_grid, mask, extent_type, points, res) {
+process_layers <- function(files, target_grid, mask,res) {
+ 
   processed_layers <- list()
   
   for (file in files) {
+    
     cli::cli_progress_step("Processing {.file {basename(file)}}")
     
     # Read raster
@@ -17,53 +19,52 @@ process_layers <- function(files, target_grid, mask, extent_type, points, res) {
       r_cropped <- terra::crop(r, target_grid_1)
       r_resampled <- terra::resample(r_cropped, target_grid, method = "bilinear")
       
-      # 3. Apply mask if polygon/admin
-      if (extent_type %in% c("polygon", "admin") && !is.null(mask)) {
-        mask_1 <- sf::st_transform(mask, terra::crs(r))
-        mask_vect_1 <- terra::vect(mask_1)
-        r_resampled <- terra::mask(r_resampled, mask_vect_1)
+      # 3. Apply mask 
+      mask_1 <- sf::st_transform(mask, terra::crs(r))
+      mask_vect_1 <- terra::vect(mask_1)
+      r_resampled <- terra::mask(r_resampled, mask_vect_1)
         
-        r_resampled <- terra::project(r_resampled, terra::crs(target_grid))
-      }
+      r_resampled <- terra::project(r_resampled, terra::crs(target_grid))
+        
       if (res > 1) {
         r_resampled = terra::aggregate(r_resampled, res)
       }
+      
+      
       } else {
     
     r_cropped <- terra::crop(r, target_grid)
     
     # 2. Resample to target grid
     r_resampled <- terra::resample(r_cropped, target_grid, method = "bilinear")
+      
+    mask_vect <- terra::vect(mask)
+    r_resampled <- terra::mask(r_resampled, mask_vect)
     
-    
-    # 3. Apply mask if polygon/admin
-    if (extent_type %in% c("polygon", "admin") && !is.null(mask)) {
-      mask_vect <- terra::vect(mask)
-      r_resampled <- terra::mask(r_resampled, mask_vect)
-    }
-      }
     if (res > 1) {
       r_resampled = terra::aggregate(r_resampled, res)
     }
+    
+      }
+
     
     # Add to list with meaningful name
     layer_name <- extract_layer_name(basename(file))
     names(r_resampled) <- layer_name
     processed_layers[[layer_name]] <- r_resampled
+    
   }
   
-  # Create stack
+  # LAST STEP: after the loop, stack and return the stack
+
   if (length(processed_layers) > 0) {
+    
     stack <- terra::rast(processed_layers)
-    
-    # If points, extract values
-    if (extent_type == "points" && !is.null(points)) {
-      values <- exactextractr::exact_extract(stack, points)
-      return(values)
-    }
-    
     return(stack)
+    
   } else {
+    
     cli::cli_abort("No layers were successfully processed")
+    
   }
 }
