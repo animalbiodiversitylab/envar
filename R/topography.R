@@ -6,18 +6,14 @@
 #' in base a una combinazione di variabili, risoluzione, aggregazione e fonte.
 #' Utilizza la funzione di supporto `download_file` per gestire il download.
 #'
-#' @param bbox Bounding box (vettore numerico). Non utilizzato per la costruzione dell'URL
-#'   in questo caso, ma mantenuto per coerenza con altre funzioni `var_get_*`.
-#' @param resolution Risoluzione spaziale (es. "1KM", "5KM").
-#' @param variables Un vettore di caratteri delle variabili da scaricare (es. "elevation", "tpi").
-#' @param temp_dir Directory temporanea dove salvare i file scaricati.
+#' @param vars Un vettore di caratteri delle variabili da scaricare (es. "elevation", "tpi").
 #' @param topo_source La fonte dei dati topografici. Deve essere "GMTED" o "SRTM".
-#' @param aggregation Il metodo di aggregazione (es. "md", "mn", "sd").
+#' @param algorithm Il metodo di aggregazione (es. "md", "mn", "sd").
 #' @param ... Argomenti aggiuntivi (attualmente non utilizzati).
 #'
 #' @return Un vettore di caratteri contenente i percorsi completi dei file scaricati con successo.
 #' @noRd
-topography <- function(x, variables, algorithm, topo_source) {
+topography <- function(x, vars, algorithm, topo_source) {
 
   par_list = get_par(x)
   
@@ -52,7 +48,7 @@ topography <- function(x, variables, algorithm, topo_source) {
   
   # --- 2. Loop sulle Variabili e Download ---
   
-  for (var in variables) {
+  for (var in vars) {
     if (var == "elevation") {
       if (algorithm == "max") {
         algorithm = "ma"
