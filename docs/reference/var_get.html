@@ -160,7 +160,7 @@ retrieved variables are perfectly aligned and stacked.</p>
 <span class="r-in"><span><span class="co"># ----------------------------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="co"># Initialize a workflow for Italy at 1km resolution</span></span></span>
 <span class="r-in"><span><span class="co"># and pipe it into a download function</span></span></span>
-<span class="r-in"><span><span class="va">data_stack</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, res <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="va">data_stack</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, res <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">%&gt;%</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="topography.html">topography</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="st">"elevation"</span>, topo_source <span class="op">=</span> <span class="st">"GMTED"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># ----------------------------------------------------------------</span></span></span>
@@ -171,7 +171,7 @@ retrieved variables are perfectly aligned and stacked.</p>
 <span class="r-in"><span><span class="va">my_points_sf</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">my_points</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lon"</span>, <span class="st">"lat"</span><span class="op">)</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Initialize extraction workflow (res is ignored for pure point extraction)</span></span></span>
-<span class="r-in"><span><span class="va">point_data</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>shape <span class="op">=</span> <span class="va">my_points_sf</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="va">point_data</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>shape <span class="op">=</span> <span class="va">my_points_sf</span><span class="op">)</span> <span class="op">%&gt;%</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="worldclim.html">worldclim</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="st">"bio"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># ----------------------------------------------------------------</span></span></span>
@@ -179,14 +179,14 @@ retrieved variables are perfectly aligned and stacked.</p>
 <span class="r-in"><span><span class="co"># ----------------------------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="co"># Create a 50km buffer around points to get environmental rasters</span></span></span>
 <span class="r-in"><span><span class="co"># for the surrounding area (e.g., for pseudo-absence generation)</span></span></span>
-<span class="r-in"><span><span class="va">background_stack</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>shape <span class="op">=</span> <span class="va">my_points_sf</span>, buffer <span class="op">=</span> <span class="fl">50</span>, res <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="va">background_stack</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>shape <span class="op">=</span> <span class="va">my_points_sf</span>, buffer <span class="op">=</span> <span class="fl">50</span>, res <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">%&gt;%</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="st">"prec"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># ----------------------------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="co"># Example 4: Reprojection</span></span></span>
 <span class="r-in"><span><span class="co"># ----------------------------------------------------------------</span></span></span>
 <span class="r-in"><span><span class="co"># Get data for France, but project everything to Lambert-93 (EPSG:2154)</span></span></span>
-<span class="r-in"><span><span class="va">france_data</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>country <span class="op">=</span> <span class="st">"France"</span>, res <span class="op">=</span> <span class="fl">1</span>, crs <span class="op">=</span> <span class="fl">2154</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="va">france_data</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>country <span class="op">=</span> <span class="st">"France"</span>, res <span class="op">=</span> <span class="fl">1</span>, crs <span class="op">=</span> <span class="fl">2154</span><span class="op">)</span> <span class="op">%&gt;%</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="accessibility.html">accessibility</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="st">"cities1"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>

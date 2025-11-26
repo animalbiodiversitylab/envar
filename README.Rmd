@@ -36,7 +36,7 @@ Please cite the _envar R_ package when using it in publications, and the citatio
 
 Here we provide a short example showing how the _envar R_ package can be used to retrieve and process environmental variables for a specific use case. To begin with, we will load the required packages.
 
-```{r, eval = FALSE}
+```{r}
 # load packages
 library(envar)
 
@@ -48,7 +48,7 @@ We will get a set of variables already cropped to the desired area of study,
 and presented as a rast file with multiple layers corresponding to the different
 variables. For instance, we can visualize the first layer produced (tree cover)
 as follows. 
-```{r, eval = FALSE}
+```{r}
 # visualize a variable to have a confirmation that everything worked
 plot(processed_vars[[1]])
 ```
