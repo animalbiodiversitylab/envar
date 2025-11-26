@@ -1,3 +1,3 @@
-# envar 0.1.0
+# envar 0.0.1
 
-* Initial CRAN submission.
+* Initial creation of the package.

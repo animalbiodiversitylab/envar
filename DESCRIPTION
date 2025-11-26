@@ -1,10 +1,16 @@
 Package: envar
 Type: Package
-Title: Download and Process Environmental Variables for SDM
-Version: 0.1.0
-Authors@R: person("Andrea", "Simoncini", email = "your.email@example.com", role = c("aut", "cre"))
-Description: Download environmental variables from databases like CHELSA and WorldClim
-    and integrate them into Species Distribution Modeling workflows.
+Title: Download environmental variables in R
+Version: 0.0.1
+Authors@R: 
+    c(person(given = "Andrea", family = "Simoncini", role = c("aut", "cre"), email = "simonciniandre@gmail.com",comment = c(ORCID = "0000-0002-9856-6111")),
+      person(given = "Michele", family = "Bertoncini", role = "aut", comment = c(ORCID = "0000-0002-1866-0045")),
+      person(given = "Andrea", family = "Cerofolini", role = "aut", comment = c(ORCID = "0009-0009-4439-3014")),
+      person(given = "Andrea", family = "Dalpasso", role="aut", comment = c(ORCID = "0000-0003-1471-789X")),
+      person(given = "Mattia", family = "Falaschi", role="aut", comment = c(ORCID = "0000-0002-4511-4816")),
+      person(given = "Gentile Francesco", family = "Ficetola", role = "aut", comment = c(ORCID = "0000-0003-3414-5155")),
+      person(given = "Elia", family = "Lo Parrino", role ="aut", comment = c(ORCID = "0000-0001-9619-9568")))
+Description: Download environmental variables in R.
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
@@ -18,4 +24,9 @@ Imports:
     cli,
     fs,
     utils
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
+URL: https://envar.net

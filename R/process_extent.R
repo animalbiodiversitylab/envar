@@ -15,13 +15,13 @@ process_extent <- function(shape = NULL, country = NULL, continent = NULL, buffe
   active_sources <- names(Filter(identity, input_sources))
   
   if (length(active_sources) > 1) {
-    cli::cli_alert_warning("Hai specificato più sorgenti di extent: {paste(active_sources, collapse = ', ')}. Verrà usata la seguente priorità: shape > country > continent.")
+    cli::cli_alert_warning("You specified more extent sources: {paste(active_sources, collapse = ', ')}. Verrà usata la seguente priorità: shape > country > continent.")
   }
   
   # ---- 1. SHAPE (highest priority) ----
   if (!is.null(shape)) {
     if (!inherits(shape, "sf") && !inherits(shape, "sfc")) {
-      cli::cli_abort("Il parametro `shape` deve essere un oggetto `sf` o `sfc`.")
+      cli::cli_abort("The `shape` parameter must be an object of type `sf` or `sfc`.")
     }
     
     if ((sf::st_geometry_type(shape) =="POINT")[[1]]) {
@@ -46,7 +46,7 @@ process_extent <- function(shape = NULL, country = NULL, continent = NULL, buffe
     extent_info$type <- "polygon"
     extent_info$mask <- shape
     
-    if (buffer > 0) {
+    if (buffer != 0) {
       extent_buffered <- sf::st_buffer(shape, dist = buffer * 1000)
       extent_info$bbox <- sf::st_bbox(extent_buffered)
     } else {

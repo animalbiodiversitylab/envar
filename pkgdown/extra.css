@@ -1,0 +1,27 @@
+.r-plt img {
+  background: #FFFFFF;
+}
+
+.page-header {
+  border-bottom: none !important;
+  padding-bottom: 0px !important;
+  min-height: 0px !important;
+}
+
+#download-environmental-variables-in-r {
+  margin-bottom: 30px;
+  font-style: italic;
+}
+
+#envar {
+  margin-top: 10px;
+}
+
+#rnvar- {
+  margin-top: 10px;
+}
+
+.page-header img {
+  height: 153px !important; 
+  width: auto !important;  
+}

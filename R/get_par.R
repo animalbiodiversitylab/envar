@@ -7,8 +7,10 @@ get_par <- function(x){
       grid <- x[[1]]
       mask <- x[[2]]
       res <- x[[3]]
+      crs <- as.character(x$'crs')
       
-      return (list(grid = grid, mask = mask, res = res))
+      
+      return (list(grid = grid, mask = mask, res = res, crs=crs))
 
   }
   

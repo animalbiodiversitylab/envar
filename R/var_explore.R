@@ -14,6 +14,7 @@
 #' 
 #' # Show variables for WorldClim
 #' var_explore(source = "worldclim", what = "variables")
+
 var_explore <- function(source = NULL, what = "sources", error_context = NULL) {
   
   if (!is.null(error_context)) {

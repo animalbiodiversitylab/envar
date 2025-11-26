@@ -1,0 +1,46 @@
+---
+output:
+  rmarkdown::github_document:
+    html_preview: no
+---
+
+<!--- README.md is generated from README.Rmd. Please edit that file -->
+
+# envar <img src="man/figures/logo.png" align="right" height="153" alt="" />
+
+## Download environmental variables in R
+
+The _envar R_ package streamlines the retrieval and processing of environmental variables for ecological modelling. Selecting a proper set of environmental variables is a cornerstone of any ecological study but is often relegated to a simplistic use of a few widespread variables. This package facilitates the careful selection of a heterogeneous set of proximal drivers, allowing users to integrate data from various sources into R workflows easily.
+
+## Installation
+
+#### Developmental version
+
+The latest development version can be installed to gain access to new functionality that is not yet present in the latest official version. 
+
+* To install the latest development version from [GitHub](https://github.com/prioritizr/prioritizr), use the following _R_ code.
+
+    ```{r, eval = FALSE}
+    if (!require(remotes)) install.packages("remotes")
+    remotes::install_github("prioritizr/prioritizr")
+    ```
+
+## Citation
+
+Please cite the _envar R_ package when using it in publications, and the citation(s) associated with each source retrieved. The citations specific to each source are printed in the console during the download process. To cite the package, please use:
+
+> Simoncini A, Bertoncini M, Cerofolini A, Dalpasso A, Falaschi M, Lo Parrino E (2025) envar: an R package to streamline the retrieval and processing of environmental variables. _biorXive preprint_.
+
+
+## Usage
+
+Here we provide a short example showing how the _envar R_ package can be used to retrieve and process environmental variables for a specific use case. To begin with, we will load the required packages.
+
+```{r, eval = FALSE}
+# load packages
+library(prioritizr)
+library(prioritizrdata)
+library(terra)
+```
+
+We will get

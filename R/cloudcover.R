@@ -1,73 +1,78 @@
-# R/topography.R
+# R/cloudcover.R
 
-#' Download and process EarthEnv Topography layers
+#' Download and process EarthEnv Global Cloud Cover layers
 #'
-#' `topography()` downloads, processes, and extracts variables from the
-#' **EarthEnv Topography** dataset. This dataset provides global, cross-scale
-#' topographic variables suitable for biodiversity and ecosystem modeling.
+#' `cloudcover()` downloads, processes, and extracts variables from the
+#' **EarthEnv Global Cloud Cover** dataset. Each variable corresponds to a 
+#' global Cloud-Optimized GeoTIFF (COG) representing cloud cover dynamics.
 #'
 #' The function allows users to input either:
-#' - **canonical EarthEnv variable names**, e.g. `"elevation"`, `"roughness"`
-#' - **human-readable names**, e.g. `"dem"`, `"slope"`, `"terrain ruggedness"`, etc.
+#' - **canonical EarthEnv filenames**, e.g. `"MODCF_meanannual"`
+#' - **human-readable names**, e.g. `"mean annual"`, `"cloud forest"`,
+#'   `"seasonality concentration"`, `"january"`, etc.
 #'
 #' It automatically:
-#' - downloads the selected files based on the requested source and algorithm,
+#' - downloads the selected files,
 #' - crops/resamples/masks to match a user-provided `SpatRaster`, **or**
 #' - extracts values when `x` is point data.
 #'
-#' ## Citation
-#' If you use EarthEnv Topography data, please cite:
 #'
-#' **Amatulli, G., Domisch, S., Tuanmu, M.-N., Parmentier, B., Ranipeta, A.,**
-#' **Malczyk, J., and Jetz, W. (2018).**
-#' *A suite of global, cross-scale topographic variables for environmental and biodiversity modeling.*
-#' Scientific Data 5: 180040.
-#' https://doi.org/10.1038/sdata.2018.40
+#' ## Citation
+#' If you use this data, please cite:
+#'
+#' **Wilson AM, Jetz W (2016)** #' *Remotely Sensed High-Resolution Global Cloud Dynamics for Predicting 
+#' Ecosystem and Biodiversity Distributions.* PLoS Biol 14(3): e1002415. 
+#' https://doi.org/10.1371/journal.pbio.1002415
 #'
 #'
 #' ## Available variables
 #'
-#' | Human-readable name  | Canonical variable code |
-#' |----------------------|-------------------------|
-#' | Elevation (DEM)      | elevation               |
-#' | Slope                | slope                   |
-#' | Aspect               | aspect                  |
-#' | Roughness            | roughness               |
-#' | TRI                  | tri                     |
-#' | TPI                  | tpi                     |
-#' | VRM                  | vrm                     |
-#' | Profile Curvature    | pcurv                   |
-#' | Tangential Curvature | tcurv                   |
-#' | Eastness             | eastness                |
-#' | Northness            | northness               |
+#' | Human-readable name          | Canonical variable code              |
+#' |------------------------------|--------------------------------------|
+#' | cloud forest prediction      | MODCF_CloudForestPrediction          |
+#' | inter-annual variability     | MODCF_interannualSD                  |
+#' | intra-annual variability     | MODCF_intraannualSD                  |
+#' | mean annual                  | MODCF_meanannual                     |
+#' | january mean (jan)           | MODCF_monthlymean_01                 |
+#' | february mean (feb)          | MODCF_monthlymean_02                 |
+#' | march mean (mar)             | MODCF_monthlymean_03                 |
+#' | april mean (apr)             | MODCF_monthlymean_04                 |
+#' | may mean                     | MODCF_monthlymean_05                 |
+#' | june mean (jun)              | MODCF_monthlymean_06                 |
+#' | july mean (jul)              | MODCF_monthlymean_07                 |
+#' | august mean (aug)            | MODCF_monthlymean_08                 |
+#' | september mean (sep)         | MODCF_monthlymean_09                 |
+#' | october mean (oct)           | MODCF_monthlymean_10                 |
+#' | november mean (nov)          | MODCF_monthlymean_11                 |
+#' | december mean (dec)          | MODCF_monthlymean_12                 |
+#' | seasonality concentration    | MODCF_seasonality_concentration      |
+#' | seasonality rgb              | MODCF_seasonality_rgb                |
+#' | seasonality theta            | MODCF_seasonality_theta              |
+#' | seasonality visual (visct)   | MODCF_seasonality_visct              |
+#' | spatial variability (1 deg)  | MODCF_spatialSD_1deg                 |
+#'
 #'
 #' @param x A `SpatRaster`, `SpatVector`, or `sf` object defining the area or
 #'          locations for extraction.
 #' @param vars Character vector of variables, supplied as canonical codes or
 #'             friendly names.
-#' @param algorithm Character. The aggregation method/algorithm to use. 
-#'        Common options: `"md"` (median), `"mn"` (mean), `"min"`, `"max"`, `"sd"`.
-#'        Default is `"md"`.
-#' @param topo_source Character. The source of the data. Must be `"GMTED"` 
-#'        (Global Multi-resolution Terrain Elevation Data) or `"SRTM"` 
-#'        (Shuttle Radar Topography Mission). Default is `"GMTED"`.
 #' @param ... Reserved for future use.
 #'
 #' @return
-#' - If `x` is a raster: a `SpatRaster` stack of processed topography layers.
+#' - If `x` is a raster: a `SpatRaster` stack of processed cloud cover layers.  
 #' - If `x` contains points: a `data.frame` of extracted values.
 #'
 #' @export
 
-topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
+cloudcover <- function(x, vars, ...) {
   
   # --------------------------------------------------------------------
   # Citation displayed on execution
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
-    "Using EarthEnv Topography layers.\n",
-    "Citation: Amatulli, G., et al. (2018). A suite of global, cross-scale topographic variables for environmental and biodiversity modeling. Scientific Data.\n",
-    "DOI: {.url https://doi.org/10.1038/sdata.2018.40}\n",
+    "Using EarthEnv Global Cloud Cover layers.\n",
+    "Citation: Wilson AM, Jetz W (2016). PLoS Biol 14(3): e1002415.\n",
+    "DOI: {.url https://doi.org/10.1371/journal.pbio.1002415}\n",
     "Note: Please cite original sources of primary datasets where appropriate."
   ))
   
@@ -89,30 +94,35 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
   extracted_df <- NULL
   
   # --------------------------------------------------------------------
-  # Validate additional arguments
-  # --------------------------------------------------------------------
-  source_upper <- toupper(topo_source)
-  valid_sources <- c("GMTED", "SRTM")
-  
-  if (!source_upper %in% valid_sources) {
-    cli::cli_abort("The parameter {.arg topo_source} must be one of: {.val {valid_sources}}")
-  }
-  
-  # --------------------------------------------------------------------
   # Friendly-name -> canonical code mapping
   # --------------------------------------------------------------------
-  topo_lookup <- list(
-    "elevation" = c("elevation", "dem", "height", "alt", "altitude"),
-    "slope"     = c("slope"),
-    "aspect"    = c("aspect"),
-    "roughness" = c("roughness", "rough"),
-    "tri"       = c("tri", "terrain ruggedness index", "ruggedness"),
-    "tpi"       = c("tpi", "topographic position index", "position"),
-    "vrm"       = c("vrm", "vector ruggedness measure"),
-    "pcurv"     = c("pcurv", "profile curvature", "profile curve"),
-    "tcurv"     = c("tcurv", "tangential curvature", "tangential curve"),
-    "eastness"  = c("eastness", "east"),
-    "northness" = c("northness", "north")
+  cloud_lookup <- list(
+    # Metrics
+    "MODCF_CloudForestPrediction"     = c("cloud forest prediction", "cloud forest", "cfp"),
+    "MODCF_interannualSD"             = c("inter-annual variability", "interannual sd", "interannual variability"),
+    "MODCF_intraannualSD"             = c("intra-annual variability", "intraannual sd", "intraannual variability"),
+    "MODCF_meanannual"                = c("mean annual", "annual mean", "annual"),
+    "MODCF_spatialSD_1deg"            = c("spatial variability", "spatial sd", "spatial sd 1deg"),
+    
+    # Seasonality
+    "MODCF_seasonality_concentration" = c("seasonality concentration", "concentration"),
+    "MODCF_seasonality_rgb"           = c("seasonality rgb", "rgb"),
+    "MODCF_seasonality_theta"         = c("seasonality theta", "theta"),
+    "MODCF_seasonality_visct"         = c("seasonality single band", "seasonality visct", "seasonality color"),
+    
+    # Monthly means
+    "MODCF_monthlymean_01"            = c("january mean", "january", "jan"),
+    "MODCF_monthlymean_02"            = c("february mean", "february", "feb"),
+    "MODCF_monthlymean_03"            = c("march mean", "march", "mar"),
+    "MODCF_monthlymean_04"            = c("april mean", "april", "apr"),
+    "MODCF_monthlymean_05"            = c("may mean", "may"),
+    "MODCF_monthlymean_06"            = c("june mean", "june", "jun"),
+    "MODCF_monthlymean_07"            = c("july mean", "july", "jul"),
+    "MODCF_monthlymean_08"            = c("august mean", "august", "aug"),
+    "MODCF_monthlymean_09"            = c("september mean", "september", "sep"),
+    "MODCF_monthlymean_10"            = c("october mean", "october", "oct"),
+    "MODCF_monthlymean_11"            = c("november mean", "november", "nov"),
+    "MODCF_monthlymean_12"            = c("december mean", "december", "dec")
   )
   
   # Normalizer
@@ -125,8 +135,8 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
   
   # Build synonym -> canonical map
   syn2canon <- list()
-  for (canon in names(topo_lookup)) {
-    for (syn in topo_lookup[[canon]]) {
+  for (canon in names(cloud_lookup)) {
+    for (syn in cloud_lookup[[canon]]) {
       syn2canon[[normalize_string(syn)]] <- canon
     }
     syn2canon[[normalize_string(canon)]] <- canon
@@ -146,7 +156,7 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
   
   if (length(unmapped) > 0) {
     cli::cli_abort(c(
-      "Unknown Topography variables:",
+      "Unknown Cloud Cover variables:",
       "x" = "{.val {unmapped}}"
     ))
   }
@@ -156,7 +166,7 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
   # Helper: Download, process, and clean up a single file
   # --------------------------------------------------------------------
   handle_file <- function(url, dest_file, var) {
-    temp_dir <- fs::path_temp("envar/grids")
+    temp_dir <- fs::path_temp("envar/cloud")
     fs::dir_create(temp_dir)
     
     cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {var}}...")
@@ -225,32 +235,14 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
   # --------------------------------------------------------------------
   # Loop through requested variables
   # --------------------------------------------------------------------
-  base_url <- "https://data.earthenv.org/topography"
+  base_url <- "https://data.earthenv.org/cloud"
   
-  cli::cli_alert_info("Starting the download of EarthEnv Topography data...")
+  cli::cli_alert_info("Processing EarthEnv Cloud data...")
   
   for (canon in requested_codes) {
-    
-    # Apply logic to determine filename parts
-    current_alg <- algorithm
-    
-    # Special case for elevation max algorithm
-    if (canon == "elevation" && algorithm == "max") {
-      current_alg <- "ma"
-    }
-    
-    # Logic for source part of filename
-    source_filename_part <- if (source_upper == "GMTED") {
-      paste0(source_upper, current_alg)
-    } else {
-      source_upper
-    }
-    
-    # Construct filename: {var}_1KM{alg}_{source_part}.tif
-    file_name <- paste0(canon, "_1KM", current_alg, "_", source_filename_part, ".tif")
-    
-    url <- file.path(base_url, file_name)
-    dest <- file.path(fs::path_temp("envar/grids"), file_name)
+    filename <- paste0(canon, ".tif")
+    url <- file.path(base_url, filename)
+    dest <- file.path(fs::path_temp("envar/cloud"), filename)
     
     handle_file(url, dest, canon)
   }

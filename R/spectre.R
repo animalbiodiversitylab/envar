@@ -1,73 +1,84 @@
-# R/topography.R
+# R/spectre.R
 
-#' Download and process EarthEnv Topography layers
+#' Download and process SPECTRE environmental threat layers
 #'
-#' `topography()` downloads, processes, and extracts variables from the
-#' **EarthEnv Topography** dataset. This dataset provides global, cross-scale
-#' topographic variables suitable for biodiversity and ecosystem modeling.
+#' `spectre()` downloads, processes, and extracts variables from the
+#' **SPECTRE – Spatially Explicit ECosysTem ThREats** dataset.  
+#' Each variable corresponds to a global Cloud-Optimized GeoTIFF (COG)
+#' representing a different anthropogenic or climatic threat.
 #'
 #' The function allows users to input either:
-#' - **canonical EarthEnv variable names**, e.g. `"elevation"`, `"roughness"`
-#' - **human-readable names**, e.g. `"dem"`, `"slope"`, `"terrain ruggedness"`, etc.
+#' - **canonical SPECTRE filenames**, e.g. `"1_1_MINING_AREA_cog"`
+#' - **human-readable names**, e.g. `"mining area"`, `"forest loss"`,
+#'   `"light at night"`, `"aridity trend"`, etc.
 #'
 #' It automatically:
-#' - downloads the selected files based on the requested source and algorithm,
+#' - downloads the selected files,
 #' - crops/resamples/masks to match a user-provided `SpatRaster`, **or**
 #' - extracts values when `x` is point data.
 #'
-#' ## Citation
-#' If you use EarthEnv Topography data, please cite:
 #'
-#' **Amatulli, G., Domisch, S., Tuanmu, M.-N., Parmentier, B., Ranipeta, A.,**
-#' **Malczyk, J., and Jetz, W. (2018).**
-#' *A suite of global, cross-scale topographic variables for environmental and biodiversity modeling.*
-#' Scientific Data 5: 180040.
-#' https://doi.org/10.1038/sdata.2018.40
+#' ## Citation
+#' If you use SPECTRE data, please cite:
+#'
+#' **Branco, V. V., Capinha, C., Rocha, J., Correia, L. & Cardoso, P. (2024).**  
+#' *SPECTRE: standardized global spatial data on terrestrial SPecies and  
+#' ECosystems ThREats.* Global Ecology and Biogeography, **34(1)**, e13949.  
+#' https://doi.org/10.1111/geb.13949
+#'
+#' _Note: Many SPECTRE variables are derived from external primary datasets.  
+#' Users should consult and cite the original sources listed in the SPECTRE
+#' supplementary materials._
 #'
 #'
 #' ## Available variables
 #'
-#' | Human-readable name  | Canonical variable code |
-#' |----------------------|-------------------------|
-#' | Elevation (DEM)      | elevation               |
-#' | Slope                | slope                   |
-#' | Aspect               | aspect                  |
-#' | Roughness            | roughness               |
-#' | TRI                  | tri                     |
-#' | TPI                  | tpi                     |
-#' | VRM                  | vrm                     |
-#' | Profile Curvature    | pcurv                   |
-#' | Tangential Curvature | tcurv                   |
-#' | Eastness             | eastness                |
-#' | Northness            | northness               |
+#' | Human-readable name          | Canonical variable code              |
+#' |------------------------------|--------------------------------------|
+#' | mining area                  | 1_1_MINING_AREA_cog                  |
+#' | hazard potential             | 1_2_HAZARD_POTENTIAL_cog             |
+#' | human density                | 1_3_HUMAN_DENSITY_cog                |
+#' | built area                   | 1_4_BUILT_AREA_cog                   |
+#' | road density                 | 1_5_ROAD_DENSITY_cog                 |
+#' | human footprint              | 1_6_FOOTPRINT_PERC_cog               |
+#' | impacted area                | 1_7_IMPACT_AREA_cog                  |
+#' | modified area                | 1_8_MODIF_AREA_cog                   |
+#' | human biomes                 | 1_9_HUMAN_BIOMES_cog                 |
+#' | fires                        | 1_10_FIRE_OCCUR_cog                  |
+#' | crops uni                    | 1_11_CROP_PERC_UNI_cog               |
+#' | crops iiasa                  | 1_12_CROP_PERC_IIASA_cog             |
+#' | livestock                    | 1_13_LIVESTOCK_MASS_cog              |
+#' | forest loss                  | 2_1_FOREST_LOSS_PERC_cog             |
+#' | forest trend                 | 2_2_FOREST_TREND_cog                 |
+#' | light at night               | 3_1_LIGHT_MCDM2_cog                  |
+#' | temperature trends           | 5_1_TEMP_TRENDS_cog                  |
+#' | temperature significance     | 5_2_TEMP_SIGNIF_cog                  |
+#' | climate extremes             | 5_3_CLIM_EXTREME_cog                 |
+#' | climate velocity             | 5_4_CLIM_VELOCITY_cog                |
+#' | aridity trend                | 5_5_ARIDITY_TREND_cog                |
+#'
 #'
 #' @param x A `SpatRaster`, `SpatVector`, or `sf` object defining the area or
 #'          locations for extraction.
 #' @param vars Character vector of variables, supplied as canonical codes or
 #'             friendly names.
-#' @param algorithm Character. The aggregation method/algorithm to use. 
-#'        Common options: `"md"` (median), `"mn"` (mean), `"min"`, `"max"`, `"sd"`.
-#'        Default is `"md"`.
-#' @param topo_source Character. The source of the data. Must be `"GMTED"` 
-#'        (Global Multi-resolution Terrain Elevation Data) or `"SRTM"` 
-#'        (Shuttle Radar Topography Mission). Default is `"GMTED"`.
 #' @param ... Reserved for future use.
 #'
 #' @return
-#' - If `x` is a raster: a `SpatRaster` stack of processed topography layers.
+#' - If `x` is a raster: a `SpatRaster` stack of processed SPECTRE layers.  
 #' - If `x` contains points: a `data.frame` of extracted values.
 #'
 #' @export
 
-topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
+spectre <- function(x, vars, ...) {
   
   # --------------------------------------------------------------------
   # Citation displayed on execution
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
-    "Using EarthEnv Topography layers.\n",
-    "Citation: Amatulli, G., et al. (2018). A suite of global, cross-scale topographic variables for environmental and biodiversity modeling. Scientific Data.\n",
-    "DOI: {.url https://doi.org/10.1038/sdata.2018.40}\n",
+    "Using SPECTRE global threat layers.\n",
+    "Citation: Branco, V. V., et al. (2024). SPECTRE: Standardised Global Spatial Data on Terrestrial SPecies and ECosystems ThREats. Global Ecology and Biogeography.\n",
+    "DOI: {.url https://doi.org/10.1111/geb.13949}\n",
     "Note: Please cite original sources of primary datasets where appropriate."
   ))
   
@@ -89,30 +100,30 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
   extracted_df <- NULL
   
   # --------------------------------------------------------------------
-  # Validate additional arguments
-  # --------------------------------------------------------------------
-  source_upper <- toupper(topo_source)
-  valid_sources <- c("GMTED", "SRTM")
-  
-  if (!source_upper %in% valid_sources) {
-    cli::cli_abort("The parameter {.arg topo_source} must be one of: {.val {valid_sources}}")
-  }
-  
-  # --------------------------------------------------------------------
   # Friendly-name -> canonical code mapping
   # --------------------------------------------------------------------
-  topo_lookup <- list(
-    "elevation" = c("elevation", "dem", "height", "alt", "altitude"),
-    "slope"     = c("slope"),
-    "aspect"    = c("aspect"),
-    "roughness" = c("roughness", "rough"),
-    "tri"       = c("tri", "terrain ruggedness index", "ruggedness"),
-    "tpi"       = c("tpi", "topographic position index", "position"),
-    "vrm"       = c("vrm", "vector ruggedness measure"),
-    "pcurv"     = c("pcurv", "profile curvature", "profile curve"),
-    "tcurv"     = c("tcurv", "tangential curvature", "tangential curve"),
-    "eastness"  = c("eastness", "east"),
-    "northness" = c("northness", "north")
+  spectre_lookup <- list(
+    "1_1_MINING_AREA_cog"        = c("mining area","mining_area","mining"),
+    "1_2_HAZARD_POTENTIAL_cog"   = c("hazard potential","hazard"),
+    "1_3_HUMAN_DENSITY_cog"      = c("human density","population","pop"),
+    "1_4_BUILT_AREA_cog"         = c("built area","built"),
+    "1_5_ROAD_DENSITY_cog"       = c("road density","roads","road"),
+    "1_6_FOOTPRINT_PERC_cog"     = c("human footprint","footprint"),
+    "1_7_IMPACT_AREA_cog"        = c("impacted area","impact area"),
+    "1_8_MODIF_AREA_cog"         = c("modified area","modif area"),
+    "1_9_HUMAN_BIOMES_cog"       = c("human biomes","biomes"),
+    "1_10_FIRE_OCCUR_cog"        = c("fires","fire"),
+    "1_11_CROP_PERC_UNI_cog"     = c("crops uni","crop uni","crop"),
+    "1_12_CROP_PERC_IIASA_cog"   = c("crops iiasa","iiasa crops"),
+    "1_13_LIVESTOCK_MASS_cog"    = c("livestock","livestock mass"),
+    "2_1_FOREST_LOSS_PERC_cog"   = c("forest loss"),
+    "2_2_FOREST_TREND_cog"       = c("forest trend"),
+    "3_1_LIGHT_MCDM2_cog"        = c("light at night","night light", "light"),
+    "5_1_TEMP_TRENDS_cog"        = c("temperature trends","temp trends"),
+    "5_2_TEMP_SIGNIF_cog"        = c("temperature significance","temp signif"),
+    "5_3_CLIM_EXTREME_cog"       = c("climate extremes"),
+    "5_4_CLIM_VELOCITY_cog"      = c("climate velocity","velocity"),
+    "5_5_ARIDITY_TREND_cog"      = c("aridity trend","aridity")
   )
   
   # Normalizer
@@ -125,8 +136,8 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
   
   # Build synonym -> canonical map
   syn2canon <- list()
-  for (canon in names(topo_lookup)) {
-    for (syn in topo_lookup[[canon]]) {
+  for (canon in names(spectre_lookup)) {
+    for (syn in spectre_lookup[[canon]]) {
       syn2canon[[normalize_string(syn)]] <- canon
     }
     syn2canon[[normalize_string(canon)]] <- canon
@@ -146,7 +157,7 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
   
   if (length(unmapped) > 0) {
     cli::cli_abort(c(
-      "Unknown Topography variables:",
+      "Unknown SPECTRE variables:",
       "x" = "{.val {unmapped}}"
     ))
   }
@@ -225,32 +236,14 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
   # --------------------------------------------------------------------
   # Loop through requested variables
   # --------------------------------------------------------------------
-  base_url <- "https://data.earthenv.org/topography"
+  base_url <- "https://www.nic.funet.fi/index/geodata/hy/spectre/2023"
   
-  cli::cli_alert_info("Starting the download of EarthEnv Topography data...")
+  cli::cli_alert_info("Starting the download of SPECTRE data...")
   
   for (canon in requested_codes) {
-    
-    # Apply logic to determine filename parts
-    current_alg <- algorithm
-    
-    # Special case for elevation max algorithm
-    if (canon == "elevation" && algorithm == "max") {
-      current_alg <- "ma"
-    }
-    
-    # Logic for source part of filename
-    source_filename_part <- if (source_upper == "GMTED") {
-      paste0(source_upper, current_alg)
-    } else {
-      source_upper
-    }
-    
-    # Construct filename: {var}_1KM{alg}_{source_part}.tif
-    file_name <- paste0(canon, "_1KM", current_alg, "_", source_filename_part, ".tif")
-    
-    url <- file.path(base_url, file_name)
-    dest <- file.path(fs::path_temp("envar/grids"), file_name)
+    filename <- paste0(canon, ".tif")
+    url <- file.path(base_url, filename)
+    dest <- file.path(fs::path_temp("envar/grids"), filename)
     
     handle_file(url, dest, canon)
   }
@@ -269,3 +262,6 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
     return(extracted_df)
   }
 }
+
+
+

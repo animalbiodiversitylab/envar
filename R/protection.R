@@ -1,74 +1,67 @@
-# R/topography.R
+# R/protection.R
 
-#' Download and process EarthEnv Topography layers
+#' Download and process WDPA Protected Area layers
 #'
-#' `topography()` downloads, processes, and extracts variables from the
-#' **EarthEnv Topography** dataset. This dataset provides global, cross-scale
-#' topographic variables suitable for biodiversity and ecosystem modeling.
+#' `protection()` downloads, processes, and extracts variables from the
+#' **World Database of Protected Areas (WDPA)**. Each variable corresponds 
+#' to a global raster representing different IUCN Management Categories of 
+#' protected areas.
 #'
 #' The function allows users to input either:
-#' - **canonical EarthEnv variable names**, e.g. `"elevation"`, `"roughness"`
-#' - **human-readable names**, e.g. `"dem"`, `"slope"`, `"terrain ruggedness"`, etc.
+#' - **canonical WDPA codes**, e.g. `"WDPA_II"`, `"WDPA_ALL"`
+#' - **human-readable names**, e.g. `"national park"`, `"strict nature reserve"`,
+#'   `"wilderness area"`, `"sustainable use"`, etc.
 #'
 #' It automatically:
-#' - downloads the selected files based on the requested source and algorithm,
+#' - downloads the selected files from the source repositories,
 #' - crops/resamples/masks to match a user-provided `SpatRaster`, **or**
 #' - extracts values when `x` is point data.
 #'
-#' ## Citation
-#' If you use EarthEnv Topography data, please cite:
 #'
-#' **Amatulli, G., Domisch, S., Tuanmu, M.-N., Parmentier, B., Ranipeta, A.,**
-#' **Malczyk, J., and Jetz, W. (2018).**
-#' *A suite of global, cross-scale topographic variables for environmental and biodiversity modeling.*
-#' Scientific Data 5: 180040.
-#' https://doi.org/10.1038/sdata.2018.40
+#' ## Citation
+#' If you use these data, please cite:
+#'
+#' **Protected Planet (2025).** #' *World Database of Protected Areas (WDPA).* #' https://www.protectedplanet.net/en
+#'
+#' _Note: Users should ensure they comply with the terms of use of the WDPA
+#' when using these data for commercial or research purposes._
 #'
 #'
 #' ## Available variables
 #'
-#' | Human-readable name  | Canonical variable code |
-#' |----------------------|-------------------------|
-#' | Elevation (DEM)      | elevation               |
-#' | Slope                | slope                   |
-#' | Aspect               | aspect                  |
-#' | Roughness            | roughness               |
-#' | TRI                  | tri                     |
-#' | TPI                  | tpi                     |
-#' | VRM                  | vrm                     |
-#' | Profile Curvature    | pcurv                   |
-#' | Tangential Curvature | tcurv                   |
-#' | Eastness             | eastness                |
-#' | Northness            | northness               |
+#' | Human-readable name                | Canonical variable code              | Description |
+#' |------------------------------------|--------------------------------------|-------------|
+#' | strict nature reserve (1a)         | WDPA_IA                              | IUCN Category Ia |
+#' | wilderness area (1b)               | WDPA_IB                              | IUCN Category Ib |
+#' | national park (2)                  | WDPA_II                              | IUCN Category II |
+#' | natural monument (3)               | WDPA_III                             | IUCN Category III |
+#' | habitat species management (4)     | WDPA_IV                              | IUCN Category IV |
+#' | protected landscape (5)            | WDPA_V                               | IUCN Category V |
+#' | sustainable use (6)                | WDPA_VI                              | IUCN Category VI |
+#' | all protected areas                | WDPA_ALL                             | Combined/Full WDPA |
+#'
 #'
 #' @param x A `SpatRaster`, `SpatVector`, or `sf` object defining the area or
 #'          locations for extraction.
 #' @param vars Character vector of variables, supplied as canonical codes or
 #'             friendly names.
-#' @param algorithm Character. The aggregation method/algorithm to use. 
-#'        Common options: `"md"` (median), `"mn"` (mean), `"min"`, `"max"`, `"sd"`.
-#'        Default is `"md"`.
-#' @param topo_source Character. The source of the data. Must be `"GMTED"` 
-#'        (Global Multi-resolution Terrain Elevation Data) or `"SRTM"` 
-#'        (Shuttle Radar Topography Mission). Default is `"GMTED"`.
 #' @param ... Reserved for future use.
 #'
 #' @return
-#' - If `x` is a raster: a `SpatRaster` stack of processed topography layers.
+#' - If `x` is a raster: a `SpatRaster` stack of processed WDPA layers.  
 #' - If `x` contains points: a `data.frame` of extracted values.
 #'
 #' @export
 
-topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
+protection <- function(x, vars, ...) {
   
   # --------------------------------------------------------------------
   # Citation displayed on execution
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
-    "Using EarthEnv Topography layers.\n",
-    "Citation: Amatulli, G., et al. (2018). A suite of global, cross-scale topographic variables for environmental and biodiversity modeling. Scientific Data.\n",
-    "DOI: {.url https://doi.org/10.1038/sdata.2018.40}\n",
-    "Note: Please cite original sources of primary datasets where appropriate."
+    "Using World Database of Protected Areas (WDPA) layers.\n",
+    "Citation: Protected Planet (2025). World Database of Protected Areas (WDPA).\n",
+    "DOI: {.url https://www.protectedplanet.net/en}\n"
   ))
   
   par_list <- get_par(x)
@@ -89,30 +82,29 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
   extracted_df <- NULL
   
   # --------------------------------------------------------------------
-  # Validate additional arguments
-  # --------------------------------------------------------------------
-  source_upper <- toupper(topo_source)
-  valid_sources <- c("GMTED", "SRTM")
-  
-  if (!source_upper %in% valid_sources) {
-    cli::cli_abort("The parameter {.arg topo_source} must be one of: {.val {valid_sources}}")
-  }
-  
-  # --------------------------------------------------------------------
   # Friendly-name -> canonical code mapping
   # --------------------------------------------------------------------
-  topo_lookup <- list(
-    "elevation" = c("elevation", "dem", "height", "alt", "altitude"),
-    "slope"     = c("slope"),
-    "aspect"    = c("aspect"),
-    "roughness" = c("roughness", "rough"),
-    "tri"       = c("tri", "terrain ruggedness index", "ruggedness"),
-    "tpi"       = c("tpi", "topographic position index", "position"),
-    "vrm"       = c("vrm", "vector ruggedness measure"),
-    "pcurv"     = c("pcurv", "profile curvature", "profile curve"),
-    "tcurv"     = c("tcurv", "tangential curvature", "tangential curve"),
-    "eastness"  = c("eastness", "east"),
-    "northness" = c("northness", "north")
+  protection_lookup <- list(
+    "WDPA_IA"  = c("strict nature reserve", "strict reserve", "1a", "ia", "Ia"),
+    "WDPA_IB"  = c("wilderness area", "wilderness", "1b", "ib", "Ib"),
+    "WDPA_II"  = c("national park", "park", "2", "ii", "II"),
+    "WDPA_III" = c("natural monument", "monument", "3", "iii", "III"),
+    "WDPA_IV"  = c("habitat species management", "habitat management", "4", "iv", "IV"),
+    "WDPA_V"   = c("protected landscape", "protected seascape", "landscape", "5", "v", "V"),
+    "WDPA_VI"  = c("sustainable use", "natural resources", "6", "vi", "VI"),
+    "WDPA_ALL" = c("all", "combined", "full", "total", "all protected areas")
+  )
+  
+  # URL mapping for canonical codes
+  url_lookup <- list(
+    "WDPA_IA"  = "https://figshare.com/ndownloader/files/59746952?private_link=f0cabc378ea496838f66",
+    "WDPA_IB"  = "https://figshare.com/ndownloader/files/59746949?private_link=f0cabc378ea496838f66",
+    "WDPA_II"  = "https://figshare.com/ndownloader/files/59746562?private_link=f0cabc378ea496838f66",
+    "WDPA_III" = "https://figshare.com/ndownloader/files/59746559?private_link=f0cabc378ea496838f66",
+    "WDPA_IV"  = "https://figshare.com/ndownloader/files/59746565?private_link=f0cabc378ea496838f66",
+    "WDPA_V"   = "https://figshare.com/ndownloader/files/59746568?private_link=f0cabc378ea496838f66",
+    "WDPA_VI"  = "https://figshare.com/ndownloader/files/59746571?private_link=f0cabc378ea496838f66",
+    "WDPA_ALL" = "https://figshare.com/ndownloader/files/59747045?private_link=f0cabc378ea496838f66"
   )
   
   # Normalizer
@@ -125,8 +117,8 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
   
   # Build synonym -> canonical map
   syn2canon <- list()
-  for (canon in names(topo_lookup)) {
-    for (syn in topo_lookup[[canon]]) {
+  for (canon in names(protection_lookup)) {
+    for (syn in protection_lookup[[canon]]) {
       syn2canon[[normalize_string(syn)]] <- canon
     }
     syn2canon[[normalize_string(canon)]] <- canon
@@ -146,7 +138,7 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
   
   if (length(unmapped) > 0) {
     cli::cli_abort(c(
-      "Unknown Topography variables:",
+      "Unknown WDPA variables:",
       "x" = "{.val {unmapped}}"
     ))
   }
@@ -225,32 +217,13 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
   # --------------------------------------------------------------------
   # Loop through requested variables
   # --------------------------------------------------------------------
-  base_url <- "https://data.earthenv.org/topography"
   
-  cli::cli_alert_info("Starting the download of EarthEnv Topography data...")
+  cli::cli_alert_info("Starting the download of WDPA data...")
   
   for (canon in requested_codes) {
-    
-    # Apply logic to determine filename parts
-    current_alg <- algorithm
-    
-    # Special case for elevation max algorithm
-    if (canon == "elevation" && algorithm == "max") {
-      current_alg <- "ma"
-    }
-    
-    # Logic for source part of filename
-    source_filename_part <- if (source_upper == "GMTED") {
-      paste0(source_upper, current_alg)
-    } else {
-      source_upper
-    }
-    
-    # Construct filename: {var}_1KM{alg}_{source_part}.tif
-    file_name <- paste0(canon, "_1KM", current_alg, "_", source_filename_part, ".tif")
-    
-    url <- file.path(base_url, file_name)
-    dest <- file.path(fs::path_temp("envar/grids"), file_name)
+    filename <- paste0(canon, ".tif")
+    url <- url_lookup[[canon]]
+    dest <- file.path(fs::path_temp("envar/grids"), filename)
     
     handle_file(url, dest, canon)
   }

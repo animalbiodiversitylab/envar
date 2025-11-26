@@ -1,7 +1,7 @@
 # R/create_target_grid.R
 #' Create target grid at 30 arc-seconds
 #' @noRd
-create_target_grid <- function(bbox, resolution) {
+create_target_grid <- function(bbox, resolution, crs) {
   # Always create at 30 arc-seconds (0.008333333 degrees)
   res_degrees <- 0.008333333
   
@@ -22,6 +22,10 @@ create_target_grid <- function(bbox, resolution) {
     ncols = ncols, nrows = nrows,
     crs = "EPSG:4326"
   )
+  
+  # if (!is.null(crs) & crs != "EPSG:4326"){
+  #   target_grid <- project(target_grid, crs)
+  # }
   
   return(target_grid)
 }

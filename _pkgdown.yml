@@ -1,0 +1,91 @@
+url: https://envar.net
+
+template:
+  bootstrap: 5
+  math-rendering: katex
+  params:
+    bootswatch: flatly
+    ganalytics: UA-70466840-4
+
+authors:
+  Andrea Simoncini:
+    href: "https://www.researchgate.net/profile/Andrea-Simoncini"
+  Michele Bertoncini:
+    href: "https://www.researchgate.net/profile/Michele-Bertoncini-2"
+  Andrea Cerofolini:
+    href: "https://www.researchgate.net/profile/Andrea_Cerofolini2"
+  Andrea Dalpasso:
+    href: "https://www.researchgate.net/profile/Andrea-Dalpasso"
+  Mattia Falaschi:
+    href: "https://www.researchgate.net/profile/Mattia-Falaschi"
+  Gentile Francesco Ficetola:
+    href: https://digilander.libero.it/lyrgus/index.html
+  Elia Lo Parrino:
+    href: "https://www.researchgate.net/profile/Elia-Lo-Parrino-2"
+
+home:
+  sidebar:
+    structure: [links, citation, license, authors, dev]
+  links:
+    - text: Learn about contributing
+      href: CONTRIBUTING.html
+
+navbar:
+  structure:
+    left:  [home, intro, reference, articles, tutorial, news]
+    right: [search, github]
+  components:
+    intro:
+      text: Get Started
+      href: articles/intro.html
+    articles:
+      text: Articles
+      menu:
+      - text: Package overview
+        href: articles/package_overview.html
+    tutorial:
+      text: Tutorials
+      menu:
+      - text: Downloading and processing environmental variables
+        href: articles/download_and_process_tutorial.html
+      - text: Species distribution modelling full workflow
+        href: articles/sdm_tutorial.html
+
+reference:
+  
+  - title: Explore download options
+    desc: Function for exploring the variables available for download
+    contents:
+      - var_explore
+      
+  - title: Set overall parameters
+    desc: Function for creating new download task and process it
+    contents:
+      - var_get
+
+  - title: Download variables from different sources
+    desc: Functions for downloading variables from multiple sources
+    contents:
+      - chelsa
+      - worldclim
+      - topography
+      - accessibility
+      - spectre
+      - freshwater
+      - protection
+      - esalandcover
+      - earthenvlandcover
+      - heterogeneity
+      - aridity
+      - cloudcover
+      - climatezones
+      - soil
+      
+  - title: Correlation
+    desc: Function for identifying correlated variables
+    contents:
+      - check
+  # - title: Deprecated functions
+  #   desc: Documentation for functions that are no longer available.
+  #   contents:
+  #     - envar-deprecated

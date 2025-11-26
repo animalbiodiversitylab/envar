@@ -1,74 +1,74 @@
-# R/topography.R
+# R/earthenvlandcover.R
 
-#' Download and process EarthEnv Topography layers
+#' Download and process EarthEnv Consensus Land Cover layers
 #'
-#' `topography()` downloads, processes, and extracts variables from the
-#' **EarthEnv Topography** dataset. This dataset provides global, cross-scale
-#' topographic variables suitable for biodiversity and ecosystem modeling.
+#' `earthenvlandcover()` downloads, processes, and extracts variables from the
+#' **EarthEnv Consensus Land Cover** dataset. Each variable corresponds to a 
+#' global Cloud-Optimized GeoTIFF (COG) representing the consensus prevalence 
+#' of a specific land cover class.
 #'
 #' The function allows users to input either:
-#' - **canonical EarthEnv variable names**, e.g. `"elevation"`, `"roughness"`
-#' - **human-readable names**, e.g. `"dem"`, `"slope"`, `"terrain ruggedness"`, etc.
+#' - **canonical EarthEnv filenames**, e.g. `"consensus_full_class_1"`, `"consensus_full_class_9"`
+#' - **human-readable names**, e.g. `"needleleaf trees"`, `"urban"`,
+#'   `"open water"`, `"cultivated"`, etc.
 #'
 #' It automatically:
-#' - downloads the selected files based on the requested source and algorithm,
+#' - downloads the selected files,
 #' - crops/resamples/masks to match a user-provided `SpatRaster`, **or**
 #' - extracts values when `x` is point data.
 #'
 #' ## Citation
-#' If you use EarthEnv Topography data, please cite:
+#' If you use EarthEnv Consensus Land Cover data, please cite:
 #'
-#' **Amatulli, G., Domisch, S., Tuanmu, M.-N., Parmentier, B., Ranipeta, A.,**
-#' **Malczyk, J., and Jetz, W. (2018).**
-#' *A suite of global, cross-scale topographic variables for environmental and biodiversity modeling.*
-#' Scientific Data 5: 180040.
-#' https://doi.org/10.1038/sdata.2018.40
+#' **Tuanmu, M.-N. and W. Jetz. (2014).**
+#' *A global 1-km consensus land-cover product for biodiversity and ecosystem modeling.*
+#' Global Ecology and Biogeography 23(9): 1031-1045.
+#' https://doi.org/10.1111/geb.12182
 #'
+#' _Note: Users should verify the terms of use for EarthEnv data provided 
+#' at https://www.earthenv.org/._
 #'
 #' ## Available variables
 #'
-#' | Human-readable name  | Canonical variable code |
-#' |----------------------|-------------------------|
-#' | Elevation (DEM)      | elevation               |
-#' | Slope                | slope                   |
-#' | Aspect               | aspect                  |
-#' | Roughness            | roughness               |
-#' | TRI                  | tri                     |
-#' | TPI                  | tpi                     |
-#' | VRM                  | vrm                     |
-#' | Profile Curvature    | pcurv                   |
-#' | Tangential Curvature | tcurv                   |
-#' | Eastness             | eastness                |
-#' | Northness            | northness               |
+#' | Human-readable name                 | Canonical variable code      |
+#' |-------------------------------------|------------------------------|
+#' | Evergreen/Deciduous Needleleaf Trees| consensus_full_class_1       |
+#' | Evergreen Broadleaf Trees           | consensus_full_class_2       |
+#' | Deciduous Broadleaf Trees           | consensus_full_class_3       |
+#' | Mixed/Other Trees                   | consensus_full_class_4       |
+#' | Shrubs                              | consensus_full_class_5       |
+#' | Herbaceous Vegetation               | consensus_full_class_6       |
+#' | Cultivated and Managed Vegetation   | consensus_full_class_7       |
+#' | Regularly Flooded Vegetation        | consensus_full_class_8       |
+#' | Urban/Built-up                      | consensus_full_class_9       |
+#' | Snow/Ice                            | consensus_full_class_10      |
+#' | Barren                              | consensus_full_class_11      |
+#' | Open Water                          | consensus_full_class_12      |
 #'
 #' @param x A `SpatRaster`, `SpatVector`, or `sf` object defining the area or
 #'          locations for extraction.
 #' @param vars Character vector of variables, supplied as canonical codes or
 #'             friendly names.
-#' @param algorithm Character. The aggregation method/algorithm to use. 
-#'        Common options: `"md"` (median), `"mn"` (mean), `"min"`, `"max"`, `"sd"`.
-#'        Default is `"md"`.
-#' @param topo_source Character. The source of the data. Must be `"GMTED"` 
-#'        (Global Multi-resolution Terrain Elevation Data) or `"SRTM"` 
-#'        (Shuttle Radar Topography Mission). Default is `"GMTED"`.
+#' @param discover Logical. If `TRUE` (default), downloads the version integrated 
+#'        with the DISCover dataset. If `FALSE`, downloads the version without 
+#'        DISCover integration.
 #' @param ... Reserved for future use.
 #'
 #' @return
-#' - If `x` is a raster: a `SpatRaster` stack of processed topography layers.
+#' - If `x` is a raster: a `SpatRaster` stack of processed EarthEnv layers.
 #' - If `x` contains points: a `data.frame` of extracted values.
 #'
 #' @export
 
-topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
+earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
   
   # --------------------------------------------------------------------
   # Citation displayed on execution
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
-    "Using EarthEnv Topography layers.\n",
-    "Citation: Amatulli, G., et al. (2018). A suite of global, cross-scale topographic variables for environmental and biodiversity modeling. Scientific Data.\n",
-    "DOI: {.url https://doi.org/10.1038/sdata.2018.40}\n",
-    "Note: Please cite original sources of primary datasets where appropriate."
+    "Using EarthEnv Consensus Land Cover layers.\n",
+    "Citation: Tuanmu, M.N. and W. Jetz. (2014). A global 1-km consensus land-cover product for biodiversity and ecosystem modeling. Global Ecology and Biogeography.\n",
+    "DOI: {.url https://doi.org/10.1111/geb.12182}\n"
   ))
   
   par_list <- get_par(x)
@@ -89,30 +89,21 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
   extracted_df <- NULL
   
   # --------------------------------------------------------------------
-  # Validate additional arguments
-  # --------------------------------------------------------------------
-  source_upper <- toupper(topo_source)
-  valid_sources <- c("GMTED", "SRTM")
-  
-  if (!source_upper %in% valid_sources) {
-    cli::cli_abort("The parameter {.arg topo_source} must be one of: {.val {valid_sources}}")
-  }
-  
-  # --------------------------------------------------------------------
   # Friendly-name -> canonical code mapping
   # --------------------------------------------------------------------
-  topo_lookup <- list(
-    "elevation" = c("elevation", "dem", "height", "alt", "altitude"),
-    "slope"     = c("slope"),
-    "aspect"    = c("aspect"),
-    "roughness" = c("roughness", "rough"),
-    "tri"       = c("tri", "terrain ruggedness index", "ruggedness"),
-    "tpi"       = c("tpi", "topographic position index", "position"),
-    "vrm"       = c("vrm", "vector ruggedness measure"),
-    "pcurv"     = c("pcurv", "profile curvature", "profile curve"),
-    "tcurv"     = c("tcurv", "tangential curvature", "tangential curve"),
-    "eastness"  = c("eastness", "east"),
-    "northness" = c("northness", "north")
+  earthenv_lookup <- list(
+    "consensus_full_class_1"  = c("evergreen deciduous needleleaf trees", "needleleaf trees", "needleleaf", "conifer"),
+    "consensus_full_class_2"  = c("evergreen broadleaf trees", "evergreen broadleaf", "broadleaf evergreen"),
+    "consensus_full_class_3"  = c("deciduous broadleaf trees", "deciduous broadleaf", "broadleaf deciduous"),
+    "consensus_full_class_4"  = c("mixed other trees", "mixed trees", "other trees", "mixed forest"),
+    "consensus_full_class_5"  = c("shrubs", "shrubland", "shrub"),
+    "consensus_full_class_6"  = c("herbaceous vegetation", "herbaceous", "grassland", "grass", "herbs"),
+    "consensus_full_class_7"  = c("cultivated and managed vegetation", "cultivated", "managed vegetation", "agriculture", "crops", "cropland"),
+    "consensus_full_class_8"  = c("regularly flooded vegetation", "flooded vegetation", "flooded", "wetland"),
+    "consensus_full_class_9"  = c("urban built up", "urban", "built up", "built-up", "artificial surface"),
+    "consensus_full_class_10" = c("snow ice", "snow", "ice", "glacier", "permafrost"),
+    "consensus_full_class_11" = c("barren", "barren land", "bare ground", "bare"),
+    "consensus_full_class_12" = c("open water", "water", "water bodies")
   )
   
   # Normalizer
@@ -125,8 +116,8 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
   
   # Build synonym -> canonical map
   syn2canon <- list()
-  for (canon in names(topo_lookup)) {
-    for (syn in topo_lookup[[canon]]) {
+  for (canon in names(earthenv_lookup)) {
+    for (syn in earthenv_lookup[[canon]]) {
       syn2canon[[normalize_string(syn)]] <- canon
     }
     syn2canon[[normalize_string(canon)]] <- canon
@@ -146,7 +137,7 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
   
   if (length(unmapped) > 0) {
     cli::cli_abort(c(
-      "Unknown Topography variables:",
+      "Unknown EarthEnv variables:",
       "x" = "{.val {unmapped}}"
     ))
   }
@@ -225,32 +216,18 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
   # --------------------------------------------------------------------
   # Loop through requested variables
   # --------------------------------------------------------------------
-  base_url <- "https://data.earthenv.org/topography"
+  if (discover) {
+    base_url <- "https://data.earthenv.org/consensus_landcover/with_DISCover"
+  } else {
+    base_url <- "https://data.earthenv.org/consensus_landcover/without_DISCover"
+  }
   
-  cli::cli_alert_info("Starting the download of EarthEnv Topography data...")
+  cli::cli_alert_info("Starting the download of EarthEnv Consensus Land Cover data...")
   
   for (canon in requested_codes) {
-    
-    # Apply logic to determine filename parts
-    current_alg <- algorithm
-    
-    # Special case for elevation max algorithm
-    if (canon == "elevation" && algorithm == "max") {
-      current_alg <- "ma"
-    }
-    
-    # Logic for source part of filename
-    source_filename_part <- if (source_upper == "GMTED") {
-      paste0(source_upper, current_alg)
-    } else {
-      source_upper
-    }
-    
-    # Construct filename: {var}_1KM{alg}_{source_part}.tif
-    file_name <- paste0(canon, "_1KM", current_alg, "_", source_filename_part, ".tif")
-    
-    url <- file.path(base_url, file_name)
-    dest <- file.path(fs::path_temp("envar/grids"), file_name)
+    filename <- paste0(canon, ".tif")
+    url <- file.path(base_url, filename)
+    dest <- file.path(fs::path_temp("envar/grids"), filename)
     
     handle_file(url, dest, canon)
   }
