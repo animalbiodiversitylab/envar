@@ -1,0 +1,12 @@
+pandoc: 3.1.1
+pkgdown: 2.1.0
+pkgdown_sha: ~
+articles:
+  download_and_process_tutorial: download_and_process_tutorial.html
+  intro: intro.html
+  package_overview: package_overview.html
+  sdm_tutorial: sdm_tutorial.html
+last_built: 2025-11-26T16:42Z
+urls:
+  reference: https://envar.net/reference
+  article: https://envar.net/articles

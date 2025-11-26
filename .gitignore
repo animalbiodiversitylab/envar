@@ -15,5 +15,3 @@ temp/
 .RData
 .Rhistory
 .Rproj.user
-docs
-inst/doc
