@@ -18,18 +18,18 @@ The _envar R_ package streamlines the retrieval and processing of environmental 
 
 The latest development version can be installed to gain access to new functionality that is not yet present in the latest official version. 
 
-* To install the latest development version from [GitHub](https://github.com/prioritizr/prioritizr), use the following _R_ code.
+* To install the latest development version from [GitHub](https://github.com/animalbiodiversitylab/envar), use the following _R_ code.
 
     ```{r, eval = FALSE}
     if (!require(remotes)) install.packages("remotes")
-    remotes::install_github("prioritizr/prioritizr")
+    remotes::install_github("animalbiodiversitylab/envar")
     ```
 
 ## Citation
 
 Please cite the _envar R_ package when using it in publications, and the citation(s) associated with each source retrieved. The citations specific to each source are printed in the console during the download process. To cite the package, please use:
 
-> Simoncini A, Bertoncini M, Cerofolini A, Dalpasso A, Falaschi M, Lo Parrino E (2025) envar: an R package to streamline the retrieval and processing of environmental variables. _biorXive preprint_.
+> Simoncini A, Bertoncini M, Cerofolini A, Dalpasso A, Falaschi M, Lo Parrino E (2025) envar: an R package to streamline the retrieval and processing of environmental variables. 
 
 
 ## Usage
@@ -38,9 +38,18 @@ Here we provide a short example showing how the _envar R_ package can be used to
 
 ```{r, eval = FALSE}
 # load packages
-library(prioritizr)
-library(prioritizrdata)
-library(terra)
+library(envar)
+
+# download variables (e.g., the percentage cover of trees and ice here) over a study area
+processed_vars = var_get(country="Italy", res = 1, crs="EPSG:3035") %>% 
+  esalandcover(vars = c("trees", "ice"))
+```
+We will get a set of variables already cropped to the desired area of study,
+and presented as a rast file with multiple layers corresponding to the different
+variables. For instance, we can visualize the first layer produced (tree cover)
+as follows. 
+```{r, eval = FALSE}
+# visualize a variable to have a confirmation that everything worked
+plot(processed_vars[[1]])
 ```
 
-We will get
