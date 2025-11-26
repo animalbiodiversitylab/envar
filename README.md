@@ -21,12 +21,12 @@ The latest development version can be installed to gain access to new
 functionality that is not yet present in the latest official version.
 
 - To install the latest development version from
-  [GitHub](https://github.com/prioritizr/prioritizr), use the following
-  *R* code.
+  [GitHub](https://github.com/animalbiodiversitylab/envar), use the
+  following *R* code.
 
   ``` r
   if (!require(remotes)) install.packages("remotes")
-  remotes::install_github("prioritizr/prioritizr")
+  remotes::install_github("animalbiodiversitylab/envar")
   ```
 
 ## Citation
@@ -38,7 +38,7 @@ process. To cite the package, please use:
 
 > Simoncini A, Bertoncini M, Cerofolini A, Dalpasso A, Falaschi M, Lo
 > Parrino E (2025) envar: an R package to streamline the retrieval and
-> processing of environmental variables. *biorXive preprint*.
+> processing of environmental variables.
 
 ## Usage
 
@@ -48,9 +48,19 @@ case. To begin with, we will load the required packages.
 
 ``` r
 # load packages
-library(prioritizr)
-library(prioritizrdata)
-library(terra)
+library(envar)
+
+# download variables (e.g., the percentage cover of trees and ice here) over a study area
+processed_vars = var_get(country="Italy", res = 1, crs="EPSG:3035") %>% 
+  esalandcover(vars = c("trees", "ice"))
 ```
 
-We will get
+We will get a set of variables already cropped to the desired area of
+study, and presented as a rast file with multiple layers corresponding
+to the different variables. For instance, we can visualize the first
+layer produced (tree cover) as follows.
+
+``` r
+# visualize a variable to have a confirmation that everything worked
+plot(processed_vars[[1]])
+```
