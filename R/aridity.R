@@ -162,7 +162,7 @@ aridity <- function(x, vars, ...) {
       })
     }
     
-    # --- CRITICAL FIX START: Inspect sub-zip content to find the actual file path ---
+    # --- Inspect sub-zip content to find the actual file path ---
     cli::cli_alert_info("Locating {.val {var}} inside {.val {sub_zip_name}}...")
     
     # List files inside the sub-zip
@@ -196,8 +196,7 @@ aridity <- function(x, vars, ...) {
         return(NULL)
       })
     }
-    # --- CRITICAL FIX END ---
-    
+
     # 3. Process the extracted TIF
     if (is_raster_input) {
       layer <- try(terra::rast(final_tif), silent = TRUE)
