@@ -1,52 +1,52 @@
 # R/download_file.R
 #' Download file with progress
 #' @noRd
-download_file <- function(url, dest_file, max_retries = 3) {
+download_file <- function(url, dest_file, max_retries = 2) {
 
   for (i in 1:max_retries) {
-    # Definiamo un User-Agent per simulare un browser e non essere bloccati
+    # Simulate a browser
     user_agent_string <- "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
     
-    success <- FALSE # Flag per monitorare il successo del download
+    success <- FALSE # Flag to monitor download success
     
     tryCatch({
       response <- httr::GET(
         url,
-        httr::user_agent(user_agent_string), # <-- MODIFICA CHIAVE: Aggiunta dello User-Agent
+        httr::user_agent(user_agent_string), 
         httr::write_disk(dest_file, overwrite = TRUE),
         httr::progress(),
-        httr::timeout(600)  # Timeout di 10 minuti (3600 era 1 ora)
+        httr::timeout(3000)  # Timeout time
       )
       
-      # Controlliamo se la risposta del server è "200 OK"
+      # Check if server response is "200 OK"
       if (httr::status_code(response) == 200) {
-        success <- TRUE # Il download è andato a buon fine
+        success <- TRUE # Download was successful
       } else {
-        # Se il server risponde con un errore (es. 403, 404, 500), lo segnaliamo
-        cli::cli_alert_warning("Tentativo {i}/{max_retries} fallito. Il server ha risposto con codice: {httr::status_code(response)}")
+ 
+        cli::cli_alert_warning("Attempt {i}/{max_retries} failed")
       }
     }, error = function(e) {
-      # Questa parte intercetta errori di connessione, timeout, etc.
-      cli::cli_alert_warning("Tentativo {i}/{max_retries} fallito con errore di connessione: {e$message}")
+
+      cli::cli_alert_warning("Attempt {i}/{max_retries} failed")
     })
     
-    # Se il download ha avuto successo, usciamo dalla funzione
+    # If download was successfull, get out
     if (success) {
-      cli::cli_progress_done() # Finalizza la barra di progresso con successo
+      cli::cli_progress_done() # Finalize progress bar
       return(TRUE)
     }
     
-    # Se il download è fallito e non abbiamo esaurito i tentativi, aspettiamo prima di riprovare
+  
     if (i < max_retries) {
-      wait_time <- 2^i # Attesa esponenziale (2, 4, 8 secondi...)
-      cli::cli_alert_info("Attendo {wait_time}s prima di riprovare...")
+      wait_time <- 2^i # Wait between one request and another is exponential (2, 4, 8 seconds)
+      cli::cli_alert_info("Waiting {wait_time}s before next attempt...")
       Sys.sleep(wait_time)
     }
   }
   
-  # Se tutti i tentativi sono falliti, lo segnaliamo
-  cli::cli_progress_done(result = "failed") # Finalizza la barra di progresso come fallita
-  cli::cli_alert_danger("Download di {.file {basename(dest_file)}} fallito dopo {max_retries} tentativi.")
+  # If all attempts fail
+  cli::cli_progress_done(result = "failed") 
+  cli::cli_alert_danger("Download of {.file {basename(dest_file)}} failed after {max_retries} attempts.")
   
   return(FALSE)
 }

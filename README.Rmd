@@ -16,14 +16,52 @@ The _envar R_ package streamlines the retrieval and processing of environmental 
 
 #### Developmental version
 
-The latest development version can be installed to gain access to new functionality that is not yet present in the latest official version. 
+The latest development version can be installed directly from the GitHub repository 
+to allow access to an always up-to-date package version incorporating all the most
+recent fixes.
 
 * To install the latest development version from [GitHub](https://github.com/animalbiodiversitylab/envar), use the following _R_ code.
 
-    ```{r, eval = FALSE}
-    if (!require(remotes)) install.packages("remotes")
-    remotes::install_github("animalbiodiversitylab/envar")
-    ```
+```{r, eval = FALSE}
+if (!require(remotes)) install.packages("remotes")
+remotes::install_github("animalbiodiversitylab/envar")
+
+# or alternatively using "devtools"
+if (!require(devtools)) install.packages("devtools")
+devtools::install_github("animalbiodiversitylab/envar")
+```
+
+Alternatively, a zip folder is available for download [HERE](https://drive.usercontent.google.com/u/0/uc?id=1lZanCY-LanaUd_p3dWXecPOagTTjHJiX&export=download). After downloading the zip folder, open RStudio and from the "Packages" window, click on "Install" -> "Install from: Package Archive File (.zip; .tar.gz)" and select the downloaded zip folder.\
+
+## :scroll: Vignettes
+
+We wrote several vignettes that will help you using the **bioregion R package**.
+Vignettes available are the following ones: <br>
+
+- **[1. Installation of the executable binary files](https://bioRgeo.github.io/bioregion/articles/a1_install_binary_files.html)**  
+- **[2. Matrix and network formats](https://bioRgeo.github.io/bioregion/articles/a2_matrix_and_network_formats.html)**
+- **[3. Pairwise similarity/dissimilarity metrics](https://bioRgeo.github.io/bioregion/articles/a3_pairwise_metrics.html)** 
+- **[4.1 Hierarchical clustering](https://bioRgeo.github.io/bioregion/articles/a4_1_hierarchical_clustering.html)** 
+- **[4.2 Non-hierarchical clustering](https://bioRgeo.github.io/bioregion/articles/a4_2_non_hierarchical_clustering.html)** 
+- **[4.3 Network clustering](https://bioRgeo.github.io/bioregion/articles/a4_3_network_clustering.html)** 
+- **[4.4 Microbenchmark](https://bioRgeo.github.io/bioregion/articles/a4_4_microbenchmark.html)** 
+- **[5.1 Visualization](https://bioRgeo.github.io/bioregion/articles/a5_1_visualization.html)** 
+- **[5.2 Summary metrics](https://bioRgeo.github.io/bioregion/articles/a5_2_summary_metrics.html)** 
+- **[5.3 Compare bioregionalizations](https://bioRgeo.github.io/bioregion/articles/a5_3_compare_bioregionalizations.html)** 
+
+## Functions
+
+An overview of all functions and data is given 
+**[here](https://envarpackage.netlify.app/reference/)**.
+
+## :bug: Did you find a bug?
+
+We are glad that you found it and you can report it on the GitHub Issues tab. Otherwise, you can send us an e-mail and we'll do our best to rapidly fix the issue.
+
+## Dependencies  
+
+`envar` depends on `terra`, `sf`, `rnaturalearth`, `rnaturalearthdata`, `corrplot`,
+ `grDevices`, `httr`, `dplyr`, `usdm`, `rlang`, `rmarkdown`, `stats`, `tidyr` and `utils`.
 
 ## Citation
 
@@ -41,8 +79,9 @@ Here we provide a short example showing how the _envar R_ package can be used to
 library(envar)
 
 # download variables (e.g., the percentage cover of trees and ice here) over a study area
-processed_vars = var_get(country="Italy", res = 1, crs="EPSG:3035") %>% 
-  esalandcover(vars = c("trees", "ice"))
+processed_vars = var_get(country="Italy", res = 1, crs="EPSG:3035", buffer=-20) %>% 
+  esalandcover(vars = c("trees", "ice")) %>% 
+  check()
 ```
 We will get a set of variables already cropped to the desired area of study,
 and presented as a rast file with multiple layers corresponding to the different

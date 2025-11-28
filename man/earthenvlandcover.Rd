@@ -2,69 +2,67 @@
 % Please edit documentation in R/earthenvlandcover.R
 \name{earthenvlandcover}
 \alias{earthenvlandcover}
-\title{Download and process EarthEnv Consensus Land Cover layers}
+\title{Download EarthEnv land cover}
 \usage{
 earthenvlandcover(x, vars, discover = TRUE, ...)
 }
 \arguments{
-\item{x}{A `SpatRaster`, `SpatVector`, or `sf` object defining the area or
-locations for extraction.}
+\item{x}{The output from `var_get()` defining the area or locations for extraction, 
+the reference system, and the buffer. 
+Leave this empty and use `var_get()` to define parameters for download.}
 
-\item{vars}{Character vector of variables, supplied as canonical codes or
-friendly names.}
+\item{vars}{Character vector of one or more variables to download and process.}
 
 \item{discover}{Logical. If `TRUE` (default), downloads the version integrated 
 with the DISCover dataset. If `FALSE`, downloads the version without 
 DISCover integration.}
-
-\item{...}{Reserved for future use.}
 }
 \value{
-- If `x` is a raster: a `SpatRaster` stack of processed EarthEnv layers.
-- If `x` contains points: a `data.frame` of extracted values.
+If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
-`earthenvlandcover()` downloads, processes, and extracts variables from the
-**EarthEnv Consensus Land Cover** dataset. Each variable corresponds to a 
-global Cloud-Optimized GeoTIFF (COG) representing the consensus prevalence 
-of a specific land cover class.
+This function downloads, processes, and extracts variables from the
+EarthEnv Consensus Land Cover dataset.
 }
 \details{
-The function allows users to input either:
-- **canonical EarthEnv filenames**, e.g. `"consensus_full_class_1"`, `"consensus_full_class_9"`
-- **human-readable names**, e.g. `"needleleaf trees"`, `"urban"`,
-  `"open water"`, `"cultivated"`, etc.
+Available variables (working synonyms in parentheses):
 
-It automatically:
-- downloads the selected files,
-- crops/resamples/masks to match a user-provided `SpatRaster`, **or**
-- extracts values when `x` is point data.
+1 - "evergreen deciduous needleleaf trees" ("needleleaf trees", "needleleaf", "conifer")
 
-## Citation
-If you use EarthEnv Consensus Land Cover data, please cite:
+2 - "evergreen broadleaf trees" ("evergreen broadleaf", "broadleaf evergreen")
 
-**Tuanmu, M.-N. and W. Jetz. (2014).**
-*A global 1-km consensus land-cover product for biodiversity and ecosystem modeling.*
-Global Ecology and Biogeography 23(9): 1031-1045.
+3 - "deciduous broadleaf trees" ("deciduous broadleaf", "broadleaf deciduous")
+
+4 - "mixed other trees" ("mixed trees", "other trees", "mixed forest")
+
+5 - "shrubs" ("shrubland", "shrub")
+
+6 - "herbaceous vegetation" ("herbaceous", "grassland", "grass", "herbs")
+
+7 - "cultivated and managed vegetation" ("cultivated", "managed vegetation", "agriculture", "crops", "cropland")
+
+8 - "regularly flooded vegetation" ("flooded vegetation", "flooded", "wetland")
+
+9 - "urban built up" ("urban", "built up", "built-up", "artificial surface")
+
+10 - "snow ice" ("snow", "ice", "glacier", "permafrost")
+
+11 - "barren" ("barren land", "bare ground", "bare")
+
+12 - "open water" ("water", "water bodies")
+
+Citation:
+
+Tuanmu, M.-N. and W. Jetz. (2014). "A global 1-km consensus land-cover product
+for biodiversity and ecosystem modeling." Global Ecology and Biogeography 23(9): 1031-1045.
 https://doi.org/10.1111/geb.12182
 
-_Note: Users should verify the terms of use for EarthEnv data provided 
-at https://www.earthenv.org/._
-
-## Available variables
-
-| Human-readable name                 | Canonical variable code      |
-|-------------------------------------|------------------------------|
-| Evergreen/Deciduous Needleleaf Trees| consensus_full_class_1       |
-| Evergreen Broadleaf Trees           | consensus_full_class_2       |
-| Deciduous Broadleaf Trees           | consensus_full_class_3       |
-| Mixed/Other Trees                   | consensus_full_class_4       |
-| Shrubs                              | consensus_full_class_5       |
-| Herbaceous Vegetation               | consensus_full_class_6       |
-| Cultivated and Managed Vegetation   | consensus_full_class_7       |
-| Regularly Flooded Vegetation        | consensus_full_class_8       |
-| Urban/Built-up                      | consensus_full_class_9       |
-| Snow/Ice                            | consensus_full_class_10      |
-| Barren                              | consensus_full_class_11      |
-| Open Water                          | consensus_full_class_12      |
+Note: Users should verify the terms of use for EarthEnv data provided 
+at https://www.earthenv.org/
+}
+\examples{
+\dontrun{
+processed <- var_get(country= "Italy", crs=3035) \%>\% 
+earthenvlandcover(vars=c("snow ice"))
+  }
 }
