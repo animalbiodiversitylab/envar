@@ -40,7 +40,7 @@ devtools::load_all()
 
 _envar_ is an _R_ package that enables the download of a wide range of environmental variables and their processing. In this tutorial we explore all the potential uses of the package, to give an idea of the breadth of uses and of the potential challenges and shortcuts. First we load the package. When executing this command, other five packages (`dplyr`, `terra`, `sf`, `corrplot`, `usdm`) will be automatically loaded to ensure the full functionality of the package.
 
-```{r,results='hide',message =FALSE,warning=FALSE}
+```{r,eval=FALSE,results='hide',message =FALSE,warning=FALSE}
 library(envar)
 ```
 
