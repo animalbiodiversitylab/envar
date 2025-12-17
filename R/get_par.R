@@ -15,6 +15,7 @@ get_par <- function(x) {
         crs = x$crs,
         type = x$type,
         is_global = isTRUE(x$is_global),
+        global_extent = x$global_extent,  # Track cumulative global extent
         from_varget = TRUE
       ))
     }
@@ -47,23 +48,77 @@ get_par <- function(x) {
       crs = crs,
       type = "polygon",
       is_global = isTRUE(x$is_global),
+      global_extent = x$global_extent,  # Track cumulative global extent
       from_varget = TRUE
     ))
   }
   
   # If it inherits a raster from a previous download and crop:
   if (inherits(x, "SpatRaster")) {
+    
+    # Check for global extent attribute
+    global_extent <- attr(x, "global_extent")
+    is_global <- isTRUE(attr(x, "is_global"))
+    
+    if (is_global){
+      grid <- x[[1]]
+      extent <- terra::ext(grid)
+      raster_crs <- terra::crs(grid, describe = TRUE)
+      crs_string <- terra::crs(grid)
+      
+      # Create a clean grid template instead of deriving unreliable mask
+      grid_template <- terra::rast(
+        extent = terra::ext(grid),
+        resolution = terra::res(grid),
+        crs = crs_string
+      )
+      terra::values(grid_template) <- 1
+      
+      # Determine resolution multiplier
+      raster_res <- terra::res(x)[1]
+      
+      # Check if geographic or projected
+      is_geographic <- tryCatch({
+        sf::st_crs(crs_string)$IsGeographic
+      }, error = function(e) {
+        raster_res < 1
+      })
+      
+      if (isTRUE(is_geographic)) {
+        res <- round(raster_res / 0.008333333, 0)
+      } else {
+        res <- round(raster_res / 1000, 0)
+      }
+      res <- max(res, 1)
+      
+      # Check for global extent attribute
+      global_extent <- attr(x, "global_extent")
+      is_global <- isTRUE(attr(x, "is_global"))
+      
+      return(list(
+        grid = grid_template,
+        mask = NULL,
+        res = res,
+        crs = crs_string,
+        type = "polygon",
+        is_global = is_global,
+        global_extent = global_extent,
+        from_varget = FALSE
+      ))
+      
+    } else {
+    
     grid <- x[[1]]
     extent <- terra::ext(grid)
     raster_crs <- terra::crs(grid, describe = TRUE)
     crs_string <- terra::crs(grid)
     
-    mask <- sf::st_sf(sf::st_as_sfc(sf::st_bbox(c(
-      xmin = as.numeric(extent[1]),
-      ymin = as.numeric(extent[3]),
-      xmax = as.numeric(extent[2]),
-      ymax = as.numeric(extent[4])
-    ), crs = sf::st_crs(crs_string))))
+    mask_rs <- !is.na(x)
+    
+    mask <- sf::st_as_sf(terra::as.polygons(mask_rs, dissolve = TRUE))
+    mask = mask[2,]
+    
+    
     
     # Determine resolution multiplier
     raster_res <- terra::res(x)[1]
@@ -83,13 +138,16 @@ get_par <- function(x) {
     }
     res <- max(res, 1)
     
+    
+    
     return(list(
       grid = grid,
       mask = mask,
       res = res,
       crs = crs_string,
       type = "polygon",
-      is_global = FALSE,
+      is_global = is_global,
+      global_extent = global_extent,
       from_varget = FALSE
     ))
   }
@@ -102,12 +160,46 @@ get_par <- function(x) {
       cli::cli_abort("Data frame must contain 'X' and 'Y' columns for coordinates.")
     }
     
-    shapefile <- sf::st_as_sf(x, coords = c("X", "Y"), crs = 4326)
-    extent_info <- process_extent(shapefile, crs = "EPSG:4326")
+    # FIXED: Check for stored CRS attribute from previous extraction
+    # This preserves the original CRS through the chain
+    stored_crs <- attr(x, "envar_crs")
+    
+    if (!is.null(stored_crs)) {
+      # Use the stored CRS from previous extraction
+      point_crs <- stored_crs
+    } else {
+      # Fallback: try to detect CRS from coordinate values
+      max_x <- max(abs(x$X), na.rm = TRUE)
+      max_y <- max(abs(x$Y), na.rm = TRUE)
+      
+      if (max_x > 180 || max_y > 90) {
+        # Coordinates are too large for WGS84, likely projected
+        cli::cli_alert_warning("No CRS stored in data.frame. Coordinates appear projected (X={round(max_x)}, Y={round(max_y)}).")
+        
+        # Check if coordinates are in typical EPSG:3035 range (European LAEA)
+        if (max_x > 1000000 && max_x < 8000000 && max_y > 1000000 && max_y < 6000000) {
+          point_crs <- "EPSG:3035"
+          cli::cli_alert_info("Detected likely EPSG:3035 (European LAEA) based on coordinate range.")
+        } else {
+          cli::cli_alert_warning("Could not detect CRS. Assuming EPSG:4326 - results may be incorrect!")
+          point_crs <- "EPSG:4326"
+        }
+      } else {
+        point_crs <- "EPSG:4326"
+      }
+    }
+    
+    # Create sf object with the correct CRS
+    shapefile <- sf::st_as_sf(x, coords = c("X", "Y"), crs = point_crs)
+    
+    # Process extent with the correct CRS
+    extent_info <- process_extent(shapefile, crs = point_crs)
+    extent_info$crs <- point_crs
     extent_info$from_varget <- FALSE
     
     return(extent_info)
   }
   
   cli::cli_abort("Unsupported input type for get_par()")
+  }
 }

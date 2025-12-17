@@ -1,63 +1,67 @@
 # R/heterogeneity.R
 
-#' Download and process Earthenv habitat heterogeneity layers
+#' Download and process EarthEnv habitat heterogeneity layers
 #'
-#' `heterogeneity()` downloads, processes, and extracts variables from the
-#' **Earthenv habitat heterogeneity** dataset (1-km resolution).
-#' Each variable corresponds to a global Cloud-Optimized GeoTIFF (COG)
-#' representing different metrics of habitat heterogeneity derived from
-#' remote sensing data.
+#' This function downloads, processes, and extracts variables from the
+#' EarthEnv habitat heterogeneity dataset (1-km resolution). Each variable 
+#' corresponds to a global Cloud-Optimized GeoTIFF (COG) representing different 
+#' metrics of habitat heterogeneity derived from remote sensing data.
 #'
-#' The function allows users to input either:
-#' - **Canonical variable names**, e.g. `"cv"` (Coefficient of variation), `"shannon"`, `"maximum"`
-#' - **Human-readable names**, e.g. `"coefficient of variation"`, `"standard deviation"`,
-#'   `"dissimilarity"`, etc.
+#' Available variables (working synonyms in parentheses):
 #'
-#' It automatically:
-#' - downloads the selected files,
-#' - crops/resamples/masks to match a user-provided `SpatRaster`, **or**
-#' - extracts values when `x` is point data.
+#' First-order statistics:
+#' 
+#' 1 - "cv" ("coefficient of variation", "coeff of variation")
+#' 
+#' 2 - "evenness" ("even")
+#' 
+#' 3 - "range"
+#' 
+#' 4 - "shannon" ("shannon index", "shannon entropy")
+#' 
+#' 5 - "simpson" ("simpson index", "simpson diversity")
+#' 
+#' 6 - "std" ("standard deviation", "std dev")
+#' 
+#' Second-order statistics (texture metrics):
+#' 
+#' 7 - "Contrast" ("contrast")
+#' 
+#' 8 - "Correlation" ("correlation", "corr")
+#' 
+#' 9 - "Dissimilarity" ("dissimilarity")
+#' 
+#' 10 - "Entropy" ("entropy", "texture entropy")
+#' 
+#' 11 - "Homogeneity" ("homogeneity")
+#' 
+#' 12 - "Maximum" ("maximum", "max")
+#' 
+#' 13 - "Uniformity" ("uniformity", "uniform")
+#' 
+#' 14 - "Variance" ("variance", "var")
 #'
+#' Citation:
 #'
-#' ## Citation
-#' If you use Earthenv habitat heterogeneity data, please cite:
-#'
-#' **Tuanmu MN, Jetz W (2015).**
-#' *A global, remote sensing-based characterization of terrestrial habitat heterogeneity
-#' for biodiversity and ecosystem modeling.* Global Ecology and Biogeography, **24(11)**, 1329-1339.
+#' Tuanmu MN, Jetz W (2015). "A global, remote sensing-based characterization 
+#' of terrestrial habitat heterogeneity for biodiversity and ecosystem modeling." 
+#' Global Ecology and Biogeography, 24(11), 1329-1339.
 #' https://doi.org/10.1111/geb.12365
 #'
-#'
-#' ## Available variables (1-km resolution)
-#'
-#' | Human-readable name           | Canonical variable name (URL suffix)   |
-#' |-------------------------------|----------------------------------------|
-#' | Coefficient of variation      | cv                                     |
-#' | Evenness                      | evenness                               |
-#' | Range                         | range                                  |
-#' | Shannon (entropy)             | shannon                                |
-#' | Simpson (diversity)           | simpson                                |
-#' | Standard deviation            | std                                    |
-#' | Contrast                      | Contrast                               |
-#' | Correlation                   | Correlation                            |
-#' | Dissimilarity                 | Dissimilarity                          |
-#' | Entropy (texture)             | Entropy                                |
-#' | Homogeneity                   | Homogeneity                            |
-#' | Maximum                       | Maximum                                |
-#' | Uniformity                    | Uniformity                             |
-#' | Variance                      | Variance                               |
-#'
-#'
-#' @param x A `SpatRaster`, `SpatVector`, or `sf` object defining the area or
-#'          locations for extraction.
-#' @param vars Character vector of variables, supplied as canonical names or
-#'          friendly names.
-#' @param ... Reserved for future use.
+#' @param x The output from `var_get()` defining the area or locations for extraction, 
+#' the reference system, and the buffer. 
+#' Leave this empty and use `var_get()` to define parameters for download.
+#' @param vars Character vector of one or more variables to download and process.
+#' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' - If `x` is a raster: a `SpatRaster` stack of processed heterogeneity layers.
-#' - If `x` contains points: a `data.frame` of extracted values.
+#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
+#' @examples
+#' \dontrun{
+#' processed <- var_get(country= "Italy", crs=3035) %>% 
+#' heterogeneity(vars=c("shannon", "cv"))
+#'   }
 #' @export
 
 heterogeneity <- function(x, vars, ...) {
@@ -66,24 +70,32 @@ heterogeneity <- function(x, vars, ...) {
   # Citation displayed on execution
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
-    "Using Earthenv Habitat Heterogeneity layers (1-km).\n",
-    "Citation: Tuanmu MN, Jetz W (2015). A global, remote sensing-based characterization of terrestrial habitat heterogeneity...\n",
-    "DOI: {.url https://doi.org/10.1111/geb.12365}"
+    "Using EarthEnv Habitat Heterogeneity layers (1-km).\n",
+    "Citation: Tuanmu MN, Jetz W (2015). A global, remote sensing-based characterization of terrestrial habitat heterogeneity... Global Ecology and Biogeography.\n",
+    "DOI: {.url https://doi.org/10.1111/geb.12365}\n"
   ))
   
-  # NOTE: Assuming get_par, download_file, and process_points are defined elsewhere in the package.
   par_list <- get_par(x)
   
-  if (inherits(par_list[[1]], "SpatRaster")) {
+  # Determine input type
+  if (!is.null(par_list$grid) && inherits(par_list$grid, "SpatRaster")) {
     grid <- par_list$grid
     mask <- par_list$mask
     res  <- par_list$res
     crs  <- par_list$crs
+    is_global <- isTRUE(par_list$is_global)
     is_raster_input <- TRUE
-  } else {
+    # Track cumulative global extent
+    current_global_extent <- par_list$global_extent
+  } else if (par_list$type == "point") {
     points <- par_list$mask
     bbox_points <- par_list$bbox
+    crs  <- par_list$crs
+    is_global <- FALSE
     is_raster_input <- FALSE
+    current_global_extent <- NULL
+  } else {
+    cli::cli_abort("Unsupported input type.")
   }
   
   processed_stack <- NULL
@@ -95,20 +107,20 @@ heterogeneity <- function(x, vars, ...) {
   # --------------------------------------------------------------------
   # Full URL components (variable part -> full filename part)
   hetero_url_components <- list(
-    "cv" = "cv_01_05_1km_uint16.tif",
-    "evenness" = "evenness_01_05_1km_uint16.tif",
-    "range" = "range_01_05_1km_uint16.tif",
-    "shannon" = "shannon_01_05_1km_uint16.tif",
-    "simpson" = "simpson_01_05_1km_uint16.tif",
-    "std" = "std_01_05_1km_uint16.tif",
-    "Contrast" = "Contrast_01_05_1km_uint32.tif",
-    "Correlation" = "Correlation_01_05_1km_int16.tif",
+    "cv"            = "cv_01_05_1km_uint16.tif",
+    "evenness"      = "evenness_01_05_1km_uint16.tif",
+    "range"         = "range_01_05_1km_uint16.tif",
+    "shannon"       = "shannon_01_05_1km_uint16.tif",
+    "simpson"       = "simpson_01_05_1km_uint16.tif",
+    "std"           = "std_01_05_1km_uint16.tif",
+    "Contrast"      = "Contrast_01_05_1km_uint32.tif",
+    "Correlation"   = "Correlation_01_05_1km_int16.tif",
     "Dissimilarity" = "Dissimilarity_01_05_1km_uint32.tif",
-    "Entropy" = "Entropy_01_05_1km_uint16.tif",
-    "Homogeneity" = "Homogeneity_01_05_1km_uint16.tif",
-    "Maximum" = "Maximum_01_05_1km_uint16.tif",
-    "Uniformity" = "Uniformity_01_05_1km_uint16.tif",
-    "Variance" = "Variance_01_05_1km_uint32.tif"
+    "Entropy"       = "Entropy_01_05_1km_uint16.tif",
+    "Homogeneity"   = "Homogeneity_01_05_1km_uint16.tif",
+    "Maximum"       = "Maximum_01_05_1km_uint16.tif",
+    "Uniformity"    = "Uniformity_01_05_1km_uint16.tif",
+    "Variance"      = "Variance_01_05_1km_uint32.tif"
   )
   
   # Friendly-name -> canonical code mapping (canonical code is the key in hetero_url_components)
@@ -129,7 +141,7 @@ heterogeneity <- function(x, vars, ...) {
     "Variance"      = c("variance", "var")
   )
   
-  # Normalizer (same as in example)
+  # Normalizer: convert to lowercase, remove punctuation, normalize whitespace
   normalize_string <- function(s) {
     s <- tolower(s)
     s <- gsub("[[:punct:]]", " ", s)
@@ -147,13 +159,21 @@ heterogeneity <- function(x, vars, ...) {
     syn2canon[[normalize_string(canon)]] <- canon
   }
   
-  # Convert requested vars to canonical codes
+  # Convert requested vars to canonical codes AND keep mapping to original names
   requested_codes <- character(0)
+  code_to_user_name <- list() # Maps canonical code -> user's original name
   unmapped <- character(0)
+  
   for (v in vars) {
     key <- normalize_string(v)
     if (!is.null(syn2canon[[key]])) {
-      requested_codes <- c(requested_codes, syn2canon[[key]])
+      canon <- syn2canon[[key]]
+      # Only add if not already present (avoid duplicates)
+      if (!(canon %in% requested_codes)) {
+        requested_codes <- c(requested_codes, canon)
+        # Store the user's original name for this canonical code
+        code_to_user_name[[canon]] <- v
+      }
     } else {
       unmapped <- c(unmapped, v)
     }
@@ -161,24 +181,24 @@ heterogeneity <- function(x, vars, ...) {
   
   if (length(unmapped) > 0) {
     cli::cli_abort(c(
-      "Unknown Earthenv habitat heterogeneity variables:",
+      "Unknown EarthEnv habitat heterogeneity variables:",
       "x" = "{.val {unmapped}}"
     ))
   }
-  requested_codes <- unique(requested_codes)
   
   # --------------------------------------------------------------------
-  # Helper: Download, process, and clean up a single file (same structure)
+  # Helper: Download, process, and clean up a single file
   # --------------------------------------------------------------------
-  handle_file <- function(url, dest_file, var) {
+  handle_file <- function(url, dest_file, canon, user_name) {
     temp_dir <- fs::path_temp("envar/grids")
     fs::dir_create(temp_dir)
     
-    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {var}}...")
+    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {user_name}}...")
     
     success <- download_file(url, dest_file)
+    
     if (!success) {
-      cli::cli_alert_warning("Failed to download {.val {var}} from {.url {url}}.")
+      cli::cli_alert_warning("Failed to download {.val {user_name}} from {.url {url}}.")
       return(NULL)
     }
     
@@ -186,54 +206,93 @@ heterogeneity <- function(x, vars, ...) {
       layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
-        fs::file_delete(dest_file)
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
-      cli::cli_alert_info("Processing layer {.val {basename(dest_file)}}...")
+      cli::cli_alert_info("Processing layer {.val {user_name}}...")
       
-      layer <- terra::crop(layer, grid, snap = "out")
-      layer <- terra::resample(layer, grid, method = "bilinear")
-      layer <- terra::mask(layer, mask)
+      # Process layer using standard helper
+      result <- process_raster_layer(
+        layer = layer,
+        grid = grid,
+        mask = mask,
+        res = res,
+        crs = crs,
+        is_global = is_global,
+        current_extent = current_global_extent
+      )
       
-      if (!is.null(par_list$crs)) {
-        layer <- terra::project(layer, par_list$crs)
+      if (is_global) {
+        # For global processing, result is a list with layer and extent
+        layer1 <- result$layer
+        new_extent <- result$extent
+        
+        # Update the cumulative global extent
+        current_global_extent <<- new_extent
+        
+        # If we have existing layers and extent changed, crop them
+        if (!is.null(processed_stack)) {
+          processed_stack <<- align_stack_to_extent(processed_stack, new_extent)
+        }
+      } else {
+        # For regional processing, result is just the layer
+        layer1 <- result
       }
+      
+      # Assign user-requested name to layer
+      names(layer1) <- user_name
       
       if (is.null(processed_stack)) {
-        processed_stack <<- layer
+        processed_stack <<- layer1
       } else {
-        processed_stack <<- c(processed_stack, layer)
+        processed_stack <<- c(processed_stack, layer1)
       }
       
-      cli::cli_alert_success("Processed and added {.val {basename(dest_file)}} to stack.")
+      cli::cli_alert_success("Processed and added {.val {user_name}} to stack.")
       
-      rm(layer)
+      rm(layer, layer1)
       gc()
-      fs::file_delete(dest_file)
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
       
     } else {
-      cli::cli_alert_info("Extracting values from {.val {basename(dest_file)}}...")
+      
+      cli::cli_alert_info("Extracting values from {.val {user_name}}...")
       
       extracted <- try(process_points(file = dest_file, points = points), silent = TRUE)
+      
       if (inherits(extracted, "try-error")) {
-        cli::cli_alert_warning("Extraction failed for {.val {basename(dest_file)}}.")
-        fs::file_delete(dest_file)
+        cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
       extracted <- data.frame(extracted)
+      
+      if (ncol(extracted) >= 2) {
+        # Use user-requested name for the column
+        names(extracted)[ncol(extracted)] <- user_name
+      }
+      
       if (is.null(extracted_df)) {
         extracted_df <<- extracted
       } else {
-        extracted_df <<- merge(extracted_df, extracted[, c(1, 4)], by = "ID", all = TRUE)
+        extracted_df <<- merge(extracted_df, extracted[, c(1, ncol(extracted))], by = "ID", all = TRUE)
       }
       
-      cli::cli_alert_success("Extracted {.val {basename(dest_file)}} successfully.")
+      cli::cli_alert_success("Extracted {.val {user_name}} successfully.")
       
       rm(extracted)
       gc()
-      fs::file_delete(dest_file)
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
     }
   }
   
@@ -242,7 +301,7 @@ heterogeneity <- function(x, vars, ...) {
   # --------------------------------------------------------------------
   base_url <- "https://data.earthenv.org/habitat_heterogeneity/1km"
   
-  cli::cli_alert_info("Starting the download of Earthenv habitat heterogeneity data...")
+  cli::cli_alert_info("Starting the download of EarthEnv habitat heterogeneity data...")
   
   for (canon in requested_codes) {
     # Get the full filename from the lookup list
@@ -250,7 +309,10 @@ heterogeneity <- function(x, vars, ...) {
     url <- file.path(base_url, filename)
     dest <- file.path(fs::path_temp("envar/grids"), filename)
     
-    handle_file(url, dest, canon)
+    # Get the user's original name for this canonical code
+    user_name <- code_to_user_name[[canon]]
+    
+    handle_file(url, dest, canon, user_name)
   }
   
   # --------------------------------------------------------------------
@@ -258,11 +320,50 @@ heterogeneity <- function(x, vars, ...) {
   # --------------------------------------------------------------------
   if (is_raster_input) {
     if (is.null(processed_stack)) cli::cli_abort("No layers were successfully processed")
-    if (inherits(x, "SpatRaster")) processed_stack <- c(x, processed_stack)
+    
+    # If x was already a SpatRaster (from previous function), combine
+    if (inherits(x, "SpatRaster")) {
+      if (is_global) {
+        processed_stack <- combine_global_rasters(
+          existing_stack = x,
+          new_stack = processed_stack,
+          current_global_extent = current_global_extent
+        )
+      } else {
+        # Regional mode: resample new layers to match input raster exactly
+        # This ensures perfect alignment for stacking
+        if (!terra::compareGeom(x, processed_stack, stopOnError = FALSE)) {
+          cli::cli_alert_info("Aligning new layers to match input raster geometry...")
+          processed_stack <- terra::resample(processed_stack, x, method = "bilinear")
+        }
+      }
+      
+      processed_stack <- c(x, processed_stack)
+    }
+    
+    # Attach global extent as attribute for downstream functions
+    if (is_global) {
+      attr(processed_stack, "global_extent") <- current_global_extent
+      attr(processed_stack, "is_global") <- TRUE
+    }
+    
     cli::cli_alert_success("All layers processed and stacked successfully")
     return(processed_stack)
   } else {
     if (is.null(extracted_df)) cli::cli_abort("No values extracted successfully")
+    # Merge with previous data if x was a data.frame
+    if (inherits(x, "data.frame") && !inherits(x, "sf")) {
+      extracted_df <- merge(x, extracted_df[, c(1, 4:ncol(extracted_df))], by = c("ID"), all = TRUE)
+      # Preserve CRS from previous extraction
+      prev_crs <- attr(x, "envar_crs")
+      if (!is.null(prev_crs)) {
+        crs <- prev_crs
+      }
+    }
+    
+    # Store the CRS as an attribute for downstream functions
+    # This ensures the CRS is preserved when chaining point extractions
+    attr(extracted_df, "envar_crs") <- crs
     cli::cli_alert_success("Extraction completed successfully")
     return(extracted_df)
   }

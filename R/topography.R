@@ -2,61 +2,63 @@
 
 #' Download and process EarthEnv Topography layers
 #'
-#' `topography()` downloads, processes, and extracts variables from the
-#' **EarthEnv Topography** dataset. This dataset provides global, cross-scale
+#' This function downloads, processes, and extracts variables from the
+#' EarthEnv Topography dataset. This dataset provides global, cross-scale
 #' topographic variables suitable for biodiversity and ecosystem modeling.
 #'
-#' The function allows users to input either:
-#' - **canonical EarthEnv variable names**, e.g. `"elevation"`, `"roughness"`
-#' - **human-readable names**, e.g. `"dem"`, `"slope"`, `"terrain ruggedness"`, etc.
+#' Available variables (working synonyms in parentheses):
 #'
-#' It automatically:
-#' - downloads the selected files based on the requested source and algorithm,
-#' - crops/resamples/masks to match a user-provided `SpatRaster`, **or**
-#' - extracts values when `x` is point data.
+#' 1 - "elevation" ("dem", "height", "alt", "altitude")
+#' 
+#' 2 - "slope" 
+#' 
+#' 3 - "aspect"
+#' 
+#' 4 - "roughness" ("rough")
+#' 
+#' 5 - "tri" ("terrain ruggedness index", "ruggedness")
+#' 
+#' 6 - "tpi" ("topographic position index", "position")
+#' 
+#' 7 - "vrm" ("vector ruggedness measure")
+#' 
+#' 8 - "pcurv" ("profile curvature", "profile curve")
+#' 
+#' 9 - "tcurv" ("tangential curvature", "tangential curve")
+#' 
+#' 10 - "eastness" ("east")
+#' 
+#' 11 - "northness" ("north")
 #'
-#' ## Citation
-#' If you use EarthEnv Topography data, please cite:
+#' Citation:
 #'
-#' **Amatulli, G., Domisch, S., Tuanmu, M.-N., Parmentier, B., Ranipeta, A.,**
-#' **Malczyk, J., and Jetz, W. (2018).**
-#' *A suite of global, cross-scale topographic variables for environmental and biodiversity modeling.*
-#' Scientific Data 5: 180040.
+#' Amatulli, G., Domisch, S., Tuanmu, M.-N., Parmentier, B., Ranipeta, A.,
+#' Malczyk, J., and Jetz, W. (2018). "A suite of global, cross-scale topographic 
+#' variables for environmental and biodiversity modeling." Scientific Data 5: 180040.
 #' https://doi.org/10.1038/sdata.2018.40
 #'
+#' Note: Please cite original sources of primary datasets where appropriate.
 #'
-#' ## Available variables
-#'
-#' | Human-readable name  | Canonical variable code |
-#' |----------------------|-------------------------|
-#' | Elevation (DEM)      | elevation               |
-#' | Slope                | slope                   |
-#' | Aspect               | aspect                  |
-#' | Roughness            | roughness               |
-#' | TRI                  | tri                     |
-#' | TPI                  | tpi                     |
-#' | VRM                  | vrm                     |
-#' | Profile Curvature    | pcurv                   |
-#' | Tangential Curvature | tcurv                   |
-#' | Eastness             | eastness                |
-#' | Northness            | northness               |
-#'
-#' @param x A `SpatRaster`, `SpatVector`, or `sf` object defining the area or
-#'          locations for extraction.
-#' @param vars Character vector of variables, supplied as canonical codes or
-#'             friendly names.
+#' @param x The output from `var_get()` defining the area or locations for extraction, 
+#' the reference system, and the buffer. 
+#' Leave this empty and use `var_get()` to define parameters for download.
+#' @param vars Character vector of one or more variables to download and process.
 #' @param algorithm Character. The aggregation method/algorithm to use. 
-#'        Common options: `"md"` (median), `"mn"` (mean), `"min"`, `"max"`, `"sd"`.
-#'        Default is `"md"`.
-#' @param topo_source Character. The source of the data. Must be `"GMTED"` 
-#'        (Global Multi-resolution Terrain Elevation Data) or `"SRTM"` 
-#'        (Shuttle Radar Topography Mission). Default is `"GMTED"`.
-#' @param ... Reserved for future use.
+#'        Common options: "md" (median), "mn" (mean), "min", "max", "sd".
+#'        Default is "md".
+#' @param topo_source Character. The source of the data. Must be "GMTED" 
+#'        (Global Multi-resolution Terrain Elevation Data) or "SRTM" 
+#'        (Shuttle Radar Topography Mission). Default is "GMTED".
+#' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' - If `x` is a raster: a `SpatRaster` stack of processed topography layers.
-#' - If `x` contains points: a `data.frame` of extracted values.
+#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
+#' @examples
+#' \dontrun{
+#' processed <- var_get(country= "Italy", crs=3035) %>% 
+#' topography(vars=c("elevation", "slope"))
+#'   }
 #' @export
 
 topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
@@ -67,22 +69,30 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
   cli::cli_alert_info(paste0(
     "Using EarthEnv Topography layers.\n",
     "Citation: Amatulli, G., et al. (2018). A suite of global, cross-scale topographic variables for environmental and biodiversity modeling. Scientific Data.\n",
-    "DOI: {.url https://doi.org/10.1038/sdata.2018.40}\n",
-    "Note: Please cite original sources of primary datasets where appropriate."
+    "DOI: {.url https://doi.org/10.1038/sdata.2018.40}\n"
   ))
   
   par_list <- get_par(x)
   
-  if (inherits(par_list[[1]], "SpatRaster")) {
+  # Determine input type
+  if (!is.null(par_list$grid) && inherits(par_list$grid, "SpatRaster")) {
     grid <- par_list$grid
     mask <- par_list$mask
-    res  <- par_list$res
-    crs  <- par_list$crs
+    res <- par_list$res
+    crs <- par_list$crs
+    is_global <- isTRUE(par_list$is_global)
     is_raster_input <- TRUE
-  } else {
+    # Track cumulative global extent
+    current_global_extent <- par_list$global_extent
+  } else if (par_list$type == "point") {
     points <- par_list$mask
     bbox_points <- par_list$bbox
+    crs <- par_list$crs
+    is_global <- FALSE
     is_raster_input <- FALSE
+    current_global_extent <- NULL
+  } else {
+    cli::cli_abort("Unsupported input type.")
   }
   
   processed_stack <- NULL
@@ -115,7 +125,7 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
     "northness" = c("northness", "north")
   )
   
-  # Normalizer
+  # Normalizer: convert to lowercase, remove punctuation, normalize whitespace
   normalize_string <- function(s) {
     s <- tolower(s)
     s <- gsub("[[:punct:]]", " ", s)
@@ -132,13 +142,21 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
     syn2canon[[normalize_string(canon)]] <- canon
   }
   
-  # Convert requested vars to canonical codes
+  # Convert requested vars to canonical codes AND keep mapping to original names
   requested_codes <- character(0)
+  code_to_user_name <- list() # Maps canonical code -> user's original name
   unmapped <- character(0)
+  
   for (v in vars) {
     key <- normalize_string(v)
     if (!is.null(syn2canon[[key]])) {
-      requested_codes <- c(requested_codes, syn2canon[[key]])
+      canon <- syn2canon[[key]]
+      # Only add if not already present (avoid duplicates)
+      if (!(canon %in% requested_codes)) {
+        requested_codes <- c(requested_codes, canon)
+        # Store the user's original name for this canonical code
+        code_to_user_name[[canon]] <- v
+      }
     } else {
       unmapped <- c(unmapped, v)
     }
@@ -150,20 +168,19 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
       "x" = "{.val {unmapped}}"
     ))
   }
-  requested_codes <- unique(requested_codes)
   
   # --------------------------------------------------------------------
   # Helper: Download, process, and clean up a single file
   # --------------------------------------------------------------------
-  handle_file <- function(url, dest_file, var) {
+  handle_file <- function(url, dest_file, canon, user_name) {
     temp_dir <- fs::path_temp("envar/grids")
     fs::dir_create(temp_dir)
     
-    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {var}}...")
+    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {user_name}}...")
     
     success <- download_file(url, dest_file)
     if (!success) {
-      cli::cli_alert_warning("Failed to download {.val {var}} from {.url {url}}.")
+      cli::cli_alert_warning("Failed to download {.val {user_name}} from {.url {url}}.")
       return(NULL)
     }
     
@@ -171,54 +188,91 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
       layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
-        fs::file_delete(dest_file)
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
-      cli::cli_alert_info("Processing layer {.val {basename(dest_file)}}...")
+      cli::cli_alert_info("Processing layer {.val {user_name}}...")
       
-      layer <- terra::crop(layer, grid, snap = "out")
-      layer <- terra::resample(layer, grid, method = "bilinear")
-      layer <- terra::mask(layer, mask)
+      # Process layer using standard helper
+      result <- process_raster_layer(
+        layer = layer,
+        grid = grid,
+        mask = mask,
+        res = res,
+        crs = crs,
+        is_global = is_global,
+        current_extent = current_global_extent
+      )
       
-      if (!is.null(par_list$crs)) {
-        layer <- terra::project(layer, par_list$crs)
+      if (is_global) {
+        # For global processing, result is a list with layer and extent
+        layer1 <- result$layer
+        new_extent <- result$extent
+        
+        # Update the cumulative global extent
+        current_global_extent <<- new_extent
+        
+        # If we have existing layers and extent changed, crop them
+        if (!is.null(processed_stack)) {
+          processed_stack <<- align_stack_to_extent(processed_stack, new_extent)
+        }
+      } else {
+        # For regional processing, result is just the layer
+        layer1 <- result
       }
+      
+      # Assign user-requested name to layer
+      names(layer1) <- user_name
       
       if (is.null(processed_stack)) {
-        processed_stack <<- layer
+        processed_stack <<- layer1
       } else {
-        processed_stack <<- c(processed_stack, layer)
+        processed_stack <<- c(processed_stack, layer1)
       }
       
-      cli::cli_alert_success("Processed and added {.val {basename(dest_file)}} to stack.")
+      cli::cli_alert_success("Processed and added {.val {user_name}} to stack.")
       
-      rm(layer)
+      rm(layer, layer1)
       gc()
-      fs::file_delete(dest_file)
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
       
     } else {
-      cli::cli_alert_info("Extracting values from {.val {basename(dest_file)}}...")
+      
+      cli::cli_alert_info("Extracting values from {.val {user_name}}...")
       
       extracted <- try(process_points(file = dest_file, points = points), silent = TRUE)
       if (inherits(extracted, "try-error")) {
-        cli::cli_alert_warning("Extraction failed for {.val {basename(dest_file)}}.")
-        fs::file_delete(dest_file)
+        cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
       extracted <- data.frame(extracted)
+      if (ncol(extracted) >= 2) {
+        # Use user-requested name for the column
+        names(extracted)[ncol(extracted)] <- user_name
+      }
+      
       if (is.null(extracted_df)) {
         extracted_df <<- extracted
       } else {
-        extracted_df <<- merge(extracted_df, extracted[, c(1, 4)], by = "ID", all = TRUE)
+        extracted_df <<- merge(extracted_df, extracted[, c(1, ncol(extracted))], by = "ID", all = TRUE)
       }
       
-      cli::cli_alert_success("Extracted {.val {basename(dest_file)}} successfully.")
+      cli::cli_alert_success("Extracted {.val {user_name}} successfully.")
       
       rm(extracted)
       gc()
-      fs::file_delete(dest_file)
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
     }
   }
   
@@ -252,7 +306,10 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
     url <- file.path(base_url, file_name)
     dest <- file.path(fs::path_temp("envar/grids"), file_name)
     
-    handle_file(url, dest, canon)
+    # Get the user's original name for this canonical code
+    user_name <- code_to_user_name[[canon]]
+    
+    handle_file(url, dest, canon, user_name)
   }
   
   # --------------------------------------------------------------------
@@ -260,11 +317,50 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
   # --------------------------------------------------------------------
   if (is_raster_input) {
     if (is.null(processed_stack)) cli::cli_abort("No layers were successfully processed")
-    if (inherits(x, "SpatRaster")) processed_stack <- c(x, processed_stack)
+    
+    # If x was already a SpatRaster (from previous function), combine
+    if (inherits(x, "SpatRaster")) {
+      if (is_global) {
+        processed_stack <- combine_global_rasters(
+          existing_stack = x,
+          new_stack = processed_stack,
+          current_global_extent = current_global_extent
+        )
+      } else {
+        # Regional mode: resample new layers to match input raster exactly
+        # This ensures perfect alignment for stacking
+        if (!terra::compareGeom(x, processed_stack, stopOnError = FALSE)) {
+          cli::cli_alert_info("Aligning new layers to match input raster geometry...")
+          processed_stack <- terra::resample(processed_stack, x, method = "bilinear")
+        }
+      }
+      
+      processed_stack <- c(x, processed_stack)
+    }
+    
+    # Attach global extent as attribute for downstream functions
+    if (is_global) {
+      attr(processed_stack, "global_extent") <- current_global_extent
+      attr(processed_stack, "is_global") <- TRUE
+    }
+    
     cli::cli_alert_success("All layers processed and stacked successfully")
     return(processed_stack)
   } else {
     if (is.null(extracted_df)) cli::cli_abort("No values extracted successfully")
+    # Merge with previous data if x was a data.frame
+    if (inherits(x, "data.frame") && !inherits(x, "sf")) {
+      extracted_df <- merge(x, extracted_df[, c(1, 4:ncol(extracted_df))], by = c("ID"), all = TRUE)
+      # Preserve CRS from previous extraction
+      prev_crs <- attr(x, "envar_crs")
+      if (!is.null(prev_crs)) {
+        crs <- prev_crs
+      }
+    }
+    
+    # Store the CRS as an attribute for downstream functions
+    # This ensures the CRS is preserved when chaining point extractions
+    attr(extracted_df, "envar_crs") <- crs
     cli::cli_alert_success("Extraction completed successfully")
     return(extracted_df)
   }

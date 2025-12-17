@@ -2,55 +2,51 @@
 
 #' Download and process WDPA Protected Area layers
 #'
-#' `protection()` downloads, processes, and extracts variables from the
-#' **World Database of Protected Areas (WDPA)**. Each variable corresponds 
+#' This function downloads, processes, and extracts variables from the
+#' World Database of Protected Areas (WDPA). Each variable corresponds 
 #' to a global raster representing different IUCN Management Categories of 
 #' protected areas.
 #'
-#' The function allows users to input either:
-#' - **canonical WDPA codes**, e.g. `"WDPA_II"`, `"WDPA_ALL"`
-#' - **human-readable names**, e.g. `"national park"`, `"strict nature reserve"`,
-#'   `"wilderness area"`, `"sustainable use"`, etc.
+#' Available variables (working synonyms in parentheses):
 #'
-#' It automatically:
-#' - downloads the selected files from the source repositories,
-#' - crops/resamples/masks to match a user-provided `SpatRaster`, **or**
-#' - extracts values when `x` is point data.
+#' 1 - "WDPA_IA" ("strict nature reserve", "strict reserve", "1a", "ia", "Ia")
+#' 
+#' 2 - "WDPA_IB" ("wilderness area", "wilderness", "1b", "ib", "Ib")
+#' 
+#' 3 - "WDPA_II" ("national park", "park", "2", "ii", "II")
+#' 
+#' 4 - "WDPA_III" ("natural monument", "monument", "3", "iii", "III")
+#' 
+#' 5 - "WDPA_IV" ("habitat species management", "habitat management", "4", "iv", "IV")
+#' 
+#' 6 - "WDPA_V" ("protected landscape", "protected seascape", "landscape", "5", "v", "V")
+#' 
+#' 7 - "WDPA_VI" ("sustainable use", "natural resources", "6", "vi", "VI")
+#' 
+#' 8 - "WDPA_ALL" ("all", "combined", "full", "total", "all protected areas")
 #'
+#' Citation:
 #'
-#' ## Citation
-#' If you use these data, please cite:
+#' Protected Planet (2025). "World Database of Protected Areas (WDPA)."
+#' https://www.protectedplanet.net/en
 #'
-#' **Protected Planet (2025).** #' *World Database of Protected Areas (WDPA).* #' https://www.protectedplanet.net/en
+#' Note: Users should ensure they comply with the terms of use of the WDPA
+#' when using these data for commercial or research purposes.
 #'
-#' _Note: Users should ensure they comply with the terms of use of the WDPA
-#' when using these data for commercial or research purposes._
-#'
-#'
-#' ## Available variables
-#'
-#' | Human-readable name                | Canonical variable code              | Description |
-#' |------------------------------------|--------------------------------------|-------------|
-#' | strict nature reserve (1a)         | WDPA_IA                              | IUCN Category Ia |
-#' | wilderness area (1b)               | WDPA_IB                              | IUCN Category Ib |
-#' | national park (2)                  | WDPA_II                              | IUCN Category II |
-#' | natural monument (3)               | WDPA_III                             | IUCN Category III |
-#' | habitat species management (4)     | WDPA_IV                              | IUCN Category IV |
-#' | protected landscape (5)            | WDPA_V                               | IUCN Category V |
-#' | sustainable use (6)                | WDPA_VI                              | IUCN Category VI |
-#' | all protected areas                | WDPA_ALL                             | Combined/Full WDPA |
-#'
-#'
-#' @param x A `SpatRaster`, `SpatVector`, or `sf` object defining the area or
-#'          locations for extraction.
-#' @param vars Character vector of variables, supplied as canonical codes or
-#'             friendly names.
-#' @param ... Reserved for future use.
+#' @param x The output from `var_get()` defining the area or locations for extraction, 
+#' the reference system, and the buffer. 
+#' Leave this empty and use `var_get()` to define parameters for download.
+#' @param vars Character vector of one or more variables to download and process.
+#' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' - If `x` is a raster: a `SpatRaster` stack of processed WDPA layers.  
-#' - If `x` contains points: a `data.frame` of extracted values.
+#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
+#' @examples
+#' \dontrun{
+#' processed <- var_get(country= "Italy", crs=3035) %>% 
+#' protection(vars=c("national park", "WDPA_ALL"))
+#'   }
 #' @export
 
 protection <- function(x, vars, ...) {
@@ -66,16 +62,25 @@ protection <- function(x, vars, ...) {
   
   par_list <- get_par(x)
   
-  if (inherits(par_list[[1]], "SpatRaster")) {
+  # Determine input type
+  if (!is.null(par_list$grid) && inherits(par_list$grid, "SpatRaster")) {
     grid <- par_list$grid
     mask <- par_list$mask
     res  <- par_list$res
     crs  <- par_list$crs
+    is_global <- isTRUE(par_list$is_global)
     is_raster_input <- TRUE
-  } else {
+    # Track cumulative global extent
+    current_global_extent <- par_list$global_extent
+  } else if (par_list$type == "point") {
     points <- par_list$mask
     bbox_points <- par_list$bbox
+    crs  <- par_list$crs
+    is_global <- FALSE
     is_raster_input <- FALSE
+    current_global_extent <- NULL
+  } else {
+    cli::cli_abort("Unsupported input type.")
   }
   
   processed_stack <- NULL
@@ -95,7 +100,7 @@ protection <- function(x, vars, ...) {
     "WDPA_ALL" = c("all", "combined", "full", "total", "all protected areas")
   )
   
-  # URL mapping for canonical codes
+  # Direct URL lookup
   url_lookup <- list(
     "WDPA_IA"  = "https://figshare.com/ndownloader/files/59746952?private_link=f0cabc378ea496838f66",
     "WDPA_IB"  = "https://figshare.com/ndownloader/files/59746949?private_link=f0cabc378ea496838f66",
@@ -107,7 +112,7 @@ protection <- function(x, vars, ...) {
     "WDPA_ALL" = "https://figshare.com/ndownloader/files/59747045?private_link=f0cabc378ea496838f66"
   )
   
-  # Normalizer
+  # Normalizer: convert to lowercase, remove punctuation, normalize whitespace
   normalize_string <- function(s) {
     s <- tolower(s)
     s <- gsub("[[:punct:]]", " ", s)
@@ -124,13 +129,21 @@ protection <- function(x, vars, ...) {
     syn2canon[[normalize_string(canon)]] <- canon
   }
   
-  # Convert requested vars to canonical codes
+  # Convert requested vars to canonical codes AND keep mapping to original names
   requested_codes <- character(0)
+  code_to_user_name <- list() # Maps canonical code -> user's original name
   unmapped <- character(0)
+  
   for (v in vars) {
     key <- normalize_string(v)
     if (!is.null(syn2canon[[key]])) {
-      requested_codes <- c(requested_codes, syn2canon[[key]])
+      canon <- syn2canon[[key]]
+      # Only add if not already present (avoid duplicates)
+      if (!(canon %in% requested_codes)) {
+        requested_codes <- c(requested_codes, canon)
+        # Store the user's original name for this canonical code
+        code_to_user_name[[canon]] <- v
+      }
     } else {
       unmapped <- c(unmapped, v)
     }
@@ -142,20 +155,20 @@ protection <- function(x, vars, ...) {
       "x" = "{.val {unmapped}}"
     ))
   }
-  requested_codes <- unique(requested_codes)
   
   # --------------------------------------------------------------------
   # Helper: Download, process, and clean up a single file
   # --------------------------------------------------------------------
-  handle_file <- function(url, dest_file, var) {
+  handle_file <- function(url, dest_file, canon, user_name) {
     temp_dir <- fs::path_temp("envar/grids")
     fs::dir_create(temp_dir)
     
-    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {var}}...")
+    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {user_name}}...")
     
     success <- download_file(url, dest_file)
+    
     if (!success) {
-      cli::cli_alert_warning("Failed to download {.val {var}} from {.url {url}}.")
+      cli::cli_alert_warning("Failed to download {.val {user_name}} from {.url {url}}.")
       return(NULL)
     }
     
@@ -163,61 +176,99 @@ protection <- function(x, vars, ...) {
       layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
-        fs::file_delete(dest_file)
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
-      cli::cli_alert_info("Processing layer {.val {basename(dest_file)}}...")
+      cli::cli_alert_info("Processing layer {.val {user_name}}...")
       
-      layer <- terra::crop(layer, grid, snap = "out")
-      layer <- terra::resample(layer, grid, method = "bilinear")
-      layer <- terra::mask(layer, mask)
+      # Process layer using standard helper
+      result <- process_raster_layer(
+        layer = layer,
+        grid = grid,
+        mask = mask,
+        res = res,
+        crs = crs,
+        is_global = is_global,
+        current_extent = current_global_extent
+      )
       
-      if (!is.null(par_list$crs)) {
-        layer <- terra::project(layer, par_list$crs)
+      if (is_global) {
+        # For global processing, result is a list with layer and extent
+        layer1 <- result$layer
+        new_extent <- result$extent
+        
+        # Update the cumulative global extent
+        current_global_extent <<- new_extent
+        
+        # If we have existing layers and extent changed, crop them
+        if (!is.null(processed_stack)) {
+          processed_stack <<- align_stack_to_extent(processed_stack, new_extent)
+        }
+      } else {
+        # For regional processing, result is just the layer
+        layer1 <- result
       }
+      
+      # Assign user-requested name to layer
+      names(layer1) <- user_name
       
       if (is.null(processed_stack)) {
-        processed_stack <<- layer
+        processed_stack <<- layer1
       } else {
-        processed_stack <<- c(processed_stack, layer)
+        processed_stack <<- c(processed_stack, layer1)
       }
       
-      cli::cli_alert_success("Processed and added {.val {basename(dest_file)}} to stack.")
+      cli::cli_alert_success("Processed and added {.val {user_name}} to stack.")
       
-      rm(layer)
+      rm(layer, layer1)
       gc()
-      fs::file_delete(dest_file)
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
       
     } else {
-      cli::cli_alert_info("Extracting values from {.val {basename(dest_file)}}...")
+      
+      cli::cli_alert_info("Extracting values from {.val {user_name}}...")
       
       extracted <- try(process_points(file = dest_file, points = points), silent = TRUE)
+      
       if (inherits(extracted, "try-error")) {
-        cli::cli_alert_warning("Extraction failed for {.val {basename(dest_file)}}.")
-        fs::file_delete(dest_file)
+        cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
       extracted <- data.frame(extracted)
+      
+      if (ncol(extracted) >= 2) {
+        # Use user-requested name for the column
+        names(extracted)[ncol(extracted)] <- user_name
+      }
+      
       if (is.null(extracted_df)) {
         extracted_df <<- extracted
       } else {
-        extracted_df <<- merge(extracted_df, extracted[, c(1, 4)], by = "ID", all = TRUE)
+        extracted_df <<- merge(extracted_df, extracted[, c(1, ncol(extracted))], by = "ID", all = TRUE)
       }
       
-      cli::cli_alert_success("Extracted {.val {basename(dest_file)}} successfully.")
+      cli::cli_alert_success("Extracted {.val {user_name}} successfully.")
       
       rm(extracted)
       gc()
-      fs::file_delete(dest_file)
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
     }
   }
   
   # --------------------------------------------------------------------
   # Loop through requested variables
   # --------------------------------------------------------------------
-  
   cli::cli_alert_info("Starting the download of WDPA data...")
   
   for (canon in requested_codes) {
@@ -225,7 +276,10 @@ protection <- function(x, vars, ...) {
     url <- url_lookup[[canon]]
     dest <- file.path(fs::path_temp("envar/grids"), filename)
     
-    handle_file(url, dest, canon)
+    # Get the user's original name for this canonical code
+    user_name <- code_to_user_name[[canon]]
+    
+    handle_file(url, dest, canon, user_name)
   }
   
   # --------------------------------------------------------------------
@@ -233,11 +287,50 @@ protection <- function(x, vars, ...) {
   # --------------------------------------------------------------------
   if (is_raster_input) {
     if (is.null(processed_stack)) cli::cli_abort("No layers were successfully processed")
-    if (inherits(x, "SpatRaster")) processed_stack <- c(x, processed_stack)
+    
+    # If x was already a SpatRaster (from previous function), combine
+    if (inherits(x, "SpatRaster")) {
+      if (is_global) {
+        processed_stack <- combine_global_rasters(
+          existing_stack = x,
+          new_stack = processed_stack,
+          current_global_extent = current_global_extent
+        )
+      } else {
+        # Regional mode: resample new layers to match input raster exactly
+        # This ensures perfect alignment for stacking
+        if (!terra::compareGeom(x, processed_stack, stopOnError = FALSE)) {
+          cli::cli_alert_info("Aligning new layers to match input raster geometry...")
+          processed_stack <- terra::resample(processed_stack, x, method = "bilinear")
+        }
+      }
+      
+      processed_stack <- c(x, processed_stack)
+    }
+    
+    # Attach global extent as attribute for downstream functions
+    if (is_global) {
+      attr(processed_stack, "global_extent") <- current_global_extent
+      attr(processed_stack, "is_global") <- TRUE
+    }
+    
     cli::cli_alert_success("All layers processed and stacked successfully")
     return(processed_stack)
   } else {
     if (is.null(extracted_df)) cli::cli_abort("No values extracted successfully")
+    # Merge with previous data if x was a data.frame
+    if (inherits(x, "data.frame") && !inherits(x, "sf")) {
+      extracted_df <- merge(x, extracted_df[, c(1, 4:ncol(extracted_df))], by = c("ID"), all = TRUE)
+      # Preserve CRS from previous extraction
+      prev_crs <- attr(x, "envar_crs")
+      if (!is.null(prev_crs)) {
+        crs <- prev_crs
+      }
+    }
+    
+    # Store the CRS as an attribute for downstream functions
+    # This ensures the CRS is preserved when chaining point extractions
+    attr(extracted_df, "envar_crs") <- crs
     cli::cli_alert_success("Extraction completed successfully")
     return(extracted_df)
   }

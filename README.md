@@ -9,25 +9,79 @@ The *envar R* package streamlines the retrieval and processing of
 environmental variables for ecological modelling. Selecting a proper set
 of environmental variables is a cornerstone of any ecological study but
 is often relegated to a simplistic use of a few widespread variables.
-This package facilitates the careful selection of a heterogeneous set of
-proximal drivers, allowing users to integrate data from various sources
-into R workflows easily.
 
 ## Installation
 
 #### Developmental version
 
-The latest development version can be installed to gain access to new
-functionality that is not yet present in the latest official version.
+The latest development version can be installed directly from the GitHub
+repository to allow access to an always up-to-date package version
+incorporating all the most recent fixes.
 
 - To install the latest development version from
   [GitHub](https://github.com/animalbiodiversitylab/envar), use the
   following *R* code.
 
-  ``` r
-  if (!require(remotes)) install.packages("remotes")
-  remotes::install_github("animalbiodiversitylab/envar")
-  ```
+``` r
+# install using the "remotes" package
+if (!require(remotes)) install.packages("remotes")
+remotes::install_github("animalbiodiversitylab/envar", dependencies = TRUE,
+                         build_vignettes=TRUE)
+
+# or alternatively using the "devtools" package
+if (!require(devtools)) install.packages("devtools")
+devtools::install_github("animalbiodiversitylab/envar", dependencies = TRUE,
+                         build_vignettes=TRUE)
+```
+
+Until the scientific article relative to the package is published, the
+github repository is set as private and to install the package (for
+testing and revision) you can run the code here:  
+
+``` r
+if (!require(remotes)) install.packages("remotes")
+
+remotes::install_github("animalbiodiversitylab/envar", 
+                        auth_token = "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", 
+                        upgrade="never", 
+                        dependencies=TRUE,
+                        build_vignettes=TRUE)
+
+# This code will install the package. To run the examples and vignettes, 
+#you will need to load the package as follows:
+library(envar)
+```
+
+## Vignettes
+
+We present the following vignettes to illustrate the use of the *envar
+R* package:
+
+- **[1. Installation of the library and first use
+  example](https://envarpackage.netlify.app/articles/intro)**  
+- **[2. Overview of potential uses of the
+  package](https://envarpackage.netlify.app/articles/package_overview)**
+- **[3. Presentation of available sources and variables with example
+  code](https://envarpackage.netlify.app/articles/variables)**
+- **[4. Example of use for species distribution
+  modelling](https://envarpackage.netlify.app/articles/sdm)**
+
+## Functions
+
+An overview of all functions and data is given
+**[here](https://envarpackage.netlify.app/reference/)**.
+
+## Did you find a bug?
+
+We are glad that you found a :bug: and you can report it on the GitHub
+Issues tab. Otherwise, you can send us an e-mail and we’ll do our best
+to rapidly fix the issue.
+
+## Dependencies
+
+`envar` depends on `terra`, `dplyr`, `httr`, `sf`, `rnaturalearth`,
+`rnaturalearthdata`, `exactextractr`, `usdm`, `corrplot`, `cli`, `fs`,
+and `utils`.
 
 ## Citation
 
@@ -38,7 +92,7 @@ process. To cite the package, please use:
 
 > Simoncini A, Bertoncini M, Cerofolini A, Dalpasso A, Falaschi M, Lo
 > Parrino E (2025) envar: an R package to streamline the retrieval and
-> processing of environmental variables.
+> processing of environmental variables. Submitted to Ecography.
 
 ## Usage
 
@@ -49,18 +103,36 @@ case. To begin with, we will load the required packages.
 ``` r
 # load packages
 library(envar)
+library(dplyr)
+library(terra)
 
-# download variables (e.g., the percentage cover of trees and ice here) over a study area
-processed_vars = var_get(country="Italy", res = 1, crs="EPSG:3035") %>% 
-  esalandcover(vars = c("trees", "ice"))
+# download variables (e.g., the percentage cover of trees and the slope) over a 
+# study area (in this case, the "Alps" shapefile already included in 
+# the package)
+
+processed_vars = var_get(shape = Alps, res = 1, crs=3035) %>% 
+  esalandcover(vars = c("trees")) %>% 
+  topography(vars=c("slope"))
 ```
 
 We will get a set of variables already cropped to the desired area of
-study, and presented as a rast file with multiple layers corresponding
-to the different variables. For instance, we can visualize the first
-layer produced (tree cover) as follows.
+study, and presented as a SpatRaster file with multiple layers
+corresponding to the different variables:
 
 ``` r
-# visualize a variable to have a confirmation that everything worked
-plot(processed_vars[[1]])
+# visualize the result
+print(processed_vars)
 ```
+
+    ## class       : SpatRaster 
+    ## dimensions  : 636, 961, 2  (nrow, ncol, nlyr)
+    ## resolution  : 1000, 1000  (x, y)
+    ## extent      : 3893175, 4854175, 2216131, 2852131  (xmin, xmax, ymin, ymax)
+    ## coord. ref. : ETRS89-extended / LAEA Europe (EPSG:3035) 
+    ## source(s)   : memory
+    ## names       : trees,    slope 
+    ## min values  :     0,  0.00000 
+    ## max values  :   100, 44.31425
+
+For a more in-depth explanation and examples refer to the **[Get
+started](https://envarpackage.netlify.app/articles/intro)** page.

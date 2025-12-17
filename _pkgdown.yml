@@ -1,4 +1,4 @@
-url: https://envar.net
+url: https://envarpackage.netlify.app
 
 template:
   bootstrap: 5
@@ -32,25 +32,23 @@ home:
 
 navbar:
   structure:
-    left:  [home, intro, reference, articles, tutorial, news]
+    left:  [home, intro, reference, tutorial, news]
     right: [search, github]
   components:
     intro:
-      text: Get Started
+      text: Get started
       href: articles/intro.html
-    articles:
-      text: Articles
-      menu:
-      - text: Package overview
-        href: articles/package_overview.html
+      
     tutorial:
       text: Tutorials
       menu:
-      - text: Downloading and processing environmental variables
-        href: articles/download_and_process_tutorial.html
-      - text: Species distribution modelling full workflow
-        href: articles/sdm_tutorial.html
-
+      - text: Package overview
+        href: articles/package_overview.html         
+      - text: Available variables
+        href: articles/variables.html
+      - text: Species distribution models
+        href: articles/sdm.html
+        
 reference:
   
   - title: Explore download options
@@ -84,8 +82,10 @@ reference:
   - title: Correlation
     desc: Function for identifying correlated variables
     contents:
-      - check
-  # - title: Deprecated functions
-  #   desc: Documentation for functions that are no longer available.
-  #   contents:
-  #     - envar-deprecated
+      - corr_check
+      
+  - title: Datasets
+    desc: Included data for examples and testing
+    contents:
+      - Alps
+      - Apollo

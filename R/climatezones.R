@@ -2,69 +2,63 @@
 
 #' Download and process Köppen-Geiger climate classification maps
 #'
-#' `climatezones()` downloads, processes, and extracts variables from the
-#' **High-resolution (1 km) Köppen-Geiger maps** dataset.
-#' Each variable corresponds to a global GeoTIFF representing climate classification
-#' zones based on historical data or future CMIP6 projections.
+#' This function downloads, processes, and extracts variables from the
+#' High-resolution (1 km) Köppen-Geiger maps dataset. Each variable corresponds
+#' to a global GeoTIFF representing climate classification zones based on 
+#' historical data or future CMIP6 projections.
 #'
-#' The function automatically:
-#' - Checks for the dataset zip file (downloading it once if necessary),
-#' - Extracts the specific time periods and SSP scenarios requested,
-#' - Crops/resamples/masks to match a user-provided `SpatRaster`, **or**
-#' - Extracts values when `x` is point data.
+#' Available variables (working synonyms in parentheses):
 #'
-#' This function specifically targets the **0.01 degree resolution** layers
-#' (approximately 1km).
+#' 1 - "zones" ("koppengeiger", "climate", "climatezones", "koppen", "koppen geiger")
 #'
-#' ## Citation
-#' If you use this data, please cite:
+#' Time Periods (years argument):
 #'
-#' **Beck, H.E., T.R. McVicar, N. Vergopolan, A. Berg, N.J. Lutsko, A. Dufour, Z. Zeng, X. Jiang, A.I.J.M. van Dijk, D.G. Miralles (2023).**
-#' *High-resolution (1 km) Köppen-Geiger maps for 1901–2099 based on constrained CMIP6 projections.*
-#' Scientific Data **10**, 724.
+#' Historical:
+#' - "1901-1930"
+#' - "1931-1960"
+#' - "1961-1990"
+#' - "1991-2020" (default)
+#'
+#' Future:
+#' - "2041-2070"
+#' - "2071-2099"
+#'
+#' SSP Scenarios (ssp argument, required for future periods):
+#' - 119 (SSP1-1.9)
+#' - 126 (SSP1-2.6)
+#' - 245 (SSP2-4.5)
+#' - 370 (SSP3-7.0)
+#' - 434 (SSP4-3.4)
+#' - 460 (SSP4-6.0)
+#' - 585 (SSP5-8.5)
+#'
+#' Citation:
+#'
+#' Beck, H.E., T.R. McVicar, N. Vergopolan, A. Berg, N.J. Lutsko, A. Dufour, 
+#' Z. Zeng, X. Jiang, A.I.J.M. van Dijk, D.G. Miralles (2023). "High-resolution 
+#' (1 km) Köppen-Geiger maps for 1901-2099 based on constrained CMIP6 projections." 
+#' Scientific Data 10, 724.
 #' https://doi.org/10.1038/s41597-023-02549-6
 #'
-#'
-#' ## Available Arguments
-#'
-#' The `vars` argument is provided for consistency but defaults to `"zones"`.
-#' Users should control the output primarily via the `years` and `ssp` arguments.
-#'
-#' ### Time Periods (`years`)
-#' **Historical:**
-#' * `"1901-1930"`
-#' * `"1931-1960"`
-#' * `"1961-1990"`
-#' * `"1991-2020"`
-#'
-#' **Future:**
-#' * `"2041-2070"`
-#' * `"2071-2099"`
-#'
-#' ### SSP Scenarios (`ssp`)
-#' Required if a future time period is selected.
-#' * `119` (SSP1-1.9)
-#' * `126` (SSP1-2.6)
-#' * `245` (SSP2-4.5)
-#' * `370` (SSP3-7.0)
-#' * `434` (SSP4-3.4)
-#' * `460` (SSP4-6.0)
-#' * `585` (SSP5-8.5)
-#'
-#' @param x A `SpatRaster`, `SpatVector`, or `sf` object defining the area or
-#'          locations for extraction.
-#' @param vars Character vector. Defaults to `"zones"`. Accepted aliases include:
-#'             `"koppengeiger"`, `"climate"`, `"climatezones"`, `"koppen"`.
-#' @param years Character vector of time periods. Defaults to `"1991-2020"`.
-#'              Accepts formats with underscores or hyphens (e.g., `"1901-1930"` or `"1901_1930"`).
+#' @param x The output from `var_get()` defining the area or locations for extraction, 
+#' the reference system, and the buffer. 
+#' Leave this empty and use `var_get()` to define parameters for download.
+#' @param vars Character vector. Defaults to "zones". Accepted aliases include:
+#'        "koppengeiger", "climate", "climatezones", "koppen".
+#' @param years Character vector of time periods. Defaults to "1991-2020".
+#'        Accepts formats with underscores or hyphens (e.g., "1901-1930" or "1901_1930").
 #' @param ssp Numeric or character vector of Shared Socioeconomic Pathways.
-#'            Required for future projections (e.g., `126`, `585`).
-#' @param ... Reserved for future use.
+#'        Required for future projections (e.g., 126, 585).
+#' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' - If `x` is a raster: a `SpatRaster` stack of processed climate zone layers.
-#' - If `x` contains points: a `data.frame` of extracted values.
+#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
+#' @examples
+#' \dontrun{
+#' processed <- var_get(country= "Italy", crs=3035) %>% 
+#' climatezones(vars="zones", years="1991-2020")
+#'   }
 #' @export
 
 climatezones <- function(x, vars = "zones", years = "1991-2020", ssp = NULL, ...) {
@@ -74,22 +68,31 @@ climatezones <- function(x, vars = "zones", years = "1991-2020", ssp = NULL, ...
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using Köppen-Geiger climate classification maps.\n",
-    "Citation: Beck, H.E., et al. (2023). High-resolution (1 km) Köppen-Geiger maps for 1901–2099 based on constrained CMIP6 projec­tions. Scientific Data.\n",
-    "DOI: {.url https://doi.org/10.1038/s41597-023-02549-6}"
+    "Citation: Beck, H.E., et al. (2023). High-resolution (1 km) Köppen-Geiger maps for 1901-2099 based on constrained CMIP6 projections. Scientific Data.\n",
+    "DOI: {.url https://doi.org/10.1038/s41597-023-02549-6}\n"
   ))
   
   par_list <- get_par(x)
   
-  if (inherits(par_list[[1]], "SpatRaster")) {
+  # Determine input type
+  if (!is.null(par_list$grid) && inherits(par_list$grid, "SpatRaster")) {
     grid <- par_list$grid
     mask <- par_list$mask
     res  <- par_list$res
     crs  <- par_list$crs
+    is_global <- isTRUE(par_list$is_global)
     is_raster_input <- TRUE
-  } else {
+    # Track cumulative global extent
+    current_global_extent <- par_list$global_extent
+  } else if (par_list$type == "point") {
     points <- par_list$mask
     bbox_points <- par_list$bbox
+    crs  <- par_list$crs
+    is_global <- FALSE
     is_raster_input <- FALSE
+    current_global_extent <- NULL
+  } else {
+    cli::cli_abort("Unsupported input type.")
   }
   
   processed_stack <- NULL
@@ -102,7 +105,7 @@ climatezones <- function(x, vars = "zones", years = "1991-2020", ssp = NULL, ...
   # the user intends to download climate zones.
   valid_names <- c("zones", "koppengeiger", "climate", "climatezones", "koppen", "koppen geiger")
   
-  # Normalizer
+  # Normalizer: convert to lowercase, remove punctuation, normalize whitespace
   normalize_string <- function(s) {
     s <- tolower(s)
     s <- gsub("[[:punct:]]", " ", s)
@@ -179,7 +182,7 @@ climatezones <- function(x, vars = "zones", years = "1991-2020", ssp = NULL, ...
   # --------------------------------------------------------------------
   # Helper: Process and clean up a single file
   # --------------------------------------------------------------------
-  handle_file <- function(dest_file, var_name) {
+  handle_file <- function(dest_file, user_name) {
     
     if (is_raster_input) {
       layer <- try(terra::rast(dest_file), silent = TRUE)
@@ -189,52 +192,77 @@ climatezones <- function(x, vars = "zones", years = "1991-2020", ssp = NULL, ...
         return(NULL)
       }
       
-      cli::cli_alert_info("Processing layer {.val {var_name}}...")
+      cli::cli_alert_info("Processing layer {.val {user_name}}...")
       
-      layer <- terra::crop(layer, grid, snap = "out")
-      layer <- terra::resample(layer, grid, method = "near") # Categorical data uses 'near'
-      layer <- terra::mask(layer, mask)
+      # Process layer using standard helper
+      result <- process_raster_layer(
+        layer = layer,
+        grid = grid,
+        mask = mask,
+        res = res,
+        crs = crs,
+        is_global = is_global,
+        current_extent = current_global_extent
+      )
       
-      # Rename the layer inside the raster object
-      names(layer) <- var_name
-      
-      if (!is.null(par_list$crs)) {
-        layer <- terra::project(layer, par_list$crs, method = "near")
+      if (is_global) {
+        # For global processing, result is a list with layer and extent
+        layer1 <- result$layer
+        new_extent <- result$extent
+        
+        # Update the cumulative global extent
+        current_global_extent <<- new_extent
+        
+        # If we have existing layers and extent changed, crop them
+        if (!is.null(processed_stack)) {
+          processed_stack <<- align_stack_to_extent(processed_stack, new_extent)
+        }
+      } else {
+        # For regional processing, result is just the layer
+        layer1 <- result
       }
+      
+      # Assign user-requested name to layer
+      names(layer1) <- user_name
       
       if (is.null(processed_stack)) {
-        processed_stack <<- layer
+        processed_stack <<- layer1
       } else {
-        processed_stack <<- c(processed_stack, layer)
+        processed_stack <<- c(processed_stack, layer1)
       }
       
-      cli::cli_alert_success("Processed and added {.val {var_name}} to stack.")
+      cli::cli_alert_success("Processed and added {.val {user_name}} to stack.")
       
-      rm(layer)
+      rm(layer, layer1)
       gc()
       fs::file_delete(dest_file)
       
     } else {
-      cli::cli_alert_info("Extracting values from {.val {var_name}}...")
+      
+      cli::cli_alert_info("Extracting values from {.val {user_name}}...")
       
       extracted <- try(process_points(file = dest_file, points = points), silent = TRUE)
+      
       if (inherits(extracted, "try-error")) {
-        cli::cli_alert_warning("Extraction failed for {.val {var_name}}.")
+        cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
         fs::file_delete(dest_file)
         return(NULL)
       }
       
       extracted <- data.frame(extracted)
-      # Rename value column to the specific variable name
-      colnames(extracted)[which(names(extracted) != "ID")] <- var_name
+      
+      if (ncol(extracted) >= 2) {
+        # Use user-requested name for the column
+        names(extracted)[ncol(extracted)] <- user_name
+      }
       
       if (is.null(extracted_df)) {
         extracted_df <<- extracted
       } else {
-        extracted_df <<- merge(extracted_df, extracted, by = "ID", all = TRUE)
+        extracted_df <<- merge(extracted_df, extracted[, c(1, ncol(extracted))], by = "ID", all = TRUE)
       }
       
-      cli::cli_alert_success("Extracted {.val {var_name}} successfully.")
+      cli::cli_alert_success("Extracted {.val {user_name}} successfully.")
       
       rm(extracted)
       gc()
@@ -273,10 +301,6 @@ climatezones <- function(x, vars = "zones", years = "1991-2020", ssp = NULL, ...
   for (layer_id in names(files_to_extract)) {
     internal_path <- files_to_extract[[layer_id]]
     
-    # We extract the specific file to the temp dir
-    # Note: unzip behavior varies by OS, but 'files' argument helps limit extraction
-    # We flatten the path on extraction to make it easier to find
-    
     cli::cli_alert_info("Unzipping {.val {layer_id}}...")
     
     # Unzip specific file
@@ -307,11 +331,50 @@ climatezones <- function(x, vars = "zones", years = "1991-2020", ssp = NULL, ...
   # --------------------------------------------------------------------
   if (is_raster_input) {
     if (is.null(processed_stack)) cli::cli_abort("No layers were successfully processed")
-    if (inherits(x, "SpatRaster")) processed_stack <- c(x, processed_stack)
+    
+    # If x was already a SpatRaster (from previous function), combine
+    if (inherits(x, "SpatRaster")) {
+      if (is_global) {
+        processed_stack <- combine_global_rasters(
+          existing_stack = x,
+          new_stack = processed_stack,
+          current_global_extent = current_global_extent
+        )
+      } else {
+        # Regional mode: resample new layers to match input raster exactly
+        # This ensures perfect alignment for stacking
+        if (!terra::compareGeom(x, processed_stack, stopOnError = FALSE)) {
+          cli::cli_alert_info("Aligning new layers to match input raster geometry...")
+          processed_stack <- terra::resample(processed_stack, x, method = "bilinear")
+        }
+      }
+      
+      processed_stack <- c(x, processed_stack)
+    }
+    
+    # Attach global extent as attribute for downstream functions
+    if (is_global) {
+      attr(processed_stack, "global_extent") <- current_global_extent
+      attr(processed_stack, "is_global") <- TRUE
+    }
+    
     cli::cli_alert_success("All layers processed and stacked successfully")
     return(processed_stack)
   } else {
     if (is.null(extracted_df)) cli::cli_abort("No values extracted successfully")
+    # Merge with previous data if x was a data.frame
+    if (inherits(x, "data.frame") && !inherits(x, "sf")) {
+      extracted_df <- merge(x, extracted_df[, c(1, 4:ncol(extracted_df))], by = c("ID"), all = TRUE)
+      # Preserve CRS from previous extraction
+      prev_crs <- attr(x, "envar_crs")
+      if (!is.null(prev_crs)) {
+        crs <- prev_crs
+      }
+    }
+    
+    # Store the CRS as an attribute for downstream functions
+    # This ensures the CRS is preserved when chaining point extractions
+    attr(extracted_df, "envar_crs") <- crs
     cli::cli_alert_success("Extraction completed successfully")
     return(extracted_df)
   }

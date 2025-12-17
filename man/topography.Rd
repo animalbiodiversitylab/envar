@@ -7,64 +7,67 @@
 topography(x, vars, algorithm = "md", topo_source = "GMTED", ...)
 }
 \arguments{
-\item{x}{A `SpatRaster`, `SpatVector`, or `sf` object defining the area or
-locations for extraction.}
+\item{x}{The output from `var_get()` defining the area or locations for extraction, 
+the reference system, and the buffer. 
+Leave this empty and use `var_get()` to define parameters for download.}
 
-\item{vars}{Character vector of variables, supplied as canonical codes or
-friendly names.}
+\item{vars}{Character vector of one or more variables to download and process.}
 
 \item{algorithm}{Character. The aggregation method/algorithm to use. 
-Common options: `"md"` (median), `"mn"` (mean), `"min"`, `"max"`, `"sd"`.
-Default is `"md"`.}
+Common options: "md" (median), "mn" (mean), "min", "max", "sd".
+Default is "md".}
 
-\item{topo_source}{Character. The source of the data. Must be `"GMTED"` 
-(Global Multi-resolution Terrain Elevation Data) or `"SRTM"` 
-(Shuttle Radar Topography Mission). Default is `"GMTED"`.}
+\item{topo_source}{Character. The source of the data. Must be "GMTED" 
+(Global Multi-resolution Terrain Elevation Data) or "SRTM" 
+(Shuttle Radar Topography Mission). Default is "GMTED".}
 
-\item{...}{Reserved for future use.}
+\item{...}{Additional arguments (currently unused).}
 }
 \value{
-- If `x` is a raster: a `SpatRaster` stack of processed topography layers.
-- If `x` contains points: a `data.frame` of extracted values.
+If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
-`topography()` downloads, processes, and extracts variables from the
-**EarthEnv Topography** dataset. This dataset provides global, cross-scale
+This function downloads, processes, and extracts variables from the
+EarthEnv Topography dataset. This dataset provides global, cross-scale
 topographic variables suitable for biodiversity and ecosystem modeling.
 }
 \details{
-The function allows users to input either:
-- **canonical EarthEnv variable names**, e.g. `"elevation"`, `"roughness"`
-- **human-readable names**, e.g. `"dem"`, `"slope"`, `"terrain ruggedness"`, etc.
+Available variables (working synonyms in parentheses):
 
-It automatically:
-- downloads the selected files based on the requested source and algorithm,
-- crops/resamples/masks to match a user-provided `SpatRaster`, **or**
-- extracts values when `x` is point data.
+1 - "elevation" ("dem", "height", "alt", "altitude")
 
-## Citation
-If you use EarthEnv Topography data, please cite:
+2 - "slope" 
 
-**Amatulli, G., Domisch, S., Tuanmu, M.-N., Parmentier, B., Ranipeta, A.,**
-**Malczyk, J., and Jetz, W. (2018).**
-*A suite of global, cross-scale topographic variables for environmental and biodiversity modeling.*
-Scientific Data 5: 180040.
+3 - "aspect"
+
+4 - "roughness" ("rough")
+
+5 - "tri" ("terrain ruggedness index", "ruggedness")
+
+6 - "tpi" ("topographic position index", "position")
+
+7 - "vrm" ("vector ruggedness measure")
+
+8 - "pcurv" ("profile curvature", "profile curve")
+
+9 - "tcurv" ("tangential curvature", "tangential curve")
+
+10 - "eastness" ("east")
+
+11 - "northness" ("north")
+
+Citation:
+
+Amatulli, G., Domisch, S., Tuanmu, M.-N., Parmentier, B., Ranipeta, A.,
+Malczyk, J., and Jetz, W. (2018). "A suite of global, cross-scale topographic 
+variables for environmental and biodiversity modeling." Scientific Data 5: 180040.
 https://doi.org/10.1038/sdata.2018.40
 
-
-## Available variables
-
-| Human-readable name  | Canonical variable code |
-|----------------------|-------------------------|
-| Elevation (DEM)      | elevation               |
-| Slope                | slope                   |
-| Aspect               | aspect                  |
-| Roughness            | roughness               |
-| TRI                  | tri                     |
-| TPI                  | tpi                     |
-| VRM                  | vrm                     |
-| Profile Curvature    | pcurv                   |
-| Tangential Curvature | tcurv                   |
-| Eastness             | eastness                |
-| Northness            | northness               |
+Note: Please cite original sources of primary datasets where appropriate.
+}
+\examples{
+\dontrun{
+processed <- var_get(country= "Italy", crs=3035) \%>\% 
+topography(vars=c("elevation", "slope"))
+  }
 }

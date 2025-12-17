@@ -2,36 +2,76 @@
 
 #' Download and process Global Accessibility Indicators
 #'
-#' `accessibility()` downloads, processes, and extracts variables from the
-#' **Global Accessibility Indicators** dataset.
-#' Each variable corresponds to a raster representing the travelling time (in minutes)
-#' to cities or ports of specific sizes.
+#' This function downloads, processes, and extracts variables from the
+#' Global Accessibility Indicators dataset. Each variable corresponds to a 
+#' global raster representing the travelling time (in minutes) to cities or 
+#' ports of specific sizes.
 #'
-#' The function allows users to input either:
-#' - **canonical variable codes**, e.g. `"cities1"`, `"ports1"`
-#' - **human-readable names**, e.g. `"large cities"`, `"travel time cities 1"`,
-#'   `"small ports"`, `"ports 4"`, etc.
+#' Available variables (working synonyms in parentheses):
 #'
-#' It automatically:
-#' - downloads the selected files,
-#' - crops/resamples/masks to match a user-provided `SpatRaster`, **or**
-#' - extracts values when `x` is point data.
+#' 1 - "cities1" ("cities 1", "city 1", "cities >5m", "huge cities", "travel time cities 1")
+#' 
+#' 2 - "cities2" ("cities 2", "city 2", "cities >1m", "large cities", "travel time cities 2")
+#' 
+#' 3 - "cities3" ("cities 3", "city 3", "medium cities", "travel time cities 3")
+#' 
+#' 4 - "cities4" ("cities 4", "city 4", "small cities", "travel time cities 4")
+#' 
+#' 5 - "cities5" ("cities 5", "city 5", "travel time cities 5")
+#' 
+#' 6 - "cities6" ("cities 6", "city 6", "travel time cities 6")
+#' 
+#' 7 - "cities7" ("cities 7", "city 7", "travel time cities 7")
+#' 
+#' 8 - "cities8" ("cities 8", "city 8", "towns", "travel time cities 8")
+#' 
+#' 9 - "cities9" ("cities 9", "city 9", "small towns", "travel time cities 9")
+#' 
+#' 10 - "cities10" ("cities 10", "city 10", "aggregated cities 1", "travel time cities 10")
+#' 
+#' 11 - "cities11" ("cities 11", "city 11", "aggregated cities 2", "travel time cities 11")
+#' 
+#' 12 - "cities12" ("cities 12", "city 12", "aggregated cities 3", "travel time cities 12")
+#' 
+#' 13 - "ports1" ("ports 1", "port 1", "large ports", "travel time ports 1")
+#' 
+#' 14 - "ports2" ("ports 2", "port 2", "medium ports", "travel time ports 2")
+#' 
+#' 15 - "ports3" ("ports 3", "port 3", "small ports", "travel time ports 3")
+#' 
+#' 16 - "ports4" ("ports 4", "port 4", "very small ports", "travel time ports 4")
+#' 
+#' 17 - "ports5" ("ports 5", "port 5", "any port", "all ports", "travel time ports 5")
 #'
-#' @param x A `SpatRaster`, `SpatVector`, `sf` object, or output from `var_get()` 
-#'          defining the area or locations for extraction.
-#' @param vars Character vector of variables, supplied as canonical codes or
-#'             friendly names.
-#' @param ... Reserved for future use.
+#' Citation:
+#'
+#' Nelson, A., Weiss, D.J., van Etten, J. et al. (2019). "A suite of global 
+#' accessibility indicators." Scientific Data 6, 266.
+#' https://doi.org/10.1038/s41597-019-0265-5
+#'
+#' Note: Data extent is [-180, 180, -60, 85].
+#' 
+#' @param x The output from `var_get()` defining the area or locations for extraction, 
+#' the reference system, and the buffer. 
+#' Leave this empty and use `var_get()` to define parameters for download.
+#' @param vars Character vector of one or more variables to download and process.
+#' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' - If `x` is a raster/polygon input: a `SpatRaster` stack of processed accessibility layers.
-#' - If `x` contains points: a `data.frame` of extracted values.
+#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
+#' @examples
+#' \dontrun{
+#' processed <- var_get(country= "Italy", crs=3035) %>% 
+#' accessibility(vars=c("large cities", "ports1"))
+#'   }
 #' @export
 
 accessibility <- function(x, vars, ...) {
   
+  # --------------------------------------------------------------------
   # Citation displayed on execution
+  # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using Global Accessibility Indicators.\n",
     "Citation: Nelson, A., Weiss, D.J., van Etten, J. et al. (2019). A suite of global accessibility indicators. Sci Data 6, 266.\n",
@@ -48,11 +88,15 @@ accessibility <- function(x, vars, ...) {
     crs <- par_list$crs
     is_global <- isTRUE(par_list$is_global)
     is_raster_input <- TRUE
+    # Track cumulative global extent
+    current_global_extent <- par_list$global_extent
   } else if (par_list$type == "point") {
     points <- par_list$mask
     bbox_points <- par_list$bbox
     crs <- par_list$crs
+    is_global <- FALSE
     is_raster_input <- FALSE
+    current_global_extent <- NULL
   } else {
     cli::cli_abort("Unsupported input type.")
   }
@@ -60,29 +104,9 @@ accessibility <- function(x, vars, ...) {
   processed_stack <- NULL
   extracted_df <- NULL
   
-  # Data Source URLs (Figshare)
-  # Note: Accessibility data extent is [-180, 180, -60, 85]
-  accessibility_urls <- c(
-    "cities1"  = "https://figshare.com/ndownloader/files/14189804",
-    "cities2"  = "https://figshare.com/ndownloader/files/14189807",
-    "cities3"  = "https://figshare.com/ndownloader/files/14189810",
-    "cities4"  = "https://figshare.com/ndownloader/files/14189816",
-    "cities5"  = "https://figshare.com/ndownloader/files/14189819",
-    "cities6"  = "https://figshare.com/ndownloader/files/14189825",
-    "cities7"  = "https://figshare.com/ndownloader/files/14189831",
-    "cities8"  = "https://figshare.com/ndownloader/files/14189837",
-    "cities9"  = "https://figshare.com/ndownloader/files/14189840",
-    "cities10" = "https://figshare.com/ndownloader/files/14189843",
-    "cities11" = "https://figshare.com/ndownloader/files/14189849",
-    "cities12" = "https://figshare.com/ndownloader/files/14189852",
-    "ports1"   = "https://figshare.com/ndownloader/files/14189864",
-    "ports2"   = "https://figshare.com/ndownloader/files/14189870",
-    "ports3"   = "https://figshare.com/ndownloader/files/14189873",
-    "ports4"   = "https://figshare.com/ndownloader/files/14189879",
-    "ports5"   = "https://figshare.com/ndownloader/files/14189885"
-  )
-  
+  # --------------------------------------------------------------------
   # Friendly-name -> canonical code mapping
+  # --------------------------------------------------------------------
   accessibility_lookup <- list(
     "cities1"  = c("cities 1", "city 1", "cities >5m", "huge cities", "travel time cities 1"),
     "cities2"  = c("cities 2", "city 2", "cities >1m", "large cities", "travel time cities 2"),
@@ -103,7 +127,28 @@ accessibility <- function(x, vars, ...) {
     "ports5"   = c("ports 5", "port 5", "any port", "all ports", "travel time ports 5")
   )
   
-  # Normalizer
+  # Direct URL lookup (Figshare)
+  url_lookup <- list(
+    "cities1"  = "https://figshare.com/ndownloader/files/14189804",
+    "cities2"  = "https://figshare.com/ndownloader/files/14189807",
+    "cities3"  = "https://figshare.com/ndownloader/files/14189810",
+    "cities4"  = "https://figshare.com/ndownloader/files/14189816",
+    "cities5"  = "https://figshare.com/ndownloader/files/14189819",
+    "cities6"  = "https://figshare.com/ndownloader/files/14189825",
+    "cities7"  = "https://figshare.com/ndownloader/files/14189831",
+    "cities8"  = "https://figshare.com/ndownloader/files/14189837",
+    "cities9"  = "https://figshare.com/ndownloader/files/14189840",
+    "cities10" = "https://figshare.com/ndownloader/files/14189843",
+    "cities11" = "https://figshare.com/ndownloader/files/14189849",
+    "cities12" = "https://figshare.com/ndownloader/files/14189852",
+    "ports1"   = "https://figshare.com/ndownloader/files/14189864",
+    "ports2"   = "https://figshare.com/ndownloader/files/14189870",
+    "ports3"   = "https://figshare.com/ndownloader/files/14189873",
+    "ports4"   = "https://figshare.com/ndownloader/files/14189879",
+    "ports5"   = "https://figshare.com/ndownloader/files/14189885"
+  )
+  
+  # Normalizer: convert to lowercase, remove punctuation, normalize whitespace
   normalize_string <- function(s) {
     s <- tolower(s)
     s <- gsub("[[:punct:]]", " ", s)
@@ -120,14 +165,21 @@ accessibility <- function(x, vars, ...) {
     syn2canon[[normalize_string(canon)]] <- canon
   }
   
-  # Convert requested vars to canonical codes
+  # Convert requested vars to canonical codes AND keep mapping to original names
   requested_codes <- character(0)
+  code_to_user_name <- list() # Maps canonical code -> user's original name
   unmapped <- character(0)
   
   for (v in vars) {
     key <- normalize_string(v)
     if (!is.null(syn2canon[[key]])) {
-      requested_codes <- c(requested_codes, syn2canon[[key]])
+      canon <- syn2canon[[key]]
+      # Only add if not already present (avoid duplicates)
+      if (!(canon %in% requested_codes)) {
+        requested_codes <- c(requested_codes, canon)
+        # Store the user's original name for this canonical code
+        code_to_user_name[[canon]] <- v
+      }
     } else {
       unmapped <- c(unmapped, v)
     }
@@ -139,19 +191,19 @@ accessibility <- function(x, vars, ...) {
       "x" = "{.val {unmapped}}"
     ))
   }
-  requested_codes <- unique(requested_codes)
   
+  # --------------------------------------------------------------------
   # Helper: Download, process, and clean up a single file
-  handle_file <- function(url, dest_file, var) {
+  # --------------------------------------------------------------------
+  handle_file <- function(url, dest_file, canon, user_name) {
     temp_dir <- fs::path_temp("envar/grids")
     fs::dir_create(temp_dir)
     
-    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {var}}...")
+    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {user_name}}...")
     
     success <- download_file(url, dest_file)
-    
     if (!success) {
-      cli::cli_alert_warning("Failed to download {.val {var}} from {.url {url}}.")
+      cli::cli_alert_warning("Failed to download {.val {user_name}} from {.url {url}}.")
       return(NULL)
     }
     
@@ -159,24 +211,44 @@ accessibility <- function(x, vars, ...) {
       layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
-        fs::file_delete(dest_file)
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
-      cli::cli_alert_info("Processing layer {.val {basename(dest_file)}}...")
+      cli::cli_alert_info("Processing layer {.val {user_name}}...")
       
-      # Process layer based on whether we're doing global or regional processing
-      layer1 <- process_raster_layer(
+      # Process layer using standard helper
+      result <- process_raster_layer(
         layer = layer,
         grid = grid,
         mask = mask,
         res = res,
         crs = crs,
-        is_global = is_global
+        is_global = is_global,
+        current_extent = current_global_extent
       )
       
-      # Assign name to layer
-      names(layer1) <- var
+      if (is_global) {
+        # For global processing, result is a list with layer and extent
+        layer1 <- result$layer
+        new_extent <- result$extent
+        
+        # Update the cumulative global extent
+        current_global_extent <<- new_extent
+        
+        # If we have existing layers and extent changed, crop them
+        if (!is.null(processed_stack)) {
+          processed_stack <<- align_stack_to_extent(processed_stack, new_extent)
+        }
+      } else {
+        # For regional processing, result is just the layer
+        layer1 <- result
+      }
+      
+      # Assign user-requested name to layer
+      names(layer1) <- user_name
       
       if (is.null(processed_stack)) {
         processed_stack <<- layer1
@@ -184,26 +256,31 @@ accessibility <- function(x, vars, ...) {
         processed_stack <<- c(processed_stack, layer1)
       }
       
-      cli::cli_alert_success("Processed and added {.val {basename(dest_file)}} to stack.")
+      cli::cli_alert_success("Processed and added {.val {user_name}} to stack.")
       
       rm(layer, layer1)
       gc()
-      fs::file_delete(dest_file)
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
       
     } else {
-      # Point extraction
-      cli::cli_alert_info("Extracting values from {.val {basename(dest_file)}}...")
+      
+      cli::cli_alert_info("Extracting values from {.val {user_name}}...")
       
       extracted <- try(process_points(file = dest_file, points = points), silent = TRUE)
       if (inherits(extracted, "try-error")) {
-        cli::cli_alert_warning("Extraction failed for {.val {basename(dest_file)}}.")
-        fs::file_delete(dest_file)
+        cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
       extracted <- data.frame(extracted)
       if (ncol(extracted) >= 2) {
-        names(extracted)[ncol(extracted)] <- var
+        # Use user-requested name for the column
+        names(extracted)[ncol(extracted)] <- user_name
       }
       
       if (is.null(extracted_df)) {
@@ -212,122 +289,82 @@ accessibility <- function(x, vars, ...) {
         extracted_df <<- merge(extracted_df, extracted[, c(1, ncol(extracted))], by = "ID", all = TRUE)
       }
       
-      cli::cli_alert_success("Extracted {.val {basename(dest_file)}} successfully.")
+      cli::cli_alert_success("Extracted {.val {user_name}} successfully.")
       
       rm(extracted)
       gc()
-      fs::file_delete(dest_file)
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
     }
   }
   
+  # --------------------------------------------------------------------
   # Loop through requested variables
+  # --------------------------------------------------------------------
   cli::cli_alert_info("Starting the download of Accessibility data...")
   
   for (canon in requested_codes) {
-    url <- accessibility_urls[[canon]]
-    
-    if (is.null(url)) {
-      cli::cli_alert_warning("No URL found for {.val {canon}}.")
-      next
-    }
-    
     filename <- paste0(canon, ".tif")
+    url <- url_lookup[[canon]]
     dest <- file.path(fs::path_temp("envar/grids"), filename)
     
-    handle_file(url = url, dest_file = dest, var = canon)
+    # Get the user's original name for this canonical code
+    user_name <- code_to_user_name[[canon]]
+    
+    handle_file(url, dest, canon, user_name)
   }
   
+  # --------------------------------------------------------------------
   # Return output
+  # --------------------------------------------------------------------
   if (is_raster_input) {
     if (is.null(processed_stack)) cli::cli_abort("No layers were successfully processed")
     
     # If x was already a SpatRaster (from previous function), combine
     if (inherits(x, "SpatRaster")) {
+      if (is_global) {
+        processed_stack <- combine_global_rasters(
+          existing_stack = x,
+          new_stack = processed_stack,
+          current_global_extent = current_global_extent
+        )
+      } else {
+        # Regional mode: resample new layers to match input raster exactly
+        # This ensures perfect alignment for stacking
+        if (!terra::compareGeom(x, processed_stack, stopOnError = FALSE)) {
+          cli::cli_alert_info("Aligning new layers to match input raster geometry...")
+          processed_stack <- terra::resample(processed_stack, x, method = "bilinear")
+        }
+      }
+      
       processed_stack <- c(x, processed_stack)
+    }
+    
+    # Attach global extent as attribute for downstream functions
+    if (is_global) {
+      attr(processed_stack, "global_extent") <- current_global_extent
+      attr(processed_stack, "is_global") <- TRUE
     }
     
     cli::cli_alert_success("All layers processed and stacked successfully")
     return(processed_stack)
   } else {
     if (is.null(extracted_df)) cli::cli_abort("No values extracted successfully")
+    # Merge with previous data if x was a data.frame
+    if (inherits(x, "data.frame") && !inherits(x, "sf")) {
+      extracted_df <- merge(x, extracted_df[, c(1, 4:ncol(extracted_df))], by = c("ID"), all = TRUE)
+      # Preserve CRS from previous extraction
+      prev_crs <- attr(x, "envar_crs")
+      if (!is.null(prev_crs)) {
+        crs <- prev_crs
+      }
+    }
+    
+    # Store the CRS as an attribute for downstream functions
+    # This ensures the CRS is preserved when chaining point extractions
+    attr(extracted_df, "envar_crs") <- crs
     cli::cli_alert_success("Extraction completed successfully")
     return(extracted_df)
-  }
-}
-
-#' Process a raster layer according to global or regional settings
-#' @noRd
-process_raster_layer <- function(layer, grid, mask, res, crs, is_global = FALSE) {
-  
-  source_crs <- terra::crs(layer)
-  target_crs <- crs
-  
-  # Check if target is geographic
-  is_target_geographic <- tryCatch({
-    sf::st_crs(target_crs)$IsGeographic
-  }, error = function(e) {
-    grepl("EPSG:4326|WGS.*84|longlat|latlong", target_crs, ignore.case = TRUE)
-  })
-  
-  if (is_global) {
-    # Global processing: keep original extent, apply resolution and CRS
-    
-    # First, aggregate if needed
-    if (res > 1) {
-      cli::cli_alert_info("Aggregating by factor {res}...")
-      layer <- terra::aggregate(layer, fact = res, fun = "mean", na.rm = TRUE)
-    }
-    
-    # Project to target CRS if different
-    if (target_crs != "EPSG:4326" && !grepl("4326", target_crs)) {
-      cli::cli_alert_info("Projecting to {target_crs}...")
-      layer <- terra::project(layer, target_crs, method = "bilinear")
-    }
-    
-    return(layer)
-    
-  } else {
-    # Regional processing: crop, resample, mask
-    
-    # Convert mask to target CRS if needed
-    mask_crs <- sf::st_crs(mask)
-    if (!is.na(mask_crs) && !identical(mask_crs, sf::st_crs(source_crs))) {
-      mask_reproj <- sf::st_transform(mask, source_crs)
-    } else {
-      mask_reproj <- mask
-    }
-    
-    # Check if source and target CRS differ
-    source_crs_wkt <- terra::crs(layer)
-    target_crs_wkt <- terra::crs(grid)
-    crs_differ <- !identical(source_crs_wkt, target_crs_wkt)
-    
-    if (crs_differ) {
-      # Different CRS: project grid to source, crop, then project back
-      grid_reproj <- terra::project(grid, source_crs_wkt)
-      
-      # Crop to reprojected grid extent
-      layer_cropped <- terra::crop(layer, grid_reproj, snap = "out")
-      
-      # Resample to reprojected grid
-      layer_resampled <- terra::resample(layer_cropped, grid_reproj, method = "bilinear")
-      
-      # Mask with reprojected mask
-      mask_vect <- terra::vect(mask_reproj)
-      layer_masked <- terra::mask(layer_resampled, mask_vect)
-      
-      # Project to target CRS
-      layer_final <- terra::project(layer_masked, target_crs_wkt, method = "bilinear")
-      
-    } else {
-      # Same CRS: straightforward crop, resample, mask
-      layer_cropped <- terra::crop(layer, grid, snap = "out")
-      layer_resampled <- terra::resample(layer_cropped, grid, method = "bilinear")
-      
-      mask_vect <- terra::vect(mask)
-      layer_final <- terra::mask(layer_resampled, mask_vect)
-    }
-    
-    return(layer_final)
   }
 }

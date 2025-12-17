@@ -2,7 +2,7 @@
 % Please edit documentation in R/worldclim.R
 \name{worldclim}
 \alias{worldclim}
-\title{Download WorldClim Climate Data (Historical & Future)}
+\title{Download and process WorldClim Climate Data (Historical & Future)}
 \usage{
 worldclim(
   x,
@@ -16,49 +16,73 @@ worldclim(
 )
 }
 \arguments{
-\item{x}{A SpatRaster or sf object to define the area of interest.}
+\item{x}{The output from `var_get()` defining the area or locations for extraction, 
+the reference system, and the buffer. 
+Leave this empty and use `var_get()` to define parameters for download.}
 
-\item{vars}{A character vector of variables to download.
-Accepts the following names (case-insensitive):
-\itemize{
-  \item \strong{Temperature}: "tmin", "tmax", "tavg" (average temp)
-  \item \strong{Precipitation}: "prec", "pr"
-  \item \strong{Bioclimatic}: "bio" (all 19), or specific e.g., "bio1", "bio12"
-  \item \strong{Physical}: "srad" (solar radiation), "wind" (wind speed), 
-        "vapr" (vapor pressure), "elev" (elevation)
-}}
+\item{vars}{Character vector of one or more variables to download and process.}
 
-\item{years}{A character vector of years or periods. 
-\itemize{
-  \item For **Historical**: Use "1970-2000" (or "historical").
-  \item For **Future**: Use "2021-2040", "2041-2060", "2061-2080", "2081-2100".
-}}
+\item{years}{Character vector of years or periods. For Historical: use "1970-2000" 
+or "historical". For Future: use "2021-2040", "2041-2060", "2061-2080", "2081-2100".}
 
-\item{months}{A numeric vector (1–12) specifying which months to download. 
-Only applies to monthly historical variables (tmin, tmax, tavg, prec, srad, wind, vapr).
-Ignored for bioclimatic variables, elevation, or future data.}
+\item{months}{Numeric vector (1-12) specifying which months to download. Only applies
+to monthly historical variables. Ignored for bioclimatic variables, elevation, 
+or future data.}
 
-\item{gcm}{A character vector of General Circulation Models (for Future data).}
+\item{gcm}{Character vector of General Circulation Models (for Future data).}
 
-\item{ssp}{A character or numeric vector of Shared Socioeconomic Pathways (e.g., "126", "585").}
+\item{ssp}{Character or numeric vector of Shared Socioeconomic Pathways (e.g., "126", "585").}
 
 \item{...}{Additional arguments (currently unused).}
 }
 \value{
-A SpatRaster stack or data.frame with extracted values.
+If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
-This function builds URLs and downloads WorldClim climate data based on
-variables, years, climate models, and scenarios.
+This function downloads, processes, and extracts variables from the
+WorldClim climate dataset. Each variable corresponds to a global raster
+representing climate variables at approximately 1-km resolution.
 It supports both Historical (v2.1, 1970-2000) and Future (CMIP6) data.
 }
 \details{
-Uses the helper function `download_file` to handle downloads.
-Each raster layer is downloaded (and unzipped if necessary), processed 
-(cropped/masked/resampled), added to the output stack immediately, and 
-temporary files are deleted to minimize memory use.
+Available variables (working synonyms in parentheses):
+
+Temperature:
+
+1 - "tmin" ("min temp")
+
+2 - "tmax" ("max temp")
+
+3 - "tavg" ("average temp")
+
+Precipitation:
+
+4 - "prec" ("precipitation", "pr")
+
+Physical:
+
+5 - "srad" ("solar radiation")
+
+6 - "wind" ("wind speed")
+
+7 - "vapr" ("water vapor")
+
+8 - "elev" ("elevation")
+
+Bioclimatic:
+
+9 - "bio" (all 19 bioclimatic variables), or specific e.g., "bio1", "bio12"
+
+Citation:
+
+Fick, Stephen E., and Robert J. Hijmans. "WorldClim 2: new 1-km spatial 
+resolution climate surfaces for global land areas." International Journal 
+of Climatology 37, no. 12 (2017): 4302-4315.
+https://doi.org/10.1002/joc.5086
 }
-\references{
-Fick, Stephen E., and Robert J. Hijmans. "WorldClim 2: new 1‐km spatial resolution climate surfaces for global land areas." International journal of climatology 37, no. 12 (2017): 4302-4315.
-DOI: \url{https://doi.org/10.1002/joc.5086}
+\examples{
+\dontrun{
+processed <- var_get(country= "Italy", crs=3035) \%>\% 
+worldclim(vars=c("tmin", "bio1"), years="1970-2000")
+  }
 }

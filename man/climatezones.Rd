@@ -7,72 +7,67 @@
 climatezones(x, vars = "zones", years = "1991-2020", ssp = NULL, ...)
 }
 \arguments{
-\item{x}{A `SpatRaster`, `SpatVector`, or `sf` object defining the area or
-locations for extraction.}
+\item{x}{The output from `var_get()` defining the area or locations for extraction, 
+the reference system, and the buffer. 
+Leave this empty and use `var_get()` to define parameters for download.}
 
-\item{vars}{Character vector. Defaults to `"zones"`. Accepted aliases include:
-`"koppengeiger"`, `"climate"`, `"climatezones"`, `"koppen"`.}
+\item{vars}{Character vector. Defaults to "zones". Accepted aliases include:
+"koppengeiger", "climate", "climatezones", "koppen".}
 
-\item{years}{Character vector of time periods. Defaults to `"1991-2020"`.
-Accepts formats with underscores or hyphens (e.g., `"1901-1930"` or `"1901_1930"`).}
+\item{years}{Character vector of time periods. Defaults to "1991-2020".
+Accepts formats with underscores or hyphens (e.g., "1901-1930" or "1901_1930").}
 
 \item{ssp}{Numeric or character vector of Shared Socioeconomic Pathways.
-Required for future projections (e.g., `126`, `585`).}
+Required for future projections (e.g., 126, 585).}
 
-\item{...}{Reserved for future use.}
+\item{...}{Additional arguments (currently unused).}
 }
 \value{
-- If `x` is a raster: a `SpatRaster` stack of processed climate zone layers.
-- If `x` contains points: a `data.frame` of extracted values.
+If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
-`climatezones()` downloads, processes, and extracts variables from the
-**High-resolution (1 km) Köppen-Geiger maps** dataset.
-Each variable corresponds to a global GeoTIFF representing climate classification
-zones based on historical data or future CMIP6 projections.
+This function downloads, processes, and extracts variables from the
+High-resolution (1 km) Köppen-Geiger maps dataset. Each variable corresponds
+to a global GeoTIFF representing climate classification zones based on 
+historical data or future CMIP6 projections.
 }
 \details{
-The function automatically:
-- Checks for the dataset zip file (downloading it once if necessary),
-- Extracts the specific time periods and SSP scenarios requested,
-- Crops/resamples/masks to match a user-provided `SpatRaster`, **or**
-- Extracts values when `x` is point data.
+Available variables (working synonyms in parentheses):
 
-This function specifically targets the **0.01 degree resolution** layers
-(approximately 1km).
+1 - "zones" ("koppengeiger", "climate", "climatezones", "koppen", "koppen geiger")
 
-## Citation
-If you use this data, please cite:
+Time Periods (years argument):
 
-**Beck, H.E., T.R. McVicar, N. Vergopolan, A. Berg, N.J. Lutsko, A. Dufour, Z. Zeng, X. Jiang, A.I.J.M. van Dijk, D.G. Miralles (2023).**
-*High-resolution (1 km) Köppen-Geiger maps for 1901–2099 based on constrained CMIP6 projections.*
-Scientific Data **10**, 724.
+Historical:
+- "1901-1930"
+- "1931-1960"
+- "1961-1990"
+- "1991-2020" (default)
+
+Future:
+- "2041-2070"
+- "2071-2099"
+
+SSP Scenarios (ssp argument, required for future periods):
+- 119 (SSP1-1.9)
+- 126 (SSP1-2.6)
+- 245 (SSP2-4.5)
+- 370 (SSP3-7.0)
+- 434 (SSP4-3.4)
+- 460 (SSP4-6.0)
+- 585 (SSP5-8.5)
+
+Citation:
+
+Beck, H.E., T.R. McVicar, N. Vergopolan, A. Berg, N.J. Lutsko, A. Dufour, 
+Z. Zeng, X. Jiang, A.I.J.M. van Dijk, D.G. Miralles (2023). "High-resolution 
+(1 km) Köppen-Geiger maps for 1901-2099 based on constrained CMIP6 projections." 
+Scientific Data 10, 724.
 https://doi.org/10.1038/s41597-023-02549-6
-
-
-## Available Arguments
-
-The `vars` argument is provided for consistency but defaults to `"zones"`.
-Users should control the output primarily via the `years` and `ssp` arguments.
-
-### Time Periods (`years`)
-**Historical:**
-* `"1901-1930"`
-* `"1931-1960"`
-* `"1961-1990"`
-* `"1991-2020"`
-
-**Future:**
-* `"2041-2070"`
-* `"2071-2099"`
-
-### SSP Scenarios (`ssp`)
-Required if a future time period is selected.
-* `119` (SSP1-1.9)
-* `126` (SSP1-2.6)
-* `245` (SSP2-4.5)
-* `370` (SSP3-7.0)
-* `434` (SSP4-3.4)
-* `460` (SSP4-6.0)
-* `585` (SSP5-8.5)
+}
+\examples{
+\dontrun{
+processed <- var_get(country= "Italy", crs=3035) \%>\% 
+climatezones(vars="zones", years="1991-2020")
+  }
 }

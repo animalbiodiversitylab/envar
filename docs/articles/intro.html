@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Get Started with envar • envar</title>
+<title>Get started • envar</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png">
@@ -18,7 +18,7 @@
 <link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><link href="../deps/KaTex-0.16.10/katex.min.css" rel="stylesheet">
 <script src="../deps/KaTex-0.16.10/katex.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
-<meta property="og:title" content="Get Started with envar">
+<meta property="og:title" content="Get started">
 <!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-70466840-4"></script><script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -44,19 +44,13 @@
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="active nav-item"><a class="nav-link" href="../articles/intro.html">Get Started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../articles/intro.html">Get started</a></li>
 <li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/package_overview.html">Package overview</a></li>
-  </ul>
-</li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials">
-<li><a class="dropdown-item" href="../articles/download_and_process_tutorial.html">Downloading and processing environmental variables</a></li>
-    <li><a class="dropdown-item" href="../articles/sdm_tutorial.html">Species distribution modelling full workflow</a></li>
+<li><a class="dropdown-item" href="../articles/package_overview.html">Package overview</a></li>
+    <li><a class="dropdown-item" href="../articles/variables.html">Available variables</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -77,7 +71,7 @@
 
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
-      <img src="../logo.png" class="logo" alt=""><h1>Get Started with envar</h1>
+      <img src="../logo.png" class="logo" alt=""><h1>Get started</h1>
             
       
 
@@ -86,9 +80,203 @@
 
     
     
+<div class="section level2">
+<h2 id="package-aims">Package aims<a class="anchor" aria-label="anchor" href="#package-aims"></a>
+</h2>
+<p>When conducting an ecological analysis, the response of one or more
+variable(s) is modeled as a function of one or more predictor(s). When
+variables are not directly collected in the field or through remote
+sensing, and information on the spatial location of samples is
+available, global and already published maps can be used to define
+variable values. This process is often time-consuming and requires the
+standardization of different sources to the same study area and/or the
+extraction of value across study points and/or the conversion to a
+common coordinate reference system. <em>envar</em> is an <em>R</em>
+package that allows the download of a wide range of environmental
+variables from different pre-existing sources, to make the whole process
+of retrieving variables easier and faster, and integrated within the R
+environment. The user can thus avoid to manually download and process
+different variables from different sources, and instead focus on the
+analysis itself and integrate the downloaded and processed variables
+within a single R pipeline.</p>
+</div>
+<div class="section level2">
+<h2 id="first-use-installation">First use: installation<a class="anchor" aria-label="anchor" href="#first-use-installation"></a>
+</h2>
+<p>First, we install the package with the following code.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://envar.net">envar</a></span><span class="op">)</span></span></code></pre></div>
-  </main>
+<code class="sourceCode R"><span><span class="co"># install using the "remotes" package</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://remotes.r-lib.org" class="external-link">remotes</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"animalbiodiversitylab/envar"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># or alternatively using the "devtools" package</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"animalbiodiversitylab/envar"</span><span class="op">)</span></span></code></pre></div>
+<p>Until the scientific article relative to the package is published,
+the github repository is set as private and to install the package (for
+testing and revision) you can run the code here:<br></p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://remotes.r-lib.org" class="external-link">remotes</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"animalbiodiversitylab/envar"</span>, </span>
+<span>                        auth_token <span class="op">=</span> <span class="st">"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"</span>, </span>
+<span>                        upgrade<span class="op">=</span><span class="st">"never"</span>, </span>
+<span>                        dependencies<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span>                        build_vignettes<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="load-the-library">Load the library<a class="anchor" aria-label="anchor" href="#load-the-library"></a>
+</h2>
+<p>When executing this command, other five packages (<code>dplyr</code>,
+<code>terra</code>, <code>sf</code>, <code>corrplot</code>,
+<code>usdm</code>) will be automatically loaded to ensure the full
+functionality of the package.</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://envarpackage.netlify.app">envar</a></span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="full-working-example">Full working example<a class="anchor" aria-label="anchor" href="#full-working-example"></a>
+</h2>
+<p>Here, we show a full working example of how to use the package to
+download and process a set of environmental variables for a specific
+study area. We will download a set of climatic, topographic, and land
+cover variables for a study area in the European Alps (already included
+in the package as the object <code><a href="../reference/Alps.html">Alps()</a></code>). A call to the
+<code><a href="../reference/var_get.html">var_get()</a></code> function is used to define the study area
+(argument “shape”), the desired grid output resolution in km (argument
+“res”), the coordinate reference system (argument “crs”), and an
+eventual buffer (in km) by which to expand the study area (argument
+“buffer”). The default resolution is always 30 arcseconds (0.008333333°,
+or ~ 1 km) at the equator, and “res” specifies a factor by which to
+aggregate (the default is 1 and doesn’t apply any change).</p>
+<p>Then, the “%&gt;%” is used to concatenate different commands. The
+next step is to set the specific functions that are used to download and
+process variables from different sources (see the <strong><a href="https://envarpackage.netlify.app/reference/">reference</a></strong>
+for a full list). The call to a generic source is structured as:
+sourcename(vars = c()), where sourcename is the name of the function
+devoted to one source and inside the “vars” argument the specific
+variables to be downloaded from that source are specified. In this
+example, we first download a set of 5 bioclimatic variables from the
+CHELSA source <span class="citation">(Karger <em>et al.</em>
+2017)</span>, then we download elevation and slope from the topography
+source <span class="citation">(Amatulli <em>et al.</em> 2018)</span>,
+and finally we download the percentage cover of trees and ice from the 1
+km resolution global land cover based on the ESA 30 m land cover <span class="citation">(Lo Parrino <em>et al.</em> 2025)</span>.</p>
+<p>A correlation analysis can be performed with the to
+<code><a href="../reference/corr_check.html">corr_check()</a></code> function to identify and remove highly
+correlated variables. This function must always be called as the last
+one in the pipeline.</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span>, res <span class="op">=</span> <span class="fl">2</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>             <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1"</span>, <span class="st">"bio4"</span>, <span class="st">"bio10"</span>, <span class="st">"bio12"</span>, <span class="st">"bio19"</span><span class="op">)</span>,</span>
+<span>                    years <span class="op">=</span> <span class="st">"1981-2010"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>             <span class="fu"><a href="../reference/topography.html">topography</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"elevation"</span>, <span class="st">"slope"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>             <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trees"</span>, <span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>             <span class="fu"><a href="../reference/corr_check.html">corr_check</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="output-overview">Output overview<a class="anchor" aria-label="anchor" href="#output-overview"></a>
+</h2>
+<p>If the correlation analysis is performed, the output is a list.
+Otherwise, it is a SpatRaster (object to be used within the <em>terra
+R</em> package), either with a single layer or with multiple layers if
+multiple variables were specified. If the output is a list, it contains
+the following elements: “data” (the SpatRaster or data.frame with your
+data), “correlation_matrix” containing a matrix of Pairwise Pearson’s
+correlation coefficients between all variables, “vif” a data.frame
+containing the Variance Inflation Factors for each variable, a “summary”
+that reports if and which variables have a Pearson’s correlation
+coefficient higher than |0.6| and/or a VIF higher than 3. Lastly, the
+“plot_path” specifies the local directory to which a plot of the
+Pearson’s pairwise correlation was saved.</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Plot the first two variables</span></span>
+<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">$</span><span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="intro_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># View the Pearson's pairwise correlation matrix</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">processed</span><span class="op">$</span><span class="va">correlation_matrix</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##                 bio1_1981-2010 bio4_1981-2010 bio10_1981-2010 bio12_1981-2010</span></span>
+<span><span class="co">## bio1_1981-2010       1.0000000    -0.16218091      0.99419247    -0.593023380</span></span>
+<span><span class="co">## bio4_1981-2010      -0.1621809     1.00000000     -0.05811524    -0.140826490</span></span>
+<span><span class="co">## bio10_1981-2010      0.9941925    -0.05811524      1.00000000    -0.616575650</span></span>
+<span><span class="co">## bio12_1981-2010     -0.5930234    -0.14082649     -0.61657565     1.000000000</span></span>
+<span><span class="co">## bio19_1981-2010     -0.4231690    -0.33187576     -0.46121816     0.846422025</span></span>
+<span><span class="co">## elevation           -0.9701695     0.05564816     -0.97217707     0.587809843</span></span>
+<span><span class="co">## slope               -0.7636451     0.00524989     -0.77230823     0.558445357</span></span>
+<span><span class="co">## trees                0.1481525    -0.26620120      0.11469130     0.007079224</span></span>
+<span><span class="co">## ice                 -0.4510495     0.12101796     -0.43809075     0.259209359</span></span>
+<span><span class="co">##                 bio19_1981-2010   elevation       slope        trees        ice</span></span>
+<span><span class="co">## bio1_1981-2010      -0.42316901 -0.97016954 -0.76364511  0.148152525 -0.4510495</span></span>
+<span><span class="co">## bio4_1981-2010      -0.33187576  0.05564816  0.00524989 -0.266201199  0.1210180</span></span>
+<span><span class="co">## bio10_1981-2010     -0.46121816 -0.97217707 -0.77230823  0.114691295 -0.4380907</span></span>
+<span><span class="co">## bio12_1981-2010      0.84642203  0.58780984  0.55844536  0.007079224  0.2592094</span></span>
+<span><span class="co">## bio19_1981-2010      1.00000000  0.44669367  0.38982142 -0.014066794  0.2196525</span></span>
+<span><span class="co">## elevation            0.44669367  1.00000000  0.80267782 -0.130484035  0.4600400</span></span>
+<span><span class="co">## slope                0.38982142  0.80267782  1.00000000  0.235548954  0.2069919</span></span>
+<span><span class="co">## trees               -0.01406679 -0.13048403  0.23554895  1.000000000 -0.2964818</span></span>
+<span><span class="co">## ice                  0.21965250  0.46003996  0.20699186 -0.296481827  1.0000000</span></span></code></pre>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># View the Variance Inflation Factor values</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">processed</span><span class="op">$</span><span class="va">vif</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##         Variables         VIF</span></span>
+<span><span class="co">## 1  bio1_1981-2010 3056.493047</span></span>
+<span><span class="co">## 2  bio4_1981-2010   35.774109</span></span>
+<span><span class="co">## 3 bio10_1981-2010 2623.044535</span></span>
+<span><span class="co">## 4 bio12_1981-2010    5.064462</span></span>
+<span><span class="co">## 5 bio19_1981-2010    4.451829</span></span>
+<span><span class="co">## 6       elevation   40.736641</span></span>
+<span><span class="co">## 7           slope    4.761601</span></span>
+<span><span class="co">## 8           trees    1.716337</span></span>
+<span><span class="co">## 9             ice    1.437932</span></span></code></pre>
+<p>To better understand the structure of correlation, we can also
+analyze the correlation plot that was locally stored.</p>
+<p><img src="images/Corr_plot_example.png" width="100%" style="display: block; margin: auto;"></p>
+<p>This plot was created with the aid of the <em>corrplot R</em> package
+and it helps to pinpoint correlation problems. In this example, we can
+see that elevation is highly correlated with multiple variables and as
+this is not a proximal variable (i.e., the effect of elevation on
+species distributions is mediated by other co-varying factors such as
+climate) we can remove it. To obtain a set of uncorrelated variables we
+might thus want to sub-set our variables as follows.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">uncorrelated_vars</span> <span class="op">&lt;-</span> <span class="va">processed</span><span class="op">$</span><span class="va">data</span><span class="op">[[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1_1981-2010"</span>, <span class="st">"bio12_1981-2010"</span>, <span class="st">"trees"</span>, <span class="st">"ice"</span><span class="op">)</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
+</h2>
+<p>We have shown a single full example of use of the <em>envar R</em>
+package. Instead of specifying a shape, we could have chosen a
+country/continent or defined a data.frame of points. For an overview of
+all the possible use-cases see the <strong><a href="https://envarpackage.netlify.app/tutorials/package_overview">package
+overview vignette</a></strong> and for a full list of all the available
+sources and variables see the <strong><a href="https://envarpackage.netlify.app/reference/">reference</a></strong>.</p>
+</div>
+<div class="section level2 unnumbered">
+<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+</h2>
+<div id="refs" class="references csl-bib-body hanging-indent">
+<div id="ref-amatulli2018" class="csl-entry">
+Amatulli, G., Domisch, S., Tuanmu, M.-N., Parmentier, B., Ranipeta, A.,
+Malczyk, J. &amp; Jetz, W. (2018). A suite of global, cross-scale
+topographic variables for environmental and biodiversity modeling.
+<em>Scientific Data</em>, <em>5</em>, 180040.
+</div>
+<div id="ref-karger2017" class="csl-entry">
+Karger, D.N., Conrad, O., Böhner, J., Kawohl, T., Kreft, H., Soria-Auza,
+R.W., Zimmermann, N.E., Linder, H.P. &amp; Kessler, M. (2017).
+Climatologies at high resolution for the earth’s land surface areas.
+<em>Scientific Data</em>, <em>4</em>, 170122.
+</div>
+<div id="ref-loparrino2025" class="csl-entry">
+Lo Parrino, E., Simoncini, A., Ficetola, G.F. &amp; Falaschi, M. (2025).
+Global 1 km land cover for macroecological modelling from very high
+resolution imagery. <em>Figshare</em>.
+</div>
+</div>
+</div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 

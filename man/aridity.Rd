@@ -6,6 +6,53 @@
 \usage{
 aridity(x, vars, ...)
 }
+\arguments{
+\item{x}{The output from `var_get()` defining the area or locations for extraction, 
+the reference system, and the buffer. 
+Leave this empty and use `var_get()` to define parameters for download.}
+
+\item{vars}{Character vector of one or more variables to download and process.}
+
+\item{...}{Additional arguments (currently unused).}
+}
+\value{
+If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+}
 \description{
-Download and process Global Aridity Index and Potential Evapotranspiration (ET0)
+This function downloads, processes, and extracts variables from the
+Global Aridity Index and ET0 Database v3. Each variable corresponds to a global
+raster representing aridity index or potential evapotranspiration values.
+}
+\details{
+Available variables (working synonyms in parentheses):
+
+Annual Variables:
+
+1 - "ai_v3_yr.tif" ("aridity index annual", "ai annual", "aridity annual", "ai year")
+
+2 - "et0_v3_yr.tif" ("et0 annual", "potential evapotranspiration annual", "evapotranspiration annual", "et0 year")
+
+3 - "et0_v3_yr_sd.tif" ("et0 standard deviation", "et0 sd", "et0 variability", "et0 annual sd")
+
+Monthly Aridity Index (ai_v3_01.tif to ai_v3_12.tif):
+
+4-15 - "ai january" through "ai december" (also "aridity index [month]", "ai [month abbr]", "ai [1-12]")
+
+Monthly ET0 (et0_v3_01.tif to et0_v3_12.tif):
+
+16-27 - "et0 january" through "et0 december" (also "potential evapotranspiration [month]", "et0 [month abbr]", "et0 [1-12]")
+
+Citation:
+
+Zomer, R. J., Xu, J., & Trabucco, A. (2022). "Version 3 of the Global Aridity 
+Index and Potential Evapotranspiration Database." Scientific Data.
+https://doi.org/10.1038/s41597-022-01493-1
+
+Note: Data is downloaded from Figshare (Article ID 7504448).
+}
+\examples{
+\dontrun{
+processed <- var_get(country= "Italy", crs=3035) \%>\% 
+aridity(vars=c("aridity index annual", "et0 january"))
+  }
 }

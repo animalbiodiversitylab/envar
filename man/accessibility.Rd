@@ -7,32 +7,71 @@
 accessibility(x, vars, ...)
 }
 \arguments{
-\item{x}{A `SpatRaster`, `SpatVector`, `sf` object, or output from `var_get()` 
-defining the area or locations for extraction.}
+\item{x}{The output from `var_get()` defining the area or locations for extraction, 
+the reference system, and the buffer. 
+Leave this empty and use `var_get()` to define parameters for download.}
 
-\item{vars}{Character vector of variables, supplied as canonical codes or
-friendly names.}
+\item{vars}{Character vector of one or more variables to download and process.}
 
-\item{...}{Reserved for future use.}
+\item{...}{Additional arguments (currently unused).}
 }
 \value{
-- If `x` is a raster/polygon input: a `SpatRaster` stack of processed accessibility layers.
-- If `x` contains points: a `data.frame` of extracted values.
+If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
-`accessibility()` downloads, processes, and extracts variables from the
-**Global Accessibility Indicators** dataset.
-Each variable corresponds to a raster representing the travelling time (in minutes)
-to cities or ports of specific sizes.
+This function downloads, processes, and extracts variables from the
+Global Accessibility Indicators dataset. Each variable corresponds to a 
+global raster representing the travelling time (in minutes) to cities or 
+ports of specific sizes.
 }
 \details{
-The function allows users to input either:
-- **canonical variable codes**, e.g. `"cities1"`, `"ports1"`
-- **human-readable names**, e.g. `"large cities"`, `"travel time cities 1"`,
-  `"small ports"`, `"ports 4"`, etc.
+Available variables (working synonyms in parentheses):
 
-It automatically:
-- downloads the selected files,
-- crops/resamples/masks to match a user-provided `SpatRaster`, **or**
-- extracts values when `x` is point data.
+1 - "cities1" ("cities 1", "city 1", "cities >5m", "huge cities", "travel time cities 1")
+
+2 - "cities2" ("cities 2", "city 2", "cities >1m", "large cities", "travel time cities 2")
+
+3 - "cities3" ("cities 3", "city 3", "medium cities", "travel time cities 3")
+
+4 - "cities4" ("cities 4", "city 4", "small cities", "travel time cities 4")
+
+5 - "cities5" ("cities 5", "city 5", "travel time cities 5")
+
+6 - "cities6" ("cities 6", "city 6", "travel time cities 6")
+
+7 - "cities7" ("cities 7", "city 7", "travel time cities 7")
+
+8 - "cities8" ("cities 8", "city 8", "towns", "travel time cities 8")
+
+9 - "cities9" ("cities 9", "city 9", "small towns", "travel time cities 9")
+
+10 - "cities10" ("cities 10", "city 10", "aggregated cities 1", "travel time cities 10")
+
+11 - "cities11" ("cities 11", "city 11", "aggregated cities 2", "travel time cities 11")
+
+12 - "cities12" ("cities 12", "city 12", "aggregated cities 3", "travel time cities 12")
+
+13 - "ports1" ("ports 1", "port 1", "large ports", "travel time ports 1")
+
+14 - "ports2" ("ports 2", "port 2", "medium ports", "travel time ports 2")
+
+15 - "ports3" ("ports 3", "port 3", "small ports", "travel time ports 3")
+
+16 - "ports4" ("ports 4", "port 4", "very small ports", "travel time ports 4")
+
+17 - "ports5" ("ports 5", "port 5", "any port", "all ports", "travel time ports 5")
+
+Citation:
+
+Nelson, A., Weiss, D.J., van Etten, J. et al. (2019). "A suite of global 
+accessibility indicators." Scientific Data 6, 266.
+https://doi.org/10.1038/s41597-019-0265-5
+
+Note: Data extent is [-180, 180, -60, 85].
+}
+\examples{
+\dontrun{
+processed <- var_get(country= "Italy", crs=3035) \%>\% 
+accessibility(vars=c("large cities", "ports1"))
+  }
 }

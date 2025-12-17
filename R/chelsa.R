@@ -2,54 +2,198 @@
 
 #' Download CHELSA climate data
 #'
-#' This function builds URLs and downloads CHELSA climate data based on
-#' variables, years, months, climate models, and scenarios.
-#' Uses the helper function `download_file` to handle downloads.
-#' Each raster layer is downloaded, processed (cropped/masked/resampled),
-#' added to the output stack immediately, and temporary files are deleted
-#' to minimize memory use.
+#' This function downloads, processes, and extracts variables from the
+#' CHELSA (Climatologies at High Resolution for the Earth's Land Surface Areas) dataset.
 #'
-#' @param x A SpatRaster or sf object to define the area of interest
-#' @param vars A character vector of variables to download (e.g., "tas", "pr", "bio")
-#' @param years A character or numeric vector of years or year ranges (e.g., "1981-2010", 2015)
+
+#'
+#' Available variables:
+#' 
+#' The following variables are available. Please note the distinction between 
+#' "Monthly" time-series data and "Climatologies". There is only one code-name for each variable and no working synonyms, differently from most other functions of the package, and in parentheses is the meaning
+#' of each variable code-name):
+#' 
+#' --- Monthly Time-Series (Available years: 1980 - 2018) ---
+#' 
+#' 1 - "pr" (Precipitation amount; mass per unit area) 
+#' 
+#' 2 - "tas" (Mean daily air temperature at 2 meters) 
+#' 
+#' 3 - "tasmax" (Mean daily maximum air temperature at 2 meters)
+#' 
+#' 4 - "tasmin" (Mean daily minimum air temperature at 2 meters)
+#' 
+#' 5 - "hurs" (Near-surface relative humidity) 
+#' 
+#' 6 - "clt" (Total cloud cover at surface; considers entire atmospheric column) 
+#' 
+#' 7 - "sfcWind" (Near-surface wind speed at 10m above ground) 
+#' 
+#' 8 - "vpd" (Vapor pressure deficit) 
+#' 
+#' 9 - "rsds" (Surface downwelling shortwave flux in air) 
+#' 
+#' 10 - "pet_penman" (Potential evapotranspiration; Penman-Monteith equation) 
+#' 
+#' 11 - "cmi" (Climate Moisture Index) 
+#' 
+#' 12 - "swb" (Site water balance; cumulative available water) 
+#' 
+#' 
+#' --- Climatologies & Derived Indices ---
+#' (Available for 30-year periods: 1981-2010, 2011-2040, 2041-2070, 2071-2100)
+#' 
+#' -- Cloud Cover Climatologies --
+#' 13 - "clt_mean" (Mean monthly total cloud cover over 1 year)
+#' 14 - "clt_max"  (Maximum monthly total cloud cover)
+#' 15 - "clt_min"  (Minimum monthly total cloud cover) 
+#' 16 - "clt_range" (Annual range of monthly total cloud cover) 
+#' 
+#' -- Climate Moisture Index Climatologies --
+#' 17 - "cmi_mean" (Mean monthly climate moisture index) 
+#' 18 - "cmi_max"  (Maximum monthly climate moisture index; highest surplus) 
+#' 19 - "cmi_min"  (Minimum monthly climate moisture index; highest deficit) 
+#' 20 - "cmi_range" (Annual range of monthly climate moisture index) 
+#' 
+#' -- Relative Humidity Climatologies --
+#' 21 - "hurs_mean" (Mean monthly near-surface relative humidity) 
+#' 22 - "hurs_max"  (Maximum monthly near-surface relative humidity) 
+#' 23 - "hurs_min"  (Minimum monthly near-surface relative humidity) 
+#' 24 - "hurs_range" (Annual range of monthly near-surface relative humidity) 
+#' 
+#' -- Potential Evapotranspiration Climatologies --
+#' 25 - "pet_penman_mean" (Mean monthly PET) 
+#' 26 - "pet_penman_max"  (Maximum monthly PET) 
+#' 27 - "pet_penman_min"  (Minimum monthly PET) 
+#' 28 - "pet_penman_range" (Annual range of monthly PET) 
+#' 
+#' -- Solar Radiation Climatologies --
+#' 29 - "rsds_mean" (Mean monthly surface downwelling shortwave flux) 
+#' 30 - "rsds_max"  (Maximum monthly surface downwelling shortwave flux)
+#' 31 - "rsds_min"  (Minimum monthly surface downwelling shortwave flux) 
+#' 32 - "rsds_range" (Annual range of monthly surface downwelling shortwave flux)
+#' 
+#' -- Wind Speed Climatologies --
+#' 33 - "sfcWind_mean" (Mean monthly near-surface wind speed)
+#' 34 - "sfcWind_max"  (Maximum monthly near-surface wind speed)
+#' 35 - "sfcWind_min"  (Minimum monthly near-surface wind speed) 
+#' 36 - "sfcWind_range" (Annual range of monthly near-surface wind speed)
+#' 
+#' -- Vapor Pressure Deficit Climatologies --
+#' 37 - "vpd_mean" (Mean monthly vapor pressure deficit)
+#' 38 - "vpd_max"  (Maximum monthly vapor pressure deficit)
+#' 39 - "vpd_min"  (Minimum monthly vapor pressure deficit)
+#' 40 - "vpd_range" (Annual range of monthly vapor pressure deficit)
+#' 
+#' -- Growing Season Characteristics (TREELIM model) --
+#' 41 - "gsl" (Growing season length; days) *Note: Corrected from 'gls' 
+#' 42 - "gsp" (Accumulated precipitation during growing season) 
+#' 43 - "gst" (Mean temperature of the growing season) 
+#' 44 - "fgd" (First day of the growing season; Julian day) 
+#' 45 - "lgd" (Last day of the growing season; Julian day)
+#' 
+#' -- Growing Degree Days (GDD) --
+#' 46 - "gdd0"  (Heat sum of all days > 0°C accumulated over 1 year) 
+#' 47 - "gdd5"  (Heat sum of all days > 5°C accumulated over 1 year) 
+#' 48 - "gdd10" (Heat sum of all days > 10°C accumulated over 1 year) 
+#' 49 - "ngd0"  (Number of days with tas > 0°C) 
+#' 50 - "ngd5"  (Number of days with tas > 5°C) 
+#' 51 - "ngd10" (Number of days with tas > 10°C)
+#' 52 - "gdgfgd0" (First growing degree day > 0°C; Julian day)
+#' 53 - "gdgfgd5" (First growing degree day > 5°C; Julian day) 
+#' 54 - "gdgfgd10" (First growing degree day > 10°C; Julian day) 
+#' 55 - "gddlgd0" (Last growing degree day > 0°C; Julian day) 
+#' 56 - "gddlgd5" (Last growing degree day > 5°C; Julian day) 
+#' 57 - "gddlgd10" (Last growing degree day > 10°C; Julian day) 
+#' 
+#' -- Snow and Frost --
+#' 58 - "scd" (Snow cover days; count)
+#' 59 - "swe" (Snow water equivalent; accumulated amount of liquid water if snow melted)
+#' 60 - "fcf" (Frost change frequency; events where tmin/tmax cross 0°C) 
+#' 
+#' -- Biological Productivity --
+#' 61 - "npp" (Net primary productivity; g C m^-2 yr^-1) 
+#' 
+#' -- Climate Classifications (Köppen-Geiger & others) --
+#' 62 - "kg0" (Köppen-Geiger climate category) 
+#' 63 - "kg1" (Köppen-Geiger without As/Aw differentiation)
+#' 64 - "kg2" (Köppen-Geiger after Peel et al. 2007) 
+#' 65 - "kg3" (Wissmann 1939 classification) 
+#' 66 - "kg4" (Thornthwaite 1931 classification)
+#' 67 - "kg5" (Troll-Pfaffen classification) 
+#' 
+#' Citation for standard bioclimatic variables (current and future):
+#'
+#' Karger, D. E., et al. (2017). "Climatologies at high resolution for the earth's land surface areas."
+#' Scientific Data. https://doi.org/10.1038/sdata.2017.122
+#'
+#' Citation for the BIOCLIM+ dataset:
+#' 
+#' Brun, P., et al. (2022). "A novel set of global climate-related predictors at kilometre-resolution." 
+#' Earth System Science Data. https://doi.org/10.5194/essd-14-5573-2022
+#' 
+#' Note: Users should verify the terms of use for CHELSA data provided
+#' at https://chelsa-climate.org/
+#'
+#' @param x The output from `var_get()` defining the area or locations for extraction,
+#' the reference system, and the buffer.
+#' Leave this empty and use `var_get()` to define parameters for download.
+#' @param vars Character vector of one or more variables to download and process.
+#' @param years A character or numeric vector of years or year ranges (e.g., "1981-2010", 2015).
 #' @param months A numeric vector (1–12) specifying which months to download.
 #'        If NULL and `years` are single years, all 12 months are downloaded.
-#' @param gcm General Circulation Model(s) for future projections
-#' @param rcp Representative Concentration Pathway for CMIP5 data
-#' @param ssp Shared Socioeconomic Pathway for CMIP6 data
-#' @param cruts_years Numeric vector. Years to download from CHELSAcruts (must be 1901–2016)
-#' @param ... Additional arguments (currently unused)
+#' @param gcm General Circulation Model(s) for future projections.
+#' @param rcp Representative Concentration Pathway for CMIP5 data.
+#' @param ssp Shared Socioeconomic Pathway for CMIP6 data.
+#' @param cruts_years Numeric vector. Years to download from CHELSAcruts (must be 1901–2016).
+#' @param ... Additional arguments (currently unused).
 #'
-#' @return A SpatRaster stack or data.frame with extracted values
+#' @return
+#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+#'
+#' @examples
+#' \dontrun{
+#' processed <- var_get(country= "Italy", crs=3035) %>%
+#' chelsa(vars=c("pr", "tas"), years = 2018, months = 1)
+#'    }
+#' @export
+
 
 chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL, 
                    ssp = NULL, cruts_years = NULL, ...) {
   
-  old_timeout <- getOption("timeout")
-  options(timeout=max(100000000000000,old_timeout))
-  on.exit(options(timeout=old_timeout))
   # --------------------------------------------------------------------
   # Citation displayed on execution
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
-    "Using CHELSA.\n",
-    "Citation: Karger, D. E., et al. (2017). Climatologies at high resolution for the earth’s land surface areas. Scientific Data\n",
-    "DOI: {.url https://doi.org/10.1038/sdata.2017.122}\n"
+    "Using CHELSA data.\n",
+    "Citation if using standard climatology: Karger, D. E., et al. (2017). Climatologies at high resolution for the earth's land surface areas. Scientific Data.\n",
+    "DOI: {.url https://doi.org/10.1038/sdata.2017.122}\n",
+    "Citation if using the BIOCLIM+ dataset: Brun, P., et al. (2022). A novel set of global climate-related predictors at kilometre-resolution. Earth System Science Data.\n",
+    "DOI: {.url https://doi.org/10.5194/essd-14-5573-2022}" 
   ))
-  
-  cli::cli_alert_info("Starting the download of CHELSA data...")
   
   par_list <- get_par(x)
   
-  if (inherits(par_list[[1]], "SpatRaster")) {
+  # Determine input type
+  if (!is.null(par_list$grid) && inherits(par_list$grid, "SpatRaster")) {
     grid <- par_list$grid
     mask <- par_list$mask
-    res  <- par_list$res
+    res <- par_list$res
+    crs <- par_list$crs
+    is_global <- isTRUE(par_list$is_global)
     is_raster_input <- TRUE
-  } else {
+    # Track cumulative global extent
+    current_global_extent <- par_list$global_extent
+  } else if (par_list$type == "point") {
     points <- par_list$mask
     bbox_points <- par_list$bbox
+    crs <- par_list$crs
+    is_global <- FALSE
     is_raster_input <- FALSE
+    current_global_extent <- NULL
+  } else {
+    cli::cli_abort("Unsupported input type.")
   }
   
   processed_stack <- NULL
@@ -58,87 +202,131 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
   # --------------------------------------------------------------------
   # Helper: Download, process, and clean up a single file
   # --------------------------------------------------------------------
-  handle_file <- function(url, dest_file, var, m = NULL, y = NULL) {
+  handle_file <- function(url, dest_file, canon, user_name) {
     temp_dir <- fs::path_temp("envar/grids")
     fs::dir_create(temp_dir)
     
+    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {user_name}}...")
     
     success <- download_file(url, dest_file)
+    
     if (!success) {
-      cli::cli_alert_warning("Failed to download {.val {var}} ({.val {m}}/{.val {y}}) from {.url {url}}.")
+      cli::cli_alert_warning("Failed to download {.val {user_name}} from {.url {url}}.")
       return(NULL)
     }
     
     if (is_raster_input) {
       layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
-        cli::cli_alert_warning(" Could not read raster {.val {dest_file}}.")
-        fs::file_delete(dest_file)
+        cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
-      cli::cli_alert_info("Processing layer {.val {basename(dest_file)}}...")
+      cli::cli_alert_info("Processing layer {.val {user_name}}...")
       
-      layer <- terra::crop(layer, grid, snap = "out")
-      layer <- terra::resample(layer, grid, method = "bilinear")
-      layer <- terra::mask(layer, mask)
+      # Process layer based on whether we're doing global or regional processing
+      result <- process_raster_layer(
+        layer = layer,
+        grid = grid,
+        mask = mask,
+        res = res,
+        crs = crs,
+        is_global = is_global,
+        current_extent = current_global_extent
+      )
       
-      if (!is.null(par_list$crs)) {
-        layer <- terra::project(layer, par_list$crs)
+      if (is_global) {
+        # For global processing, result is a list with layer and extent
+        layer1 <- result$layer
+        new_extent <- result$extent
+        
+        # Update the cumulative global extent
+        current_global_extent <<- new_extent
+        
+        # If we have existing layers and extent changed, crop them
+        if (!is.null(processed_stack)) {
+          processed_stack <<- align_stack_to_extent(processed_stack, new_extent)
+        }
+      } else {
+        # For regional processing, result is just the layer
+        layer1 <- result
       }
+      
+      # Assign user-requested name to layer
+      names(layer1) <- user_name
       
       if (is.null(processed_stack)) {
-        processed_stack <<- layer
+        processed_stack <<- layer1
       } else {
-        processed_stack <<- c(processed_stack, layer)
+        processed_stack <<- c(processed_stack, layer1)
       }
       
-      cli::cli_alert_success("Processed and added {.val {basename(dest_file)}} to stack.")
+      cli::cli_alert_success("Processed and added {.val {user_name}} to stack.")
       
-      rm(layer)
+      rm(layer, layer1)
       gc()
-      fs::file_delete(dest_file)
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
       
     } else {
-      cli::cli_alert_info("Extracting values from {.val {basename(dest_file)}}...")
+      cli::cli_alert_info("Extracting values from {.val {user_name}}...")
+      
       extracted <- try(process_points(file = dest_file, points = points), silent = TRUE)
       if (inherits(extracted, "try-error")) {
-        cli::cli_alert_warning(" Extraction failed for {.val {basename(dest_file)}}.")
-        fs::file_delete(dest_file)
+        cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
       extracted <- data.frame(extracted)
+      if (ncol(extracted) >= 2) {
+        # Use user-requested name for the column
+        names(extracted)[ncol(extracted)] <- user_name
+      }
+      
       if (is.null(extracted_df)) {
         extracted_df <<- extracted
       } else {
-        extracted_df <<- merge(extracted_df, extracted[, c(1, 4)], by = "ID", all = TRUE)
+        extracted_df <<- merge(extracted_df, extracted[, c(1, ncol(extracted))], by = "ID", all = TRUE)
       }
       
-      cli::cli_alert_success("Extracted {.val {basename(dest_file)}} successfully.")
+      cli::cli_alert_success("Extracted {.val {user_name}} successfully.")
       
       rm(extracted)
       gc()
-      fs::file_delete(dest_file)
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
     }
   }
   
   # --------------------------------------------------------------------
-  # --- Handle CHELSAcruts (1901–2016) ---
+  # Loop through requested variables
   # --------------------------------------------------------------------
+  cli::cli_alert_info("Starting the download of CHELSA data...")
+  
+  # Handle BIO expansion if requested
+  if ("bio" %in% vars) {
+    bio_range <- readline(prompt = "Enter BIO numbers (e.g., 1:19 or 3:5): ")
+    bio_nums <- eval(parse(text = bio_range))
+    vars <- setdiff(vars, "bio")
+    vars <- c(vars, paste0("bio", bio_nums))
+  }
+  
+  # --- Handle CHELSAcruts (1901–2016) ---
   if (!is.null(cruts_years)) {
     if (any(cruts_years < 1901) || any(cruts_years > 2016)) {
       cli::cli_abort("CHELSAcruts data is only available for years 1901–2016.")
     }
     
-    # valid_cruts_vars <- c("pr", "tasmax", "tasmin")
-    # invalid_vars <- setdiff(vars, valid_cruts_vars)
-    # if (length(invalid_vars) > 0) {
-    #   cli::cli_abort("CHELSAcruts only supports variables: {.val {paste(valid_cruts_vars, collapse=', ')}}. Invalid: {.val {paste(invalid_vars, collapse=', ')}}")
-    # }
-    
-    cli::cli_alert_info("Starting the download of CHELSAcruts data...")
-    base_url <- "https://os.zhdk.cloud.switch.ch/chelsav1/chelsa_cruts"
+    cli::cli_alert_info("Downloading CHELSAcruts data...")
+    base_url_cruts <- "https://os.zhdk.cloud.switch.ch/chelsav1/chelsa_cruts"
     months_to_download <- if (is.null(months)) 1:12 else months
     
     for (var in vars) {
@@ -152,25 +340,18 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
       for (year in cruts_years) {
         for (month in months_to_download) {
           filename <- sprintf("CHELSAcruts_%s_%d_%d_V.1.0.tif", var_cruts, month, year)
-          url <- sprintf("%s/%s/%s", base_url, var_cruts, filename)
+          url <- sprintf("%s/%s/%s", base_url_cruts, var_cruts, filename)
           dest_file <- file.path(fs::path_temp("envar/grids"), filename)
-          handle_file(url, dest_file, var, month, year)
+          canon <- var
+          user_name <- paste0(var, "_", year, "_", month)
+          handle_file(url, dest_file, canon, user_name)
         }
       }
     }
   }
   
-  # --------------------------------------------------------------------
   # --- Standard CHELSA (v1/v2) Processing ---
-  # --------------------------------------------------------------------
   if (!is.null(years) && length(years) > 0) {
-    
-    if ("bio" %in% vars) {
-      bio_range <- readline(prompt = "Enter BIO numbers (e.g., 1:19 or 3:5): ")
-      bio_nums <- eval(parse(text = bio_range))
-      vars <- setdiff(vars, "bio")
-      vars <- c(vars, paste0("bio", bio_nums))
-    }
     
     for (var in vars) {
       for (y in years) {
@@ -206,7 +387,9 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
               
               url <- sprintf("%s/%s/%s/%s", base_url, year_str, var1, filename)
               dest_file <- file.path(fs::path_temp("envar/grids"), filename)
-              handle_file(url, dest_file, var, NULL, y)
+              canon <- var
+              user_name <- paste0(var, "_", year_str, "_", g, "_rcp", r)
+              handle_file(url, dest_file, canon, user_name)
             }
           }
         }
@@ -248,13 +431,17 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
                                     part1, year_str, part2)
                 url <- sprintf("%s/%s/%s/%s", base_url, year_str, var1, filename)
                 dest_file <- file.path(fs::path_temp("envar/grids"), filename)
-                handle_file(url, dest_file, var, NULL, y)
+                canon <- var
+                user_name <- paste0(var, "_", year_str)
+                handle_file(url, dest_file, canon, user_name)
               } else {
                 filename <- sprintf("CHELSA_%s_%s_V.2.1.tif",
                                     var, year_str)
                 url <- sprintf("%s/%s/%s/%s", base_url, year_str, var1, filename)
                 dest_file <- file.path(fs::path_temp("envar/grids"), filename)
-                handle_file(url, dest_file, var, NULL, y)
+                canon <- var
+                user_name <- paste0(var, "_", year_str)
+                handle_file(url, dest_file, canon, user_name)
               }
               
             } else {
@@ -271,7 +458,9 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
                                     var, m, year_str)
                 url <- sprintf("%s/%s/%s/%s", base_url, year_str, var1, filename)
                 dest_file <- file.path(fs::path_temp("envar/grids"), filename)
-                handle_file(url, dest_file, var, m, y)
+                canon <- var
+                user_name <- paste0(var, "_", year_str, "_", m)
+                handle_file(url, dest_file, canon, user_name)
               }
             }
             
@@ -307,7 +496,9 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
                   url <- sprintf("%s/%s/%s/%s/%s/%s", 
                                  base_url, year_str, toupper(g), paste0("ssp", s), var1, filename)
                   dest_file <- file.path(fs::path_temp("envar/grids"), filename)
-                  handle_file(url, dest_file, var, NULL, y)
+                  canon <- var
+                  user_name <- paste0(var, "_", year_str, "_", g, "_ssp", s)
+                  handle_file(url, dest_file, canon, user_name)
                   
                 } else {
                   
@@ -325,7 +516,9 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
                     url <- sprintf("%s/%s/%s/%s/%s/%s", 
                                    base_url, year_str, toupper(g), paste0("ssp", s), var1, filename)
                     dest_file <- file.path(fs::path_temp("envar/grids"), filename)
-                    handle_file(url, dest_file, var, m, y)
+                    canon <- var
+                    user_name <- paste0(var, "_", year_str, "_", m, "_", g, "_ssp", s)
+                    handle_file(url, dest_file, canon, user_name)
                   }
                 }
               }
@@ -358,7 +551,9 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
             }
             url <- sprintf("%s/%s/%s", base_url, var1, filename)
             dest_file <- file.path(fs::path_temp("envar/grids"), filename)
-            handle_file(url, dest_file, var, m, y)
+            canon <- var
+            user_name <- paste0(var, "_", year_str, "_", m)
+            handle_file(url, dest_file, canon, user_name)
           }
         }
         
@@ -369,22 +564,62 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
                               var, year_str)
           url <- sprintf("%s/%s", base_url, filename)
           dest_file <- file.path(fs::path_temp("envar/grids"), filename)
-          handle_file(url, dest_file, var, NULL, y)
+          canon <- var
+          user_name <- paste0(var, "_", year_str)
+          handle_file(url, dest_file, canon, user_name)
         }
       }
     }
   }
   
   # --------------------------------------------------------------------
-  # --- Return processed results ---
+  # Return output
   # --------------------------------------------------------------------
   if (is_raster_input) {
     if (is.null(processed_stack)) cli::cli_abort("No layers were successfully processed")
-    if (inherits(x, "SpatRaster")) processed_stack <- c(x, processed_stack)
+    
+    # If x was already a SpatRaster (from previous function), combine
+    if (inherits(x, "SpatRaster")) {
+      if (is_global) {
+        processed_stack <- combine_global_rasters(
+          existing_stack = x,
+          new_stack = processed_stack,
+          current_global_extent = current_global_extent
+        )
+      } else {
+        # Regional mode: resample new layers to match input raster exactly
+        # This ensures perfect alignment for stacking
+        if (!terra::compareGeom(x, processed_stack, stopOnError = FALSE)) {
+          cli::cli_alert_info("Aligning new layers to match input raster geometry...")
+          processed_stack <- terra::resample(processed_stack, x, method = "bilinear")
+        }
+      }
+      
+      processed_stack <- c(x, processed_stack)
+    }
+    
+    # Attach global extent as attribute for downstream functions
+    if (is_global) {
+      attr(processed_stack, "global_extent") <- current_global_extent
+      attr(processed_stack, "is_global") <- TRUE
+    }
+    
     cli::cli_alert_success("All layers processed and stacked successfully")
     return(processed_stack)
   } else {
     if (is.null(extracted_df)) cli::cli_abort("No values extracted successfully")
+    if (inherits(x, "data.frame") && !inherits(x, "sf")) {
+      extracted_df <- merge(x, extracted_df[, c(1, 4:ncol(extracted_df))], by = c("ID"), all = TRUE)
+      # Preserve CRS from previous extraction
+      prev_crs <- attr(x, "envar_crs")
+      if (!is.null(prev_crs)) {
+        crs <- prev_crs
+      }
+    }
+    
+    # Store the CRS as an attribute for downstream functions
+    # This ensures the CRS is preserved when chaining point extractions
+    attr(extracted_df, "envar_crs") <- crs
     cli::cli_alert_success("Extraction completed successfully")
     return(extracted_df)
   }

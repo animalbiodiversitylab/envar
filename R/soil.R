@@ -2,51 +2,36 @@
 
 #' Download and process Harmonized World Soil Database v2.0
 #'
-#' `soil()` downloads, processes, and extracts variables from the
-#' **Harmonized World Soil Database v2.0 (HWSD v2.0)**.
-#' The variable corresponds to a global raster file at 1 km resolution
-#' representing soil types.
+#' This function downloads, processes, and extracts variables from the
+#' Harmonized World Soil Database v2.0 (HWSD v2.0). The variable corresponds 
+#' to a global raster file at 1 km resolution representing soil types.
 #'
-#' The function allows users to input either:
-#' - **canonical variable names**, e.g. `"hwsd"`
-#' - **human-readable names**, e.g. `"soil"`, `"soil type"`, `"type"`, etc.
+#' Available variables (working synonyms in parentheses):
 #'
-#' It automatically:
-#' - downloads the source data (zipped),
-#' - unzips and processes the raster (`HWSD2.bil`),
-#' - crops/resamples/masks to match a user-provided `SpatRaster`, **or**
-#' - extracts values when `x` is point data.
+#' 1 - "hwsd" ("soil", "type", "soiltype", "soil type")
 #'
+#' Citation:
 #'
-#' ## Citation
-#' If you use HWSD v2.0 data, please cite:
-#'
-#' **FAO & IIASA. (2023).**
-#' *Harmonized World Soil Database v2.0.* Food and Agriculture Organization of the United Nations, Rome and International Institute for Applied Systems Analysis, Laxenburg, Austria.
+#' FAO & IIASA. (2023). "Harmonized World Soil Database v2.0." 
+#' Food and Agriculture Organization of the United Nations, Rome and 
+#' International Institute for Applied Systems Analysis, Laxenburg, Austria.
 #' https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/
 #'
-#'
-#' ## Available variables
-#'
-#' | Human-readable name          | Canonical variable code              |
-#' |------------------------------|--------------------------------------|
-#' | soil                         | hwsd                                 |
-#' | type                         | hwsd                                 |
-#' | soil type                    | hwsd                                 |
-#' | soiltype                     | hwsd                                 |
-#' | hwsd                         | hwsd                                 |
-#'
-#'
-#' @param x A `SpatRaster`, `SpatVector`, or `sf` object defining the area or
-#'          locations for extraction.
-#' @param vars Character vector of variables. Defaults to `"hwsd"` if left empty.
-#'          Accepts friendly names or canonical codes.
-#' @param ... Reserved for future use.
+#' @param x The output from `var_get()` defining the area or locations for extraction, 
+#' the reference system, and the buffer. 
+#' Leave this empty and use `var_get()` to define parameters for download.
+#' @param vars Character vector of one or more variables to download and process.
+#'        Defaults to "hwsd" if left empty.
+#' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' - If `x` is a raster: a `SpatRaster` stack of the processed soil layer.
-#' - If `x` contains points: a `data.frame` of extracted values.
+#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
+#' @examples
+#' \dontrun{
+#' processed <- var_get(country= "Italy", crs=3035) %>% 
+#' soil(vars=c("soil"))
+#'   }
 #' @export
 
 soil <- function(x, vars = NULL, ...) {
@@ -62,16 +47,25 @@ soil <- function(x, vars = NULL, ...) {
   
   par_list <- get_par(x)
   
-  if (inherits(par_list[[1]], "SpatRaster")) {
+  # Determine input type
+  if (!is.null(par_list$grid) && inherits(par_list$grid, "SpatRaster")) {
     grid <- par_list$grid
     mask <- par_list$mask
     res  <- par_list$res
     crs  <- par_list$crs
+    is_global <- isTRUE(par_list$is_global)
     is_raster_input <- TRUE
-  } else {
+    # Track cumulative global extent
+    current_global_extent <- par_list$global_extent
+  } else if (par_list$type == "point") {
     points <- par_list$mask
     bbox_points <- par_list$bbox
+    crs  <- par_list$crs
+    is_global <- FALSE
     is_raster_input <- FALSE
+    current_global_extent <- NULL
+  } else {
+    cli::cli_abort("Unsupported input type.")
   }
   
   processed_stack <- NULL
@@ -90,7 +84,7 @@ soil <- function(x, vars = NULL, ...) {
     vars <- "hwsd"
   }
   
-  # Normalizer
+  # Normalizer: convert to lowercase, remove punctuation, normalize whitespace
   normalize_string <- function(s) {
     s <- tolower(s)
     s <- gsub("[[:punct:]]", " ", s)
@@ -107,13 +101,21 @@ soil <- function(x, vars = NULL, ...) {
     syn2canon[[normalize_string(canon)]] <- canon
   }
   
-  # Convert requested vars to canonical codes
+  # Convert requested vars to canonical codes AND keep mapping to original names
   requested_codes <- character(0)
+  code_to_user_name <- list() # Maps canonical code -> user's original name
   unmapped <- character(0)
+  
   for (v in vars) {
     key <- normalize_string(v)
     if (!is.null(syn2canon[[key]])) {
-      requested_codes <- c(requested_codes, syn2canon[[key]])
+      canon <- syn2canon[[key]]
+      # Only add if not already present (avoid duplicates)
+      if (!(canon %in% requested_codes)) {
+        requested_codes <- c(requested_codes, canon)
+        # Store the user's original name for this canonical code
+        code_to_user_name[[canon]] <- v
+      }
     } else {
       unmapped <- c(unmapped, v)
     }
@@ -125,20 +127,20 @@ soil <- function(x, vars = NULL, ...) {
       "x" = "{.val {unmapped}}"
     ))
   }
-  requested_codes <- unique(requested_codes)
   
   # --------------------------------------------------------------------
   # Helper: Download, process, and clean up a single file
   # --------------------------------------------------------------------
-  handle_file <- function(url, dest_file, var) {
+  handle_file <- function(url, dest_file, canon, user_name) {
     temp_dir <- fs::path_temp("envar/soil")
     fs::dir_create(temp_dir)
     
-    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {var}}...")
+    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {user_name}}...")
     
     success <- download_file(url, dest_file)
+    
     if (!success) {
-      cli::cli_alert_warning("Failed to download {.val {var}} from {.url {url}}.")
+      cli::cli_alert_warning("Failed to download {.val {user_name}} from {.url {url}}.")
       return(NULL)
     }
     
@@ -167,49 +169,79 @@ soil <- function(x, vars = NULL, ...) {
         return(NULL)
       }
       
-      cli::cli_alert_info("Processing layer {.val HWSD2}...")
+      cli::cli_alert_info("Processing layer {.val {user_name}}...")
       
-      layer <- terra::crop(layer, grid, snap = "out")
-      layer <- terra::resample(layer, grid, method = "bilinear")
-      layer <- terra::mask(layer, mask)
+      # Process layer using standard helper
+      result <- process_raster_layer(
+        layer = layer,
+        grid = grid,
+        mask = mask,
+        res = res,
+        crs = crs,
+        is_global = is_global,
+        current_extent = current_global_extent
+      )
       
-      if (!is.null(par_list$crs)) {
-        layer <- terra::project(layer, par_list$crs)
+      if (is_global) {
+        # For global processing, result is a list with layer and extent
+        layer1 <- result$layer
+        new_extent <- result$extent
+        
+        # Update the cumulative global extent
+        current_global_extent <<- new_extent
+        
+        # If we have existing layers and extent changed, crop them
+        if (!is.null(processed_stack)) {
+          processed_stack <<- align_stack_to_extent(processed_stack, new_extent)
+        }
+      } else {
+        # For regional processing, result is just the layer
+        layer1 <- result
       }
+      
+      # Assign user-requested name to layer
+      names(layer1) <- user_name
       
       if (is.null(processed_stack)) {
-        processed_stack <<- layer
+        processed_stack <<- layer1
       } else {
-        processed_stack <<- c(processed_stack, layer)
+        processed_stack <<- c(processed_stack, layer1)
       }
       
-      cli::cli_alert_success("Processed and added {.val HWSD2} to stack.")
+      cli::cli_alert_success("Processed and added {.val {user_name}} to stack.")
       
-      rm(layer)
+      rm(layer, layer1)
       gc()
       fs::file_delete(dest_file)
       fs::dir_delete(unzip_dir)
       
     } else {
-      cli::cli_alert_info("Extracting values from {.val HWSD2}...")
       
-      # process_points must handle the direct raster path
+      cli::cli_alert_info("Extracting values from {.val {user_name}}...")
+      
       extracted <- try(process_points(file = raster_file, points = points), silent = TRUE)
+      
       if (inherits(extracted, "try-error")) {
-        cli::cli_alert_warning("Extraction failed for {.val HWSD2}.")
+        cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
         fs::file_delete(dest_file)
         fs::dir_delete(unzip_dir)
         return(NULL)
       }
       
       extracted <- data.frame(extracted)
+      
+      if (ncol(extracted) >= 2) {
+        # Use user-requested name for the column
+        names(extracted)[ncol(extracted)] <- user_name
+      }
+      
       if (is.null(extracted_df)) {
         extracted_df <<- extracted
       } else {
-        extracted_df <<- merge(extracted_df, extracted[, c(1, 4)], by = "ID", all = TRUE)
+        extracted_df <<- merge(extracted_df, extracted[, c(1, ncol(extracted))], by = "ID", all = TRUE)
       }
       
-      cli::cli_alert_success("Extracted {.val HWSD2} successfully.")
+      cli::cli_alert_success("Extracted {.val {user_name}} successfully.")
       
       rm(extracted)
       gc()
@@ -222,8 +254,6 @@ soil <- function(x, vars = NULL, ...) {
   # Loop through requested variables
   # --------------------------------------------------------------------
   # Since there is only one source file for this function, we define it directly.
-  # The loop ensures structure consistency if multiple codes were requested (though redundant here).
-  
   full_url <- "https://s3.eu-west-1.amazonaws.com/data.gaezdev.aws.fao.org/HWSD/HWSD2_RASTER.zip"
   
   cli::cli_alert_info("Starting the download of HWSD data...")
@@ -234,7 +264,10 @@ soil <- function(x, vars = NULL, ...) {
     url <- full_url
     dest <- file.path(fs::path_temp("envar/soil"), filename)
     
-    handle_file(url, dest, canon)
+    # Get the user's original name for this canonical code
+    user_name <- code_to_user_name[[canon]]
+    
+    handle_file(url, dest, canon, user_name)
   }
   
   # --------------------------------------------------------------------
@@ -242,11 +275,50 @@ soil <- function(x, vars = NULL, ...) {
   # --------------------------------------------------------------------
   if (is_raster_input) {
     if (is.null(processed_stack)) cli::cli_abort("No layers were successfully processed")
-    if (inherits(x, "SpatRaster")) processed_stack <- c(x, processed_stack)
+    
+    # If x was already a SpatRaster (from previous function), combine
+    if (inherits(x, "SpatRaster")) {
+      if (is_global) {
+        processed_stack <- combine_global_rasters(
+          existing_stack = x,
+          new_stack = processed_stack,
+          current_global_extent = current_global_extent
+        )
+      } else {
+        # Regional mode: resample new layers to match input raster exactly
+        # This ensures perfect alignment for stacking
+        if (!terra::compareGeom(x, processed_stack, stopOnError = FALSE)) {
+          cli::cli_alert_info("Aligning new layers to match input raster geometry...")
+          processed_stack <- terra::resample(processed_stack, x, method = "bilinear")
+        }
+      }
+      
+      processed_stack <- c(x, processed_stack)
+    }
+    
+    # Attach global extent as attribute for downstream functions
+    if (is_global) {
+      attr(processed_stack, "global_extent") <- current_global_extent
+      attr(processed_stack, "is_global") <- TRUE
+    }
+    
     cli::cli_alert_success("All layers processed and stacked successfully")
     return(processed_stack)
   } else {
     if (is.null(extracted_df)) cli::cli_abort("No values extracted successfully")
+    # Merge with previous data if x was a data.frame
+    if (inherits(x, "data.frame") && !inherits(x, "sf")) {
+      extracted_df <- merge(x, extracted_df[, c(1, 4:ncol(extracted_df))], by = c("ID"), all = TRUE)
+      # Preserve CRS from previous extraction
+      prev_crs <- attr(x, "envar_crs")
+      if (!is.null(prev_crs)) {
+        crs <- prev_crs
+      }
+    }
+    
+    # Store the CRS as an attribute for downstream functions
+    # This ensures the CRS is preserved when chaining point extractions
+    attr(extracted_df, "envar_crs") <- crs
     cli::cli_alert_success("Extraction completed successfully")
     return(extracted_df)
   }

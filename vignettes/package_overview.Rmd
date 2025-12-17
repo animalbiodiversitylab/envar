@@ -1,19 +1,323 @@
 ---
-title: "Package Overview"
-output: rmarkdown::html_vignette
+title: "Package overview"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    fig_caption: true
+    self_contained: yes
+fontsize: 11pt
+documentclass: article
+bibliography: references.bib
+csl: reference-style.csl
 vignette: >
-  %\VignetteIndexEntry{Package Overview}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{Package overview}
+  %\VignetteEngine{knitr::rmarkdown_notangle}
 ---
 
 ```{r, include = FALSE}
+h = 3.2
+w = 5.0
+is_check <-
+  ("CheckExEnv" %in% search()) ||
+  any(c("_R_CHECK_TIMINGS_", "_R_CHECK_LICENSE_") %in% names(Sys.getenv())) ||
+  !identical(Sys.getenv("MY_UNIVERSE"), "") ||
+  any(c("CI", "GITHUB_ACTIONS", "GITHUB_SHA") %in% names(Sys.getenv()))
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+  fig.height = h,
+  fig.width = w,
+  fig.align = "center",
+  eval = !is_check,
+  root.dir = normalizePath("../..")
 )
 ```
 
-```{r setup}
+```{r,include = FALSE}
+# load developmental version of package
+devtools::load_all()
+```
+
+## Introduction 
+
+_envar_ is an _R_ package that enables the download of a wide range of environmental variables and their processing. In this tutorial we explore all the potential uses of the package, to give an idea of the breadth of uses and of the potential challenges and shortcuts. First we load the package. When executing this command, other five packages (`dplyr`, `terra`, `sf`, `corrplot`, `usdm`) will be automatically loaded to ensure the full functionality of the package.
+
+```{r,results='hide',message =FALSE,warning=FALSE}
 library(envar)
 ```
+
+## Potential uses
+
+Below, we illustrate a set of download examples covering all possible customizations of the user query, to make sure that every use is covered and illustrated.
+
+### 1. Single global layer 
+
+We here show an example of download of a single variable from a single source, in this case the 1 km land cover based on ESA [@loparrino2025]. The variable is downloaded and maintains its original extent. If not aggregated, the original grid resolution of any source is always 30 arcseconds (0.008333333°, or ~ 1 km) at the equator.
+
+```{r,results='hide',message =FALSE,warning=FALSE}
+processed_singlelayer_lc <- var_get() %>% 
+  esalandcover(vars=c("ice")) 
+```
+
+The print in the console is omitted in this tutorial to avoid output overflow. When run locally, the print in the console displays the citation(s) and doi(s) for the downloaded source(s) to make sure that users cite the proper source(s) when redacting manuscripts or using data for public presentations. Then, a progress bar is shown for each variable that is being downloaded and success messages are issued when each variable has been correctly processed. The output is a SpatRaster object from the _terra_ package, which can be plotted and further processed.
+
+```{r}
+plot(processed_singlelayer_lc)
+```
+
+### 2. Single global layer with aggregation
+
+A multiple of the native 30 arcsecond grid (~1 km at the equator) can be set by using an aggregation factor, defined by the argument **res**. A value of `res = 1` keeps the native resolution; any value > 1 aggregates the raster by that factor.
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+processed_singlelayer_aggregated <- var_get(res = 100) %>%
+  esalandcover(vars = c("ice"))
+```
+
+```{r}
+print(processed_singlelayer_aggregated)
+```
+
+### 3. Multiple global layers with different spatial extents
+
+When multiple layers from different sources are downloaded together, the output automatically crops all layers to the smallest shared extent. If more than two sources are reported, the code updates step-by-step the shared extent across all layers.
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+processed_bilayer_global <- var_get() %>%
+  chelsa(vars = c("pr"), months = 12, year = 2015) %>%
+  esalandcover(vars = c("ice"))
+```
+
+The same occurs if the order of downloaded variables is inverted:
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+processed_bilayer_global_1 <- var_get() %>%
+  esalandcover(vars = c("ice")) %>%
+  chelsa(vars = c("pr"), months = 12, year = 2015)
+```
+
+```{r}
+# define the extents of the first SpatRaster object and of the second to check
+# if they are the same
+
+ext1 <- round(ext(processed_bilayer_global), 1)
+ext2 <-round(ext(processed_bilayer_global_1), 1)
+
+# print the resulting extents 
+print(ext1)
+print(ext2)
+```
+
+### 4. Crop and mask to a country
+
+A country can be specified by name (case‑insensitive). The output is cropped/masked to that country.
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+processed_bilayer_country <- var_get(country = "Italy") %>%
+  esalandcover(vars = c("ice")) %>%
+  chelsa(vars = c("pr"), months = 12, years = 2015)
+```
+
+```{r}
+plot(processed_bilayer_country)
+```
+
+### 5. Crop and mask to a continent
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+processed_singlelayer_africa <- var_get(continent = "Africa", buffer = 10) %>%
+  esalandcover(vars = c("forest"))
+```
+
+```{r}
+plot(processed_singlelayer_africa)
+```
+
+Some continents such as Europe have a complex shape if downloaded directly with the method just showed, and the invalid resulting geometry provides unrealistic outputs. Thus, in some cases it is recommended to import an external shapefile (e.g., of Europe) where all geometries are valid, or to build the continent step by step defining the countries
+in the _rnaturalearth R_ package and manually creating a union of countries.
+
+### 6. Projecting to a PRS
+
+The single layer is downloaded and maintains its original extent. But additionally it is projected to the desired Coordinate Reference System (CRS). The default CRS in _envar_ is the Geographic Reference System (GRS) WGS 84 (EPSG: 4326). This is the most commonly used GRS for global analyses. GRS assume that the Earth is an ellipsoid (or spheroid) and provide coordinates based on a 3D surface with degrees and latitude-longitude values. However, these systems are not ideal to compute distances as the meaning of degrees changes based on the location on earth (e.g., 1 degree of longitude corresponds to ~ 111 km at the equator but approaches zero towards the poles). Additionally, users might want to improve spatial analysis accuracy, visualize data in a specific projection, or align results with other data that use a different CRS. Thus, a Projected Reference System (PRS) can be used, where coordinates are based on the location on a 2D system. The conversion from a GRS to a PRS always implies a certain amount of distortion, and thus different PRS are optimized for different areas of the globe to locally reduce distortion when moving from a 3D to a 2D representation. Thus, users can use the argument "crs" in the `var_get()` function to specify the desired CRS. Here we show an example of download of a single variable from a single source, in this case the 1 km land cover based on ESA [@loparrino2025], and its projection to the local equal-area projection (EPSG:3035). Inside the crs argument, a number or character representing the code of the PRS must be provided. If nothing is specified, 4326 is assumed. The crs can also be specified with the prefix 'ESRI' or 'EPSG' according to the system, e.g. "EPSG:4326" or "ESRI:54009".
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+processed_singlelayer_projected <- var_get(country = "Italy", crs=3035) %>% 
+ esalandcover(vars=c("ice"))
+```
+
+```{r}
+print(processed_singlelayer_projected)
+plot(processed_singlelayer_projected)
+```
+
+### 7. Apply a buffer to a shape
+
+A positive buffer expands the shape by the specified number of kilometers; a negative buffer shrinks it. Units are always km for the user. If the CRS is left to the default (crs="EPSG:4326"), the function used by the package (st_buffer) automatically transforms the kilometers in degrees so that the buffer is circular on the 3D surface (and the buffer might thus appear non-circular if plotted in 2D). However, it is recommended to always specify a projected CRS when using buffers to avoid potential distortions.
+
+```{r, results = "hide", message = FALSE, warning =FALSE}
+processed_singlelayer_buffer <- var_get(country = "Italy", crs = 3035, buffer = 10) %>%
+  esalandcover(vars = c("ice"))
+```
+
+```{r}
+plot(processed_singlelayer_buffer)
+```
+
+Negative buffer example:
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+processed_singlelayer_negative_buffer <- var_get(country = "Italy", crs = 3035, buffer = -10) %>%
+  esalandcover(vars = c("ice"))
+```
+
+```{r}
+plot(processed_singlelayer_negative_buffer)
+```
+
+A buffer at global scale (no shape or data.frame or country defined) triggers an error (not shown here):
+
+```{r,eval = FALSE}
+processed_singlelayer_global_buffer <- var_get(buffer = 10) %>%
+  esalandcover(vars = c("ice"))
+```
+
+
+### 8. Use a local shapefile (polygon)
+
+The user can load a shapefile of type POLYGON and use it to crop/mask the downloaded variables. Here we use the already included European Alps shapefile (`Alps()`).
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+processed_bilayer_shapefile <- var_get(shape = Alps) %>%
+  esalandcover(vars = c("ice")) %>%
+  chelsa(vars = c("pr"), months = 12, year = 2015)
+```
+
+```{r}
+plot(processed_bilayer_shapefile[[2]])
+```
+
+### 9. Add a correlation check
+
+It is possible to call the `corr_check()` function at the bottom of the code to enable an automatic test of correlation among the downloaded variables over the defined spatial area and resolution. Doing this will produce a list containing the processed SpatRaster, Pearson pairwise correlations, VIF statistics, and a saved correlation plot.
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+processed_bilayer_corr_check <- var_get(shape = Alps, crs = 3035, res = 2, buffer = 10) %>% 
+             chelsa(vars = c("bio1", "bio4", "bio10", "bio12", "bio19"),
+                    years = "1981-2010") %>%
+             topography(vars = c("elevation", "slope")) %>%
+             esalandcover(vars = c("trees", "ice")) %>%
+             corr_check()
+```
+
+The output will thus be a list that contains the following elements: "data" (the SpatRaster or data.frame with your downloaded data), "correlation_matrix" containing a matrix of Pairwise Pearson's correlation coefficients between all variables, "vif" a data.frame containing the Variance Inflation Factors for each variable, a "summary" that reports if and which variables have a Pearson's correlation coefficient higher than |0.6| and/or a VIF higher than 3. Lastly, the "plot_path" specifies the local directory to which a plot of the Pearson's pairwise correlation was saved. 
+
+```{r}
+# View the Pearson's pairwise correlation matrix
+print(processed_bilayer_corr_check$correlation_matrix)
+```
+
+```{r}
+# View the Variance Inflation Factor values
+print(processed_bilayer_corr_check$vif)
+```
+
+To better understand the structure of correlation, we can also analyze the correlation plot that was locally stored. 
+
+```{r, echo=FALSE, out.width="100%", fig.align='center'}
+knitr::include_graphics("images/Corr_plot_example.png")
+```
+
+### 10. Use a local shapefile (points)
+
+If a POINT shapefile is used and no buffer is applied, the output will be a data.frame containing columns: ID (integer going from 1 to the length of the dataset), X (longitude), Y (latitude), and the extracted values over the specified points.
+
+```{r, results = "hide", message = FALSE, warning =FALSE}
+points <- sf::st_sample(Alps, size = 100, type = "random")
+
+processed_singlelayer_points <- var_get(shape = points) %>%
+  esalandcover(vars = c("ice"))
+
+processed_bilayer_points <- var_get(shape = points) %>%
+  esalandcover(vars = c("ice")) %>%
+  chelsa(vars = c("pr"), months = 12, year = 2015)
+```
+
+```{r}
+# visualize the points shapefile
+plot(Alps$geometry)
+plot(points, add =T)
+```
+
+```{r}
+# visualize the resulting data.frame with the extracted values when only one source was used
+head(processed_singlelayer_points)
+```
+
+```{r}
+# visualize the resulting data.frame with the extracted values when two or more sources were used
+head(processed_bilayer_points)
+```
+
+### 11. Add a correlation check when using points
+
+This will create a similar result as for the correlation test applied to a SpatRaster object, but instead of a set of rasters, the first element of the resulting list will be a data.frame with the extracted values.
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+processed_bilayer_points_corr_check <- var_get(shape = points) %>%
+  esalandcover(vars = c("ice")) %>%
+  chelsa(vars = c("pr"), months = 12, year = 2015) %>%
+  corr_check()
+```
+
+```{r}
+head(processed_bilayer_points_corr_check[[1]])
+```
+
+### 12. Use points as a data.frame
+
+Points can be fed into the package in the form of a data.frame with only two columns that represent coordinates. Column names must be **X** and **Y**, reporting the longitude and latitude, respectively. The CRS is assigned based on user input (default: 4326).
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+points3035 <- st_transform(points, 3035)
+points3035df <- as.data.frame(st_coordinates(points3035))
+
+processed_singlelayer_pointsdf <- var_get(pointsdf = points3035df, crs = 3035) %>%
+  esalandcover(vars = c("ice"))
+
+processed_bilayer_pointsdf <- var_get(pointsdf = points3035df, crs = 3035) %>%
+  esalandcover(vars = c("ice")) %>%
+  chelsa(vars = c("pr"), months = 12, year = 2015)
+```
+
+```{r}
+# visualize the resulting data.frame when using only one source
+head(processed_singlelayer_pointsdf)
+```
+
+```{r}
+# visualize the resulting data.frame when using multiple sources
+head(processed_bilayer_pointsdf)
+```
+
+### 13. Apply a buffer when using points
+
+A buffer (in km) expands the points to a polygon and all the variables that are downloaded are subsequently cropped to that shape. This option can be very useful 
+for instance in Species Distribution Modelling, whereby records of species presence
+are often known but not absences. The so-called pseudo-absences (i.e. simulated absences of species) and background points (points used to define the background environmental conditions and compare them to presences, as done in the Maximum Entropy algorithm) are typically picked in a defined radius around the presences,
+to define areas that could theoretically be reached by the species via dispersal. Additionally, picking pseudo-absence/background points in a buffer around presences
+allows to better simulate the spatial sampling effort patterns and replicate them. 
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+processed_bilayer_points_buffer <- var_get(pointsdf = points3035df, crs = 3035, buffer = 50) %>%
+  esalandcover(vars = c("ice")) %>%
+  chelsa(vars = c("pr"), months = 12, year = 2015)
+```  
+
+```{r}
+plot(processed_bilayer_points_buffer)
+```
+
+## Conclusion
+
+In this tutorial we have gone through all the potential ways in which the user can tailor the download and processing of data. For simplicity we have relied only on a few sources, but many more are available and can be checked at the **[reference](https://envarpackage.netlify.app/reference/)** or at the detailed explanation of all **[sources and variables](https://envarpackage.netlify.app/articles/variables)**.
+
+## References
+

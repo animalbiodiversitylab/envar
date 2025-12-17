@@ -2,67 +2,73 @@
 % Please edit documentation in R/heterogeneity.R
 \name{heterogeneity}
 \alias{heterogeneity}
-\title{Download and process Earthenv habitat heterogeneity layers}
+\title{Download and process EarthEnv habitat heterogeneity layers}
 \usage{
 heterogeneity(x, vars, ...)
 }
 \arguments{
-\item{x}{A `SpatRaster`, `SpatVector`, or `sf` object defining the area or
-locations for extraction.}
+\item{x}{The output from `var_get()` defining the area or locations for extraction, 
+the reference system, and the buffer. 
+Leave this empty and use `var_get()` to define parameters for download.}
 
-\item{vars}{Character vector of variables, supplied as canonical names or
-friendly names.}
+\item{vars}{Character vector of one or more variables to download and process.}
 
-\item{...}{Reserved for future use.}
+\item{...}{Additional arguments (currently unused).}
 }
 \value{
-- If `x` is a raster: a `SpatRaster` stack of processed heterogeneity layers.
-- If `x` contains points: a `data.frame` of extracted values.
+If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
-`heterogeneity()` downloads, processes, and extracts variables from the
-**Earthenv habitat heterogeneity** dataset (1-km resolution).
-Each variable corresponds to a global Cloud-Optimized GeoTIFF (COG)
-representing different metrics of habitat heterogeneity derived from
-remote sensing data.
+This function downloads, processes, and extracts variables from the
+EarthEnv habitat heterogeneity dataset (1-km resolution). Each variable 
+corresponds to a global Cloud-Optimized GeoTIFF (COG) representing different 
+metrics of habitat heterogeneity derived from remote sensing data.
 }
 \details{
-The function allows users to input either:
-- **Canonical variable names**, e.g. `"cv"` (Coefficient of variation), `"shannon"`, `"maximum"`
-- **Human-readable names**, e.g. `"coefficient of variation"`, `"standard deviation"`,
-  `"dissimilarity"`, etc.
+Available variables (working synonyms in parentheses):
 
-It automatically:
-- downloads the selected files,
-- crops/resamples/masks to match a user-provided `SpatRaster`, **or**
-- extracts values when `x` is point data.
+First-order statistics:
 
+1 - "cv" ("coefficient of variation", "coeff of variation")
 
-## Citation
-If you use Earthenv habitat heterogeneity data, please cite:
+2 - "evenness" ("even")
 
-**Tuanmu MN, Jetz W (2015).**
-*A global, remote sensing-based characterization of terrestrial habitat heterogeneity
-for biodiversity and ecosystem modeling.* Global Ecology and Biogeography, **24(11)**, 1329-1339.
+3 - "range"
+
+4 - "shannon" ("shannon index", "shannon entropy")
+
+5 - "simpson" ("simpson index", "simpson diversity")
+
+6 - "std" ("standard deviation", "std dev")
+
+Second-order statistics (texture metrics):
+
+7 - "Contrast" ("contrast")
+
+8 - "Correlation" ("correlation", "corr")
+
+9 - "Dissimilarity" ("dissimilarity")
+
+10 - "Entropy" ("entropy", "texture entropy")
+
+11 - "Homogeneity" ("homogeneity")
+
+12 - "Maximum" ("maximum", "max")
+
+13 - "Uniformity" ("uniformity", "uniform")
+
+14 - "Variance" ("variance", "var")
+
+Citation:
+
+Tuanmu MN, Jetz W (2015). "A global, remote sensing-based characterization 
+of terrestrial habitat heterogeneity for biodiversity and ecosystem modeling." 
+Global Ecology and Biogeography, 24(11), 1329-1339.
 https://doi.org/10.1111/geb.12365
-
-
-## Available variables (1-km resolution)
-
-| Human-readable name           | Canonical variable name (URL suffix)   |
-|-------------------------------|----------------------------------------|
-| Coefficient of variation      | cv                                     |
-| Evenness                      | evenness                               |
-| Range                         | range                                  |
-| Shannon (entropy)             | shannon                                |
-| Simpson (diversity)           | simpson                                |
-| Standard deviation            | std                                    |
-| Contrast                      | Contrast                               |
-| Correlation                   | Correlation                            |
-| Dissimilarity                 | Dissimilarity                          |
-| Entropy (texture)             | Entropy                                |
-| Homogeneity                   | Homogeneity                            |
-| Maximum                       | Maximum                                |
-| Uniformity                    | Uniformity                             |
-| Variance                      | Variance                               |
+}
+\examples{
+\dontrun{
+processed <- var_get(country= "Italy", crs=3035) \%>\% 
+heterogeneity(vars=c("shannon", "cv"))
+  }
 }

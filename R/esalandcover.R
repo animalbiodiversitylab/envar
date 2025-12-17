@@ -2,63 +2,68 @@
 
 #' Download and process Global 1 km Land Cover variables
 #'
-#' `esalandcover()` downloads, processes, and extracts variables from the
-#' **Global 1 km Land Cover** dataset. Each variable corresponds to a global 
+#' This function downloads, processes, and extracts variables from the
+#' Global 1 km Land Cover dataset. Each variable corresponds to a global 
 #' raster representing a specific land cover class or diversity index derived 
 #' from very high-resolution imagery.
 #'
-#' The function allows users to input either:
-#' - **canonical variable codes**, e.g. `"wetland"`, `"tree"`, `"shannon"`
-#' - **human-readable names**, e.g. `"forest"`, `"agriculture"`, 
-#'   `"surface water"`, `"simpson index"`, etc.
+#' Available variables (working synonyms in parentheses):
 #'
-#' It automatically:
-#' - downloads the selected files from Figshare,
-#' - crops/resamples/masks to match a user-provided `SpatRaster`, **or**
-#' - extracts values when `x` is point data.
+#' 1 - "wetland" ("wetlands", "swamp", "marsh", "bog", "fen")
+#' 
+#' 2 - "bare" ("bare ground", "bare soil", "desert", "unvegetated")
+#' 
+#' 3 - "built" ("built area", "built up", "urban", "artificial", "impervious")
+#' 
+#' 4 - "cropland" ("agriculture", "agricultural", "crop", "crops", "farming")
+#' 
+#' 5 - "grass" ("grassland", "grass land", "meadow", "pasture", "prairie")
+#' 
+#' 6 - "ice" ("snow", "snow and ice", "glacier", "ice", "permafrost")
+#' 
+#' 7 - "land_perc" ("percentage of land", "land percentage", "land cover fraction", "land fraction")
+#' 
+#' 8 - "mangrove" ("mangroves")
+#' 
+#' 9 - "moss" ("mosses", "lichen", "lichens", "moss and lichen")
+#' 
+#' 10 - "shrub" ("shrubland", "scrub", "bush", "thicket")
+#' 
+#' 11 - "tree" ("trees", "forest", "woodland", "canopy", "canopy cover")
+#' 
+#' 12 - "water" ("surface water", "lake", "river", "freshwater")
+#' 
+#' 13 - "simpson" ("simpson index", "diversity simpson", "simpson diversity")
+#' 
+#' 14 - "shannon" ("shannon index", "entropy", "shannon entropy", "shannon diversity")
+#' 
+#' 15 - "evenness" ("evenness index", "pielou", "pielou evenness", "species evenness")
 #'
+#' Citation:
 #'
-#' ## Citation
-#' If you use this data, please cite:
+#' Lo Parrino E, Simoncini A, Ficetola GF, Falaschi M (2025). "Global 1 km land cover 
+#' for macroecological modelling from very high resolution imagery." Figshare.  
+#' https://doi.org/10.6084/m9.figshare.22061801
 #'
-#' **Lo Parrino E, Simoncini A, Ficetola GF, Falaschi M (2025)** #' *Global 1 km land cover for macroecological modelling from very high resolution imagery.* #' Figshare.  
-#' https://figshare.com/s/4e7dee46628b530aee03
-#'
-#'
-#' ## Available variables
-#'
-#' | Human-readable name          | Canonical variable code              |
-#' |------------------------------|--------------------------------------|
-#' | wetland / marsh              | wetland                              |
-#' | bare ground / soil           | bare                                 |
-#' | built / urban area           | built                                |
-#' | cropland / agriculture       | cropland                             |
-#' | grassland / meadow           | grass                                |
-#' | ice / snow / glacier         | ice                                  |
-#' | land percentage              | land_perc                            |
-#' | mangrove                     | mangrove                             |
-#' | moss / lichen                | moss                                 |
-#' | shrub / scrub                | shrub                                |
-#' | tree / forest                | tree                                 |
-#' | water / surface water        | water                                |
-#' | simpson index                | simpson                              |
-#' | shannon index                | shannon                              |
-#' | evenness index               | evenness                             |
-#'
-#'
-#' @param x A `SpatRaster`, `SpatVector`, or `sf` object defining the area or
-#'          locations for extraction.
-#' @param vars Character vector of variables, supplied as canonical codes or
-#'             friendly names.
-#' @param ... Reserved for future use.
+#' Note: Users should verify the terms of use provided at https://figshare.com/s/4e7dee46628b530aee03
+#' 
+#' @param x The output from `var_get()` defining the area or locations for extraction, 
+#' the reference system, and the buffer. 
+#' Leave this empty and use `var_get()` to define parameters for download.
+#' @param vars Character vector of one or more variables to download and process.
+#' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' - If `x` is a raster: a `SpatRaster` stack of processed layers.  
-#' - If `x` contains points: a `data.frame` of extracted values.
+#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
+#' @examples
+#' \dontrun{
+#' processed <- var_get(country= "Italy", crs=3035) %>% 
+#' esalandcover(vars=c("tree", "water"))
+#'     }
 #' @export
 
-esalandcover <- function(x, vars, ...) {
+esalandcover <- function(x, vars, discover=TRUE, ...) {
   
   # --------------------------------------------------------------------
   # Citation displayed on execution
@@ -71,16 +76,25 @@ esalandcover <- function(x, vars, ...) {
   
   par_list <- get_par(x)
   
-  if (inherits(par_list[[1]], "SpatRaster")) {
+  # Determine input type
+  if (!is.null(par_list$grid) && inherits(par_list$grid, "SpatRaster")) {
     grid <- par_list$grid
     mask <- par_list$mask
     res  <- par_list$res
     crs  <- par_list$crs
+    is_global <- isTRUE(par_list$is_global)
     is_raster_input <- TRUE
-  } else {
+    # Track cumulative global extent
+    current_global_extent <- par_list$global_extent
+  } else if (par_list$type == "point") {
     points <- par_list$mask
     bbox_points <- par_list$bbox
+    crs  <- par_list$crs
+    is_global <- FALSE
     is_raster_input <- FALSE
+    current_global_extent <- NULL
+  } else {
+    cli::cli_abort("Unsupported input type.")
   }
   
   processed_stack <- NULL
@@ -89,7 +103,6 @@ esalandcover <- function(x, vars, ...) {
   # --------------------------------------------------------------------
   # Friendly-name -> canonical code mapping
   # --------------------------------------------------------------------
-  # Map user inputs to internal canonical IDs
   esa_lookup <- list(
     "wetland"   = c("wetlands", "swamp", "marsh", "bog", "fen"),
     "bare"      = c("bare ground", "bare soil", "desert", "unvegetated"),
@@ -108,8 +121,7 @@ esalandcover <- function(x, vars, ...) {
     "evenness"  = c("evenness index", "evenness", "pielou", "pielou evenness", "species evenness")
   )
   
-  # Map canonical IDs to specific Figshare URLs
-  # Note: URLs are direct download links provided in specifications
+  # Direct URL lookup
   url_lookup <- list(
     "wetland"   = "https://figshare.com/ndownloader/files/59720123?private_link=4e7dee46628b530aee03",
     "bare"      = "https://figshare.com/ndownloader/files/59720138?private_link=4e7dee46628b530aee03",
@@ -128,7 +140,7 @@ esalandcover <- function(x, vars, ...) {
     "evenness"  = "https://figshare.com/ndownloader/files/59720165?private_link=4e7dee46628b530aee03"
   )
   
-  # Normalizer
+  # Normalizer: convert to lowercase, remove punctuation, normalize whitespace
   normalize_string <- function(s) {
     s <- tolower(s)
     s <- gsub("[[:punct:]]", " ", s)
@@ -145,13 +157,21 @@ esalandcover <- function(x, vars, ...) {
     syn2canon[[normalize_string(canon)]] <- canon
   }
   
-  # Convert requested vars to canonical codes
+  # Convert requested vars to canonical codes AND keep mapping to original names
   requested_codes <- character(0)
+  code_to_user_name <- list() # Maps canonical code -> user's original name
   unmapped <- character(0)
+  
   for (v in vars) {
     key <- normalize_string(v)
     if (!is.null(syn2canon[[key]])) {
-      requested_codes <- c(requested_codes, syn2canon[[key]])
+      canon <- syn2canon[[key]]
+      # Only add if not already present (avoid duplicates)
+      if (!(canon %in% requested_codes)) {
+        requested_codes <- c(requested_codes, canon)
+        # Store the user's original name for this canonical code
+        code_to_user_name[[canon]] <- v
+      }
     } else {
       unmapped <- c(unmapped, v)
     }
@@ -163,20 +183,20 @@ esalandcover <- function(x, vars, ...) {
       "x" = "{.val {unmapped}}"
     ))
   }
-  requested_codes <- unique(requested_codes)
   
   # --------------------------------------------------------------------
   # Helper: Download, process, and clean up a single file
   # --------------------------------------------------------------------
-  handle_file <- function(url, dest_file, var) {
+  handle_file <- function(url, dest_file, canon, user_name) {
     temp_dir <- fs::path_temp("envar/grids")
     fs::dir_create(temp_dir)
     
-    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {var}}...")
+    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {user_name}}...")
     
     success <- download_file(url, dest_file)
+    
     if (!success) {
-      cli::cli_alert_warning("Failed to download {.val {var}} from {.url {url}}.")
+      cli::cli_alert_warning("Failed to download {.val {user_name}} from {.url {url}}.")
       return(NULL)
     }
     
@@ -184,70 +204,111 @@ esalandcover <- function(x, vars, ...) {
       layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
-        fs::file_delete(dest_file)
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
-      cli::cli_alert_info("Processing layer {.val {basename(dest_file)}}...")
+      cli::cli_alert_info("Processing layer {.val {user_name}}...")
       
-      layer <- terra::crop(layer, grid, snap = "out")
-      layer <- terra::resample(layer, grid, method = "bilinear")
-      layer <- terra::mask(layer, mask)
+      # Process layer using standard helper
+      result <- process_raster_layer(
+        layer = layer,
+        grid = grid,
+        mask = mask,
+        res = res,
+        crs = crs,
+        is_global = is_global,
+        current_extent = current_global_extent
+      )
       
-      if (!is.null(par_list$crs)) {
-        layer <- terra::project(layer, par_list$crs)
+      if (is_global) {
+        # For global processing, result is a list with layer and extent
+        layer1 <- result$layer
+        new_extent <- result$extent
+        
+        # Update the cumulative global extent
+        current_global_extent <<- new_extent
+        
+        # If we have existing layers and extent changed, crop them
+        if (!is.null(processed_stack)) {
+          processed_stack <<- align_stack_to_extent(processed_stack, new_extent)
+        }
+      } else {
+        # For regional processing, result is just the layer
+        layer1 <- result
       }
+      
+      # Assign user-requested name to layer
+      names(layer1) <- user_name
       
       if (is.null(processed_stack)) {
-        processed_stack <<- layer
+        processed_stack <<- layer1
       } else {
-        processed_stack <<- c(processed_stack, layer)
+        processed_stack <<- c(processed_stack, layer1)
       }
       
-      cli::cli_alert_success("Processed and added {.val {basename(dest_file)}} to stack.")
+      cli::cli_alert_success("Processed and added {.val {user_name}} to stack.")
       
-      rm(layer)
+      rm(layer, layer1)
       gc()
-      fs::file_delete(dest_file)
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
       
     } else {
-      cli::cli_alert_info("Extracting values from {.val {basename(dest_file)}}...")
+      
+      cli::cli_alert_info("Extracting values from {.val {user_name}}...")
       
       extracted <- try(process_points(file = dest_file, points = points), silent = TRUE)
+      
       if (inherits(extracted, "try-error")) {
-        cli::cli_alert_warning("Extraction failed for {.val {basename(dest_file)}}.")
-        fs::file_delete(dest_file)
+        cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
       extracted <- data.frame(extracted)
+      
+      if (ncol(extracted) >= 2) {
+        # Use user-requested name for the column
+        names(extracted)[ncol(extracted)] <- user_name
+      }
+      
       if (is.null(extracted_df)) {
         extracted_df <<- extracted
       } else {
-        extracted_df <<- merge(extracted_df, extracted[, c(1, 4)], by = "ID", all = TRUE)
+        extracted_df <<- merge(extracted_df, extracted[, c(1, ncol(extracted))], by = "ID", all = TRUE)
       }
       
-      cli::cli_alert_success("Extracted {.val {basename(dest_file)}} successfully.")
+      cli::cli_alert_success("Extracted {.val {user_name}} successfully.")
       
       rm(extracted)
       gc()
-      fs::file_delete(dest_file)
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
     }
   }
   
   # --------------------------------------------------------------------
   # Loop through requested variables
   # --------------------------------------------------------------------
+  
   cli::cli_alert_info("Starting the download of Global Land Cover data...")
   
   for (canon in requested_codes) {
-    # We assign a .tif extension for the local filename
     filename <- paste0(canon, ".tif")
-    # Retrieve the specific Figshare URL from the lookup list
     url <- url_lookup[[canon]]
     dest <- file.path(fs::path_temp("envar/grids"), filename)
     
-    handle_file(url, dest, canon)
+    # Get the user's original name for this canonical code
+    user_name <- code_to_user_name[[canon]]
+    
+    handle_file(url, dest, canon, user_name)
   }
   
   # --------------------------------------------------------------------
@@ -255,11 +316,52 @@ esalandcover <- function(x, vars, ...) {
   # --------------------------------------------------------------------
   if (is_raster_input) {
     if (is.null(processed_stack)) cli::cli_abort("No layers were successfully processed")
-    if (inherits(x, "SpatRaster")) processed_stack <- c(x, processed_stack)
+    
+    # If x was already a SpatRaster (from previous function), combine
+    if (inherits(x, "SpatRaster")) {
+      
+      if (is_global) {
+        processed_stack <- combine_global_rasters(
+          existing_stack = x,
+          new_stack = processed_stack,
+          current_global_extent = current_global_extent
+        )
+      } else {
+        # Regional mode: resample new layers to match input raster exactly
+        # This ensures perfect alignment for stacking
+        if (!terra::compareGeom(x, processed_stack, stopOnError = FALSE)) {
+          cli::cli_alert_info("Aligning new layers to match input raster geometry...")
+          processed_stack <- terra::resample(processed_stack, x, method = "bilinear")
+        }
+      }
+      
+      processed_stack <- c(x, processed_stack)
+    }
+    
+    # Attach global extent as attribute for downstream functions
+    if (is_global) {
+      attr(processed_stack, "global_extent") <- current_global_extent
+      attr(processed_stack, "is_global") <- TRUE
+    }
+    
     cli::cli_alert_success("All layers processed and stacked successfully")
     return(processed_stack)
+    
   } else {
     if (is.null(extracted_df)) cli::cli_abort("No values extracted successfully")
+    # Merge with previous data if x was a data.frame
+    if (inherits(x, "data.frame") && !inherits(x, "sf")) {
+      extracted_df <- merge(x, extracted_df[, c(1, 4:ncol(extracted_df))], by = c("ID"), all = TRUE)
+      # Preserve CRS from previous extraction
+      prev_crs <- attr(x, "envar_crs")
+      if (!is.null(prev_crs)) {
+        crs <- prev_crs
+      }
+    }
+    
+    # Store the CRS as an attribute for downstream functions
+    # This ensures the CRS is preserved when chaining point extractions
+    attr(extracted_df, "envar_crs") <- crs
     cli::cli_alert_success("Extraction completed successfully")
     return(extracted_df)
   }

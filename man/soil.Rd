@@ -7,51 +7,38 @@
 soil(x, vars = NULL, ...)
 }
 \arguments{
-\item{x}{A `SpatRaster`, `SpatVector`, or `sf` object defining the area or
-locations for extraction.}
+\item{x}{The output from `var_get()` defining the area or locations for extraction, 
+the reference system, and the buffer. 
+Leave this empty and use `var_get()` to define parameters for download.}
 
-\item{vars}{Character vector of variables. Defaults to `"hwsd"` if left empty.
-Accepts friendly names or canonical codes.}
+\item{vars}{Character vector of one or more variables to download and process.
+Defaults to "hwsd" if left empty.}
 
-\item{...}{Reserved for future use.}
+\item{...}{Additional arguments (currently unused).}
 }
 \value{
-- If `x` is a raster: a `SpatRaster` stack of the processed soil layer.
-- If `x` contains points: a `data.frame` of extracted values.
+If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
-`soil()` downloads, processes, and extracts variables from the
-**Harmonized World Soil Database v2.0 (HWSD v2.0)**.
-The variable corresponds to a global raster file at 1 km resolution
-representing soil types.
+This function downloads, processes, and extracts variables from the
+Harmonized World Soil Database v2.0 (HWSD v2.0). The variable corresponds 
+to a global raster file at 1 km resolution representing soil types.
 }
 \details{
-The function allows users to input either:
-- **canonical variable names**, e.g. `"hwsd"`
-- **human-readable names**, e.g. `"soil"`, `"soil type"`, `"type"`, etc.
+Available variables (working synonyms in parentheses):
 
-It automatically:
-- downloads the source data (zipped),
-- unzips and processes the raster (`HWSD2.bil`),
-- crops/resamples/masks to match a user-provided `SpatRaster`, **or**
-- extracts values when `x` is point data.
+1 - "hwsd" ("soil", "type", "soiltype", "soil type")
 
+Citation:
 
-## Citation
-If you use HWSD v2.0 data, please cite:
-
-**FAO & IIASA. (2023).**
-*Harmonized World Soil Database v2.0.* Food and Agriculture Organization of the United Nations, Rome and International Institute for Applied Systems Analysis, Laxenburg, Austria.
+FAO & IIASA. (2023). "Harmonized World Soil Database v2.0." 
+Food and Agriculture Organization of the United Nations, Rome and 
+International Institute for Applied Systems Analysis, Laxenburg, Austria.
 https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/
-
-
-## Available variables
-
-| Human-readable name          | Canonical variable code              |
-|------------------------------|--------------------------------------|
-| soil                         | hwsd                                 |
-| type                         | hwsd                                 |
-| soil type                    | hwsd                                 |
-| soiltype                     | hwsd                                 |
-| hwsd                         | hwsd                                 |
+}
+\examples{
+\dontrun{
+processed <- var_get(country= "Italy", crs=3035) \%>\% 
+soil(vars=c("soil"))
+  }
 }

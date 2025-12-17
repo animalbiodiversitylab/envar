@@ -4,73 +4,119 @@
 \alias{freshwater}
 \title{Download and process EarthEnv Freshwater Environmental Variables}
 \usage{
-freshwater(x, vars, ...)
+freshwater(x, vars, year = NULL, month = NULL, algorithm = NULL, ...)
 }
 \arguments{
-\item{x}{A `SpatRaster`, `SpatVector`, or `sf` object defining the area or
-locations for extraction.}
+\item{x}{The output from `var_get()` defining the area or locations for extraction, 
+the reference system, and the buffer. 
+Leave this empty and use `var_get()` to define parameters for download.}
 
-\item{vars}{Character vector of variables, supplied as canonical filenames or
-friendly names.}
+\item{vars}{Character vector of one or more variables to download and process.}
 
-\item{...}{Reserved for future use.}
+\item{year}{Numeric. Selected year(s) for extraction. Note: Most EarthEnv freshwater variables are 
+climatologies or static layers (1.0 version, 2015), so this argument is primarily for consistency 
+and may not filter results for static layers.}
+
+\item{month}{Numeric. Selected month(s) (1-12) for extraction. Only applicable to monthly variables 
+(e.g., tmin, tmax, prec).}
+
+\item{algorithm}{Character. The aggregation method/algorithm to use to filter specific bands.
+For Elevation and Slope layers, this maps to the specific band order:
+"min" (Band 1), "max" (Band 2), "range" (Band 3), "avg"/"mn" (Band 4).
+For Flow Accumulation: "length" (Band 1), "acc" (Band 2).
+For other variables, it attempts to match the string in the layer name.}
+
+\item{...}{Additional arguments (currently unused).}
 }
 \value{
-- If `x` is a raster: a `SpatRaster` stack of processed freshwater layers.
-- If `x` contains points: a `data.frame` of extracted values.
+If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
-`freshwater_variables()` downloads, processes, and extracts variables from the
-**Near-global freshwater-specific environmental variables** dataset.
-These variables are available at a 1-km resolution and capture upstream
+This function downloads, processes, and extracts variables from the
+Near-global freshwater-specific environmental variables dataset.
+These variables are available at 1 km resolution and capture upstream
 catchment characteristics, including topography, land cover, soil, and climate.
 }
 \details{
-The function allows users to input either:
-- **canonical filenames**, e.g. `"monthly_tmin_average.nc"`
-- **human-readable names**, e.g. `"min temp"`, `"upstream precipitation"`,
-  `"slope"`, `"soil average"`, etc.
+Available variables (working synonyms in parentheses):
 
-It automatically:
-- downloads the selected files,
-- crops/resamples/masks to match a user-provided `SpatRaster`, **or**
-- extracts values when `x` is point data.
+Temperature:
 
+1 - "monthly_tmin_average.nc" (monthly minimum temperature average, min temp average, tmin avg, tmin)
 
-## Citation
-If you use this data, please cite:
+2 - "monthly_tmax_average.nc" (monthly maximum temperature average, max temp average, tmax avg, tmax)
 
-**Domisch, S., Amatulli, G. & Jetz, W. (2015).**
-*Near-global freshwater-specific environmental variables for biodiversity
-analyses in 1 km resolution.* Scientific Data, **2**, 150073.
+3 - "monthly_tmin_weighted_average.nc" (monthly minimum temperature weighted, min temp weighted, tmin weighted)
+
+4 - "monthly_tmax_weighted_average.nc" (monthly maximum temperature weighted, max temp weighted, tmax weighted)
+
+Precipitation:
+
+5 - "monthly_prec_sum.nc" (monthly upstream precipitation sum, precipitation sum, precip sum, prec)
+
+6 - "monthly_prec_weighted_sum.nc" (monthly upstream precipitation weighted, precipitation weighted, precip weighted)
+
+Hydroclimatic:
+
+7 - "hydroclim_average+sum.nc" (hydroclimatic variables average, hydroclim average, hydroclim)
+
+8 - "hydroclim_weighted_average+sum.nc" (hydroclimatic variables weighted, hydroclim weighted)
+
+Topography:
+
+9 - "elevation.nc" (upstream elevation, elevation, dem)
+
+10 - "slope.nc" (upstream slope, slope)
+
+11 - "flow_acc.nc" (stream length, flow accumulation, flow)
+
+Land cover:
+
+12 - "landcover_minimum.nc" (upstream landcover minimum, landcover min)
+
+13 - "landcover_maximum.nc" (upstream landcover maximum, landcover max)
+
+14 - "landcover_range.nc" (upstream landcover range, landcover range)
+
+15 - "landcover_average.nc" (upstream landcover average, landcover avg, landcover)
+
+16 - "landcover_weighted_average.nc" (upstream landcover weighted, landcover weighted)
+
+Geology & soil:
+
+17 - "geology_weighted_sum.nc" (upstream geology, geology weighted, geology)
+
+18 - "soil_minimum.nc" (upstream soil minimum, soil min)
+
+19 - "soil_maximum.nc" (upstream soil maximum, soil max)
+
+20 - "soil_range.nc" (upstream soil range, soil range)
+
+21 - "soil_average.nc" (upstream soil average, soil avg, soil)
+
+22 - "soil_weighted_average.nc" (upstream soil weighted, soil weighted)
+
+Quality control:
+
+23 - "quality_control.nc" (quality control, qc)
+
+Citation:
+
+Domisch, S., Amatulli, G. & Jetz, W. (2015). "Near-global freshwater-specific 
+environmental variables for biodiversity analyses in 1 km resolution." 
+Scientific Data, 2, 150073.
 https://doi.org/10.1038/sdata.2015.73
 
+Note: Please cite original sources of primary datasets where appropriate.
+}
+\examples{
+\dontrun{
+# Topography with Algorithm filtering (keeping only the average/mean band)
+processed <- var_get(country=  "Switzerland", crs = 3035) \%>\% 
+  freshwater(vars= c("elevation", "slope"), algorithm= "avg")
 
-## Available variables
-
-| Human-readable name (examples) | Canonical filename (code)               |
-|--------------------------------|-----------------------------------------|
-| min temp (average)             | monthly_tmin_average.nc                 |
-| max temp (average)             | monthly_tmax_average.nc                 |
-| precipitation (sum)            | monthly_prec_sum.nc                     |
-| min temp (weighted)            | monthly_tmin_weighted_average.nc        |
-| max temp (weighted)            | monthly_tmax_weighted_average.nc        |
-| precipitation (weighted)       | monthly_prec_weighted_sum.nc            |
-| hydroclim (avg/sum)            | hydroclim_average+sum.nc                |
-| hydroclim (weighted)           | hydroclim_weighted_average+sum.nc       |
-| elevation                      | elevation.nc                            |
-| slope                          | slope.nc                                |
-| flow accumulation              | flow_acc.nc                             |
-| landcover (min)                | landcover_minimum.nc                    |
-| landcover (max)                | landcover_maximum.nc                    |
-| landcover (range)              | landcover_range.nc                      |
-| landcover (avg)                | landcover_average.nc                    |
-| landcover (weighted)           | landcover_weighted_average.nc           |
-| geology (weighted)             | geology_weighted_sum.nc                 |
-| soil (min)                     | soil_minimum.nc                         |
-| soil (max)                     | soil_maximum.nc                         |
-| soil (range)                   | soil_range.nc                           |
-| soil (avg)                     | soil_average.nc                         |
-| soil (weighted)                | soil_weighted_average.nc                |
-| quality control                | quality_control.nc                      |
+# Monthly climate (January and July)
+processed <- var_get(country= "Italy", crs=3035) \%>\% 
+  freshwater(vars = "tmin", month = c(1, 7))
+  }
 }

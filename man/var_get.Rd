@@ -29,11 +29,15 @@ If `shape` is provided, `country` and `continent` are ignored.}
 
 \item{pointsdf}{Data.frame with columns X and Y representing point coordinates.}
 
-\item{buffer}{Numeric. A buffer distance in **kilometers** to expand the extent.
-* For **polygons/countries**: The area is expanded outwards by this distance.
-* For **points**: A circular buffer of this radius is drawn around each point, effectively
-  converting the study area into polygons (useful for downloading background raster data
-  around occurrence points).
+\item{buffer}{Numeric. A buffer distance in **kilometers** to expand or shrink the extent.
+The buffer is always specified in kilometers regardless of the target CRS - the function
+automatically converts to the appropriate units internally (degrees for geographic CRS
+like EPSG:4326, meters for projected CRS like EPSG:3035 or ESRI:54009).
+* **Positive values**: Expand the area outward by this distance.
+* **Negative values**: Shrink the area inward by this distance (useful for excluding
+  coastal/border areas where data may have different characteristics).
+* For **points with positive buffer**: A circular buffer of this radius is drawn around 
+  each point, effectively converting the study area into polygons.
 * Default is `0`.}
 
 \item{res}{Numeric. The target spatial resolution multiplier.
@@ -46,10 +50,13 @@ If `shape` is provided, `country` and `continent` are ignored.}
 or outputs. (Currently reserved for future implementation).}
 
 \item{crs}{Character or Numeric. The Coordinate Reference System for the **final output**.
-* Can be an EPSG code with or without prefix (e.g., `4326`, `3035`,`EPSG:4326`), a PROJ4 string, or WKT.
+* Can be an EPSG code with or without prefix (e.g., `4326`, `3035`, `EPSG:4326`), 
+  an ESRI code (e.g., `54009`, `ESRI:54009`), a PROJ4 string, or WKT.
 * If `NULL`, the pipeline uses the standard default WGS84 (EPSG:4326).
 * If specified, all downstream environmental layers will be projected to this CRS
-  after processing.}
+  after processing.
+* Note: ESRI codes (53000-54999, 100000+) are automatically recognized and prefixed
+  with "ESRI:" internally.}
 }
 \value{
 A `list` object (class `envar_par`) containing:
@@ -77,11 +84,30 @@ retrieved variables are perfectly aligned and stacked.
 2. **Resolution:** The `res` argument sets the target resolution as a multiplier of
    the base 30 arc-seconds (~1 km at equator).
 3. **Buffering:** An optional buffer can be applied to expand the study area or create
-   a sampling radius around points.
+   a sampling radius around points. The buffer is **always specified in kilometers**,
+   regardless of the target CRS. The function automatically converts to the appropriate
+   units (degrees for geographic CRS, meters for projected CRS).
 4. **Output:**
    - If the input is a **polygon** (or country/continent), it returns a list containing
      a target `SpatRaster` grid and a vector mask.
    - If the input is **points** (without a buffer), it returns the point coordinates for extraction.
    - If the input is **points with a buffer**, it creates a polygon geometry around the points
      and returns a grid, allowing you to download raster data for the area surrounding your points.
+}
+\examples{
+\dontrun{
+# Basic usage with a country
+italy_grid <- var_get(country = "Italy")
+
+# With a projected CRS and positive buffer (expand by 50 km)
+italy_buffered <- var_get(country = "Italy", crs = 3035, buffer = 50)
+
+# With a negative buffer (shrink by 100 km to exclude coastal areas)
+italy_inland <- var_get(country = "Italy", crs = 54009, buffer = -100)
+
+# Points with buffer to create extraction area
+points_df <- data.frame(X = c(11.25, 12.5), Y = c(43.77, 41.9))
+points_area <- var_get(pointsdf = points_df, buffer = 10, crs = 4326)
+}
+
 }

@@ -7,55 +7,53 @@
 protection(x, vars, ...)
 }
 \arguments{
-\item{x}{A `SpatRaster`, `SpatVector`, or `sf` object defining the area or
-locations for extraction.}
+\item{x}{The output from `var_get()` defining the area or locations for extraction, 
+the reference system, and the buffer. 
+Leave this empty and use `var_get()` to define parameters for download.}
 
-\item{vars}{Character vector of variables, supplied as canonical codes or
-friendly names.}
+\item{vars}{Character vector of one or more variables to download and process.}
 
-\item{...}{Reserved for future use.}
+\item{...}{Additional arguments (currently unused).}
 }
 \value{
-- If `x` is a raster: a `SpatRaster` stack of processed WDPA layers.  
-- If `x` contains points: a `data.frame` of extracted values.
+If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
-`protection()` downloads, processes, and extracts variables from the
-**World Database of Protected Areas (WDPA)**. Each variable corresponds 
+This function downloads, processes, and extracts variables from the
+World Database of Protected Areas (WDPA). Each variable corresponds 
 to a global raster representing different IUCN Management Categories of 
 protected areas.
 }
 \details{
-The function allows users to input either:
-- **canonical WDPA codes**, e.g. `"WDPA_II"`, `"WDPA_ALL"`
-- **human-readable names**, e.g. `"national park"`, `"strict nature reserve"`,
-  `"wilderness area"`, `"sustainable use"`, etc.
+Available variables (working synonyms in parentheses):
 
-It automatically:
-- downloads the selected files from the source repositories,
-- crops/resamples/masks to match a user-provided `SpatRaster`, **or**
-- extracts values when `x` is point data.
+1 - "WDPA_IA" ("strict nature reserve", "strict reserve", "1a", "ia", "Ia")
 
+2 - "WDPA_IB" ("wilderness area", "wilderness", "1b", "ib", "Ib")
 
-## Citation
-If you use these data, please cite:
+3 - "WDPA_II" ("national park", "park", "2", "ii", "II")
 
-**Protected Planet (2025).** #' *World Database of Protected Areas (WDPA).* #' https://www.protectedplanet.net/en
+4 - "WDPA_III" ("natural monument", "monument", "3", "iii", "III")
 
-_Note: Users should ensure they comply with the terms of use of the WDPA
-when using these data for commercial or research purposes._
+5 - "WDPA_IV" ("habitat species management", "habitat management", "4", "iv", "IV")
 
+6 - "WDPA_V" ("protected landscape", "protected seascape", "landscape", "5", "v", "V")
 
-## Available variables
+7 - "WDPA_VI" ("sustainable use", "natural resources", "6", "vi", "VI")
 
-| Human-readable name                | Canonical variable code              | Description |
-|------------------------------------|--------------------------------------|-------------|
-| strict nature reserve (1a)         | WDPA_IA                              | IUCN Category Ia |
-| wilderness area (1b)               | WDPA_IB                              | IUCN Category Ib |
-| national park (2)                  | WDPA_II                              | IUCN Category II |
-| natural monument (3)               | WDPA_III                             | IUCN Category III |
-| habitat species management (4)     | WDPA_IV                              | IUCN Category IV |
-| protected landscape (5)            | WDPA_V                               | IUCN Category V |
-| sustainable use (6)                | WDPA_VI                              | IUCN Category VI |
-| all protected areas                | WDPA_ALL                             | Combined/Full WDPA |
+8 - "WDPA_ALL" ("all", "combined", "full", "total", "all protected areas")
+
+Citation:
+
+Protected Planet (2025). "World Database of Protected Areas (WDPA)."
+https://www.protectedplanet.net/en
+
+Note: Users should ensure they comply with the terms of use of the WDPA
+when using these data for commercial or research purposes.
+}
+\examples{
+\dontrun{
+processed <- var_get(country= "Italy", crs=3035) \%>\% 
+protection(vars=c("national park", "WDPA_ALL"))
+  }
 }

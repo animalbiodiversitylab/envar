@@ -1,19 +1,132 @@
 ---
-title: "Get Started with envar"
-output: rmarkdown::html_vignette
+title: "Get started"
+output:
+  rmarkdown::html_vignette:
+    toc: true
+    fig_caption: true
+    self_contained: yes
+fontsize: 11pt
+documentclass: article
+bibliography: references.bib
+csl: reference-style.csl
 vignette: >
-  %\VignetteIndexEntry{Get Started with envar}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+  %\VignetteIndexEntry{Get started}
+  %\VignetteEngine{knitr::rmarkdown_notangle}
 ---
 
 ```{r, include = FALSE}
+h = 3.2
+w = 5.0
+is_check <-
+  ("CheckExEnv" %in% search()) ||
+  any(c("_R_CHECK_TIMINGS_", "_R_CHECK_LICENSE_") %in% names(Sys.getenv())) ||
+  !identical(Sys.getenv("MY_UNIVERSE"), "") ||
+  any(c("CI", "GITHUB_ACTIONS", "GITHUB_SHA") %in% names(Sys.getenv()))
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+  fig.height = h,
+  fig.width = w,
+  fig.align = "center",
+  eval = !is_check,
+  root.dir = normalizePath("../..")
 )
 ```
 
-```{r setup}
+```{r, include = FALSE}
+# load developmental version of package
+devtools::load_all()
+```
+
+## Package aims
+
+When conducting an ecological analysis, the response of one or more variable(s) is modeled as a function of one or more predictor(s). When variables are not directly collected in the field or through remote sensing, and information on the spatial location of samples is available, global and already published maps can be used to define variable values. This process is often time-consuming and requires the standardization of different sources to the same study area and/or the extraction of value across study points and/or the conversion to a common coordinate reference system. _envar_ is an _R_ package that allows the download of a wide range of environmental variables from different pre-existing sources, to make the whole process of retrieving variables easier and faster, and integrated within the R environment. The user can thus avoid to manually download and process different variables from different sources, and instead focus on the analysis itself and integrate the downloaded and processed variables within a single R pipeline. 
+
+## First use: installation
+
+First, we install the package with the following code.
+
+```{r, eval = FALSE}
+# install using the "remotes" package
+if (!require(remotes)) install.packages("remotes")
+remotes::install_github("animalbiodiversitylab/envar")
+
+# or alternatively using the "devtools" package
+if (!require(devtools)) install.packages("devtools")
+devtools::install_github("animalbiodiversitylab/envar")
+```
+
+Until the scientific article relative to the package is published, the github 
+repository is set as private and to install the package (for testing and revision) 
+you can run the code here:\
+
+```{r, eval = FALSE}
+if (!require(remotes)) install.packages("remotes")
+
+remotes::install_github("animalbiodiversitylab/envar", 
+                        auth_token = "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", 
+                        upgrade="never", 
+                        dependencies=TRUE,
+                        build_vignettes=TRUE)
+```
+
+## Load the library
+
+When executing this command, other five packages (`dplyr`, `terra`, `sf`, `corrplot`, `usdm`) will be automatically loaded to ensure the full functionality of the package.
+
+```{r, results='hide',message =FALSE,warning=FALSE}
 library(envar)
 ```
+
+## Full working example
+
+Here, we show a full working example of how to use the package to download and process a set of environmental variables for a specific study area. We will download a set of climatic, topographic, and land cover variables for a study area in the European Alps (already included in the package as the object `Alps()`). A call to the `var_get()` function is used to define the study area (argument "shape"), the desired grid output resolution in km (argument "res"), the coordinate reference system (argument "crs"), and an eventual buffer (in km) by which to expand the study area (argument "buffer"). The default resolution is always 30 arcseconds (0.008333333°, or ~ 1 km) at the equator, and "res" specifies a factor by which to aggregate (the default is 1 and doesn't apply any change). 
+
+Then, the "%>%" is used to concatenate different commands. The next step is to set the specific functions that are used to download and process variables from different sources (see the **[reference](https://envarpackage.netlify.app/reference/)** for a full list). The call to a generic source is structured as: sourcename(vars = c()), where sourcename is the name of the function devoted to one source and inside the "vars" argument the specific variables to be downloaded from that source are specified. In this example, we first download a set of 5 bioclimatic variables from the CHELSA source [@karger2017], then we download elevation and slope from the topography source [@amatulli2018], and finally we download the percentage cover of trees and ice from the 1 km resolution global land cover based on the ESA 30 m land cover [@loparrino2025].
+
+A correlation analysis can be performed with the to `corr_check()` function to identify and remove highly correlated variables. This function must always be called as the last one in the pipeline.
+
+```{r, results="hide", message = FALSE, warning = FALSE}
+processed <- var_get(shape = Alps, crs = 3035, res = 2, buffer = 10) %>% 
+             chelsa(vars = c("bio1", "bio4", "bio10", "bio12", "bio19"),
+                    years = "1981-2010") %>%
+             topography(vars = c("elevation", "slope")) %>%
+             esalandcover(vars = c("trees", "ice")) %>%
+             corr_check()
+```
+
+## Output overview
+
+If the correlation analysis is performed, the output is a list. Otherwise, it is a SpatRaster (object to be used within the _terra R_ package), either with a single layer or with multiple layers if multiple variables were specified. If the output is a list, it contains the following elements: "data" (the SpatRaster or data.frame with your data), "correlation_matrix" containing a matrix of Pairwise Pearson's correlation coefficients between all variables, "vif" a data.frame containing the Variance Inflation Factors for each variable, a "summary" that reports if and which variables have a Pearson's correlation coefficient higher than |0.6| and/or a VIF higher than 3. Lastly, the "plot_path" specifies the local directory to which a plot of the Pearson's pairwise correlation was saved. 
+
+```{r}
+# Plot the first two variables
+plot(processed$data[[1:2]])
+```
+
+```{r}
+# View the Pearson's pairwise correlation matrix
+print(processed$correlation_matrix)
+```
+
+```{r}
+# View the Variance Inflation Factor values
+print(processed$vif)
+```
+
+To better understand the structure of correlation, we can also analyze the correlation plot that was locally stored. 
+
+```{r, echo=FALSE, out.width="100%", fig.align='center'}
+knitr::include_graphics("images/Corr_plot_example.png")
+```
+
+This plot was created with the aid of the _corrplot R_ package and it helps to pinpoint correlation problems. In this example, we can see that elevation is highly correlated with multiple variables and as this is not a proximal variable (i.e., the effect of elevation on species distributions is mediated by other co-varying factors such as climate) we can remove it. To obtain a set of uncorrelated variables we might thus want to sub-set our variables as follows.
+
+```{r}
+uncorrelated_vars <- processed$data[[c("bio1_1981-2010", "bio12_1981-2010", "trees", "ice")]]
+```
+
+## Conclusion
+
+We have shown a single full example of use of the _envar R_ package. Instead of specifying a shape, we could have chosen a country/continent or defined a data.frame of points. For an overview of all the possible use-cases see the **[package overview vignette](https://envarpackage.netlify.app/tutorials/package_overview)** and for a full list of all the available sources and variables see the **[reference](https://envarpackage.netlify.app/reference/)**.
+
+## References
+

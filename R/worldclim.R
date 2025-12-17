@@ -1,56 +1,83 @@
 # R/worldclim.R
 
-#' Download WorldClim Climate Data (Historical & Future)
+#' Download and process WorldClim Climate Data (Historical & Future)
 #'
-#' This function builds URLs and downloads WorldClim climate data based on
-#' variables, years, climate models, and scenarios.
+#' This function downloads, processes, and extracts variables from the
+#' WorldClim climate dataset. Each variable corresponds to a global raster
+#' representing climate variables at approximately 1-km resolution.
 #' It supports both Historical (v2.1, 1970-2000) and Future (CMIP6) data.
 #'
-#' Uses the helper function `download_file` to handle downloads.
-#' Each raster layer is downloaded (and unzipped if necessary), processed 
-#' (cropped/masked/resampled), added to the output stack immediately, and 
-#' temporary files are deleted to minimize memory use.
+#' Available variables (working synonyms in parentheses):
 #'
-#' @param x A SpatRaster or sf object to define the area of interest.
-#' @param vars A character vector of variables to download.
-#'   Accepts the following names (case-insensitive):
-#'   \itemize{
-#'     \item \strong{Temperature}: "tmin", "tmax", "tavg" (average temp)
-#'     \item \strong{Precipitation}: "prec", "pr"
-#'     \item \strong{Bioclimatic}: "bio" (all 19), or specific e.g., "bio1", "bio12"
-#'     \item \strong{Physical}: "srad" (solar radiation), "wind" (wind speed), 
-#'           "vapr" (vapor pressure), "elev" (elevation)
-#'   }
-#' @param years A character vector of years or periods. 
-#'   \itemize{
-#'     \item For **Historical**: Use "1970-2000" (or "historical").
-#'     \item For **Future**: Use "2021-2040", "2041-2060", "2061-2080", "2081-2100".
-#'   }
-#' @param months A numeric vector (1–12) specifying which months to download. 
-#'   Only applies to monthly historical variables (tmin, tmax, tavg, prec, srad, wind, vapr).
-#'   Ignored for bioclimatic variables, elevation, or future data.
-#' @param gcm A character vector of General Circulation Models (for Future data).
-#' @param ssp A character or numeric vector of Shared Socioeconomic Pathways (e.g., "126", "585").
+#' Temperature:
+#' 
+#' 1 - "tmin" ("min temp")
+#' 
+#' 2 - "tmax" ("max temp")
+#' 
+#' 3 - "tavg" ("average temp")
+#' 
+#' Precipitation:
+#' 
+#' 4 - "prec" ("precipitation", "pr")
+#' 
+#' Physical:
+#' 
+#' 5 - "srad" ("solar radiation")
+#' 
+#' 6 - "wind" ("wind speed")
+#' 
+#' 7 - "vapr" ("water vapor")
+#' 
+#' 8 - "elev" ("elevation")
+#' 
+#' Bioclimatic:
+#' 
+#' 9 - "bio" (all 19 bioclimatic variables), or specific e.g., "bio1", "bio12"
+#'
+#' Citation:
+#'
+#' Fick, Stephen E., and Robert J. Hijmans. "WorldClim 2: new 1-km spatial 
+#' resolution climate surfaces for global land areas." International Journal 
+#' of Climatology 37, no. 12 (2017): 4302-4315.
+#' https://doi.org/10.1002/joc.5086
+#'
+#' @param x The output from `var_get()` defining the area or locations for extraction, 
+#' the reference system, and the buffer. 
+#' Leave this empty and use `var_get()` to define parameters for download.
+#' @param vars Character vector of one or more variables to download and process.
+#' @param years Character vector of years or periods. For Historical: use "1970-2000" 
+#'        or "historical". For Future: use "2021-2040", "2041-2060", "2061-2080", "2081-2100".
+#' @param months Numeric vector (1-12) specifying which months to download. Only applies
+#'        to monthly historical variables. Ignored for bioclimatic variables, elevation, 
+#'        or future data.
+#' @param gcm Character vector of General Circulation Models (for Future data).
+#' @param ssp Character or numeric vector of Shared Socioeconomic Pathways (e.g., "126", "585").
 #' @param ... Additional arguments (currently unused).
 #'
-#' @return A SpatRaster stack or data.frame with extracted values.
-#' 
-#' @references 
-#' Fick, Stephen E., and Robert J. Hijmans. "WorldClim 2: new 1‐km spatial resolution climate surfaces for global land areas." International journal of climatology 37, no. 12 (2017): 4302-4315.
-#' DOI: \url{https://doi.org/10.1002/joc.5086}
+#' @return
+#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+#'
+#' @examples
+#' \dontrun{
+#' processed <- var_get(country= "Italy", crs=3035) %>% 
+#' worldclim(vars=c("tmin", "bio1"), years="1970-2000")
+#'   }
+#' @export
 
 worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL, 
                       ssp = NULL, ...) {
   
   old_timeout <- getOption("timeout")
-  options(timeout=max(100000000000000,old_timeout))
-  on.exit(options(timeout=old_timeout))
+  options(timeout = max(100000000000000, old_timeout))
+  on.exit(options(timeout = old_timeout))
+  
   # --------------------------------------------------------------------
   # Citation displayed on execution
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using WorldClim.\n",
-    "Citation: Fick, S. E. and Hijmans, R. J. (2017). WorldClim 2: new 1-km spatial resolution climate surfaces for global land areas. International Journal of Climatology\n",
+    "Citation: Fick, S. E. and Hijmans, R. J. (2017). WorldClim 2: new 1-km spatial resolution climate surfaces for global land areas. International Journal of Climatology.\n",
     "DOI: {.url https://doi.org/10.1002/joc.5086}\n"
   ))
   
@@ -58,69 +85,111 @@ worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NU
   
   par_list <- get_par(x)
   
-  if (inherits(par_list[[1]], "SpatRaster")) {
+  # Determine input type
+  if (!is.null(par_list$grid) && inherits(par_list$grid, "SpatRaster")) {
     grid <- par_list$grid
     mask <- par_list$mask
     res  <- par_list$res
+    crs  <- par_list$crs
+    is_global <- isTRUE(par_list$is_global)
     is_raster_input <- TRUE
-  } else {
+    # Track cumulative global extent
+    current_global_extent <- par_list$global_extent
+  } else if (par_list$type == "point") {
     points <- par_list$mask
     bbox_points <- par_list$bbox
+    crs  <- par_list$crs
+    is_global <- FALSE
     is_raster_input <- FALSE
+    current_global_extent <- NULL
+  } else {
+    cli::cli_abort("Unsupported input type.")
   }
   
   processed_stack <- NULL
   extracted_df <- NULL
   
-  
   # --------------------------------------------------------------------
   # Helper: Process a local file (Crop, Mask, Stack/Extract)
   # --------------------------------------------------------------------
-  process_layer <- function(file_path) {
+  process_layer <- function(file_path, layer_name) {
     if (is_raster_input) {
       layer <- try(terra::rast(file_path), silent = TRUE)
       if (inherits(layer, "try-error")) {
-        cli::cli_alert_warning(" Could not read raster {.val {basename(file_path)}}.")
+        cli::cli_alert_warning("Could not read raster {.val {basename(file_path)}}.")
         return(FALSE)
       }
       
-      cli::cli_alert_info("Processing layer {.val {basename(file_path)}}...")
+      cli::cli_alert_info("Processing layer {.val {layer_name}}...")
       
-      layer <- terra::crop(layer, grid, snap = "out")
-      layer <- terra::resample(layer, grid, method = "bilinear")
-      layer <- terra::mask(layer, mask)
+      # Process layer using standard helper
+      result <- process_raster_layer(
+        layer = layer,
+        grid = grid,
+        mask = mask,
+        res = res,
+        crs = crs,
+        is_global = is_global,
+        current_extent = current_global_extent
+      )
       
-      if (!is.null(par_list$crs)) {
-        layer <- terra::project(layer, par_list$crs)
+      if (is_global) {
+        # For global processing, result is a list with layer and extent
+        layer1 <- result$layer
+        new_extent <- result$extent
+        
+        # Update the cumulative global extent
+        current_global_extent <<- new_extent
+        
+        # If we have existing layers and extent changed, crop them
+        if (!is.null(processed_stack)) {
+          processed_stack <<- align_stack_to_extent(processed_stack, new_extent)
+        }
+      } else {
+        # For regional processing, result is just the layer
+        layer1 <- result
       }
+      
+      # Assign name to layer
+      names(layer1) <- layer_name
       
       if (is.null(processed_stack)) {
-        processed_stack <<- layer
+        processed_stack <<- layer1
       } else {
-        processed_stack <<- c(processed_stack, layer)
+        processed_stack <<- c(processed_stack, layer1)
       }
       
-      cli::cli_alert_success("Processed and added {.val {basename(file_path)}} to stack.")
-      rm(layer); gc()
+      cli::cli_alert_success("Processed and added {.val {layer_name}} to stack.")
+      rm(layer, layer1)
+      gc()
       return(TRUE)
       
     } else {
-      cli::cli_alert_info("Extracting values from {.val {basename(file_path)}}...")
+      
+      cli::cli_alert_info("Extracting values from {.val {layer_name}}...")
+      
       extracted <- try(process_points(file = file_path, points = points), silent = TRUE)
+      
       if (inherits(extracted, "try-error")) {
-        cli::cli_alert_warning(" Extraction failed for {.val {basename(file_path)}}.")
+        cli::cli_alert_warning("Extraction failed for {.val {layer_name}}.")
         return(FALSE)
       }
       
       extracted <- data.frame(extracted)
+      
+      if (ncol(extracted) >= 2) {
+        names(extracted)[ncol(extracted)] <- layer_name
+      }
+      
       if (is.null(extracted_df)) {
         extracted_df <<- extracted
       } else {
-        extracted_df <<- merge(extracted_df, extracted[, c(1, 4)], by = "ID", all = TRUE)
+        extracted_df <<- merge(extracted_df, extracted[, c(1, ncol(extracted))], by = "ID", all = TRUE)
       }
       
-      cli::cli_alert_success("Extracted {.val {basename(file_path)}} successfully.")
-      rm(extracted); gc()
+      cli::cli_alert_success("Extracted {.val {layer_name}} successfully.")
+      rm(extracted)
+      gc()
       return(TRUE)
     }
   }
@@ -128,18 +197,20 @@ worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NU
   # --------------------------------------------------------------------
   # Helper: Download and Process (Direct TIF)
   # --------------------------------------------------------------------
-  handle_file <- function(url, dest_file, var, m = NULL, y = NULL) {
+  handle_file <- function(url, dest_file, layer_name) {
     temp_dir <- fs::path_temp("envar/grids")
     fs::dir_create(temp_dir)
     
     success <- download_file(url, dest_file)
     if (!success) {
-      cli::cli_alert_warning("Failed to download {.val {var}} from {.url {url}}.")
+      cli::cli_alert_warning("Failed to download {.val {layer_name}} from {.url {url}}.")
       return(NULL)
     }
     
-    process_layer(dest_file)
-    fs::file_delete(dest_file)
+    process_layer(dest_file, layer_name)
+    if (!is_global) {
+      fs::file_delete(dest_file)
+    }
   }
   
   # --------------------------------------------------------------------
@@ -231,15 +302,21 @@ worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NU
         # Process extracted files
         for (f in files_to_extract) {
           full_path <- file.path(fs::path_temp("envar/grids"), f)
-          process_layer(full_path)
-          fs::file_delete(full_path)
+          # Use original file name as layer name
+          layer_name <- tools::file_path_sans_ext(basename(f))
+          process_layer(full_path, layer_name)
+          if (!is_global) {
+            fs::file_delete(full_path)
+          }
         }
       } else {
         cli::cli_alert_warning("No matching files found in zip for {.val {cat}} based on selection.")
       }
       
       # Delete ZIP
-      fs::file_delete(dest_zip)
+      if (!is_global) {
+        fs::file_delete(dest_zip)
+      }
     }
     
     # Remove historical marker from years to prevent trying to find it in Future loop
@@ -281,14 +358,10 @@ worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NU
             url <- sprintf("%s/%s/%s/%s", base_url_future, g, s, filename)
             dest_file <- file.path(fs::path_temp("envar/grids"), filename)
             
-            # If category is 'bio', the TIF is multiband. 
-            # We need to download it, and if user asked for specific 'bio1', separate them?
-            # NOTE: The WorldClim CMIP6 bioc file is a multi-band GeoTiff.
-            # The handle_file/process_layer logic will stack all bands. 
-            # If user wanted specific bio vars, we might need to subset after reading.
-            # However, for simplicity/speed, we process the file. 
+            # Use descriptive layer name
+            layer_name <- tools::file_path_sans_ext(filename)
             
-            handle_file(url, dest_file, cat, NULL, y)
+            handle_file(url, dest_file, layer_name)
           }
         }
       }
@@ -296,20 +369,54 @@ worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NU
   }
   
   # --------------------------------------------------------------------
-  # --- Return processed results ---
+  # Return output
   # --------------------------------------------------------------------
   if (is_raster_input) {
     if (is.null(processed_stack)) cli::cli_abort("No layers were successfully processed")
-    if (inherits(x, "SpatRaster")) processed_stack <- c(x, processed_stack)
     
-    # Optional: Post-processing for 'bio' subsetting if user asked for specific bio vars 
-    # (This handles the case where we downloaded the full bio stack/zip but user wanted specific)
-    # Given the prompt constraints, we return the processed stack.
+    # If x was already a SpatRaster (from previous function), combine
+    if (inherits(x, "SpatRaster")) {
+      if (is_global) {
+        processed_stack <- combine_global_rasters(
+          existing_stack = x,
+          new_stack = processed_stack,
+          current_global_extent = current_global_extent
+        )
+      } else {
+        # Regional mode: resample new layers to match input raster exactly
+        # This ensures perfect alignment for stacking
+        if (!terra::compareGeom(x, processed_stack, stopOnError = FALSE)) {
+          cli::cli_alert_info("Aligning new layers to match input raster geometry...")
+          processed_stack <- terra::resample(processed_stack, x, method = "bilinear")
+        }
+      }
+      
+      processed_stack <- c(x, processed_stack)
+    }
+    
+    # Attach global extent as attribute for downstream functions
+    if (is_global) {
+      attr(processed_stack, "global_extent") <- current_global_extent
+      attr(processed_stack, "is_global") <- TRUE
+    }
     
     cli::cli_alert_success("All layers processed and stacked successfully")
     return(processed_stack)
   } else {
     if (is.null(extracted_df)) cli::cli_abort("No values extracted successfully")
+    # Merge with previous data if x was a data.frame
+    if (inherits(x, "data.frame") && !inherits(x, "sf")) {
+      extracted_df <- merge(x, extracted_df[, c(1, 4:ncol(extracted_df))], by = c("ID"), all = TRUE)
+      # Preserve CRS from previous extraction
+      prev_crs <- attr(x, "envar_crs")
+      if (!is.null(prev_crs)) {
+        crs <- prev_crs
+      }
+    }
+    
+    # Store the CRS as an attribute for downstream functions
+    # This ensures the CRS is preserved when chaining point extractions
+    attr(extracted_df, "envar_crs") <- crs
     cli::cli_alert_success("Extraction completed successfully")
     return(extracted_df)
   }

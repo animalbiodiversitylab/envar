@@ -15,7 +15,12 @@ download_file <- function(url, dest_file, max_retries = 2) {
         httr::user_agent(user_agent_string), 
         httr::write_disk(dest_file, overwrite = TRUE),
         httr::progress(),
-        httr::timeout(3000)  # Timeout time
+        httr::config(
+          connecttimeout = 60,      # 60 sec to establish connection
+          timeout = 0,              # No limit on total time (0 = infinite)
+          low_speed_limit = 100,    # At least 100 bytes/sec
+          low_speed_time = 120      # For 120 seconds before giving up
+        )
       )
       
       # Check if server response is "200 OK"

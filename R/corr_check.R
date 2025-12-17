@@ -1,8 +1,32 @@
-# R/check.R
+# R/corr_check.R
 
-#' Check Variable Correlation and Multicollinearity
+#' `corr_check()` is the optional end point for the **envar** package workflow. 
+#' It allows to to check for variable correlation and multi-collinearity among the variables
+#' over the study area.
+#' How it works: the user specifies all the sources and variables to download and then after
+#' using the %>% symbol it types corr_check() without any argument.
+#' 
+#' @return A `list` object containing:
+#'   * `grid`: A template `SpatRaster` defining the resolution and extent (for polygon input).
+#'   * `mask`: An `sf` object defining the exact study area boundaries (for polygon input).
+#'   * `res`: The resolution multiplier used.
+#'   * `bbox`: The bounding box of the study area.
+#'   * `crs`: The target coordinate reference system.
+#'   * `type`: The type of input ("polygon", "admin", or "point").
+#'   * `is_global`: Logical, TRUE if processing global extent.
+#'
+#' @examples
+#' \dontrun{
+#' 
+#' processed_bilayer_corr_check <- var_get(country = "Italy", crs=3035, buffer = 10) %>% 
+#' esalandcover(vars=c("ice")) %>% 
+#' chelsa(vars=c("pr"), months= 12, year=2015) %>% 
+#' corr_check()
+#' 
+#' }
+#'
 #' @export
-check <- function(x) {
+corr_check <- function(x) {
   
   input_data <- x
   
@@ -43,7 +67,7 @@ check <- function(x) {
   # VIF
   vif_val <- try(usdm::vif(df_analysis), silent=TRUE)
   if (inherits(vif_val, "try-error")) vif_val <- data.frame(Variables=names(df_analysis), VIF=NA)
-  
+  vif_val <- vif_val[order(vif_val$VIF, decreasing = TRUE), ]
   # Summary
   cor_diag0 <- cor_mat
   diag(cor_diag0) <- 0

@@ -12,21 +12,39 @@ Authors@R:
       person(given = "Elia", family = "Lo Parrino", role ="aut", comment = c(ORCID = "0000-0001-9619-9568")))
 Description: Download environmental variables in R.
 License: GPL-3
+Language: en-US
 Encoding: UTF-8
 LazyData: true
 Imports:
     terra,
+    dplyr,
     httr,
     sf,
     rnaturalearth,
     rnaturalearthdata,
     exactextractr,
+    usdm,
+    corrplot,
     cli,
     fs,
     utils
 RoxygenNote: 7.3.2
+Config/Needs/website:
+    terra,
+    dplyr,
+    sf,
+    pkgdown,
+    usdm,
+    corrplot
 Suggests: 
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-URL: https://envar.net
+URL: https://envarpackage.netlify.app
+Depends: 
+    R (>= 2.10),
+    dplyr,
+    terra,
+    sf,
+    corrplot,
+    usdm

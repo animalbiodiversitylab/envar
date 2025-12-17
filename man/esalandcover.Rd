@@ -4,63 +4,70 @@
 \alias{esalandcover}
 \title{Download and process Global 1 km Land Cover variables}
 \usage{
-esalandcover(x, vars, ...)
+esalandcover(x, vars, discover = TRUE, ...)
 }
 \arguments{
-\item{x}{A `SpatRaster`, `SpatVector`, or `sf` object defining the area or
-locations for extraction.}
+\item{x}{The output from `var_get()` defining the area or locations for extraction, 
+the reference system, and the buffer. 
+Leave this empty and use `var_get()` to define parameters for download.}
 
-\item{vars}{Character vector of variables, supplied as canonical codes or
-friendly names.}
+\item{vars}{Character vector of one or more variables to download and process.}
 
-\item{...}{Reserved for future use.}
+\item{...}{Additional arguments (currently unused).}
 }
 \value{
-- If `x` is a raster: a `SpatRaster` stack of processed layers.  
-- If `x` contains points: a `data.frame` of extracted values.
+If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
-`esalandcover()` downloads, processes, and extracts variables from the
-**Global 1 km Land Cover** dataset. Each variable corresponds to a global 
+This function downloads, processes, and extracts variables from the
+Global 1 km Land Cover dataset. Each variable corresponds to a global 
 raster representing a specific land cover class or diversity index derived 
 from very high-resolution imagery.
 }
 \details{
-The function allows users to input either:
-- **canonical variable codes**, e.g. `"wetland"`, `"tree"`, `"shannon"`
-- **human-readable names**, e.g. `"forest"`, `"agriculture"`, 
-  `"surface water"`, `"simpson index"`, etc.
+Available variables (working synonyms in parentheses):
 
-It automatically:
-- downloads the selected files from Figshare,
-- crops/resamples/masks to match a user-provided `SpatRaster`, **or**
-- extracts values when `x` is point data.
+1 - "wetland" ("wetlands", "swamp", "marsh", "bog", "fen")
 
+2 - "bare" ("bare ground", "bare soil", "desert", "unvegetated")
 
-## Citation
-If you use this data, please cite:
+3 - "built" ("built area", "built up", "urban", "artificial", "impervious")
 
-**Lo Parrino E, Simoncini A, Ficetola GF, Falaschi M (2025)** #' *Global 1 km land cover for macroecological modelling from very high resolution imagery.* #' Figshare.  
-https://figshare.com/s/4e7dee46628b530aee03
+4 - "cropland" ("agriculture", "agricultural", "crop", "crops", "farming")
 
+5 - "grass" ("grassland", "grass land", "meadow", "pasture", "prairie")
 
-## Available variables
+6 - "ice" ("snow", "snow and ice", "glacier", "ice", "permafrost")
 
-| Human-readable name          | Canonical variable code              |
-|------------------------------|--------------------------------------|
-| wetland / marsh              | wetland                              |
-| bare ground / soil           | bare                                 |
-| built / urban area           | built                                |
-| cropland / agriculture       | cropland                             |
-| grassland / meadow           | grass                                |
-| ice / snow / glacier         | ice                                  |
-| land percentage              | land_perc                            |
-| mangrove                     | mangrove                             |
-| moss / lichen                | moss                                 |
-| shrub / scrub                | shrub                                |
-| tree / forest                | tree                                 |
-| water / surface water        | water                                |
-| simpson index                | simpson                              |
-| shannon index                | shannon                              |
-| evenness index               | evenness                             |
+7 - "land_perc" ("percentage of land", "land percentage", "land cover fraction", "land fraction")
+
+8 - "mangrove" ("mangroves")
+
+9 - "moss" ("mosses", "lichen", "lichens", "moss and lichen")
+
+10 - "shrub" ("shrubland", "scrub", "bush", "thicket")
+
+11 - "tree" ("trees", "forest", "woodland", "canopy", "canopy cover")
+
+12 - "water" ("surface water", "lake", "river", "freshwater")
+
+13 - "simpson" ("simpson index", "diversity simpson", "simpson diversity")
+
+14 - "shannon" ("shannon index", "entropy", "shannon entropy", "shannon diversity")
+
+15 - "evenness" ("evenness index", "pielou", "pielou evenness", "species evenness")
+
+Citation:
+
+Lo Parrino E, Simoncini A, Ficetola GF, Falaschi M (2025). "Global 1 km land cover 
+for macroecological modelling from very high resolution imagery." Figshare.  
+https://doi.org/10.6084/m9.figshare.22061801
+
+Note: Users should verify the terms of use provided at https://figshare.com/s/4e7dee46628b530aee03
+}
+\examples{
+\dontrun{
+processed <- var_get(country= "Italy", crs=3035) \%>\% 
+esalandcover(vars=c("tree", "water"))
+    }
 }

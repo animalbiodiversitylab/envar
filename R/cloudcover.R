@@ -2,66 +2,83 @@
 
 #' Download and process EarthEnv Global Cloud Cover layers
 #'
-#' `cloudcover()` downloads, processes, and extracts variables from the
-#' **EarthEnv Global Cloud Cover** dataset. Each variable corresponds to a 
+#' This function downloads, processes, and extracts variables from the
+#' EarthEnv Global Cloud Cover dataset. Each variable corresponds to a 
 #' global Cloud-Optimized GeoTIFF (COG) representing cloud cover dynamics.
 #'
-#' The function allows users to input either:
-#' - **canonical EarthEnv filenames**, e.g. `"MODCF_meanannual"`
-#' - **human-readable names**, e.g. `"mean annual"`, `"cloud forest"`,
-#'   `"seasonality concentration"`, `"january"`, etc.
+#' Available variables (working synonyms in parentheses):
 #'
-#' It automatically:
-#' - downloads the selected files,
-#' - crops/resamples/masks to match a user-provided `SpatRaster`, **or**
-#' - extracts values when `x` is point data.
+#' Metrics:
+#' 
+#' 1 - "MODCF_CloudForestPrediction" ("cloud forest prediction", "cloud forest", "cfp")
+#' 
+#' 2 - "MODCF_interannualSD" ("inter-annual variability", "interannual sd", "interannual variability")
+#' 
+#' 3 - "MODCF_intraannualSD" ("intra-annual variability", "intraannual sd", "intraannual variability")
+#' 
+#' 4 - "MODCF_meanannual" ("mean annual", "annual mean", "annual")
+#' 
+#' 5 - "MODCF_spatialSD_1deg" ("spatial variability", "spatial sd", "spatial sd 1deg")
+#' 
+#' Seasonality:
+#' 
+#' 6 - "MODCF_seasonality_concentration" ("seasonality concentration", "concentration")
+#' 
+#' 7 - "MODCF_seasonality_rgb" ("seasonality rgb", "rgb")
+#' 
+#' 8 - "MODCF_seasonality_theta" ("seasonality theta", "theta")
+#' 
+#' 9 - "MODCF_seasonality_visct" ("seasonality single band", "seasonality visct", "seasonality color")
+#' 
+#' Monthly Means:
+#' 
+#' 10 - "MODCF_monthlymean_01" ("january mean", "january", "jan")
+#' 
+#' 11 - "MODCF_monthlymean_02" ("february mean", "february", "feb")
+#' 
+#' 12 - "MODCF_monthlymean_03" ("march mean", "march", "mar")
+#' 
+#' 13 - "MODCF_monthlymean_04" ("april mean", "april", "apr")
+#' 
+#' 14 - "MODCF_monthlymean_05" ("may mean", "may")
+#' 
+#' 15 - "MODCF_monthlymean_06" ("june mean", "june", "jun")
+#' 
+#' 16 - "MODCF_monthlymean_07" ("july mean", "july", "jul")
+#' 
+#' 17 - "MODCF_monthlymean_08" ("august mean", "august", "aug")
+#' 
+#' 18 - "MODCF_monthlymean_09" ("september mean", "september", "sep")
+#' 
+#' 19 - "MODCF_monthlymean_10" ("october mean", "october", "oct")
+#' 
+#' 20 - "MODCF_monthlymean_11" ("november mean", "november", "nov")
+#' 
+#' 21 - "MODCF_monthlymean_12" ("december mean", "december", "dec")
 #'
+#' Citation:
 #'
-#' ## Citation
-#' If you use this data, please cite:
-#'
-#' **Wilson AM, Jetz W (2016)** #' *Remotely Sensed High-Resolution Global Cloud Dynamics for Predicting 
-#' Ecosystem and Biodiversity Distributions.* PLoS Biol 14(3): e1002415. 
+#' Wilson AM, Jetz W (2016). "Remotely Sensed High-Resolution Global Cloud 
+#' Dynamics for Predicting Ecosystem and Biodiversity Distributions." 
+#' PLoS Biol 14(3): e1002415.
 #' https://doi.org/10.1371/journal.pbio.1002415
 #'
+#' Note: Please cite original sources of primary datasets where appropriate.
 #'
-#' ## Available variables
-#'
-#' | Human-readable name          | Canonical variable code              |
-#' |------------------------------|--------------------------------------|
-#' | cloud forest prediction      | MODCF_CloudForestPrediction          |
-#' | inter-annual variability     | MODCF_interannualSD                  |
-#' | intra-annual variability     | MODCF_intraannualSD                  |
-#' | mean annual                  | MODCF_meanannual                     |
-#' | january mean (jan)           | MODCF_monthlymean_01                 |
-#' | february mean (feb)          | MODCF_monthlymean_02                 |
-#' | march mean (mar)             | MODCF_monthlymean_03                 |
-#' | april mean (apr)             | MODCF_monthlymean_04                 |
-#' | may mean                     | MODCF_monthlymean_05                 |
-#' | june mean (jun)              | MODCF_monthlymean_06                 |
-#' | july mean (jul)              | MODCF_monthlymean_07                 |
-#' | august mean (aug)            | MODCF_monthlymean_08                 |
-#' | september mean (sep)         | MODCF_monthlymean_09                 |
-#' | october mean (oct)           | MODCF_monthlymean_10                 |
-#' | november mean (nov)          | MODCF_monthlymean_11                 |
-#' | december mean (dec)          | MODCF_monthlymean_12                 |
-#' | seasonality concentration    | MODCF_seasonality_concentration      |
-#' | seasonality rgb              | MODCF_seasonality_rgb                |
-#' | seasonality theta            | MODCF_seasonality_theta              |
-#' | seasonality visual (visct)   | MODCF_seasonality_visct              |
-#' | spatial variability (1 deg)  | MODCF_spatialSD_1deg                 |
-#'
-#'
-#' @param x A `SpatRaster`, `SpatVector`, or `sf` object defining the area or
-#'          locations for extraction.
-#' @param vars Character vector of variables, supplied as canonical codes or
-#'             friendly names.
-#' @param ... Reserved for future use.
+#' @param x The output from `var_get()` defining the area or locations for extraction, 
+#' the reference system, and the buffer. 
+#' Leave this empty and use `var_get()` to define parameters for download.
+#' @param vars Character vector of one or more variables to download and process.
+#' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' - If `x` is a raster: a `SpatRaster` stack of processed cloud cover layers.  
-#' - If `x` contains points: a `data.frame` of extracted values.
+#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
+#' @examples
+#' \dontrun{
+#' processed <- var_get(country= "Italy", crs=3035) %>% 
+#' cloudcover(vars=c("mean annual", "january"))
+#'   }
 #' @export
 
 cloudcover <- function(x, vars, ...) {
@@ -72,22 +89,30 @@ cloudcover <- function(x, vars, ...) {
   cli::cli_alert_info(paste0(
     "Using EarthEnv Global Cloud Cover layers.\n",
     "Citation: Wilson AM, Jetz W (2016). PLoS Biol 14(3): e1002415.\n",
-    "DOI: {.url https://doi.org/10.1371/journal.pbio.1002415}\n",
-    "Note: Please cite original sources of primary datasets where appropriate."
+    "DOI: {.url https://doi.org/10.1371/journal.pbio.1002415}\n"
   ))
   
   par_list <- get_par(x)
   
-  if (inherits(par_list[[1]], "SpatRaster")) {
+  # Determine input type
+  if (!is.null(par_list$grid) && inherits(par_list$grid, "SpatRaster")) {
     grid <- par_list$grid
     mask <- par_list$mask
     res  <- par_list$res
     crs  <- par_list$crs
+    is_global <- isTRUE(par_list$is_global)
     is_raster_input <- TRUE
-  } else {
+    # Track cumulative global extent
+    current_global_extent <- par_list$global_extent
+  } else if (par_list$type == "point") {
     points <- par_list$mask
     bbox_points <- par_list$bbox
+    crs  <- par_list$crs
+    is_global <- FALSE
     is_raster_input <- FALSE
+    current_global_extent <- NULL
+  } else {
+    cli::cli_abort("Unsupported input type.")
   }
   
   processed_stack <- NULL
@@ -125,7 +150,7 @@ cloudcover <- function(x, vars, ...) {
     "MODCF_monthlymean_12"            = c("december mean", "december", "dec")
   )
   
-  # Normalizer
+  # Normalizer: convert to lowercase, remove punctuation, normalize whitespace
   normalize_string <- function(s) {
     s <- tolower(s)
     s <- gsub("[[:punct:]]", " ", s)
@@ -142,13 +167,21 @@ cloudcover <- function(x, vars, ...) {
     syn2canon[[normalize_string(canon)]] <- canon
   }
   
-  # Convert requested vars to canonical codes
+  # Convert requested vars to canonical codes AND keep mapping to original names
   requested_codes <- character(0)
+  code_to_user_name <- list() # Maps canonical code -> user's original name
   unmapped <- character(0)
+  
   for (v in vars) {
     key <- normalize_string(v)
     if (!is.null(syn2canon[[key]])) {
-      requested_codes <- c(requested_codes, syn2canon[[key]])
+      canon <- syn2canon[[key]]
+      # Only add if not already present (avoid duplicates)
+      if (!(canon %in% requested_codes)) {
+        requested_codes <- c(requested_codes, canon)
+        # Store the user's original name for this canonical code
+        code_to_user_name[[canon]] <- v
+      }
     } else {
       unmapped <- c(unmapped, v)
     }
@@ -160,20 +193,20 @@ cloudcover <- function(x, vars, ...) {
       "x" = "{.val {unmapped}}"
     ))
   }
-  requested_codes <- unique(requested_codes)
   
   # --------------------------------------------------------------------
   # Helper: Download, process, and clean up a single file
   # --------------------------------------------------------------------
-  handle_file <- function(url, dest_file, var) {
+  handle_file <- function(url, dest_file, canon, user_name) {
     temp_dir <- fs::path_temp("envar/cloud")
     fs::dir_create(temp_dir)
     
-    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {var}}...")
+    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {user_name}}...")
     
     success <- download_file(url, dest_file)
+    
     if (!success) {
-      cli::cli_alert_warning("Failed to download {.val {var}} from {.url {url}}.")
+      cli::cli_alert_warning("Failed to download {.val {user_name}} from {.url {url}}.")
       return(NULL)
     }
     
@@ -181,54 +214,93 @@ cloudcover <- function(x, vars, ...) {
       layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
-        fs::file_delete(dest_file)
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
-      cli::cli_alert_info("Processing layer {.val {basename(dest_file)}}...")
+      cli::cli_alert_info("Processing layer {.val {user_name}}...")
       
-      layer <- terra::crop(layer, grid, snap = "out")
-      layer <- terra::resample(layer, grid, method = "bilinear")
-      layer <- terra::mask(layer, mask)
+      # Process layer using standard helper
+      result <- process_raster_layer(
+        layer = layer,
+        grid = grid,
+        mask = mask,
+        res = res,
+        crs = crs,
+        is_global = is_global,
+        current_extent = current_global_extent
+      )
       
-      if (!is.null(par_list$crs)) {
-        layer <- terra::project(layer, par_list$crs)
+      if (is_global) {
+        # For global processing, result is a list with layer and extent
+        layer1 <- result$layer
+        new_extent <- result$extent
+        
+        # Update the cumulative global extent
+        current_global_extent <<- new_extent
+        
+        # If we have existing layers and extent changed, crop them
+        if (!is.null(processed_stack)) {
+          processed_stack <<- align_stack_to_extent(processed_stack, new_extent)
+        }
+      } else {
+        # For regional processing, result is just the layer
+        layer1 <- result
       }
+      
+      # Assign user-requested name to layer
+      names(layer1) <- user_name
       
       if (is.null(processed_stack)) {
-        processed_stack <<- layer
+        processed_stack <<- layer1
       } else {
-        processed_stack <<- c(processed_stack, layer)
+        processed_stack <<- c(processed_stack, layer1)
       }
       
-      cli::cli_alert_success("Processed and added {.val {basename(dest_file)}} to stack.")
+      cli::cli_alert_success("Processed and added {.val {user_name}} to stack.")
       
-      rm(layer)
+      rm(layer, layer1)
       gc()
-      fs::file_delete(dest_file)
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
       
     } else {
-      cli::cli_alert_info("Extracting values from {.val {basename(dest_file)}}...")
+      
+      cli::cli_alert_info("Extracting values from {.val {user_name}}...")
       
       extracted <- try(process_points(file = dest_file, points = points), silent = TRUE)
+      
       if (inherits(extracted, "try-error")) {
-        cli::cli_alert_warning("Extraction failed for {.val {basename(dest_file)}}.")
-        fs::file_delete(dest_file)
+        cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
       extracted <- data.frame(extracted)
+      
+      if (ncol(extracted) >= 2) {
+        # Use user-requested name for the column
+        names(extracted)[ncol(extracted)] <- user_name
+      }
+      
       if (is.null(extracted_df)) {
         extracted_df <<- extracted
       } else {
-        extracted_df <<- merge(extracted_df, extracted[, c(1, 4)], by = "ID", all = TRUE)
+        extracted_df <<- merge(extracted_df, extracted[, c(1, ncol(extracted))], by = "ID", all = TRUE)
       }
       
-      cli::cli_alert_success("Extracted {.val {basename(dest_file)}} successfully.")
+      cli::cli_alert_success("Extracted {.val {user_name}} successfully.")
       
       rm(extracted)
       gc()
-      fs::file_delete(dest_file)
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
     }
   }
   
@@ -244,7 +316,10 @@ cloudcover <- function(x, vars, ...) {
     url <- file.path(base_url, filename)
     dest <- file.path(fs::path_temp("envar/cloud"), filename)
     
-    handle_file(url, dest, canon)
+    # Get the user's original name for this canonical code
+    user_name <- code_to_user_name[[canon]]
+    
+    handle_file(url, dest, canon, user_name)
   }
   
   # --------------------------------------------------------------------
@@ -252,11 +327,50 @@ cloudcover <- function(x, vars, ...) {
   # --------------------------------------------------------------------
   if (is_raster_input) {
     if (is.null(processed_stack)) cli::cli_abort("No layers were successfully processed")
-    if (inherits(x, "SpatRaster")) processed_stack <- c(x, processed_stack)
+    
+    # If x was already a SpatRaster (from previous function), combine
+    if (inherits(x, "SpatRaster")) {
+      if (is_global) {
+        processed_stack <- combine_global_rasters(
+          existing_stack = x,
+          new_stack = processed_stack,
+          current_global_extent = current_global_extent
+        )
+      } else {
+        # Regional mode: resample new layers to match input raster exactly
+        # This ensures perfect alignment for stacking
+        if (!terra::compareGeom(x, processed_stack, stopOnError = FALSE)) {
+          cli::cli_alert_info("Aligning new layers to match input raster geometry...")
+          processed_stack <- terra::resample(processed_stack, x, method = "bilinear")
+        }
+      }
+      
+      processed_stack <- c(x, processed_stack)
+    }
+    
+    # Attach global extent as attribute for downstream functions
+    if (is_global) {
+      attr(processed_stack, "global_extent") <- current_global_extent
+      attr(processed_stack, "is_global") <- TRUE
+    }
+    
     cli::cli_alert_success("All layers processed and stacked successfully")
     return(processed_stack)
   } else {
     if (is.null(extracted_df)) cli::cli_abort("No values extracted successfully")
+    # Merge with previous data if x was a data.frame
+    if (inherits(x, "data.frame") && !inherits(x, "sf")) {
+      extracted_df <- merge(x, extracted_df[, c(1, 4:ncol(extracted_df))], by = c("ID"), all = TRUE)
+      # Preserve CRS from previous extraction
+      prev_crs <- attr(x, "envar_crs")
+      if (!is.null(prev_crs)) {
+        crs <- prev_crs
+      }
+    }
+    
+    # Store the CRS as an attribute for downstream functions
+    # This ensures the CRS is preserved when chaining point extractions
+    attr(extracted_df, "envar_crs") <- crs
     cli::cli_alert_success("Extraction completed successfully")
     return(extracted_df)
   }

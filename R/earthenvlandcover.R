@@ -1,35 +1,36 @@
 # R/earthenvlandcover.R
 
-#' Download EarthEnv land cover
+#' Download and process EarthEnv land cover variables
 #'
 #' This function downloads, processes, and extracts variables from the
-#' EarthEnv Consensus Land Cover dataset. 
+#' EarthEnv Consensus Land Cover dataset. Each variable corresponds to a global
+#' raster representing a specific land cover class at 1-km resolution.
 #'
 #' Available variables (working synonyms in parentheses):
 #'
-#' 1 - "evergreen deciduous needleleaf trees" ("needleleaf trees", "needleleaf", "conifer")
+#' 1 - "consensus_full_class_1" ("evergreen deciduous needleleaf trees", "needleleaf trees", "needleleaf", "conifer")
 #' 
-#' 2 - "evergreen broadleaf trees" ("evergreen broadleaf", "broadleaf evergreen")
+#' 2 - "consensus_full_class_2" ("evergreen broadleaf trees", "evergreen broadleaf", "broadleaf evergreen")
 #' 
-#' 3 - "deciduous broadleaf trees" ("deciduous broadleaf", "broadleaf deciduous")
+#' 3 - "consensus_full_class_3" ("deciduous broadleaf trees", "deciduous broadleaf", "broadleaf deciduous")
 #' 
-#' 4 - "mixed other trees" ("mixed trees", "other trees", "mixed forest")
+#' 4 - "consensus_full_class_4" ("mixed other trees", "mixed trees", "other trees", "mixed forest")
 #' 
-#' 5 - "shrubs" ("shrubland", "shrub")
+#' 5 - "consensus_full_class_5" ("shrubs", "shrubland", "shrub")
 #' 
-#' 6 - "herbaceous vegetation" ("herbaceous", "grassland", "grass", "herbs")
+#' 6 - "consensus_full_class_6" ("herbaceous vegetation", "herbaceous", "grassland", "grass", "herbs")
 #' 
-#' 7 - "cultivated and managed vegetation" ("cultivated", "managed vegetation", "agriculture", "crops", "cropland")
+#' 7 - "consensus_full_class_7" ("cultivated and managed vegetation", "cultivated", "managed vegetation", "agriculture", "crops", "cropland")
 #' 
-#' 8 - "regularly flooded vegetation" ("flooded vegetation", "flooded", "wetland")
+#' 8 - "consensus_full_class_8" ("regularly flooded vegetation", "flooded vegetation", "flooded", "wetland")
 #' 
-#' 9 - "urban built up" ("urban", "built up", "built-up", "artificial surface")
+#' 9 - "consensus_full_class_9" ("urban built up", "urban", "built up", "built-up", "artificial surface")
 #' 
-#' 10 - "snow ice" ("snow", "ice", "glacier", "permafrost")
+#' 10 - "consensus_full_class_10" ("snow ice", "snow", "ice", "glacier", "permafrost")
 #' 
-#' 11 - "barren" ("barren land", "bare ground", "bare")
+#' 11 - "consensus_full_class_11" ("barren", "barren land", "bare ground", "bare")
 #' 
-#' 12 - "open water" ("water", "water bodies")
+#' 12 - "consensus_full_class_12" ("open water", "water", "water bodies")
 #'
 #' Citation:
 #'
@@ -47,23 +48,24 @@
 #' @param discover Logical. If `TRUE` (default), downloads the version integrated 
 #'        with the DISCover dataset. If `FALSE`, downloads the version without 
 #'        DISCover integration.
+#' @param ... Additional arguments (currently unused).
 #'
 #' @return
 #' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
 #' @examples
 #' \dontrun{
-#'processed <- var_get(country= "Italy", crs=3035) %>% 
-#'earthenvlandcover(vars=c("snow ice"))
+#' processed <- var_get(country= "Italy", crs=3035) %>% 
+#' earthenvlandcover(vars=c("snow ice"))
 #'   }
 #' @export
-
 
 earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
   
   # --------------------------------------------------------------------
   # Citation displayed on execution
   # --------------------------------------------------------------------
+  
   cli::cli_alert_info(paste0(
     "Using EarthEnv Consensus Land Cover layers.\n",
     "Citation: Tuanmu, M.N. and W. Jetz. (2014). A global 1-km consensus land-cover product for biodiversity and ecosystem modeling. Global Ecology and Biogeography.\n",
@@ -76,15 +78,19 @@ earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
   if (!is.null(par_list$grid) && inherits(par_list$grid, "SpatRaster")) {
     grid <- par_list$grid
     mask <- par_list$mask
-    res <- par_list$res
-    crs <- par_list$crs
+    res  <- par_list$res
+    crs  <- par_list$crs
     is_global <- isTRUE(par_list$is_global)
     is_raster_input <- TRUE
+    # Track cumulative global extent
+    current_global_extent <- par_list$global_extent
   } else if (par_list$type == "point") {
     points <- par_list$mask
     bbox_points <- par_list$bbox
-    crs <- par_list$crs
+    crs  <- par_list$crs
+    is_global <- FALSE
     is_raster_input <- FALSE
+    current_global_extent <- NULL
   } else {
     cli::cli_abort("Unsupported input type.")
   }
@@ -110,7 +116,7 @@ earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
     "consensus_full_class_12" = c("open water", "water", "water bodies")
   )
   
-  # Normalizer
+  # Normalizer: convert to lowercase, remove punctuation, normalize whitespace
   normalize_string <- function(s) {
     s <- tolower(s)
     s <- gsub("[[:punct:]]", " ", s)
@@ -127,13 +133,21 @@ earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
     syn2canon[[normalize_string(canon)]] <- canon
   }
   
-  # Convert requested vars to canonical codes
+  # Convert requested vars to canonical codes AND keep mapping to original names
   requested_codes <- character(0)
+  code_to_user_name <- list() # Maps canonical code -> user's original name
   unmapped <- character(0)
+  
   for (v in vars) {
     key <- normalize_string(v)
     if (!is.null(syn2canon[[key]])) {
-      requested_codes <- c(requested_codes, syn2canon[[key]])
+      canon <- syn2canon[[key]]
+      # Only add if not already present (avoid duplicates)
+      if (!(canon %in% requested_codes)) {
+        requested_codes <- c(requested_codes, canon)
+        # Store the user's original name for this canonical code
+        code_to_user_name[[canon]] <- v
+      }
     } else {
       unmapped <- c(unmapped, v)
     }
@@ -145,20 +159,20 @@ earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
       "x" = "{.val {unmapped}}"
     ))
   }
-  requested_codes <- unique(requested_codes)
   
   # --------------------------------------------------------------------
   # Helper: Download, process, and clean up a single file
   # --------------------------------------------------------------------
-  handle_file <- function(url, dest_file, var) {
+  handle_file <- function(url, dest_file, canon, user_name) {
     temp_dir <- fs::path_temp("envar/grids")
     fs::dir_create(temp_dir)
     
-    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {var}}...")
+    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {user_name}}...")
     
     success <- download_file(url, dest_file)
+    
     if (!success) {
-      cli::cli_alert_warning("Failed to download {.val {var}} from {.url {url}}.")
+      cli::cli_alert_warning("Failed to download {.val {user_name}} from {.url {url}}.")
       return(NULL)
     }
     
@@ -172,20 +186,38 @@ earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
         return(NULL)
       }
       
-      cli::cli_alert_info("Processing layer {.val {basename(dest_file)}}...")
+      cli::cli_alert_info("Processing layer {.val {user_name}}...")
       
-      # Process layer based on whether we're doing global or regional processing
-      layer1 <- process_raster_layer(
+      # Process layer using standard helper
+      result <- process_raster_layer(
         layer = layer,
         grid = grid,
         mask = mask,
         res = res,
         crs = crs,
-        is_global = is_global
+        is_global = is_global,
+        current_extent = current_global_extent
       )
       
-      # Assign name to layer
-      names(layer1) <- var
+      if (is_global) {
+        # For global processing, result is a list with layer and extent
+        layer1 <- result$layer
+        new_extent <- result$extent
+        
+        # Update the cumulative global extent
+        current_global_extent <<- new_extent
+        
+        # If we have existing layers and extent changed, crop them
+        if (!is.null(processed_stack)) {
+          processed_stack <<- align_stack_to_extent(processed_stack, new_extent)
+        }
+      } else {
+        # For regional processing, result is just the layer
+        layer1 <- result
+      }
+      
+      # Assign user-requested name to layer
+      names(layer1) <- user_name
       
       if (is.null(processed_stack)) {
         processed_stack <<- layer1
@@ -193,7 +225,7 @@ earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
         processed_stack <<- c(processed_stack, layer1)
       }
       
-      cli::cli_alert_success("Processed and added {.val {basename(dest_file)}} to stack.")
+      cli::cli_alert_success("Processed and added {.val {user_name}} to stack.")
       
       rm(layer, layer1)
       gc()
@@ -202,11 +234,13 @@ earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
       }
       
     } else {
-      cli::cli_alert_info("Extracting values from {.val {basename(dest_file)}}...")
+      
+      cli::cli_alert_info("Extracting values from {.val {user_name}}...")
       
       extracted <- try(process_points(file = dest_file, points = points), silent = TRUE)
+      
       if (inherits(extracted, "try-error")) {
-        cli::cli_alert_warning("Extraction failed for {.val {basename(dest_file)}}.")
+        cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
         if (!is_global) {
           fs::file_delete(dest_file)
         }
@@ -214,8 +248,10 @@ earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
       }
       
       extracted <- data.frame(extracted)
+      
       if (ncol(extracted) >= 2) {
-        names(extracted)[ncol(extracted)] <- var
+        # Use user-requested name for the column
+        names(extracted)[ncol(extracted)] <- user_name
       }
       
       if (is.null(extracted_df)) {
@@ -224,7 +260,7 @@ earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
         extracted_df <<- merge(extracted_df, extracted[, c(1, ncol(extracted))], by = "ID", all = TRUE)
       }
       
-      cli::cli_alert_success("Extracted {.val {basename(dest_file)}} successfully.")
+      cli::cli_alert_success("Extracted {.val {user_name}} successfully.")
       
       rm(extracted)
       gc()
@@ -250,7 +286,10 @@ earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
     url <- file.path(base_url, filename)
     dest <- file.path(fs::path_temp("envar/grids"), filename)
     
-    handle_file(url, dest, canon)
+    # Get the user's original name for this canonical code
+    user_name <- code_to_user_name[[canon]]
+    
+    handle_file(url, dest, canon, user_name)
   }
   
   # --------------------------------------------------------------------
@@ -261,13 +300,47 @@ earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
     
     # If x was already a SpatRaster (from previous function), combine
     if (inherits(x, "SpatRaster")) {
+      if (is_global) {
+        processed_stack <- combine_global_rasters(
+          existing_stack = x,
+          new_stack = processed_stack,
+          current_global_extent = current_global_extent
+        )
+      } else {
+        # Regional mode: resample new layers to match input raster exactly
+        # This ensures perfect alignment for stacking
+        if (!terra::compareGeom(x, processed_stack, stopOnError = FALSE)) {
+          cli::cli_alert_info("Aligning new layers to match input raster geometry...")
+          processed_stack <- terra::resample(processed_stack, x, method = "bilinear")
+        }
+      }
+      
       processed_stack <- c(x, processed_stack)
+    }
+    
+    # Attach global extent as attribute for downstream functions
+    if (is_global) {
+      attr(processed_stack, "global_extent") <- current_global_extent
+      attr(processed_stack, "is_global") <- TRUE
     }
     
     cli::cli_alert_success("All layers processed and stacked successfully")
     return(processed_stack)
   } else {
     if (is.null(extracted_df)) cli::cli_abort("No values extracted successfully")
+    # Merge with previous data if x was a data.frame
+    if (inherits(x, "data.frame") && !inherits(x, "sf")) {
+      extracted_df <- merge(x, extracted_df[, c(1, 4:ncol(extracted_df))], by = c("ID"), all = TRUE)
+      # Preserve CRS from previous extraction
+      prev_crs <- attr(x, "envar_crs")
+      if (!is.null(prev_crs)) {
+        crs <- prev_crs
+      }
+    }
+    
+    # Store the CRS as an attribute for downstream functions
+    # This ensures the CRS is preserved when chaining point extractions
+    attr(extracted_df, "envar_crs") <- crs
     cli::cli_alert_success("Extraction completed successfully")
     return(extracted_df)
   }
