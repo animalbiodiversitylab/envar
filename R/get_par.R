@@ -150,7 +150,8 @@ get_par <- function(x) {
       global_extent = global_extent,
       from_varget = FALSE
     ))
-  }
+    }
+  }  
   
   # If it inherits a dataframe from a previous point extraction:
   if (inherits(x, "data.frame") && !inherits(x, "sf")) {
@@ -201,5 +202,4 @@ get_par <- function(x) {
   }
   
   cli::cli_abort("Unsupported input type for get_par()")
-  }
 }

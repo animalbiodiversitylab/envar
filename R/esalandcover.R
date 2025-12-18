@@ -353,7 +353,7 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
     # Merge with previous data if x was a data.frame
     if (inherits(x, "data.frame") && !inherits(x, "sf")) {
       extracted_df <- merge(x, extracted_df[, c(1, 4:ncol(extracted_df))], by = c("ID"), all = TRUE)
-      # Preserve CRS from previous extraction
+      # # Preserve CRS from previous extraction
       prev_crs <- attr(x, "envar_crs")
       if (!is.null(prev_crs)) {
         crs <- prev_crs
