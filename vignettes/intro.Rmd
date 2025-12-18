@@ -126,7 +126,7 @@ uncorrelated_vars <- processed$data[[c("bio1_1981-2010", "bio12_1981-2010", "tre
 
 ## Conclusion
 
-We have shown a single full example of use of the _envar R_ package. Instead of specifying a shape, we could have chosen a country/continent or defined a data.frame of points. For an overview of all the possible use-cases see the **[package overview vignette](https://envarpackage.netlify.app/tutorials/package_overview)** and for a full list of all the available sources and variables see the **[reference](https://envarpackage.netlify.app/reference/)**.
+We have shown a single full example of use of the _envar R_ package. Instead of specifying a shape, we could have chosen a country/continent or defined a data.frame of points. For an overview of all the possible use-cases see the **[package overview vignette](https://envarpackage.netlify.app/articles/package_overview)** and for a full list of all the available sources and variables see the **[reference](https://envarpackage.netlify.app/reference/)**.
 
 ## References
 

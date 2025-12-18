@@ -232,10 +232,10 @@ If a POINT shapefile is used and no buffer is applied, the output will be a data
 ```{r, results = "hide", message = FALSE, warning =FALSE}
 points <- sf::st_sample(Alps, size = 100, type = "random")
 
-processed_singlelayer_points <- var_get(shape = points) %>%
+processed_singlelayer_points <- var_get(shape = points, crs=3035) %>%
   esalandcover(vars = c("ice"))
 
-processed_bilayer_points <- var_get(shape = points) %>%
+processed_bilayer_points <- var_get(shape = points, crs=3035) %>%
   esalandcover(vars = c("ice")) %>%
   chelsa(vars = c("pr"), months = 12, year = 2015)
 ```

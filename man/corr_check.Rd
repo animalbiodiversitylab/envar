@@ -2,39 +2,33 @@
 % Please edit documentation in R/corr_check.R
 \name{corr_check}
 \alias{corr_check}
-\title{`corr_check()` is the optional end point for the **envar** package workflow. 
-It allows to to check for variable correlation and multi-collinearity among the variables
-over the study area.
-How it works: the user specifies all the sources and variables to download and then after
-using the %>% symbol it types corr_check() without any argument.}
+\title{Check Variable Correlation and Multi-collinearity}
 \usage{
 corr_check(x)
 }
+\arguments{
+\item{x}{A `SpatRaster`, `data.frame`, or a list containing `extracted_df`.}
+}
 \value{
 A `list` object containing:
-  * `grid`: A template `SpatRaster` defining the resolution and extent (for polygon input).
-  * `mask`: An `sf` object defining the exact study area boundaries (for polygon input).
-  * `res`: The resolution multiplier used.
-  * `bbox`: The bounding box of the study area.
-  * `crs`: The target coordinate reference system.
-  * `type`: The type of input ("polygon", "admin", or "point").
-  * `is_global`: Logical, TRUE if processing global extent.
+\itemize{
+  \item `data`: The input data used.
+  \item `correlation_matrix`: Pearson correlation matrix.
+  \item `vif`: Variance Inflation Factor data frame.
+  \item `summary`: Character vector highlighting high correlation or VIF.
+  \item `plot_path`: Path to the saved correlation plot.
+}
 }
 \description{
 `corr_check()` is the optional end point for the **envar** package workflow. 
-It allows to to check for variable correlation and multi-collinearity among the variables
-over the study area.
-How it works: the user specifies all the sources and variables to download and then after
-using the %>% symbol it types corr_check() without any argument.
+It allows you to check for variable correlation and multi-collinearity among 
+the variables over the study area.
 }
 \examples{
 \dontrun{
-
 processed_bilayer_corr_check <- var_get(country = "Italy", crs=3035, buffer = 10) \%>\% 
-esalandcover(vars=c("ice")) \%>\% 
-chelsa(vars=c("pr"), months= 12, year=2015) \%>\% 
-corr_check()
-
+  esalandcover(vars=c("ice")) \%>\% 
+  chelsa(vars=c("pr"), months= 12, year=2015) \%>\% 
+  corr_check()
 }
-
 }
