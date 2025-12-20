@@ -12,7 +12,9 @@ var_get(
   buffer = 0,
   res = NULL,
   path = NULL,
-  crs = "EPSG:4326"
+  crs = "EPSG:4326",
+  set_na = FALSE,
+  scale = "medium"
 )
 }
 \arguments{
@@ -46,8 +48,9 @@ like EPSG:4326, meters for projected CRS like EPSG:3035 or ESRI:54009).
 * Default is `1` (30 arc-seconds or 0.008333333° at the equator).
 * Higher values will multiply the original 30 arcsec resolution by the specified factor.}
 
-\item{path}{Character. Optional path to a local directory for saving intermediate files
-or outputs. (Currently reserved for future implementation).}
+\item{path}{directory to store the result of the download/processing. Default to NULL (no output is stored locally).
+It works only if no corr_check() is specified. Specify the path including the file name and the extension (e.g. "../Out/rastername.tif" if the final
+export is a SpatRaster; or "../Out/extracteddataframe.csv" if the output is a data.frame).}
 
 \item{crs}{Character or Numeric. The Coordinate Reference System for the **final output**.
 * Can be an EPSG code with or without prefix (e.g., `4326`, `3035`, `EPSG:4326`), 
@@ -57,6 +60,13 @@ or outputs. (Currently reserved for future implementation).}
   after processing.
 * Note: ESRI codes (53000-54999, 100000+) are automatically recognized and prefixed
   with "ESRI:" internally.}
+
+\item{set_na}{Logical, with default FALSE. If TRUE, any cell that is NA in at least one raster is set to be
+NA in all rasters of the final SpatRaster object. It is useful only when the output is a SpatRaster and not a point extraction.}
+
+\item{scale}{Character with value "small", "medium", or "large". It represents the scale at
+which the country/continent shapefile are retrieved using the rnaturalearthdata package. Large implies a better
+definition of the borders of the shapefile (scale 1:10). The default is "medium". It is useful only when setting the argument country or continent.}
 }
 \value{
 A `list` object (class `envar_par`) containing:
@@ -67,6 +77,8 @@ A `list` object (class `envar_par`) containing:
   * `crs`: The target coordinate reference system.
   * `type`: The type of input ("polygon", "admin", or "point").
   * `is_global`: Logical, TRUE if processing global extent.
+  * `set_na`: Logical, TRUE if user wants to apply an NA mask.
+  * `path`: User-specified path to store the result.
 }
 \description{
 `var_get()` is the entry point for the **envar** package workflow. It defines the
@@ -99,15 +111,18 @@ retrieved variables are perfectly aligned and stacked.
 # Basic usage with a country
 italy_grid <- var_get(country = "Italy")
 
-# With a projected CRS and positive buffer (expand by 50 km)
-italy_buffered <- var_get(country = "Italy", crs = 3035, buffer = 50)
+# Download with a shapefile
+processed_alps <- var_get(shape = "Alps") \%>\% 
+esalandcover(vars=c("ice"))
 
-# With a negative buffer (shrink by 100 km to exclude coastal areas)
-italy_inland <- var_get(country = "Italy", crs = 54009, buffer = -100)
+# With a projected CRS and positive buffer (expand by 10 km)
+italy_buffered <- var_get(country = "Italy", crs = 3035, buffer = 10)
+
+# With a negative buffer (shrink by 10 km to exclude coastal areas)
+italy_inland <- var_get(country = "Italy", crs = 3035, buffer = -10)
 
 # Points with buffer to create extraction area
-points_df <- data.frame(X = c(11.25, 12.5), Y = c(43.77, 41.9))
-points_area <- var_get(pointsdf = points_df, buffer = 10, crs = 4326)
+points_area <- var_get(pointsdf = Apollo, buffer = 10, crs = 4326)
 }
 
 }

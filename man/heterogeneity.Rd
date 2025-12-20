@@ -25,50 +25,41 @@ corresponds to a global Cloud-Optimized GeoTIFF (COG) representing different
 metrics of habitat heterogeneity derived from remote sensing data.
 }
 \details{
-Available variables (working synonyms in parentheses):
+\strong{Available variables} (working synonyms in parentheses):
 
-First-order statistics:
+\strong{First-order statistics}
+\itemize{
+  \item "cv" ("coefficient of variation", "coeff of variation")
+  \item "evenness" ("even")
+  \item "range"
+  \item "shannon" ("shannon index", "shannon entropy")
+  \item "simpson" ("simpson index", "simpson diversity")
+  \item "std" ("standard deviation", "std dev")
+}
 
-1 - "cv" ("coefficient of variation", "coeff of variation")
+\strong{Second-order statistics (texture metrics)}
+\itemize{
+  \item "Contrast" ("contrast")
+  \item "Correlation" ("correlation", "corr")
+  \item "Dissimilarity" ("dissimilarity")
+  \item "Entropy" ("entropy", "texture entropy")
+  \item "Homogeneity" ("homogeneity")
+  \item "Maximum" ("maximum", "max")
+  \item "Uniformity" ("uniformity", "uniform")
+  \item "Variance" ("variance", "var")
+}
 
-2 - "evenness" ("even")
-
-3 - "range"
-
-4 - "shannon" ("shannon index", "shannon entropy")
-
-5 - "simpson" ("simpson index", "simpson diversity")
-
-6 - "std" ("standard deviation", "std dev")
-
-Second-order statistics (texture metrics):
-
-7 - "Contrast" ("contrast")
-
-8 - "Correlation" ("correlation", "corr")
-
-9 - "Dissimilarity" ("dissimilarity")
-
-10 - "Entropy" ("entropy", "texture entropy")
-
-11 - "Homogeneity" ("homogeneity")
-
-12 - "Maximum" ("maximum", "max")
-
-13 - "Uniformity" ("uniformity", "uniform")
-
-14 - "Variance" ("variance", "var")
-
-Citation:
-
-Tuanmu MN, Jetz W (2015). "A global, remote sensing-based characterization 
+\strong{Citation:}\cr
+Tuanmu, M.-N. & Jetz, W. (2015). "A global, remote sensing-based characterization 
 of terrestrial habitat heterogeneity for biodiversity and ecosystem modeling." 
 Global Ecology and Biogeography, 24(11), 1329-1339.
 https://doi.org/10.1111/geb.12365
+
+Note: Please cite original sources of primary datasets where appropriate.
 }
 \examples{
 \dontrun{
-processed <- var_get(country= "Italy", crs=3035) \%>\% 
+processed <- var_get(shape = Alps, crs = 3035) \%>\% 
 heterogeneity(vars=c("shannon", "cv"))
   }
 }

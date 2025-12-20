@@ -84,6 +84,8 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
     crs  <- par_list$crs
     is_global <- isTRUE(par_list$is_global)
     is_raster_input <- TRUE
+    set_na=par_list$set_na
+    path = par_list$path
     # Track cumulative global extent
     current_global_extent <- par_list$global_extent
   } else if (par_list$type == "point") {
@@ -93,6 +95,7 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
     is_global <- FALSE
     is_raster_input <- FALSE
     current_global_extent <- NULL
+    path = par_list$path
   } else {
     cli::cli_abort("Unsupported input type.")
   }
@@ -326,6 +329,8 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
           new_stack = processed_stack,
           current_global_extent = current_global_extent
         )
+
+        
       } else {
         # Regional mode: resample new layers to match input raster exactly
         # This ensures perfect alignment for stacking
@@ -335,6 +340,8 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
           
         }
         processed_stack <- c(x, processed_stack)
+
+        
       }
 
     }
@@ -345,7 +352,29 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
       attr(processed_stack, "is_global") <- TRUE
     }
     
+    attr(processed_stack, "set_na") <- set_na
+    attr(processed_stack, "path") <- path
+    
+    
+    # remove NAs if necessary
+    if (set_na==TRUE){
+      
+      cli::cli_alert_info("Applying NA mask...")
+      
+      master_mask <- sum(processed_stack)
+      # Apply that master mask to the whole stack
+      processed_stack <- terra::mask(processed_stack, master_mask)
+      
+    }
+    
+    # write if requested
+    
+    if (!is.null(path)){
+    terra::writeRaster(processed_stack, path, overwrite = TRUE)
+    }
+    
     cli::cli_alert_success("All layers processed and stacked successfully")
+    
     return(processed_stack)
     
   } else {
@@ -353,8 +382,10 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
     # Merge with previous data if x was a data.frame
     if (inherits(x, "data.frame") && !inherits(x, "sf")) {
       extracted_df <- merge(x, extracted_df[, c(1, 4:ncol(extracted_df))], by = c("ID"), all = TRUE)
+      
       # # Preserve CRS from previous extraction
       prev_crs <- attr(x, "envar_crs")
+      
       if (!is.null(prev_crs)) {
         crs <- prev_crs
       }
@@ -363,6 +394,16 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
     # Store the CRS as an attribute for downstream functions
     # This ensures the CRS is preserved when chaining point extractions
     attr(extracted_df, "envar_crs") <- crs
+    
+    
+    attr(extracted_df, "path") <- path
+    
+    # write if requested
+    if (!is.null(path)){
+      write.csv(extracted_df, path)
+    }
+    
+    
     cli::cli_alert_success("Extraction completed successfully")
     return(extracted_df)
   }

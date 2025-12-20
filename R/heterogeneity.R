@@ -7,46 +7,38 @@
 #' corresponds to a global Cloud-Optimized GeoTIFF (COG) representing different 
 #' metrics of habitat heterogeneity derived from remote sensing data.
 #'
-#' Available variables (working synonyms in parentheses):
+#' @details
+#' \strong{Available variables} (working synonyms in parentheses):
 #'
-#' First-order statistics:
+#' \strong{First-order statistics}
+#' \itemize{
+#'   \item "cv" ("coefficient of variation", "coeff of variation")
+#'   \item "evenness" ("even")
+#'   \item "range"
+#'   \item "shannon" ("shannon index", "shannon entropy")
+#'   \item "simpson" ("simpson index", "simpson diversity")
+#'   \item "std" ("standard deviation", "std dev")
+#' }
 #' 
-#' 1 - "cv" ("coefficient of variation", "coeff of variation")
-#' 
-#' 2 - "evenness" ("even")
-#' 
-#' 3 - "range"
-#' 
-#' 4 - "shannon" ("shannon index", "shannon entropy")
-#' 
-#' 5 - "simpson" ("simpson index", "simpson diversity")
-#' 
-#' 6 - "std" ("standard deviation", "std dev")
-#' 
-#' Second-order statistics (texture metrics):
-#' 
-#' 7 - "Contrast" ("contrast")
-#' 
-#' 8 - "Correlation" ("correlation", "corr")
-#' 
-#' 9 - "Dissimilarity" ("dissimilarity")
-#' 
-#' 10 - "Entropy" ("entropy", "texture entropy")
-#' 
-#' 11 - "Homogeneity" ("homogeneity")
-#' 
-#' 12 - "Maximum" ("maximum", "max")
-#' 
-#' 13 - "Uniformity" ("uniformity", "uniform")
-#' 
-#' 14 - "Variance" ("variance", "var")
+#' \strong{Second-order statistics (texture metrics)}
+#' \itemize{
+#'   \item "Contrast" ("contrast")
+#'   \item "Correlation" ("correlation", "corr")
+#'   \item "Dissimilarity" ("dissimilarity")
+#'   \item "Entropy" ("entropy", "texture entropy")
+#'   \item "Homogeneity" ("homogeneity")
+#'   \item "Maximum" ("maximum", "max")
+#'   \item "Uniformity" ("uniformity", "uniform")
+#'   \item "Variance" ("variance", "var")
+#' }
 #'
-#' Citation:
-#'
-#' Tuanmu MN, Jetz W (2015). "A global, remote sensing-based characterization 
+#' \strong{Citation:}\cr
+#' Tuanmu, M.-N. & Jetz, W. (2015). "A global, remote sensing-based characterization 
 #' of terrestrial habitat heterogeneity for biodiversity and ecosystem modeling." 
 #' Global Ecology and Biogeography, 24(11), 1329-1339.
 #' https://doi.org/10.1111/geb.12365
+#'
+#' Note: Please cite original sources of primary datasets where appropriate.
 #'
 #' @param x The output from `var_get()` defining the area or locations for extraction, 
 #' the reference system, and the buffer. 
@@ -59,7 +51,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' processed <- var_get(country= "Italy", crs=3035) %>% 
+#' processed <- var_get(shape = Alps, crs = 3035) %>% 
 #' heterogeneity(vars=c("shannon", "cv"))
 #'   }
 #' @export
@@ -85,6 +77,8 @@ heterogeneity <- function(x, vars, ...) {
     crs  <- par_list$crs
     is_global <- isTRUE(par_list$is_global)
     is_raster_input <- TRUE
+    set_na=par_list$set_na
+    path = par_list$path
     # Track cumulative global extent
     current_global_extent <- par_list$global_extent
   } else if (par_list$type == "point") {
@@ -94,6 +88,7 @@ heterogeneity <- function(x, vars, ...) {
     is_global <- FALSE
     is_raster_input <- FALSE
     current_global_extent <- NULL
+    path = par_list$path
   } else {
     cli::cli_abort("Unsupported input type.")
   }
@@ -349,6 +344,28 @@ heterogeneity <- function(x, vars, ...) {
       attr(processed_stack, "is_global") <- TRUE
     }
     
+    attr(processed_stack, "set_na") <- set_na
+    attr(processed_stack, "path") <- path
+    
+    
+    # remove NAs if necessary
+    if (set_na==TRUE){
+      
+      cli::cli_alert_info("Applying NA mask...")
+      
+      master_mask <- sum(processed_stack)
+      # Apply that master mask to the whole stack
+      processed_stack <- terra::mask(processed_stack, master_mask)
+      
+    }
+    
+    # write if requested
+    
+    if (!is.null(path)){
+      terra::writeRaster(processed_stack, path, overwrite = TRUE)
+    }
+    
+    
     cli::cli_alert_success("All layers processed and stacked successfully")
     return(processed_stack)
   } else {
@@ -366,7 +383,16 @@ heterogeneity <- function(x, vars, ...) {
     # Store the CRS as an attribute for downstream functions
     # This ensures the CRS is preserved when chaining point extractions
     attr(extracted_df, "envar_crs") <- crs
+    attr(extracted_df, "path") <- path
+    
+    
     cli::cli_alert_success("Extraction completed successfully")
+    
+    # write if requested
+    if (!is.null(path)){
+      write.csv(extracted_df, path)
+    }
+    
     return(extracted_df)
   }
 }

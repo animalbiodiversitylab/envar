@@ -6,32 +6,24 @@
 #' EarthEnv Topography dataset. This dataset provides global, cross-scale
 #' topographic variables suitable for biodiversity and ecosystem modeling.
 #'
-#' Available variables (working synonyms in parentheses):
+#' @details
+#' \strong{Available variables} (working synonyms in parentheses):
 #'
-#' 1 - "elevation" ("dem", "height", "alt", "altitude")
-#' 
-#' 2 - "slope" 
-#' 
-#' 3 - "aspect"
-#' 
-#' 4 - "roughness" ("rough")
-#' 
-#' 5 - "tri" ("terrain ruggedness index", "ruggedness")
-#' 
-#' 6 - "tpi" ("topographic position index", "position")
-#' 
-#' 7 - "vrm" ("vector ruggedness measure")
-#' 
-#' 8 - "pcurv" ("profile curvature", "profile curve")
-#' 
-#' 9 - "tcurv" ("tangential curvature", "tangential curve")
-#' 
-#' 10 - "eastness" ("east")
-#' 
-#' 11 - "northness" ("north")
+#' \itemize{
+#'   \item 1 - "elevation" ("dem", "height", "alt", "altitude")
+#'   \item 2 - "slope" 
+#'   \item 3 - "aspect"
+#'   \item 4 - "roughness" ("rough")
+#'   \item 5 - "tri" ("terrain ruggedness index", "ruggedness")
+#'   \item 6 - "tpi" ("topographic position index", "position")
+#'   \item 7 - "vrm" ("vector ruggedness measure")
+#'   \item 8 - "pcurv" ("profile curvature", "profile curve")
+#'   \item 9 - "tcurv" ("tangential curvature", "tangential curve")
+#'   \item 10 - "eastness" ("east")
+#'   \item 11 - "northness" ("north")
+#' }
 #'
-#' Citation:
-#'
+#' \strong{Citation:}\cr
 #' Amatulli, G., Domisch, S., Tuanmu, M.-N., Parmentier, B., Ranipeta, A.,
 #' Malczyk, J., and Jetz, W. (2018). "A suite of global, cross-scale topographic 
 #' variables for environmental and biodiversity modeling." Scientific Data 5: 180040.
@@ -44,11 +36,15 @@
 #' Leave this empty and use `var_get()` to define parameters for download.
 #' @param vars Character vector of one or more variables to download and process.
 #' @param algorithm Character. The aggregation method/algorithm to use. 
-#'        Common options: "md" (median), "mn" (mean), "min", "max", "sd".
-#'        Default is "md".
-#' @param topo_source Character. The source of the data. Must be "GMTED" 
-#'        (Global Multi-resolution Terrain Elevation Data) or "SRTM" 
-#'        (Shuttle Radar Topography Mission). Default is "GMTED".
+#' \itemize{
+#'   \item Common options: "md" (median, default), "mn" (mean), "min", "max", "sd".
+#'   \item Note: These codes directly affect the downloaded filename (e.g., \code{_1KMmd_}).
+#' }
+#' @param topo_source Character. The source of the data. 
+#' \itemize{
+#'   \item "GMTED" (Global Multi-resolution Terrain Elevation Data) - Default.
+#'   \item "SRTM" (Shuttle Radar Topography Mission).
+#' }
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
@@ -56,8 +52,8 @@
 #'
 #' @examples
 #' \dontrun{
-#' processed <- var_get(country= "Italy", crs=3035) %>% 
-#' topography(vars=c("elevation", "slope"))
+#' processed <- var_get(country = "Italy", crs = 3035) %>% 
+#' topography(vars = c("elevation", "slope"))
 #'   }
 #' @export
 
@@ -82,6 +78,8 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
     crs <- par_list$crs
     is_global <- isTRUE(par_list$is_global)
     is_raster_input <- TRUE
+    set_na=par_list$set_na
+    path = par_list$path
     # Track cumulative global extent
     current_global_extent <- par_list$global_extent
   } else if (par_list$type == "point") {
@@ -91,6 +89,7 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
     is_global <- FALSE
     is_raster_input <- FALSE
     current_global_extent <- NULL
+    path = par_list$path
   } else {
     cli::cli_abort("Unsupported input type.")
   }
@@ -346,6 +345,27 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
       attr(processed_stack, "is_global") <- TRUE
     }
     
+    attr(processed_stack, "set_na") <- set_na
+    attr(processed_stack, "path") <- path
+    
+    
+    # remove NAs if necessary
+    if (set_na==TRUE){
+      
+      cli::cli_alert_info("Applying NA mask...")
+      
+      master_mask <- sum(processed_stack)
+      # Apply that master mask to the whole stack
+      processed_stack <- terra::mask(processed_stack, master_mask)
+      
+    }
+    
+    # write if requested
+    
+    if (!is.null(path)){
+      terra::writeRaster(processed_stack, path, overwrite = TRUE)
+    }
+    
     cli::cli_alert_success("All layers processed and stacked successfully")
     return(processed_stack)
   } else {
@@ -363,7 +383,13 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
     # Store the CRS as an attribute for downstream functions
     # This ensures the CRS is preserved when chaining point extractions
     attr(extracted_df, "envar_crs") <- crs
+    attr(extracted_df, "path") <- path
+    
     cli::cli_alert_success("Extraction completed successfully")
+    # write if requested
+    if (!is.null(path)){
+      write.csv(extracted_df, path)
+    }
     return(extracted_df)
   }
 }

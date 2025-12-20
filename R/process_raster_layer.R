@@ -46,6 +46,7 @@ process_raster_layer <- function(layer, grid, mask, res, crs, is_global = FALSE,
       # Crop this layer to the intersection
       cli::cli_alert_info("Cropping layer to common global extent...")
       layer <- terra::crop(layer, new_extent)
+  
       
       return(list(
         layer = layer,

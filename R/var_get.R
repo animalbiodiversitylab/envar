@@ -51,7 +51,7 @@
 #'   * Default is `1` (30 arc-seconds or 0.008333333° at the equator).
 #'   * Higher values will multiply the original 30 arcsec resolution by the specified factor.
 #' @param path Character. Optional path to a local directory for saving intermediate files
-#'   or outputs. (Currently reserved for future implementation).
+#'   or outputs. 
 #' @param crs Character or Numeric. The Coordinate Reference System for the **final output**.
 #'   * Can be an EPSG code with or without prefix (e.g., `4326`, `3035`, `EPSG:4326`), 
 #'     an ESRI code (e.g., `54009`, `ESRI:54009`), a PROJ4 string, or WKT.
@@ -60,7 +60,14 @@
 #'     after processing.
 #'   * Note: ESRI codes (53000-54999, 100000+) are automatically recognized and prefixed
 #'     with "ESRI:" internally.
-#'
+#' @param scale Character with value "small", "medium", or "large". It represents the scale at
+#'   which the country/continent shapefile are retrieved using the rnaturalearthdata package. Large implies a better
+#'   definition of the borders of the shapefile (scale 1:10). The default is "medium". It is useful only when setting the argument country or continent.
+#' @param set_na Logical, with default FALSE. If TRUE, any cell that is NA in at least one raster is set to be
+#'   NA in all rasters of the final SpatRaster object. It is useful only when the output is a SpatRaster and not a point extraction.
+#' @param path directory to store the result of the download/processing. Default to NULL (no output is stored locally).
+#'   It works only if no corr_check() is specified. Specify the path including the file name and the extension (e.g. "../Out/rastername.tif" if the final
+#'   export is a SpatRaster; or "../Out/extracteddataframe.csv" if the output is a data.frame).
 #' @return A `list` object (class `envar_par`) containing:
 #'   * `grid`: A template `SpatRaster` defining the resolution and extent (for polygon input).
 #'   * `mask`: An `sf` object defining the exact study area boundaries (for polygon input).
@@ -69,21 +76,25 @@
 #'   * `crs`: The target coordinate reference system.
 #'   * `type`: The type of input ("polygon", "admin", or "point").
 #'   * `is_global`: Logical, TRUE if processing global extent.
-#'
+#'   * `set_na`: Logical, TRUE if user wants to apply an NA mask.
+#'   * `path`: User-specified path to store the result.
 #' @examples
 #' \dontrun{
 #' # Basic usage with a country
 #' italy_grid <- var_get(country = "Italy")
 #' 
-#' # With a projected CRS and positive buffer (expand by 50 km)
-#' italy_buffered <- var_get(country = "Italy", crs = 3035, buffer = 50)
+#' # Download with a shapefile
+#' processed_alps <- var_get(shape = "Alps") %>% 
+#' esalandcover(vars=c("ice"))
 #' 
-#' # With a negative buffer (shrink by 100 km to exclude coastal areas)
-#' italy_inland <- var_get(country = "Italy", crs = 54009, buffer = -100)
+#' # With a projected CRS and positive buffer (expand by 10 km)
+#' italy_buffered <- var_get(country = "Italy", crs = 3035, buffer = 10)
+#' 
+#' # With a negative buffer (shrink by 10 km to exclude coastal areas)
+#' italy_inland <- var_get(country = "Italy", crs = 3035, buffer = -10)
 #' 
 #' # Points with buffer to create extraction area
-#' points_df <- data.frame(X = c(11.25, 12.5), Y = c(43.77, 41.9))
-#' points_area <- var_get(pointsdf = points_df, buffer = 10, crs = 4326)
+#' points_area <- var_get(pointsdf = Apollo, buffer = 10, crs = 4326)
 #' }
 #'
 #' @export
@@ -94,7 +105,9 @@ var_get <- function(country = NULL,
                     buffer = 0,
                     res = NULL,
                     path = NULL,
-                    crs = "EPSG:4326") {
+                    crs = "EPSG:4326",
+                    set_na =FALSE,
+                    scale= "medium") {
   
   if (is.null(res)) {
     res <- 1
@@ -145,13 +158,16 @@ var_get <- function(country = NULL,
     country = country,
     continent = continent,
     buffer = buffer,
-    crs = crs
+    crs = crs,
+    scale=scale
   )
   
   # Attach CRS and resolution to extent_info
   extent_info$crs <- crs
   extent_info$res <- res
   extent_info$is_global <- is_global
+  extent_info$set_na <- set_na
+  extent_info$path <- path
   
   # If non-point -> return grid + mask + stored CRS
   if (extent_info$type != "point") {
@@ -165,7 +181,9 @@ var_get <- function(country = NULL,
       crs = crs,
       type = extent_info$type,
       is_global = is_global,
-      from_varget = TRUE
+      from_varget = TRUE,
+      set_na=set_na,
+      path=path
     )
     class(result) <- c("envar_par", "list")
     return(result)
@@ -180,6 +198,9 @@ var_get <- function(country = NULL,
     return(extent_info)
   }
 }
+
+
+
 
 #' Normalize CRS to standard format
 #' @noRd

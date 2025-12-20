@@ -51,6 +51,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials">
 <li><a class="dropdown-item" href="../articles/package_overview.html">Package overview</a></li>
     <li><a class="dropdown-item" href="../articles/variables.html">Available variables</a></li>
+    <li><a class="dropdown-item" href="../articles/sdm.html">Species distribution models</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -109,7 +110,7 @@ is downloaded and maintains its original extent. If not aggregated, the
 original grid resolution of any source is always 30 arcseconds
 (0.008333333°, or ~ 1 km) at the equator.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed_singlelayer_lc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<code class="sourceCode R"><span><span class="va">processed_singlelayer_lc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
 <p>The print in the console is omitted in this tutorial to avoid output
 overflow. When run locally, the print in the console displays the
@@ -121,7 +122,7 @@ each variable has been correctly processed. The output is a SpatRaster
 object from the <em>terra</em> package, which can be plotted and further
 processed.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_singlelayer_lc</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_singlelayer_lc</span><span class="op">)</span></span></code></pre></div>
 <p><img src="package_overview_files/figure-html/unnamed-chunk-5-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
@@ -132,7 +133,7 @@ be set by using an aggregation factor, defined by the argument
 <strong>res</strong>. A value of <code>res = 1</code> keeps the native
 resolution; any value &gt; 1 aggregates the raster by that factor.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed_singlelayer_aggregated</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>res <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">processed_singlelayer_aggregated</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>res <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">processed_singlelayer_aggregated</span><span class="op">)</span></span></code></pre></div>
@@ -154,20 +155,20 @@ the output automatically crops all layers to the smallest shared extent.
 If more than two sources are reported, the code updates step-by-step the
 shared extent across all layers.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed_bilayer_global</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">processed_bilayer_global</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>The same occurs if the order of downloaded variables is inverted:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed_bilayer_global_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">processed_bilayer_global_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># define the extents of the first SpatRaster object and of the second to check</span></span>
 <span><span class="co"># if they are the same</span></span>
 <span></span>
-<span><span class="va">ext1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/math-generics.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/ext.html" class="external-link">ext</a></span><span class="op">(</span><span class="va">processed_bilayer_global</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">ext2</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/math-generics.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/ext.html" class="external-link">ext</a></span><span class="op">(</span><span class="va">processed_bilayer_global_1</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">ext1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu">ext</span><span class="op">(</span><span class="va">processed_bilayer_global</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">ext2</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fu">ext</span><span class="op">(</span><span class="va">processed_bilayer_global_1</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># print the resulting extents </span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">ext1</span><span class="op">)</span></span></code></pre></div>
@@ -182,21 +183,21 @@ shared extent across all layers.</p>
 <p>A country can be specified by name (case‑insensitive). The output is
 cropped/masked to that country.</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed_bilayer_country</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">processed_bilayer_country</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, years <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_bilayer_country</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_bilayer_country</span><span class="op">)</span></span></code></pre></div>
 <p><img src="package_overview_files/figure-html/unnamed-chunk-12-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="crop-and-mask-to-a-continent">5. Crop and mask to a continent<a class="anchor" aria-label="anchor" href="#crop-and-mask-to-a-continent"></a>
 </h3>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed_singlelayer_africa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>continent <span class="op">=</span> <span class="st">"Africa"</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">processed_singlelayer_africa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>continent <span class="op">=</span> <span class="st">"Africa"</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"forest"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_singlelayer_africa</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_singlelayer_africa</span><span class="op">)</span></span></code></pre></div>
 <p><img src="package_overview_files/figure-html/unnamed-chunk-14-1.png" width="480" style="display: block; margin: auto;"></p>
 <p>Some continents such as Europe have a complex shape if downloaded
 directly with the method just showed, and the invalid resulting geometry
@@ -237,21 +238,21 @@ is specified, 4326 is assumed. The crs can also be specified with the
 prefix ‘ESRI’ or ‘EPSG’ according to the system, e.g. “EPSG:4326” or
 “ESRI:54009”.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed_singlelayer_projected</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs<span class="op">=</span><span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<code class="sourceCode R"><span><span class="va">processed_singlelayer_projected</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs<span class="op">=</span><span class="fl">3035</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span> <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">processed_singlelayer_projected</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## class       : SpatRaster </span></span>
-<span><span class="co">## dimensions  : 1144, 991, 1  (nrow, ncol, nlyr)</span></span>
-<span><span class="co">## resolution  : 1000, 1000  (x, y)</span></span>
-<span><span class="co">## extent      : 4055312, 5046312, 1522080, 2666080  (xmin, xmax, ymin, ymax)</span></span>
+<span><span class="co">## dimensions  : 1249, 1194, 1  (nrow, ncol, nlyr)</span></span>
+<span><span class="co">## resolution  : 982.9062, 982.9062  (x, y)</span></span>
+<span><span class="co">## extent      : 4004865, 5178455, 1484656, 2712306  (xmin, xmax, ymin, ymax)</span></span>
 <span><span class="co">## coord. ref. : ETRS89-extended / LAEA Europe (EPSG:3035) </span></span>
 <span><span class="co">## source(s)   : memory</span></span>
-<span><span class="co">## name        :     ice </span></span>
-<span><span class="co">## min value   :  0.0000 </span></span>
-<span><span class="co">## max value   : 99.9728</span></span></code></pre>
+<span><span class="co">## name        :      ice </span></span>
+<span><span class="co">## min value   :  0.00000 </span></span>
+<span><span class="co">## max value   : 99.62711</span></span></code></pre>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_singlelayer_projected</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_singlelayer_projected</span><span class="op">)</span></span></code></pre></div>
 <p><img src="package_overview_files/figure-html/unnamed-chunk-16-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
@@ -266,22 +267,22 @@ buffer might thus appear non-circular if plotted in 2D). However, it is
 recommended to always specify a projected CRS when using buffers to
 avoid potential distortions.</p>
 <div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed_singlelayer_buffer</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs <span class="op">=</span> <span class="fl">3035</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">processed_singlelayer_buffer</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs <span class="op">=</span> <span class="fl">3035</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_singlelayer_buffer</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_singlelayer_buffer</span><span class="op">)</span></span></code></pre></div>
 <p><img src="package_overview_files/figure-html/unnamed-chunk-18-1.png" width="480" style="display: block; margin: auto;"></p>
 <p>Negative buffer example:</p>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed_singlelayer_negative_buffer</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs <span class="op">=</span> <span class="fl">3035</span>, buffer <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">processed_singlelayer_negative_buffer</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs <span class="op">=</span> <span class="fl">3035</span>, buffer <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_singlelayer_negative_buffer</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_singlelayer_negative_buffer</span><span class="op">)</span></span></code></pre></div>
 <p><img src="package_overview_files/figure-html/unnamed-chunk-20-1.png" width="480" style="display: block; margin: auto;"></p>
 <p>A buffer at global scale (no shape or data.frame or country defined)
 triggers an error (not shown here):</p>
 <div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed_singlelayer_global_buffer</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">processed_singlelayer_global_buffer</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -291,11 +292,11 @@ triggers an error (not shown here):</p>
 the downloaded variables. Here we use the already included European Alps
 shapefile (<code><a href="../reference/Alps.html">Alps()</a></code>).</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed_bilayer_shapefile</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">processed_bilayer_shapefile</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_bilayer_shapefile</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_bilayer_shapefile</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="package_overview_files/figure-html/unnamed-chunk-23-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
@@ -307,11 +308,11 @@ downloaded variables over the defined spatial area and resolution. Doing
 this will produce a list containing the processed SpatRaster, Pearson
 pairwise correlations, VIF statistics, and a saved correlation plot.</p>
 <div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed_bilayer_corr_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span>, res <span class="op">=</span> <span class="fl">2</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<code class="sourceCode R"><span><span class="va">processed_bilayer_corr_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span>, res <span class="op">=</span> <span class="fl">2</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
 <span>             <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1"</span>, <span class="st">"bio4"</span>, <span class="st">"bio10"</span>, <span class="st">"bio12"</span>, <span class="st">"bio19"</span><span class="op">)</span>,</span>
-<span>                    years <span class="op">=</span> <span class="st">"1981-2010"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>             <span class="fu"><a href="../reference/topography.html">topography</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"elevation"</span>, <span class="st">"slope"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>             <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trees"</span>, <span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>                    years <span class="op">=</span> <span class="st">"1981-2010"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>             <span class="fu"><a href="../reference/topography.html">topography</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"elevation"</span>, <span class="st">"slope"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>             <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trees"</span>, <span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>             <span class="fu"><a href="../reference/corr_check.html">corr_check</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>The output will thus be a list that contains the following elements:
 “data” (the SpatRaster or data.frame with your downloaded data),
@@ -326,38 +327,38 @@ Pearson’s pairwise correlation was saved.</p>
 <code class="sourceCode R"><span><span class="co"># View the Pearson's pairwise correlation matrix</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">processed_bilayer_corr_check</span><span class="op">$</span><span class="va">correlation_matrix</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                 bio1_1981-2010 bio4_1981-2010 bio10_1981-2010 bio12_1981-2010</span></span>
-<span><span class="co">## bio1_1981-2010       1.0000000    -0.16218091      0.99419247    -0.593023380</span></span>
-<span><span class="co">## bio4_1981-2010      -0.1621809     1.00000000     -0.05811524    -0.140826490</span></span>
-<span><span class="co">## bio10_1981-2010      0.9941925    -0.05811524      1.00000000    -0.616575650</span></span>
-<span><span class="co">## bio12_1981-2010     -0.5930234    -0.14082649     -0.61657565     1.000000000</span></span>
-<span><span class="co">## bio19_1981-2010     -0.4231690    -0.33187576     -0.46121816     0.846422025</span></span>
-<span><span class="co">## elevation           -0.9701695     0.05564816     -0.97217707     0.587809843</span></span>
-<span><span class="co">## slope               -0.7636451     0.00524989     -0.77230823     0.558445357</span></span>
-<span><span class="co">## trees                0.1481525    -0.26620120      0.11469130     0.007079224</span></span>
-<span><span class="co">## ice                 -0.4510495     0.12101796     -0.43809075     0.259209359</span></span>
+<span><span class="co">## bio1_1981-2010       1.0000000    -0.17098433      0.99411075     -0.58856258</span></span>
+<span><span class="co">## bio4_1981-2010      -0.1709843     1.00000000     -0.06629979     -0.13822734</span></span>
+<span><span class="co">## bio10_1981-2010      0.9941107    -0.06629979      1.00000000     -0.61255277</span></span>
+<span><span class="co">## bio12_1981-2010     -0.5885626    -0.13822734     -0.61255277      1.00000000</span></span>
+<span><span class="co">## bio19_1981-2010     -0.4182732    -0.33185424     -0.45693075      0.84502782</span></span>
+<span><span class="co">## elevation           -0.9682340     0.06664318     -0.96993166      0.58178549</span></span>
+<span><span class="co">## slope               -0.7884759     0.01527641     -0.79705030      0.57544349</span></span>
+<span><span class="co">## trees                0.1420440    -0.28430061      0.10591260      0.02372563</span></span>
+<span><span class="co">## ice                 -0.4765922     0.13185174     -0.46273645      0.27137511</span></span>
 <span><span class="co">##                 bio19_1981-2010   elevation       slope        trees        ice</span></span>
-<span><span class="co">## bio1_1981-2010      -0.42316901 -0.97016954 -0.76364511  0.148152525 -0.4510495</span></span>
-<span><span class="co">## bio4_1981-2010      -0.33187576  0.05564816  0.00524989 -0.266201199  0.1210180</span></span>
-<span><span class="co">## bio10_1981-2010     -0.46121816 -0.97217707 -0.77230823  0.114691295 -0.4380907</span></span>
-<span><span class="co">## bio12_1981-2010      0.84642203  0.58780984  0.55844536  0.007079224  0.2592094</span></span>
-<span><span class="co">## bio19_1981-2010      1.00000000  0.44669367  0.38982142 -0.014066794  0.2196525</span></span>
-<span><span class="co">## elevation            0.44669367  1.00000000  0.80267782 -0.130484035  0.4600400</span></span>
-<span><span class="co">## slope                0.38982142  0.80267782  1.00000000  0.235548954  0.2069919</span></span>
-<span><span class="co">## trees               -0.01406679 -0.13048403  0.23554895  1.000000000 -0.2964818</span></span>
-<span><span class="co">## ice                  0.21965250  0.46003996  0.20699186 -0.296481827  1.0000000</span></span></code></pre>
+<span><span class="co">## bio1_1981-2010     -0.418273159 -0.96823403 -0.78847587  0.142043991 -0.4765922</span></span>
+<span><span class="co">## bio4_1981-2010     -0.331854239  0.06664318  0.01527641 -0.284300607  0.1318517</span></span>
+<span><span class="co">## bio10_1981-2010    -0.456930752 -0.96993166 -0.79705030  0.105912597 -0.4627365</span></span>
+<span><span class="co">## bio12_1981-2010     0.845027822  0.58178549  0.57544349  0.023725631  0.2713751</span></span>
+<span><span class="co">## bio19_1981-2010     1.000000000  0.44083530  0.39996749 -0.003624083  0.2299007</span></span>
+<span><span class="co">## elevation           0.440835298  1.00000000  0.83277881 -0.120815882  0.4857175</span></span>
+<span><span class="co">## slope               0.399967493  0.83277881  1.00000000  0.223848319  0.2433729</span></span>
+<span><span class="co">## trees              -0.003624083 -0.12081588  0.22384832  1.000000000 -0.3266344</span></span>
+<span><span class="co">## ice                 0.229900683  0.48571755  0.24337291 -0.326634442  1.0000000</span></span></code></pre>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># View the Variance Inflation Factor values</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">processed_bilayer_corr_check</span><span class="op">$</span><span class="va">vif</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##         Variables         VIF</span></span>
-<span><span class="co">## 1  bio1_1981-2010 3056.493047</span></span>
-<span><span class="co">## 2  bio4_1981-2010   35.774109</span></span>
-<span><span class="co">## 3 bio10_1981-2010 2623.044535</span></span>
-<span><span class="co">## 4 bio12_1981-2010    5.064462</span></span>
-<span><span class="co">## 5 bio19_1981-2010    4.451829</span></span>
-<span><span class="co">## 6       elevation   40.736641</span></span>
-<span><span class="co">## 7           slope    4.761601</span></span>
-<span><span class="co">## 8           trees    1.716337</span></span>
-<span><span class="co">## 9             ice    1.437932</span></span></code></pre>
+<span><span class="co">## 1  bio1_1981-2010 2977.009074</span></span>
+<span><span class="co">## 3 bio10_1981-2010 2582.861707</span></span>
+<span><span class="co">## 6       elevation   38.804836</span></span>
+<span><span class="co">## 2  bio4_1981-2010   35.891099</span></span>
+<span><span class="co">## 7           slope    5.934985</span></span>
+<span><span class="co">## 4 bio12_1981-2010    5.293864</span></span>
+<span><span class="co">## 5 bio19_1981-2010    4.668000</span></span>
+<span><span class="co">## 8           trees    1.876605</span></span>
+<span><span class="co">## 9             ice    1.560732</span></span></code></pre>
 <p>To better understand the structure of correlation, we can also
 analyze the correlation plot that was locally stored.</p>
 <p><img src="images/Corr_plot_example.png" width="100%" style="display: block; margin: auto;"></p>
@@ -372,37 +373,37 @@ values over the specified points.</p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_sample.html" class="external-link">st_sample</a></span><span class="op">(</span><span class="va">Alps</span>, size <span class="op">=</span> <span class="fl">100</span>, type <span class="op">=</span> <span class="st">"random"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">processed_singlelayer_points</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">points</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">processed_singlelayer_points</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">points</span>, crs<span class="op">=</span><span class="fl">3035</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">processed_bilayer_points</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">points</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">processed_bilayer_points</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">points</span>, crs<span class="op">=</span><span class="fl">3035</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># visualize the points shapefile</span></span>
-<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">Alps</span><span class="op">$</span><span class="va">geometry</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">points</span>, add <span class="op">=</span><span class="cn">T</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">Alps</span><span class="op">$</span><span class="va">geometry</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">points</span>, add <span class="op">=</span><span class="cn">T</span><span class="op">)</span></span></code></pre></div>
 <p><img src="package_overview_files/figure-html/unnamed-chunk-29-1.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># visualize the resulting data.frame with the extracted values when only one source was used</span></span>
-<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">processed_singlelayer_points</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##   ID         X        Y ice</span></span>
-<span><span class="co">## 1  1 14.293095 45.84910 0.0</span></span>
-<span><span class="co">## 2  2 10.379406 47.10659 4.6</span></span>
-<span><span class="co">## 3  3  7.218862 45.97181 0.0</span></span>
-<span><span class="co">## 4  4 15.116421 46.99428 0.0</span></span>
-<span><span class="co">## 5  5  6.245002 43.60734 0.0</span></span>
-<span><span class="co">## 6  6  9.976589 47.06042 0.2</span></span></code></pre>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">processed_singlelayer_points</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   ID       X       Y ice</span></span>
+<span><span class="co">## 1  1 4613557 2676660   0</span></span>
+<span><span class="co">## 2  2 4743029 2806345   0</span></span>
+<span><span class="co">## 3  3 3989011 2479880   0</span></span>
+<span><span class="co">## 4  4 4174641 2394029   0</span></span>
+<span><span class="co">## 5  5 4496954 2649027   0</span></span>
+<span><span class="co">## 6  6 4498334 2538293   0</span></span></code></pre>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># visualize the resulting data.frame with the extracted values when two or more sources were used</span></span>
-<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">processed_bilayer_points</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##    ID         X        Y ice pr_2015_12</span></span>
-<span><span class="co">## 1   1 14.293095 45.84910   0         27</span></span>
-<span><span class="co">## 2  10 13.017556 47.67438   0       4704</span></span>
-<span><span class="co">## 3 100  7.380845 46.64600   0       2819</span></span>
-<span><span class="co">## 4  11  6.690061 44.42392   0        642</span></span>
-<span><span class="co">## 5  12 11.896332 46.98289   0       1934</span></span>
-<span><span class="co">## 6  13 10.792680 47.94157   0       3631</span></span></code></pre>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">processed_bilayer_points</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   ID       X       Y ice pr_2015_12</span></span>
+<span><span class="co">## 1  1 4613557 2676660   0       1066</span></span>
+<span><span class="co">## 2  2 4743029 2806345   0       1228</span></span>
+<span><span class="co">## 3  3 3989011 2479880   0       2478</span></span>
+<span><span class="co">## 4  4 4174641 2394029   0        813</span></span>
+<span><span class="co">## 5  5 4496954 2649027   0       1658</span></span>
+<span><span class="co">## 6  6 4498334 2538293   0        931</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="add-a-correlation-check-when-using-points">11. Add a correlation check when using points<a class="anchor" aria-label="anchor" href="#add-a-correlation-check-when-using-points"></a>
@@ -412,19 +413,19 @@ to a SpatRaster object, but instead of a set of rasters, the first
 element of the resulting list will be a data.frame with the extracted
 values.</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed_bilayer_points_corr_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">points</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">processed_bilayer_points_corr_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">points</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="../reference/corr_check.html">corr_check</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">processed_bilayer_points_corr_check</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##    ID         X        Y ice pr_2015_12</span></span>
-<span><span class="co">## 1   1 14.293095 45.84910   0         27</span></span>
-<span><span class="co">## 2  10 13.017556 47.67438   0       4704</span></span>
-<span><span class="co">## 3 100  7.380845 46.64600   0       2819</span></span>
-<span><span class="co">## 4  11  6.690061 44.42392   0        642</span></span>
-<span><span class="co">## 5  12 11.896332 46.98289   0       1934</span></span>
-<span><span class="co">## 6  13 10.792680 47.94157   0       3631</span></span></code></pre>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">processed_bilayer_points_corr_check</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   ID         X        Y ice pr_2015_12</span></span>
+<span><span class="co">## 1  1 13.855199 47.13500   0       1066</span></span>
+<span><span class="co">## 2  2 15.683729 48.22435   0       1228</span></span>
+<span><span class="co">## 3  3  5.767860 45.34632   0       2478</span></span>
+<span><span class="co">## 4  4  8.158573 44.64115   0        813</span></span>
+<span><span class="co">## 5  5 12.308859 46.93009   0       1658</span></span>
+<span><span class="co">## 6  6 12.283981 45.93301   0        931</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="use-points-as-a-data-frame">12. Use points as a data.frame<a class="anchor" aria-label="anchor" href="#use-points-as-a-data-frame"></a>
@@ -435,35 +436,35 @@ only two columns that represent coordinates. Column names must be
 latitude, respectively. The CRS is assigned based on user input
 (default: 4326).</p>
 <div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">points3035</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">points</span>, <span class="fl">3035</span><span class="op">)</span></span>
-<span><span class="va">points3035df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html" class="external-link">st_coordinates</a></span><span class="op">(</span><span class="va">points3035</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">points3035</span> <span class="op">&lt;-</span> <span class="fu">st_transform</span><span class="op">(</span><span class="va">points</span>, <span class="fl">3035</span><span class="op">)</span></span>
+<span><span class="va">points3035df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu">st_coordinates</span><span class="op">(</span><span class="va">points3035</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">processed_singlelayer_pointsdf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">points3035df</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">processed_singlelayer_pointsdf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">points3035df</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">processed_bilayer_pointsdf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">points3035df</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span><span class="va">processed_bilayer_pointsdf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">points3035df</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># visualize the resulting data.frame when using only one source</span></span>
-<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">processed_singlelayer_pointsdf</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">processed_singlelayer_pointsdf</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   ID       X       Y ice</span></span>
-<span><span class="co">## 1  1 4654691 2535881 0.0</span></span>
-<span><span class="co">## 2  2 4349822 2665967 4.6</span></span>
-<span><span class="co">## 3  3 4105238 2543911 0.0</span></span>
-<span><span class="co">## 4  4 4710157 2666850 0.0</span></span>
-<span><span class="co">## 5  5 4017225 2285211 0.0</span></span>
-<span><span class="co">## 6  6 4319220 2660765 0.2</span></span></code></pre>
+<span><span class="co">## 1  1 4613557 2676660   0</span></span>
+<span><span class="co">## 2  2 4743029 2806345   0</span></span>
+<span><span class="co">## 3  3 3989011 2479880   0</span></span>
+<span><span class="co">## 4  4 4174641 2394029   0</span></span>
+<span><span class="co">## 5  5 4496954 2649027   0</span></span>
+<span><span class="co">## 6  6 4498334 2538293   0</span></span></code></pre>
 <div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># visualize the resulting data.frame when using multiple sources</span></span>
-<span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">processed_bilayer_pointsdf</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##    ID       X       Y ice pr_2015_12</span></span>
-<span><span class="co">## 1   1 4654691 2535881   0         NA</span></span>
-<span><span class="co">## 2  10 4547670 2733597   0         NA</span></span>
-<span><span class="co">## 3 100 4120335 2618276   0         NA</span></span>
-<span><span class="co">## 4  11 4056979 2373976   0         NA</span></span>
-<span><span class="co">## 5  12 4465380 2653999   0         NA</span></span>
-<span><span class="co">## 6  13 4380252 2758982   0         NA</span></span></code></pre>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">processed_bilayer_pointsdf</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##   ID       X       Y ice pr_2015_12</span></span>
+<span><span class="co">## 1  1 4613557 2676660   0       1066</span></span>
+<span><span class="co">## 2  2 4743029 2806345   0       1228</span></span>
+<span><span class="co">## 3  3 3989011 2479880   0       2478</span></span>
+<span><span class="co">## 4  4 4174641 2394029   0        813</span></span>
+<span><span class="co">## 5  5 4496954 2649027   0       1658</span></span>
+<span><span class="co">## 6  6 4498334 2538293   0        931</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="apply-a-buffer-when-using-points">13. Apply a buffer when using points<a class="anchor" aria-label="anchor" href="#apply-a-buffer-when-using-points"></a>
@@ -482,11 +483,11 @@ pseudo-absence/background points in a buffer around presences allows to
 better simulate the spatial sampling effort patterns and replicate
 them.</p>
 <div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed_bilayer_points_buffer</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">points3035df</span>, crs <span class="op">=</span> <span class="fl">3035</span>, buffer <span class="op">=</span> <span class="fl">50</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">processed_bilayer_points_buffer</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">points3035df</span>, crs <span class="op">=</span> <span class="fl">3035</span>, buffer <span class="op">=</span> <span class="fl">50</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_bilayer_points_buffer</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_bilayer_points_buffer</span><span class="op">)</span></span></code></pre></div>
 <p><img src="package_overview_files/figure-html/unnamed-chunk-38-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 </div>
@@ -506,8 +507,8 @@ variables</a></strong>.</p>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-loparrino2025" class="csl-entry">
 Lo Parrino, E., Simoncini, A., Ficetola, G.F. &amp; Falaschi, M. (2025).
-Global 1 km land cover for macroecological modelling from very high
-resolution imagery. <em>Figshare</em>.
+Global 1-km land cover for ecological modelling from very high
+resolution imagery. <em>EcoEvoRxiv</em>, in press.
 </div>
 </div>
 </div>

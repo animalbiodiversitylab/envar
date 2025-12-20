@@ -1,7 +1,7 @@
 # R/process_extent.R
 #' Process extent input
 #' @noRd
-process_extent <- function(shape = NULL, country = NULL, continent = NULL, buffer = 0, crs = "EPSG:4326") {
+process_extent <- function(shape = NULL, country = NULL, continent = NULL, buffer = 0, crs = "EPSG:4326", scale="medium") {
   
   extent_info <- list(type = NULL, bbox = NULL, mask = NULL)
   
@@ -119,7 +119,7 @@ process_extent <- function(shape = NULL, country = NULL, continent = NULL, buffe
       extent_info$mask <- rnaturalearth::ne_countries(
         country = country,
         returnclass = "sf",
-        scale = "medium"
+        scale = scale
       )
     }, error = function(e) {
       cli::cli_abort("Country not found: {.val {country}}.")
@@ -145,11 +145,23 @@ process_extent <- function(shape = NULL, country = NULL, continent = NULL, buffe
     extent_info$type <- "admin"
     
     tryCatch({
+      
+      if (continent == "Europe" | continent == "europe"){
+        
+        extent_info$mask <- Europe
+        
+      } else {
+        
       extent_info$mask <- rnaturalearth::ne_countries(
         continent = continent,
         returnclass = "sf",
-        scale = "medium"
+        scale = scale
       )
+      }
+      
+      
+      
+      
     }, error = function(e) {
       cli::cli_abort("Continent not found: {.val {continent}}.")
     })

@@ -7,70 +7,61 @@
 #' These variables are available at 1 km resolution and capture upstream
 #' catchment characteristics, including topography, land cover, soil, and climate.
 #'
-#' Available variables (working synonyms in parentheses):
+#' @details
+#' \strong{Available variables} (working synonyms in parentheses):
 #'
-#' Temperature:
+#' \strong{Temperature}
+#' \itemize{
+#'   \item 1 - "monthly_tmin_average.nc" ("monthly minimum temperature average", "min temp average", "tmin avg", "tmin")
+#'   \item 2 - "monthly_tmax_average.nc" ("monthly maximum temperature average", "max temp average", "tmax avg", "tmax")
+#'   \item 3 - "monthly_tmin_weighted_average.nc" ("monthly minimum temperature weighted", "min temp weighted", "tmin weighted")
+#'   \item 4 - "monthly_tmax_weighted_average.nc" ("monthly maximum temperature weighted", "max temp weighted", "tmax weighted")
+#' }
 #'
-#' 1 - "monthly_tmin_average.nc" (monthly minimum temperature average, min temp average, tmin avg, tmin)
+#' \strong{Precipitation}
+#' \itemize{
+#'   \item 5 - "monthly_prec_sum.nc" ("monthly upstream precipitation sum", "precipitation sum", "precip sum", "prec")
+#'   \item 6 - "monthly_prec_weighted_sum.nc" ("monthly upstream precipitation weighted", "precipitation weighted", "precip weighted")
+#' }
 #'
-#' 2 - "monthly_tmax_average.nc" (monthly maximum temperature average, max temp average, tmax avg, tmax)
+#' \strong{Hydroclimatic}
+#' \itemize{
+#'   \item 7 - "hydroclim_average+sum.nc" ("hydroclimatic variables average", "hydroclim average", "hydroclim")
+#'   \item 8 - "hydroclim_weighted_average+sum.nc" ("hydroclimatic variables weighted", "hydroclim weighted")
+#' }
 #'
-#' 3 - "monthly_tmin_weighted_average.nc" (monthly minimum temperature weighted, min temp weighted, tmin weighted)
+#' \strong{Topography}
+#' \itemize{
+#'   \item 9 - "elevation.nc" ("upstream elevation", "elevation", "dem")
+#'   \item 10 - "slope.nc" ("upstream slope", "slope")
+#'   \item 11 - "flow_acc.nc" ("stream length", "flow accumulation", "flow")
+#' }
 #'
-#' 4 - "monthly_tmax_weighted_average.nc" (monthly maximum temperature weighted, max temp weighted, tmax weighted)
+#' \strong{Land cover}
+#' \itemize{
+#'   \item 12 - "landcover_minimum.nc" ("upstream landcover minimum", "landcover min")
+#'   \item 13 - "landcover_maximum.nc" ("upstream landcover maximum", "landcover max")
+#'   \item 14 - "landcover_range.nc" ("upstream landcover range", "landcover range")
+#'   \item 15 - "landcover_average.nc" ("upstream landcover average", "landcover avg", "landcover")
+#'   \item 16 - "landcover_weighted_average.nc" ("upstream landcover weighted", "landcover weighted")
+#' }
 #'
-#' Precipitation:
+#' \strong{Geology & Soil}
+#' \itemize{
+#'   \item 17 - "geology_weighted_sum.nc" ("upstream geology", "geology weighted", "geology")
+#'   \item 18 - "soil_minimum.nc" ("upstream soil minimum", "soil min")
+#'   \item 19 - "soil_maximum.nc" ("upstream soil maximum", "soil max")
+#'   \item 20 - "soil_range.nc" ("upstream soil range", "soil range")
+#'   \item 21 - "soil_average.nc" ("upstream soil average", "soil avg", "soil")
+#'   \item 22 - "soil_weighted_average.nc" ("upstream soil weighted", "soil weighted")
+#' }
 #'
-#' 5 - "monthly_prec_sum.nc" (monthly upstream precipitation sum, precipitation sum, precip sum, prec)
+#' \strong{Quality control}
+#' \itemize{
+#'   \item 23 - "quality_control.nc" ("quality control", "qc")
+#' }
 #'
-#' 6 - "monthly_prec_weighted_sum.nc" (monthly upstream precipitation weighted, precipitation weighted, precip weighted)
-#'
-#' Hydroclimatic:
-#'
-#' 7 - "hydroclim_average+sum.nc" (hydroclimatic variables average, hydroclim average, hydroclim)
-#'
-#' 8 - "hydroclim_weighted_average+sum.nc" (hydroclimatic variables weighted, hydroclim weighted)
-#'
-#' Topography:
-#'
-#' 9 - "elevation.nc" (upstream elevation, elevation, dem)
-#'
-#' 10 - "slope.nc" (upstream slope, slope)
-#'
-#' 11 - "flow_acc.nc" (stream length, flow accumulation, flow)
-#'
-#' Land cover:
-#'
-#' 12 - "landcover_minimum.nc" (upstream landcover minimum, landcover min)
-#'
-#' 13 - "landcover_maximum.nc" (upstream landcover maximum, landcover max)
-#'
-#' 14 - "landcover_range.nc" (upstream landcover range, landcover range)
-#'
-#' 15 - "landcover_average.nc" (upstream landcover average, landcover avg, landcover)
-#'
-#' 16 - "landcover_weighted_average.nc" (upstream landcover weighted, landcover weighted)
-#'
-#' Geology & soil:
-#'
-#' 17 - "geology_weighted_sum.nc" (upstream geology, geology weighted, geology)
-#'
-#' 18 - "soil_minimum.nc" (upstream soil minimum, soil min)
-#'
-#' 19 - "soil_maximum.nc" (upstream soil maximum, soil max)
-#'
-#' 20 - "soil_range.nc" (upstream soil range, soil range)
-#'
-#' 21 - "soil_average.nc" (upstream soil average, soil avg, soil)
-#'
-#' 22 - "soil_weighted_average.nc" (upstream soil weighted, soil weighted)
-#'
-#' Quality control:
-#'
-#' 23 - "quality_control.nc" (quality control, qc)
-#'
-#' Citation:
-#'
+#' \strong{Citation:}\cr
 #' Domisch, S., Amatulli, G. & Jetz, W. (2015). "Near-global freshwater-specific 
 #' environmental variables for biodiversity analyses in 1 km resolution." 
 #' Scientific Data, 2, 150073.
@@ -82,16 +73,16 @@
 #' the reference system, and the buffer. 
 #' Leave this empty and use `var_get()` to define parameters for download.
 #' @param vars Character vector of one or more variables to download and process.
-#' @param year Numeric. Selected year(s) for extraction. Note: Most EarthEnv freshwater variables are 
-#' climatologies or static layers (1.0 version, 2015), so this argument is primarily for consistency 
-#' and may not filter results for static layers.
-#' @param month Numeric. Selected month(s) (1-12) for extraction. Only applicable to monthly variables 
-#' (e.g., tmin, tmax, prec).
-#' @param algorithm Character. The aggregation method/algorithm to use to filter specific bands.
-#' For Elevation and Slope layers, this maps to the specific band order:
-#' "min" (Band 1), "max" (Band 2), "range" (Band 3), "avg"/"mn" (Band 4).
-#' For Flow Accumulation: "length" (Band 1), "acc" (Band 2).
-#' For other variables, it attempts to match the string in the layer name.
+#' @param year Numeric. Selected year(s) for extraction. Note that most EarthEnv freshwater 
+#' variables are static layers (2015 version); this argument is primarily for consistency.
+#' @param month Numeric. Selected month(s) (1-12) for extraction. Only applicable to 
+#' monthly variables (e.g., tmin, tmax, prec).
+#' @param algorithm Character. Aggregation method to filter specific bands. 
+#' \itemize{
+#'   \item For \strong{Elevation} and \strong{Slope}: "min" (Band 1), "max" (Band 2), "range" (Band 3), "avg" (Band 4).
+#'   \item For \strong{Flow Accumulation}: "length" (Band 1), "acc" (Band 2).
+#'   \item For other variables: matches the string in the layer name.
+#' }
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
@@ -99,14 +90,14 @@
 #'
 #' @examples
 #' \dontrun{
-#' # Topography with Algorithm filtering (keeping only the average/mean band)
-#' processed <- var_get(country=  "Switzerland", crs = 3035) %>% 
-#'   freshwater(vars= c("elevation", "slope"), algorithm= "avg")
+#' # Topography with algorithm filtering (keeping only the average band)
+#' processed <- var_get(country = "Switzerland", crs = 3035) %>% 
+#'   freshwater(vars = c("elevation", "slope"), algorithm = "avg")
 #'
-#' # Monthly climate (January and July)
-#' processed <- var_get(country= "Italy", crs=3035) %>% 
+#' # Monthly Climate (January and July)
+#' processed <- var_get(country = "Italy", crs = 3035) %>% 
 #'   freshwater(vars = "tmin", month = c(1, 7))
-#'   }
+#' }
 #' @export
 
 freshwater <- function(x, vars, year = NULL, month = NULL, algorithm = NULL, ...) {
@@ -130,6 +121,8 @@ freshwater <- function(x, vars, year = NULL, month = NULL, algorithm = NULL, ...
     crs  <- par_list$crs
     is_global <- isTRUE(par_list$is_global)
     is_raster_input <- TRUE
+    set_na=par_list$set_na
+    path = par_list$path
     current_global_extent <- par_list$global_extent
   } else if (par_list$type == "point") {
     points <- par_list$mask
@@ -138,6 +131,7 @@ freshwater <- function(x, vars, year = NULL, month = NULL, algorithm = NULL, ...
     is_global <- FALSE
     is_raster_input <- FALSE
     current_global_extent <- NULL
+    path = par_list$path
   } else {
     cli::cli_abort("Unsupported input type.")
   }
@@ -432,6 +426,27 @@ freshwater <- function(x, vars, year = NULL, month = NULL, algorithm = NULL, ...
       attr(processed_stack, "is_global") <- TRUE
     }
     
+    attr(processed_stack, "set_na") <- set_na
+    attr(processed_stack, "path") <- path
+    
+    
+    # remove NAs if necessary
+    if (set_na==TRUE){
+      
+      cli::cli_alert_info("Applying NA mask...")
+      
+      master_mask <- sum(processed_stack)
+      # Apply that master mask to the whole stack
+      processed_stack <- terra::mask(processed_stack, master_mask)
+      
+    }
+    
+    # write if requested
+    
+    if (!is.null(path)){
+      terra::writeRaster(processed_stack, path, overwrite = TRUE)
+    }
+    
     cli::cli_alert_success("All layers processed and stacked successfully")
     return(processed_stack)
   } else {
@@ -444,7 +459,13 @@ freshwater <- function(x, vars, year = NULL, month = NULL, algorithm = NULL, ...
       }
     }
     attr(extracted_df, "envar_crs") <- crs
+    attr(extracted_df, "path") <- path
+    
     cli::cli_alert_success("Extraction completed successfully")
+    # write if requested
+    if (!is.null(path)){
+      write.csv(extracted_df, path)
+    }
     return(extracted_df)
   }
 }

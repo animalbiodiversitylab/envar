@@ -14,6 +14,18 @@
 #' @source Alpine Convention
 "Alps"
 
+#' Europe
+#'
+#' Europe shapefile from the GADM, the Global Administrative Areas database.
+#' 
+#' @format An sf object :
+#' \describe{	
+#'   \item{name}{Europe}
+#'   \item{geometry}{sfc_MULTIPOLYGON geometry}
+#' }
+#' @source GADM
+"Europe"
+
 #' Apollo butterfly occurrences
 #'
 #' A "data.frame" containing the occurrence data of Apollo butterfly (Parnassius apollo),

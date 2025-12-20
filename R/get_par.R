@@ -16,7 +16,9 @@ get_par <- function(x) {
         type = x$type,
         is_global = isTRUE(x$is_global),
         global_extent = x$global_extent,  # Track cumulative global extent
-        from_varget = TRUE
+        from_varget = TRUE,
+        set_na= x$set_na,
+        path = x$path
       ))
     }
     
@@ -29,7 +31,9 @@ get_par <- function(x) {
         crs = x$crs,
         res = x$res,
         is_global = FALSE,
-        from_varget = TRUE
+        from_varget = TRUE,
+        set_na=x$set_na,
+        path = x$path
       ))
     }
   }
@@ -49,7 +53,9 @@ get_par <- function(x) {
       type = "polygon",
       is_global = isTRUE(x$is_global),
       global_extent = x$global_extent,  # Track cumulative global extent
-      from_varget = TRUE
+      from_varget = TRUE,
+      set_na = x$set_na,
+      path = x$path
     ))
   }
   
@@ -59,6 +65,10 @@ get_par <- function(x) {
     # Check for global extent attribute
     global_extent <- attr(x, "global_extent")
     is_global <- isTRUE(attr(x, "is_global"))
+    
+    # extract attributes of path and set_na
+    path <- attr(x, "path")
+    set_na <- attr(x, "set_na")
     
     if (is_global){
       grid <- x[[1]]
@@ -103,7 +113,9 @@ get_par <- function(x) {
         type = "polygon",
         is_global = is_global,
         global_extent = global_extent,
-        from_varget = FALSE
+        from_varget = FALSE,
+        set_na=set_na,
+        path = path
       ))
       
     } else {
@@ -148,13 +160,18 @@ get_par <- function(x) {
       type = "polygon",
       is_global = is_global,
       global_extent = global_extent,
-      from_varget = FALSE
+      from_varget = FALSE,
+      set_na=set_na,
+      path=path
     ))
     }
   }  
   
   # If it inherits a dataframe from a previous point extraction:
   if (inherits(x, "data.frame") && !inherits(x, "sf")) {
+    
+    path <- attr(x, "path")
+      
     # Check for coordinate columns
     coord_cols <- c("X", "Y")
     if (!all(coord_cols %in% names(x))) {
@@ -197,7 +214,8 @@ get_par <- function(x) {
     extent_info <- process_extent(shapefile, crs = point_crs)
     extent_info$crs <- point_crs
     extent_info$from_varget <- FALSE
-    
+    extent_info$path <- path
+      
     return(extent_info)
   }
   

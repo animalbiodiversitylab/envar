@@ -24,31 +24,33 @@ Global Aridity Index and ET0 Database v3. Each variable corresponds to a global
 raster representing aridity index or potential evapotranspiration values.
 }
 \details{
-Available variables (working synonyms in parentheses):
+\strong{Available variables} (working synonyms in parentheses):
 
-Annual Variables:
+\strong{Annual Variables}
+\itemize{
+  \item "ai_v3_yr.tif" ("aridity index annual", "ai annual", "aridity annual", "ai year")
+  \item "et0_v3_yr.tif" ("et0 annual", "potential evapotranspiration annual", "et0 year")
+  \item "et0_v3_yr_sd.tif" ("et0 standard deviation", "et0 sd", "et0 variability")
+}
 
-1 - "ai_v3_yr.tif" ("aridity index annual", "ai annual", "aridity annual", "ai year")
+\strong{Monthly Aridity Index}
+\itemize{
+  \item "ai_v3_01.tif" to "ai_v3_12.tif"
+  \item Synonyms: "aridity index january" ... "december", "ai jan" ... "dec", "ai 01" ... "12"
+}
 
-2 - "et0_v3_yr.tif" ("et0 annual", "potential evapotranspiration annual", "evapotranspiration annual", "et0 year")
+\strong{Monthly Potential Evapotranspiration (ET0)}
+\itemize{
+  \item "et0_v3_01.tif" to "et0_v3_12.tif"
+  \item Synonyms: "et0 january" ... "december", "et0 jan" ... "dec", "et0 01" ... "12"
+}
 
-3 - "et0_v3_yr_sd.tif" ("et0 standard deviation", "et0 sd", "et0 variability", "et0 annual sd")
-
-Monthly Aridity Index (ai_v3_01.tif to ai_v3_12.tif):
-
-4-15 - "ai january" through "ai december" (also "aridity index [month]", "ai [month abbr]", "ai [1-12]")
-
-Monthly ET0 (et0_v3_01.tif to et0_v3_12.tif):
-
-16-27 - "et0 january" through "et0 december" (also "potential evapotranspiration [month]", "et0 [month abbr]", "et0 [1-12]")
-
-Citation:
-
+\strong{Citation:}\cr
 Zomer, R. J., Xu, J., & Trabucco, A. (2022). "Version 3 of the Global Aridity 
-Index and Potential Evapotranspiration Database." Scientific Data.
+Index and Potential Evapotranspiration Database." Scientific Data, 9, 409.
 https://doi.org/10.1038/s41597-022-01493-1
 
-Note: Data is downloaded from Figshare (Article ID 7504448).
+\strong{Note:} Data is downloaded from Figshare (Article ID 7504448).
 }
 \examples{
 \dontrun{

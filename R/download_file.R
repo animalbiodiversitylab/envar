@@ -16,10 +16,10 @@ download_file <- function(url, dest_file, max_retries = 2) {
         httr::write_disk(dest_file, overwrite = TRUE),
         httr::progress(),
         httr::config(
-          connecttimeout = 60,      # 60 sec to establish connection
+          connecttimeout = 500,      # sec to establish connection
           timeout = 0,              # No limit on total time (0 = infinite)
-          low_speed_limit = 100,    # At least 100 bytes/sec
-          low_speed_time = 120      # For 120 seconds before giving up
+          low_speed_limit = 0,    # At least 0 bytes/sec
+          low_speed_time = 500      # For x seconds before giving up
         )
       )
       
