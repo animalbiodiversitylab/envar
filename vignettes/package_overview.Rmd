@@ -153,6 +153,8 @@ processed_singlelayer_europe <- var_get(continent = "Europe") %>%
 plot(processed_singlelayer_europe)
 ```
 
+### 6. Set the scale of the country/continent shapefile
+
 When retrieving continents or countries from Natural Earth (i.e., any time the "country" or "continent" argument is used except for Europe), an additional argument ("scale") can be specified. This represents the scale at which the shapefiles are retrieved, and can assume three values: small (1:100 m), medium (the default; 1:50 m), and large (1:10 m). The boundaries will appear rough and imprecise with a small scale and finer with a large scale. The default is "medium" to download data at resolution that is sufficiently detailed but lighter and faster than high-resolution.
 
 ```{r,results = "hide", message = FALSE, warning =FALSE}
@@ -177,7 +179,7 @@ processed_bilayer_country_large <- var_get(country = "Italy", scale = "large") %
 plot(processed_bilayer_country_large)
 ```
 
-### 6. Projecting to a PRS
+### 7. Project to a PRS
 
 The single layer is downloaded and maintains its original extent. But additionally it is projected to the desired Coordinate Reference System (CRS). The default CRS in _envar_ is the Geographic Reference System (GRS) WGS 84 (EPSG: 4326). This is the most commonly used GRS for global analyses. GRS assume that the Earth is an ellipsoid (or spheroid) and provide coordinates based on a 3D surface with degrees and latitude-longitude values. However, these systems are not ideal to compute distances as the meaning of degrees changes based on the location on earth (e.g., 1 degree of longitude corresponds to ~ 111 km at the equator but approaches zero towards the poles). Additionally, users might want to improve spatial analysis accuracy, visualize data in a specific projection, or align results with other data that use a different CRS. Thus, a Projected Reference System (PRS) can be used, where coordinates are based on the location on a 2D system. The conversion from a GRS to a PRS always implies a certain amount of distortion, and thus different PRS are optimized for different areas of the globe to locally reduce distortion when moving from a 3D to a 2D representation. Thus, users can use the argument "crs" in the `var_get()` function to specify the desired CRS. Here we show an example of download of a single variable from a single source, in this case the 1 km land cover based on ESA [@loparrino2025], and its projection to the local equal-area projection (EPSG:3035). Inside the crs argument, a number or character representing the code of the PRS must be provided. If nothing is specified, 4326 is assumed. The crs can also be specified with the prefix 'ESRI' or 'EPSG' according to the system, e.g. "EPSG:4326" or "ESRI:54009".
 
@@ -191,7 +193,7 @@ print(processed_singlelayer_projected)
 plot(processed_singlelayer_projected)
 ```
 
-### 7. Apply a buffer to a shape
+### 8. Apply a buffer to a shape
 
 A positive buffer expands the shape by the specified number of kilometers; a negative buffer shrinks it. Units are always km for the user. If the CRS is left to the default (crs="EPSG:4326"), the function used by the package (st_buffer) automatically transforms the kilometers in degrees so that the buffer is circular on the 3D surface (and the buffer might thus appear non-circular if plotted in 2D). However, it is recommended to always specify a projected CRS when using buffers to avoid potential distortions.
 
@@ -223,7 +225,7 @@ processed_singlelayer_global_buffer <- var_get(buffer = 10) %>%
 ```
 
 
-### 8. Use a local shapefile (polygon)
+### 9. Use a local shapefile (polygon)
 
 The user can load a shapefile of type POLYGON and use it to crop/mask the downloaded variables. Here we use the already included European Alps shapefile (`Alps()`).
 
@@ -237,7 +239,7 @@ processed_bilayer_shapefile <- var_get(shape = Alps) %>%
 plot(processed_bilayer_shapefile[[2]])
 ```
 
-### 9. Add a correlation check when retrieving rasters
+### 10. Add a correlation check when retrieving rasters
 
 It is possible to call the `corr_check()` function at the bottom of the code to enable an automatic test of correlation among the downloaded variables over the defined spatial area and resolution. Doing this will produce a list containing the processed SpatRaster, Pearson pairwise correlations, VIF statistics, and a saved correlation plot.
 
@@ -268,9 +270,9 @@ To better understand the structure of correlation, we can also analyze the corre
 knitr::include_graphics("images/Corr_plot_example.png")
 ```
 
-### 10. The set NAs option
+### 11. The set NAs option for rasters
 
-When the output is a SpatRaster (all options above and section 14 in this tutorial), it is possible to specify that any cell that is NA in at least one layer is NA in all layers. For instance, when downloading data from CHELSA and land cover from [@loparrino2025], the sea is not covered in the second source and it might thus be needless to keep information on climate over the sea. We can thus set the "set_na" argument to TRUE (default to FALSE, i.e., no NA mask is applied).
+When the output is a SpatRaster (all sections above and section "15. Apply a buffer when using points" in this tutorial), it is possible to specify that any cell that is NA in at least one layer is NA in all layers. For instance, when downloading data from CHELSA and land cover from [@loparrino2025], the sea is not covered in the second source and it might thus be needless to keep information on climate over the sea. We can thus set the "set_na" argument to TRUE (default to FALSE, i.e., no NA mask is applied).
 
 ```{r,results = "hide", message = FALSE, warning =FALSE}
 processed_bilayer_global_namask <- var_get(set_na=TRUE) %>%
@@ -283,7 +285,7 @@ plot(processed_bilayer_global_namask)
 ```
 
 
-### 11. Use a local shapefile (points)
+### 12. Use a local shapefile (points)
 
 If a POINT shapefile is used and no buffer is applied, the output will be a data.frame containing columns: ID (integer going from 1 to the length of the dataset), X (longitude), Y (latitude), and the extracted values over the specified points.
 
@@ -314,7 +316,7 @@ head(processed_singlelayer_points)
 head(processed_bilayer_points)
 ```
 
-### 12. Add a correlation check when using points
+### 13. Add a correlation check when using points
 
 This will create a similar result as for the correlation test applied to a SpatRaster object, but instead of a set of rasters, the first element of the resulting list will be a data.frame with the extracted values.
 
@@ -329,7 +331,7 @@ processed_bilayer_points_corr_check <- var_get(shape = points) %>%
 head(processed_bilayer_points_corr_check[[1]])
 ```
 
-### 13. Use points as a data.frame
+### 14. Use points as a data.frame
 
 Points can be fed into the package in the form of a data.frame with only two columns that represent coordinates. Column names must be **X** and **Y**, reporting the longitude and latitude, respectively. The CRS is assigned based on user input (default: 4326).
 
@@ -355,7 +357,7 @@ head(processed_singlelayer_pointsdf)
 head(processed_bilayer_pointsdf)
 ```
 
-### 14. Apply a buffer when using points
+### 15. Apply a buffer when using points
 
 A buffer (in km) expands the points to a polygon and all the variables that are downloaded are subsequently cropped to that shape. This option can be very useful 
 for instance in Species Distribution Modelling, whereby records of species presence
@@ -373,7 +375,7 @@ processed_bilayer_points_buffer <- var_get(pointsdf = points3035df, crs = 3035, 
 plot(processed_bilayer_points_buffer)
 ```
 
-### 14. Save results as raster
+### 16. Save results as raster
 
 If the "path" argument is used (default to NULL, i.e. no output stored locally), the retrieved and processed variables will be stored locally. Remember to specify the full path, including the filename and extension.
 
@@ -383,7 +385,7 @@ processed_stored_raster <- var_get(shape = Alps, crs = 3035, path = "../Out/stor
   chelsa(vars = c("pr"), months = 12, year = 2015)
 ```  
 
-### 16. Save results as table
+### 17. Save results as table
 
 The same can be done if the output is a data.frame. In this case, the file written has to be a .csv file; specify the path accordingly. 
 
