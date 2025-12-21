@@ -38,7 +38,11 @@ devtools::load_all()
 
 ## Introduction 
 
-_envar_ is an _R_ package that enables the download of a wide range of environmental variables and their processing. In this tutorial we explore all the potential uses of the package, to give an idea of the breadth of uses and of the potential challenges and shortcuts. First we load the package. When executing this command, other five packages (`dplyr`, `terra`, `sf`, `corrplot`, `usdm`) will be automatically loaded to ensure the full functionality of the package.
+_envar_ is an _R_ package that enables the download of a wide range of environmental variables and their processing. In this tutorial we explore all the potential uses of the package, to give an idea of the breadth of uses and of the potential challenges and shortcuts. The order in which the different options and combinations of parameters are presented follows the different ways in which the study area can be defined: 1) global data, 2) a country or continent is specified, 3) a polygon shapefile is loaded, 4) a point shapefile is loaded, and 5) a point data.frame is loaded.
+
+## Load the package
+
+First we load the _envar_ package. When executing this command, other five packages (`dplyr`, `terra`, `sf`, `corrplot`, `usdm`) will be automatically loaded to ensure the full functionality of the package.
 
 ```{r,eval=FALSE,results='hide',message =FALSE,warning=FALSE}
 library(envar)
@@ -86,6 +90,10 @@ processed_bilayer_global <- var_get() %>%
   esalandcover(vars = c("ice"))
 ```
 
+```{r}
+plot(processed_bilayer_global)
+```
+
 The same occurs if the order of downloaded variables is inverted:
 
 ```{r,results = "hide", message = FALSE, warning =FALSE}
@@ -95,8 +103,11 @@ processed_bilayer_global_1 <- var_get() %>%
 ```
 
 ```{r}
-# define the extents of the first SpatRaster object and of the second to check
-# if they are the same
+plot(processed_bilayer_global_1)
+```
+
+```{r}
+# define the extents of the first SpatRaster object and of the second to check if they are the same
 
 ext1 <- round(ext(processed_bilayer_global), 1)
 ext2 <-round(ext(processed_bilayer_global_1), 1)
@@ -131,8 +142,40 @@ processed_singlelayer_africa <- var_get(continent = "Africa", buffer = 10) %>%
 plot(processed_singlelayer_africa)
 ```
 
-Some continents such as Europe have a complex shape if downloaded directly with the method just showed, and the invalid resulting geometry provides unrealistic outputs. Thus, in some cases it is recommended to import an external shapefile (e.g., of Europe) where all geometries are valid, or to build the continent step by step defining the countries
-in the _rnaturalearth R_ package and manually creating a union of countries.
+All countries and continents are retrieved with internal calls to the _rnaturalearth R_ package, which allows the download of shapefiles from the Natural Earth dataset. However, the continent of Europe has a complex shape if downloaded from Natural Earth, and the invalid resulting geometry provides unrealistic outputs. Thus, if continent = "Europe" is specified, a shapefile of geographic Europe is used (including Russia only up to the Ural mountains and excluding overseas territories), based on data from the Global Administrative Areas **[GADM](https://gadm.org)**.
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+processed_singlelayer_europe <- var_get(continent = "Europe") %>%
+  esalandcover(vars = c("forest"))
+```
+
+```{r}
+plot(processed_singlelayer_europe)
+```
+
+When retrieving continents or countries from Natural Earth (i.e., any time the "country" or "continent" argument is used except for Europe), an additional argument ("scale") can be specified. This represents the scale at which the shapefiles are retrieved, and can assume three values: small (1:100 m), medium (the default; 1:50 m), and large (1:10 m). The boundaries will appear rough and imprecise with a small scale and finer with a large scale. The default is "medium" to download data at resolution that is sufficiently detailed but lighter and faster than high-resolution.
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+# download variables over a country shape at "small" scale
+processed_bilayer_country_small <- var_get(country = "Italy", scale = "small") %>%
+  esalandcover(vars = c("ice")) %>%
+  chelsa(vars = c("pr"), months = 12, years = 2015)
+```
+
+```{r}
+plot(processed_bilayer_country_small)
+```
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+# download variables over a country shape at "large" scale
+processed_bilayer_country_large <- var_get(country = "Italy", scale = "large") %>%
+  esalandcover(vars = c("ice")) %>%
+  chelsa(vars = c("pr"), months = 12, years = 2015)
+```
+
+```{r}
+plot(processed_bilayer_country_large)
+```
 
 ### 6. Projecting to a PRS
 
@@ -194,7 +237,7 @@ processed_bilayer_shapefile <- var_get(shape = Alps) %>%
 plot(processed_bilayer_shapefile[[2]])
 ```
 
-### 9. Add a correlation check
+### 9. Add a correlation check when retrieving rasters
 
 It is possible to call the `corr_check()` function at the bottom of the code to enable an automatic test of correlation among the downloaded variables over the defined spatial area and resolution. Doing this will produce a list containing the processed SpatRaster, Pearson pairwise correlations, VIF statistics, and a saved correlation plot.
 
@@ -225,7 +268,22 @@ To better understand the structure of correlation, we can also analyze the corre
 knitr::include_graphics("images/Corr_plot_example.png")
 ```
 
-### 10. Use a local shapefile (points)
+### 10. The set NAs option
+
+When the output is a SpatRaster (all options above and section 14 in this tutorial), it is possible to specify that any cell that is NA in at least one layer is NA in all layers. For instance, when downloading data from CHELSA and land cover from [@loparrino2025], the sea is not covered in the second source and it might thus be needless to keep information on climate over the sea. We can thus set the "set_na" argument to TRUE (default to FALSE, i.e., no NA mask is applied).
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+processed_bilayer_global_namask <- var_get(set_na=TRUE) %>%
+  chelsa(vars = c("pr"), months = 12, year = 2015) %>%
+  esalandcover(vars = c("ice"))
+```
+
+```{r}
+plot(processed_bilayer_global_namask)
+```
+
+
+### 11. Use a local shapefile (points)
 
 If a POINT shapefile is used and no buffer is applied, the output will be a data.frame containing columns: ID (integer going from 1 to the length of the dataset), X (longitude), Y (latitude), and the extracted values over the specified points.
 
@@ -256,7 +314,7 @@ head(processed_singlelayer_points)
 head(processed_bilayer_points)
 ```
 
-### 11. Add a correlation check when using points
+### 12. Add a correlation check when using points
 
 This will create a similar result as for the correlation test applied to a SpatRaster object, but instead of a set of rasters, the first element of the resulting list will be a data.frame with the extracted values.
 
@@ -271,7 +329,7 @@ processed_bilayer_points_corr_check <- var_get(shape = points) %>%
 head(processed_bilayer_points_corr_check[[1]])
 ```
 
-### 12. Use points as a data.frame
+### 13. Use points as a data.frame
 
 Points can be fed into the package in the form of a data.frame with only two columns that represent coordinates. Column names must be **X** and **Y**, reporting the longitude and latitude, respectively. The CRS is assigned based on user input (default: 4326).
 
@@ -297,7 +355,7 @@ head(processed_singlelayer_pointsdf)
 head(processed_bilayer_pointsdf)
 ```
 
-### 13. Apply a buffer when using points
+### 14. Apply a buffer when using points
 
 A buffer (in km) expands the points to a polygon and all the variables that are downloaded are subsequently cropped to that shape. This option can be very useful 
 for instance in Species Distribution Modelling, whereby records of species presence
@@ -314,6 +372,28 @@ processed_bilayer_points_buffer <- var_get(pointsdf = points3035df, crs = 3035, 
 ```{r}
 plot(processed_bilayer_points_buffer)
 ```
+
+### 14. Save results as raster
+
+If the "path" argument is used (default to NULL, i.e. no output stored locally), the retrieved and processed variables will be stored locally. Remember to specify the full path, including the filename and extension.
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+processed_stored_raster <- var_get(shape = Alps, crs = 3035, path = "../Out/storedraster.tif") %>%
+  esalandcover(vars = c("ice")) %>%
+  chelsa(vars = c("pr"), months = 12, year = 2015)
+```  
+
+### 16. Save results as table
+
+The same can be done if the output is a data.frame. In this case, the file written has to be a .csv file; specify the path accordingly. 
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+processed_stored_raster <- var_get(shape = Alps, crs = 3035, path = "../Out/storedraster.tif") %>%
+  esalandcover(vars = c("ice")) %>%
+  chelsa(vars = c("pr"), months = 12, year = 2015)
+```  
+
+Results cannot be stored if the correlation check is added, as the output will be a list and not a SpatRaster/data.frame.
 
 ## Conclusion
 

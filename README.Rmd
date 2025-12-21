@@ -47,13 +47,17 @@ recent fixes.
 ```{r, eval = FALSE}
 # install using the "remotes" package
 if (!require(remotes)) install.packages("remotes")
-remotes::install_github("animalbiodiversitylab/envar", dependencies = TRUE,
-                         build_vignettes=TRUE)
+
+remotes::install_github("animalbiodiversitylab/envar", 
+                        dependencies = TRUE,
+                        build_vignettes = FALSE)
 
 # or alternatively using the "devtools" package
 if (!require(devtools)) install.packages("devtools")
-devtools::install_github("animalbiodiversitylab/envar", dependencies = TRUE,
-                         build_vignettes=TRUE)
+
+devtools::install_github("animalbiodiversitylab/envar", 
+                         dependencies = TRUE,
+                         build_vignettes = FALSE)
 ```
 
 Until the scientific article relative to the package is published, the github 
@@ -65,9 +69,9 @@ if (!require(remotes)) install.packages("remotes")
 
 remotes::install_github("animalbiodiversitylab/envar", 
                         auth_token = "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", 
-                        upgrade="never", 
-                        dependencies=TRUE,
-                        build_vignettes=TRUE)
+                        upgrade = "never", 
+                        dependencies = TRUE,
+                        build_vignettes = FALSE)
 
 # This code will install the package. To run the examples and vignettes, 
 #you will need to load the package as follows:
@@ -112,13 +116,12 @@ library(envar)
 library(dplyr)
 library(terra)
 
-# download variables (e.g., the percentage cover of trees and the slope) over a 
+# download variables (e.g., the percentage cover of trees, ice and the slope) over a 
 # study area (in this case, the "Alps" shapefile already included in 
 # the package)
-
-processed_vars = var_get(shape = Alps, res = 1, crs=3035) %>% 
-  esalandcover(vars = c("trees")) %>% 
-  topography(vars=c("slope"))
+processed_vars = var_get(shape = Alps, res = 1, crs = 3035) %>% 
+  esalandcover(vars = c("trees", "ice")) %>% 
+  topography(vars = c("slope"))
 ```
 
 We will get a set of variables already cropped to the desired area of study,
