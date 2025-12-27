@@ -1,0 +1,21 @@
+bibentry(
+  bibtype = "Article",
+  title = "'envar': an R package to streamline the retrieval and processing of environmental variables for macroecology and biogeography",
+  author = personList(
+    person("Andrea", "Simoncini", role = "aut"),
+    person("Michele", "Bertoncini", role = "aut"),
+    person("Andrea", "Cerofolini", role = "aut"),
+    person("Andrea", "Dalpasso", role = "aut"),
+    person("Gentile Francesco", "Ficetola", role = "aut"),
+    person("Mattia", "Falaschi", role = "aut"),
+    person("Elia", "Lo Parrino", role = "aut")
+  ),
+  journal = "Ecography",
+  year = "submitted",
+  volume = "",
+  number = "",
+  pages = "",
+  doi = "",
+  
+  textVersion = "Simoncini, A., Bertoncini, M., Cerofolini, A., Dalpasso, A.,  Ficetola, G.F., Falaschi, M., & Lo Parrino, E. (2025). 'envar': an R package to streamline the retrieval and processing of environmental variables for macroecology and biogeography. Ecography, submitted."
+)

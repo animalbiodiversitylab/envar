@@ -31,6 +31,13 @@ process_raster_layer <- function(layer, grid, mask, res, crs, is_global = FALSE,
       layer <- terra::project(layer, target_crs, method = "bilinear")
     }
     
+    # # If crs is not WGS84 and no other crs is specified 
+    # if (target_crs == "EPSG:4326" && source_crs != "EPSG:4326") {
+    #   cli::cli_alert_info("Projecting to {target_crs}...")
+    #   layer <- terra::project(layer, target_crs, method = "bilinear")
+    # }
+    
+    
     # Get the extent of this layer
     layer_ext <- terra::ext(layer)
     

@@ -18,7 +18,8 @@ get_par <- function(x) {
         global_extent = x$global_extent,  # Track cumulative global extent
         from_varget = TRUE,
         set_na= x$set_na,
-        path = x$path
+        path = x$path,
+        land = x$land
       ))
     }
     
@@ -55,7 +56,8 @@ get_par <- function(x) {
       global_extent = x$global_extent,  # Track cumulative global extent
       from_varget = TRUE,
       set_na = x$set_na,
-      path = x$path
+      path = x$path,
+      land = x$land
     ))
   }
   
@@ -66,9 +68,10 @@ get_par <- function(x) {
     global_extent <- attr(x, "global_extent")
     is_global <- isTRUE(attr(x, "is_global"))
     
-    # extract attributes of path and set_na
+    # extract attributes of path, set_na and land
     path <- attr(x, "path")
     set_na <- attr(x, "set_na")
+    land <- attr(x, "land")
     
     if (is_global){
       grid <- x[[1]]
@@ -115,7 +118,8 @@ get_par <- function(x) {
         global_extent = global_extent,
         from_varget = FALSE,
         set_na=set_na,
-        path = path
+        path = path,
+        land = land
       ))
       
     } else {
@@ -162,7 +166,8 @@ get_par <- function(x) {
       global_extent = global_extent,
       from_varget = FALSE,
       set_na=set_na,
-      path=path
+      path=path,
+      land=land
     ))
     }
   }  

@@ -80,6 +80,7 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
     is_raster_input <- TRUE
     set_na=par_list$set_na
     path = par_list$path
+    land= par_list$land
     # Track cumulative global extent
     current_global_extent <- par_list$global_extent
   } else if (par_list$type == "point") {
@@ -341,12 +342,26 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
     
     # Attach global extent as attribute for downstream functions
     if (is_global) {
+      if (land == TRUE){
+        cli::cli_alert_info(paste0(
+          "Global masking with land boundary from Natural Earth database...\n",
+          "Website: {.url https://www.naturalearthdata.com/}\n"
+        ))
+        invisible(capture.output(suppressMessages(suppressWarnings(land_sf <- rnaturalearth::ne_download(
+          scale = "medium",
+          type = "land",
+          category = "physical",
+          returnclass = "sf")))))
+        
+        processed_stack <-terra::crop(terra::mask(processed_stack, land_sf), land_sf)
+      }
       attr(processed_stack, "global_extent") <- current_global_extent
       attr(processed_stack, "is_global") <- TRUE
     }
     
     attr(processed_stack, "set_na") <- set_na
     attr(processed_stack, "path") <- path
+    attr(processed_stack, "land")<-land
     
     
     # remove NAs if necessary

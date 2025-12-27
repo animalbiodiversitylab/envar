@@ -1,27 +1,34 @@
-# R/soil.R
+# R/hybridlandcover.R
 
-#' Download and process Harmonized World Soil Database v2.0
+#' Download and process Hybrid Global Annual 1-km IGBP Land Cover Maps
 #'
-#' This function downloads, processes, and extracts variables from the
-#' Harmonized World Soil Database v2.0 (HWSD v2.0). The variable corresponds 
-#' to a global raster file at 1 km resolution representing soil types.
+#' This function downloads, processes, and extracts land cover variables from the
+#' Hybrid Global Annual 1-km IGBP Land Cover Maps dataset (Luo et al., 2024).
+#' The data covers the period from 2000 to 2020.
 #'
 #' Available variables (working synonyms in parentheses):
 #'
-#' 1 - "hwsd" ("soil", "type", "soiltype", "soil type")
+#' 1 - "landcover" ("cover", "land", "lc", "igbp")
+#'
+#' Note: If the `vars` argument is left empty, the function will default 
+#' to downloading the land cover map.
+#' 
+#' You must specify the `year` argument (integer between 2000 and 2020).
 #'
 #' Citation:
 #'
-#' FAO & IIASA. (2023). "Harmonized World Soil Database v2.0." 
-#' Food and Agriculture Organization of the United Nations, Rome and 
-#' International Institute for Applied Systems Analysis, Laxenburg, Austria.
-#' https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/
+#' Luo Y, Zhu Z, Zhao W, Li M, Chen J, Zhao P, Sun L, Zhang Y, Duanmu Z, Chen J (2024). 
+#' "Hybrid Global Annual 1-km IGBP Land Cover Maps for the Period 2000–2020." 
+#' Journal of Remote Sensing, 4, 0122.
+#' https://doi.org/10.34133/remotesensing.0122
+#'
+#' Note: Please cite original sources of primary datasets where appropriate.
 #'
 #' @param x The output from `var_get()` defining the area or locations for extraction, 
 #' the reference system, and the buffer. 
 #' Leave this empty and use `var_get()` to define parameters for download.
-#' @param vars Character vector of one or more variables to download and process.
-#'        Defaults to "hwsd" if left empty.
+#' @param vars Character vector of variables to download. Defaults to "landcover" if empty.
+#' @param year Integer. The year for which to download the land cover map (2000-2020). Defaults to 2000.
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
@@ -30,20 +37,25 @@
 #' @examples
 #' \dontrun{
 #' processed <- var_get(country= "Italy", crs=3035) %>% 
-#' soil(vars=c("soil"))
+#'   hybridlandcover(vars="landcover", year=2015)
 #'   }
 #' @export
 
-soil <- function(x, vars = NULL, ...) {
+hybridlandcover <- function(x, vars = NULL, year = 2000, ...) {
   
   # --------------------------------------------------------------------
   # Citation displayed on execution
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
-    "Using Harmonized World Soil Database v2.0.\n",
-    "Citation: FAO & IIASA. (2023). Harmonized World Soil Database v2.0.\n",
-    "DOI: {.url https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/}\n"
+    "Using Hybrid Global Annual 1-km IGBP Land Cover Maps.\n",
+    "Citation: Luo et al. (2024). Journal of Remote Sensing, 4, 0122.\n",
+    "DOI: {.url https://doi.org/10.34133/remotesensing.0122}\n"
   ))
+  
+  # Validate Year
+  if (!is.numeric(year) || year < 2000 || year > 2020) {
+    cli::cli_abort("Year must be an integer between 2000 and 2020.")
+  }
   
   par_list <- get_par(x)
   
@@ -57,9 +69,9 @@ soil <- function(x, vars = NULL, ...) {
     is_raster_input <- TRUE
     set_na=par_list$set_na
     path = par_list$path
+    land = par_list$land
     # Track cumulative global extent
     current_global_extent <- par_list$global_extent
-    land = par_list$land
   } else if (par_list$type == "point") {
     points <- par_list$mask
     bbox_points <- par_list$bbox
@@ -78,15 +90,11 @@ soil <- function(x, vars = NULL, ...) {
   # --------------------------------------------------------------------
   # Friendly-name -> canonical code mapping
   # --------------------------------------------------------------------
-  # There is effectively one variable, but we allow multiple synonyms
-  soil_lookup <- list(
-    "hwsd" = c("soil", "type", "soiltype", "soil type", "hwsd")
+  # Since the variable is just "landcover" regardless of year, we map it to a generic code
+  # The actual file download URL will depend on the 'year' argument later
+  land_lookup <- list(
+    "landcover" = c("landcover", "cover", "land", "lc", "igbp", "hybrid")
   )
-  
-  # Default to "hwsd" if vars is empty/NULL
-  if (is.null(vars)) {
-    vars <- "hwsd"
-  }
   
   # Normalizer: convert to lowercase, remove punctuation, normalize whitespace
   normalize_string <- function(s) {
@@ -98,11 +106,16 @@ soil <- function(x, vars = NULL, ...) {
   
   # Build synonym -> canonical map
   syn2canon <- list()
-  for (canon in names(soil_lookup)) {
-    for (syn in soil_lookup[[canon]]) {
+  for (canon in names(land_lookup)) {
+    for (syn in land_lookup[[canon]]) {
       syn2canon[[normalize_string(syn)]] <- canon
     }
     syn2canon[[normalize_string(canon)]] <- canon
+  }
+  
+  # Handle empty vars argument (default to downloading the map)
+  if (is.null(vars) || length(vars) == 0 || all(vars == "")) {
+    vars <- "landcover"
   }
   
   # Convert requested vars to canonical codes AND keep mapping to original names
@@ -127,7 +140,7 @@ soil <- function(x, vars = NULL, ...) {
   
   if (length(unmapped) > 0) {
     cli::cli_abort(c(
-      "Unknown HWSD variables:",
+      "Unknown Land Cover variables:",
       "x" = "{.val {unmapped}}"
     ))
   }
@@ -136,10 +149,10 @@ soil <- function(x, vars = NULL, ...) {
   # Helper: Download, process, and clean up a single file
   # --------------------------------------------------------------------
   handle_file <- function(url, dest_file, canon, user_name) {
-    temp_dir <- fs::path_temp("envar/soil")
+    temp_dir <- fs::path_temp("envar/hybridlandcover")
     fs::dir_create(temp_dir)
     
-    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {user_name}}...")
+    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {user_name}} (Year {year})...")
     
     success <- download_file(url, dest_file)
     
@@ -148,28 +161,13 @@ soil <- function(x, vars = NULL, ...) {
       return(NULL)
     }
     
-    # HWSD comes in a zip, so we must unzip it first
-    cli::cli_alert_info("Unzipping {.val {basename(dest_file)}}...")
-    unzip_dir <- file.path(temp_dir, "unzipped")
-    fs::dir_create(unzip_dir)
-    utils::unzip(dest_file, exdir = unzip_dir)
-    
-    # Target the .bil file specifically
-    raster_file <- file.path(unzip_dir, "HWSD2.bil")
-    
-    if (!fs::file_exists(raster_file)) {
-      cli::cli_alert_warning("Expected raster file {.val HWSD2.bil} not found in archive.")
-      fs::file_delete(dest_file)
-      fs::dir_delete(unzip_dir)
-      return(NULL)
-    }
-    
     if (is_raster_input) {
-      layer <- try(terra::rast(raster_file), silent = TRUE)
+      layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
-        cli::cli_alert_warning("Could not read raster {.val {raster_file}}.")
-        fs::file_delete(dest_file)
-        fs::dir_delete(unzip_dir)
+        cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
@@ -204,7 +202,8 @@ soil <- function(x, vars = NULL, ...) {
       }
       
       # Assign user-requested name to layer
-      names(layer1) <- user_name
+      # Append year to name to clarify which year was downloaded
+      names(layer1) <- paste0(user_name, "_", year)
       
       if (is.null(processed_stack)) {
         processed_stack <<- layer1
@@ -216,27 +215,29 @@ soil <- function(x, vars = NULL, ...) {
       
       rm(layer, layer1)
       gc()
-      fs::file_delete(dest_file)
-      fs::dir_delete(unzip_dir)
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
       
     } else {
       
       cli::cli_alert_info("Extracting values from {.val {user_name}}...")
       
-      extracted <- try(process_points(file = raster_file, points = points), silent = TRUE)
+      extracted <- try(process_points(file = dest_file, points = points), silent = TRUE)
       
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
-        fs::file_delete(dest_file)
-        fs::dir_delete(unzip_dir)
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
       extracted <- data.frame(extracted)
       
       if (ncol(extracted) >= 2) {
-        # Use user-requested name for the column
-        names(extracted)[ncol(extracted)] <- user_name
+        # Use user-requested name for the column (append year)
+        names(extracted)[ncol(extracted)] <- paste0(user_name, "_", year)
       }
       
       if (is.null(extracted_df)) {
@@ -249,24 +250,29 @@ soil <- function(x, vars = NULL, ...) {
       
       rm(extracted)
       gc()
-      fs::file_delete(dest_file)
-      fs::dir_delete(unzip_dir)
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
     }
   }
   
   # --------------------------------------------------------------------
   # Loop through requested variables
   # --------------------------------------------------------------------
-  # Since there is only one source file for this function, we define it directly.
-  full_url <- "https://s3.eu-west-1.amazonaws.com/data.gaezdev.aws.fao.org/HWSD/HWSD2_RASTER.zip"
   
-  cli::cli_alert_info("Starting the download of HWSD data...")
+  cli::cli_alert_info("Processing Hybrid Land Cover data...")
   
   for (canon in requested_codes) {
-    # For this specific dataset, the filename/URL is constant regardless of the code
-    filename <- "HWSD2_RASTER.zip"
-    url <- full_url
-    dest <- file.path(fs::path_temp("envar/soil"), filename)
+    # Construct filename and URL dynamically based on the requested year
+    filename <- paste0("HYBMAP_IGBP_", year, "_LC.tif")
+    
+    # Base Zenodo URL pattern
+    # 2000: https://zenodo.org/records/10488191/files/HYBMAP_IGBP_2000_LC.tif?download=1
+    
+    base_url <- "https://zenodo.org/records/10488191/files/"
+    url <- paste0(base_url, filename, "?download=1")
+    
+    dest <- file.path(fs::path_temp("envar/hybridlandcover"), filename)
     
     # Get the user's original name for this canonical code
     user_name <- code_to_user_name[[canon]]
@@ -304,6 +310,7 @@ soil <- function(x, vars = NULL, ...) {
     
     # Attach global extent as attribute for downstream functions
     if (is_global) {
+      
       if (land == TRUE){
         cli::cli_alert_info(paste0(
           "Global masking with land boundary from Natural Earth database...\n",
@@ -321,10 +328,10 @@ soil <- function(x, vars = NULL, ...) {
       attr(processed_stack, "global_extent") <- current_global_extent
       attr(processed_stack, "is_global") <- TRUE
     }
+    
     attr(processed_stack, "set_na") <- set_na
     attr(processed_stack, "path") <- path
-    attr(processed_stack, "land")<-land
-    
+    attr(processed_stack, "land") <- land
     
     # remove NAs if necessary
     if (set_na==TRUE){
@@ -342,6 +349,7 @@ soil <- function(x, vars = NULL, ...) {
     if (!is.null(path)){
       terra::writeRaster(processed_stack, path, overwrite = TRUE)
     }
+    
     cli::cli_alert_success("All layers processed and stacked successfully")
     return(processed_stack)
   } else {

@@ -27,7 +27,9 @@ Imports:
     corrplot,
     cli,
     fs,
-    utils
+    utils,
+    archive,
+    rangeBuilder
 RoxygenNote: 7.3.2
 Config/Needs/website:
     terra,
@@ -35,7 +37,9 @@ Config/Needs/website:
     sf,
     pkgdown,
     usdm,
-    corrplot
+    corrplot,
+    archive,
+    rangeBuilder
 Suggests: 
     knitr,
     rmarkdown
@@ -43,8 +47,4 @@ VignetteBuilder: knitr
 URL: https://envarpackage.netlify.app
 Depends: 
     R (>= 2.10),
-    dplyr,
-    terra,
-    sf,
-    corrplot,
-    usdm
+    dplyr

@@ -1,27 +1,42 @@
-# R/soil.R
+# R/pftlandcover.R
 
-#' Download and process Harmonized World Soil Database v2.0
+#' Download and process Global PFT Land Cover Projections (SSPs-RCPs)
 #'
-#' This function downloads, processes, and extracts variables from the
-#' Harmonized World Soil Database v2.0 (HWSD v2.0). The variable corresponds 
-#' to a global raster file at 1 km resolution representing soil types.
+#' This function downloads, processes, and extracts land cover variables from the
+#' Global 7-land-types LULC projection dataset based on plant functional types (PFT)
+#' with a 1-km resolution under socio-climatic scenarios (Chen et al., 2022).
 #'
 #' Available variables (working synonyms in parentheses):
 #'
-#' 1 - "hwsd" ("soil", "type", "soiltype", "soil type")
+#' 1 - "landcover" ("cover", "land", "lulc", "pft")
+#'
+#' Note: If the `vars` argument is left empty, the function will default 
+#' to downloading the land cover map.
+#'
+#' Required Arguments:
+#'
+#' `year`: Integer. Available years: 2020 to 2100 in 5-year intervals 
+#' (2020, 2025, 2030, ..., 2100).
+#'
+#' `ssp`: Integer or Character. The SSP-RCP scenario code. 
+#' Available values: 119, 126, 245, 370, 434, 460, 534, 585.
+#' (e.g., 585 corresponds to SSP5-RCP8.5).
 #'
 #' Citation:
 #'
-#' FAO & IIASA. (2023). "Harmonized World Soil Database v2.0." 
-#' Food and Agriculture Organization of the United Nations, Rome and 
-#' International Institute for Applied Systems Analysis, Laxenburg, Austria.
-#' https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/
+#' Chen, G., Li, X. & Liu, X. (2022). "Global land projection based on plant functional types 
+#' with a 1-km resolution under socio-climatic scenarios." 
+#' Sci Data 9, 125.
+#' https://doi.org/10.1038/s41597-022-01209-6
+#'
+#' Note: Please cite original sources of primary datasets where appropriate.
 #'
 #' @param x The output from `var_get()` defining the area or locations for extraction, 
 #' the reference system, and the buffer. 
 #' Leave this empty and use `var_get()` to define parameters for download.
-#' @param vars Character vector of one or more variables to download and process.
-#'        Defaults to "hwsd" if left empty.
+#' @param vars Character vector of variables to download. Defaults to "landcover" if empty.
+#' @param year Integer. The year of the projection (2020-2100, step 5). Defaults to 2025.
+#' @param ssp Integer or Character. The SSP-RCP scenario code (119, 126, 245, 370, 434, 460, 534, 585). Defaults to 585.
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
@@ -29,22 +44,54 @@
 #'
 #' @examples
 #' \dontrun{
+#' # Download SSP5-RCP8.5 projection for 2050
 #' processed <- var_get(country= "Italy", crs=3035) %>% 
-#' soil(vars=c("soil"))
+#'   pftlandcover(vars="landcover", year=2050, ssp=585)
 #'   }
 #' @export
 
-soil <- function(x, vars = NULL, ...) {
+pftlandcover <- function(x, vars = NULL, year = 2025, ssp = 585, ...) {
   
   # --------------------------------------------------------------------
   # Citation displayed on execution
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
-    "Using Harmonized World Soil Database v2.0.\n",
-    "Citation: FAO & IIASA. (2023). Harmonized World Soil Database v2.0.\n",
-    "DOI: {.url https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/}\n"
+    "Using Global PFT Land Cover Projections (Chen et al., 2022).\n",
+    "Citation: Sci Data 9, 125 (2022).\n",
+    "DOI: {.url https://doi.org/10.1038/s41597-022-01209-6}\n"
   ))
   
+  # --------------------------------------------------------------------
+  # Argument Validation
+  # --------------------------------------------------------------------
+  
+  # Validate Year
+  valid_years <- seq(2020, 2100, by = 5)
+  if (!year %in% valid_years) {
+    cli::cli_abort(c(
+      "Invalid year: {.val {year}}.",
+      "i" = "Available years: 2020 to 2100 (5-year intervals)."
+    ))
+  }
+  
+  # Validate SSP
+  valid_ssps <- c(119, 126, 245, 370, 434, 460, 534, 585)
+  if (!ssp %in% valid_ssps) {
+    cli::cli_abort(c(
+      "Invalid SSP code: {.val {ssp}}.",
+      "i" = "Available SSPs: {.val {valid_ssps}}."
+    ))
+  }
+  
+  # Parse SSP into component parts for filename construction
+  # The first digit is the SSP scenario (1-5), the rest is the RCP (e.g. 19, 26, 85)
+  ssp_str <- as.character(ssp)
+  ssp_num <- substr(ssp_str, 1, 1) # First char
+  rcp_num <- substr(ssp_str, 2, nchar(ssp_str)) # Remaining chars
+  
+  # --------------------------------------------------------------------
+  # Standard Setup
+  # --------------------------------------------------------------------
   par_list <- get_par(x)
   
   # Determine input type
@@ -57,9 +104,9 @@ soil <- function(x, vars = NULL, ...) {
     is_raster_input <- TRUE
     set_na=par_list$set_na
     path = par_list$path
+    land = par_list$land
     # Track cumulative global extent
     current_global_extent <- par_list$global_extent
-    land = par_list$land
   } else if (par_list$type == "point") {
     points <- par_list$mask
     bbox_points <- par_list$bbox
@@ -78,15 +125,9 @@ soil <- function(x, vars = NULL, ...) {
   # --------------------------------------------------------------------
   # Friendly-name -> canonical code mapping
   # --------------------------------------------------------------------
-  # There is effectively one variable, but we allow multiple synonyms
-  soil_lookup <- list(
-    "hwsd" = c("soil", "type", "soiltype", "soil type", "hwsd")
+  land_lookup <- list(
+    "landcover" = c("landcover", "cover", "land", "lulc", "pft", "projection")
   )
-  
-  # Default to "hwsd" if vars is empty/NULL
-  if (is.null(vars)) {
-    vars <- "hwsd"
-  }
   
   # Normalizer: convert to lowercase, remove punctuation, normalize whitespace
   normalize_string <- function(s) {
@@ -98,11 +139,16 @@ soil <- function(x, vars = NULL, ...) {
   
   # Build synonym -> canonical map
   syn2canon <- list()
-  for (canon in names(soil_lookup)) {
-    for (syn in soil_lookup[[canon]]) {
+  for (canon in names(land_lookup)) {
+    for (syn in land_lookup[[canon]]) {
       syn2canon[[normalize_string(syn)]] <- canon
     }
     syn2canon[[normalize_string(canon)]] <- canon
+  }
+  
+  # Handle empty vars argument (default to downloading the map)
+  if (is.null(vars) || length(vars) == 0 || all(vars == "")) {
+    vars <- "landcover"
   }
   
   # Convert requested vars to canonical codes AND keep mapping to original names
@@ -127,7 +173,7 @@ soil <- function(x, vars = NULL, ...) {
   
   if (length(unmapped) > 0) {
     cli::cli_abort(c(
-      "Unknown HWSD variables:",
+      "Unknown PFT Land Cover variables:",
       "x" = "{.val {unmapped}}"
     ))
   }
@@ -135,41 +181,67 @@ soil <- function(x, vars = NULL, ...) {
   # --------------------------------------------------------------------
   # Helper: Download, process, and clean up a single file
   # --------------------------------------------------------------------
-  handle_file <- function(url, dest_file, canon, user_name) {
-    temp_dir <- fs::path_temp("envar/soil")
-    fs::dir_create(temp_dir)
+  handle_file <- function(url, dest_file, canon, user_name, internal_file) {
     
-    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {user_name}}...")
-    
-    success <- download_file(url, dest_file)
-    
-    if (!success) {
-      cli::cli_alert_warning("Failed to download {.val {user_name}} from {.url {url}}.")
-      return(NULL)
+    # Check if the specific TIF exists; if not, check/download zip and extract
+    if (!file.exists(dest_file)) {
+      temp_dir <- dirname(dest_file)
+      # The main zip file path
+      zip_dest <- file.path(temp_dir, "Global_7-land-types_LULC.zip")
+      
+      # 1. Ensure Zip exists (it's big, so we check carefully)
+      if (!file.exists(zip_dest)) {
+        cli::cli_alert_info("Downloading Global LULC Zip archive (approx 180MB)...")
+        # Note: The provided URL might need proper quoting if passed to system commands,
+        # but download.file usually handles it.
+        success <- download_file(url, zip_dest)
+        if (!success) {
+          cli::cli_alert_warning("Failed to download Zip from {.url {url}}.")
+          return(NULL)
+        }
+      } else {
+        cli::cli_alert_info("Using existing Zip archive.")
+      }
+      
+      # 2. Extract specific file
+      cli::cli_alert_info("Extracting {.val {internal_file}} from archive...")
+      
+      # Determine internal path inside the zip
+      # We will list files first to find the match if unsure, or try direct extraction.
+      
+      # Attempt extraction
+      # We use unzip's list to find the full internal path in case of subfolders
+      
+      file_list <- utils::unzip(zip_dest, list = TRUE)
+      
+      # Find the row that ends with our target filename
+      match_idx <- grep(paste0(internal_file, "$"), file_list$Name)
+      
+      if (length(match_idx) == 0) {
+        cli::cli_alert_warning("Could not find {.val {internal_file}} inside the zip archive.")
+        return(NULL)
+      }
+      
+      full_internal_path <- file_list$Name[match_idx[1]]
+      
+      extract_result <- try(utils::unzip(zip_dest, files = full_internal_path, exdir = temp_dir, junkpaths = TRUE), silent = TRUE)
+      
+      if (inherits(extract_result, "try-error")) {
+        cli::cli_alert_warning("Extraction failed for {.val {internal_file}}.")
+        return(NULL)
+      }
     }
     
-    # HWSD comes in a zip, so we must unzip it first
-    cli::cli_alert_info("Unzipping {.val {basename(dest_file)}}...")
-    unzip_dir <- file.path(temp_dir, "unzipped")
-    fs::dir_create(unzip_dir)
-    utils::unzip(dest_file, exdir = unzip_dir)
-    
-    # Target the .bil file specifically
-    raster_file <- file.path(unzip_dir, "HWSD2.bil")
-    
-    if (!fs::file_exists(raster_file)) {
-      cli::cli_alert_warning("Expected raster file {.val HWSD2.bil} not found in archive.")
-      fs::file_delete(dest_file)
-      fs::dir_delete(unzip_dir)
-      return(NULL)
-    }
+    # After extraction with junkpaths=TRUE, the file should be at dest_file (if dest_file is just filename in temp)
+    # Ensure dest_file points to the extracted TIF location
     
     if (is_raster_input) {
-      layer <- try(terra::rast(raster_file), silent = TRUE)
+      layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
-        cli::cli_alert_warning("Could not read raster {.val {raster_file}}.")
-        fs::file_delete(dest_file)
-        fs::dir_delete(unzip_dir)
+        cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
@@ -204,7 +276,8 @@ soil <- function(x, vars = NULL, ...) {
       }
       
       # Assign user-requested name to layer
-      names(layer1) <- user_name
+      # Append ssp and year to name for clarity
+      names(layer1) <- paste0(user_name, "_SSP", ssp, "_", year)
       
       if (is.null(processed_stack)) {
         processed_stack <<- layer1
@@ -216,27 +289,30 @@ soil <- function(x, vars = NULL, ...) {
       
       rm(layer, layer1)
       gc()
-      fs::file_delete(dest_file)
-      fs::dir_delete(unzip_dir)
+      
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
       
     } else {
       
       cli::cli_alert_info("Extracting values from {.val {user_name}}...")
       
-      extracted <- try(process_points(file = raster_file, points = points), silent = TRUE)
+      extracted <- try(process_points(file = dest_file, points = points), silent = TRUE)
       
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
-        fs::file_delete(dest_file)
-        fs::dir_delete(unzip_dir)
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
       extracted <- data.frame(extracted)
       
       if (ncol(extracted) >= 2) {
-        # Use user-requested name for the column
-        names(extracted)[ncol(extracted)] <- user_name
+        # Use user-requested name for the column (append ssp/year)
+        names(extracted)[ncol(extracted)] <- paste0(user_name, "_SSP", ssp, "_", year)
       }
       
       if (is.null(extracted_df)) {
@@ -249,29 +325,41 @@ soil <- function(x, vars = NULL, ...) {
       
       rm(extracted)
       gc()
-      fs::file_delete(dest_file)
-      fs::dir_delete(unzip_dir)
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
     }
   }
   
   # --------------------------------------------------------------------
   # Loop through requested variables
   # --------------------------------------------------------------------
-  # Since there is only one source file for this function, we define it directly.
-  full_url <- "https://s3.eu-west-1.amazonaws.com/data.gaezdev.aws.fao.org/HWSD/HWSD2_RASTER.zip"
   
-  cli::cli_alert_info("Starting the download of HWSD data...")
+  # Create temp dir for this batch
+  temp_dir <- fs::path_temp("envar/pftlandcover")
+  fs::dir_create(temp_dir)
+  
+  cli::cli_alert_info("Processing PFT Land Cover data (SSP{.val {ssp}}, Year {.val {year}})...")
+  
+  # Main ZIP URL
+  zip_url <- "https://zenodo.org/records/4584775/files/Global%207-land-types%20LULC%20projection%20dataset%20under%20SSPs-RCPs.zip?download=1"
   
   for (canon in requested_codes) {
-    # For this specific dataset, the filename/URL is constant regardless of the code
-    filename <- "HWSD2_RASTER.zip"
-    url <- full_url
-    dest <- file.path(fs::path_temp("envar/soil"), filename)
+    # Construct filename based on SSP and Year
+    # Format from instructions: global_SSP5_RCP85_2025.tif
+    # We derived ssp_num and rcp_num earlier
+    # Example: ssp=585 -> ssp_num=5, rcp_num=85 -> global_SSP5_RCP85_2025.tif
+    
+    internal_filename <- paste0("global_SSP", ssp_num, "_RCP", rcp_num, "_", year, ".tif")
+    
+    # Destination for the extracted TIF
+    dest <- file.path(temp_dir, internal_filename)
     
     # Get the user's original name for this canonical code
     user_name <- code_to_user_name[[canon]]
     
-    handle_file(url, dest, canon, user_name)
+    # Pass the ZIP url, but dest is the TIF
+    handle_file(zip_url, dest, canon, user_name, internal_filename)
   }
   
   # --------------------------------------------------------------------
@@ -304,6 +392,7 @@ soil <- function(x, vars = NULL, ...) {
     
     # Attach global extent as attribute for downstream functions
     if (is_global) {
+      
       if (land == TRUE){
         cli::cli_alert_info(paste0(
           "Global masking with land boundary from Natural Earth database...\n",
@@ -321,10 +410,10 @@ soil <- function(x, vars = NULL, ...) {
       attr(processed_stack, "global_extent") <- current_global_extent
       attr(processed_stack, "is_global") <- TRUE
     }
+    
     attr(processed_stack, "set_na") <- set_na
     attr(processed_stack, "path") <- path
-    attr(processed_stack, "land")<-land
-    
+    attr(processed_stack, "land") <- land
     
     # remove NAs if necessary
     if (set_na==TRUE){
@@ -342,6 +431,7 @@ soil <- function(x, vars = NULL, ...) {
     if (!is.null(path)){
       terra::writeRaster(processed_stack, path, overwrite = TRUE)
     }
+    
     cli::cli_alert_success("All layers processed and stacked successfully")
     return(processed_stack)
   } else {

@@ -8,13 +8,30 @@ var_get(
   country = NULL,
   continent = NULL,
   shape = NULL,
+  ecoregion = NULL,
+  biome = NULL,
+  realm = NULL,
+  zooregion = NULL,
+  zoorealm = NULL,
+  mountain_region = NULL,
+  glacier_region_19 = NULL,
+  glacier_region_20 = NULL,
+  freshwater_ecoregion = NULL,
+  marine_ecoregion = NULL,
+  marine_realm = NULL,
+  marine_province = NULL,
+  pelagic_province = NULL,
+  pelagic_biome = NULL,
+  pelagic_realm = NULL,
   pointsdf = NULL,
+  alpha_hull = FALSE,
   buffer = 0,
   res = NULL,
   path = NULL,
   crs = "EPSG:4326",
   set_na = FALSE,
-  scale = "medium"
+  scale = "medium",
+  land = FALSE
 )
 }
 \arguments{
@@ -29,7 +46,66 @@ Used to generate the extent if `shape` and `country` are NULL.}
 * **Points:** defining specific sampling locations.
 If `shape` is provided, `country` and `continent` are ignored.}
 
+\item{ecoregion}{Character. The name of a terrestrial ecoregion from Dinerstein et al. (2017).
+Uses the ECO_NAME column from the Ecoregions2017 dataset.}
+
+\item{biome}{Character. The name of a biome from Dinerstein et al. (2017).
+Uses the BIOME_NAME column from the Ecoregions2017 dataset.}
+
+\item{realm}{Character. The name of a biogeographic realm from Dinerstein et al. (2017).
+Uses the REALM column from the Ecoregions2017 dataset.}
+
+\item{zooregion}{Character. The name of a zoogeographic region from Holt et al. (2013).
+Uses the Regions column from the CMEC dataset.}
+
+\item{zoorealm}{Character. The name of a zoogeographic realm from Holt et al. (2013).
+Uses the Realm column from the CMEC newRealms dataset.}
+
+\item{mountain_region}{Character. The name of a mountain region from the GMBA Mountain
+Inventory v2.0 (Snethlage et al. 2022). Uses the MapName column.}
+
+\item{glacier_region_19}{Character. The name of a glacier region based on RGI v6.0 (2017)
+first-order regions. Uses the RGI_CODE column.}
+
+\item{glacier_region_20}{Character. The name of a glacier region based on GTN-G 2023
+first-order regions. Uses the o1region column.}
+
+\item{freshwater_ecoregion}{Character or Numeric. The FEOW_ID of a freshwater ecoregion
+from Abell et al. (2008). Uses the FEOW_ID column from the FEOW dataset.}
+
+\item{marine_ecoregion}{Character. The name of a marine ecoregion from Spalding et al. (2007).
+Uses the ECOREGION column from the MEOW dataset (TYPE == "MEOW").}
+
+\item{marine_realm}{Character. The name of a marine realm from Spalding et al. (2007).
+Uses the REALM column from the MEOW dataset (TYPE == "MEOW").}
+
+\item{marine_province}{Character. The name of a marine province from Spalding et al. (2007).
+Uses the PROVINC column from the MEOW dataset (TYPE == "MEOW").}
+
+\item{pelagic_province}{Character. The name of a pelagic province from Spalding et al. (2012).
+Uses the PROVINC column from the PPOW dataset (TYPE == "PPOW").}
+
+\item{pelagic_biome}{Character. The name of a pelagic biome from Spalding et al. (2012).
+Uses the BIOME column from the PPOW dataset (TYPE == "PPOW").}
+
+\item{pelagic_realm}{Character. The name of a pelagic realm from Spalding et al. (2012).
+Uses the REALM column from the PPOW dataset (TYPE == "PPOW").}
+
 \item{pointsdf}{Data.frame with columns X and Y representing point coordinates.}
+
+\item{alpha_hull}{Logical. If TRUE, creates an alpha hull polygon around the occurrence
+points using the `getDynamicAlphaHull` function from the rangeBuilder package (Rabosky et al. 
+2016) to model species distribution ranges. The initialAlpha is set to 2 and gradually 
+increased until a polygon captures at least 99% of occurrence records. This method optimizes 
+the balance between identifying distinct clusters as unique polygons and avoiding excessive 
+fragmentation (Roll et al. 2017). Can be used in conjunction with `buffer` (applied after 
+alpha hull creation) and `land` (intersects result with land boundary). Default is FALSE.
+
+References:
+* Rabosky ARD, et al. (2016). BAMMtools: an R package for the analysis of evolutionary 
+  dynamics on phylogenetic trees. Methods in Ecology and Evolution 7:701-707.
+* Roll U, et al. (2017). The global distribution of tetrapods reveals a need for targeted 
+  reptile conservation. Nature Ecology & Evolution 1:1677-1682.}
 
 \item{buffer}{Numeric. A buffer distance in **kilometers** to expand or shrink the extent.
 The buffer is always specified in kilometers regardless of the target CRS - the function
@@ -45,7 +121,7 @@ like EPSG:4326, meters for projected CRS like EPSG:3035 or ESRI:54009).
 \item{res}{Numeric. The target spatial resolution multiplier.
 * This controls the cell size of the output raster stack.
 * Must be a positive integer (e.g., `1`, `5`, `10`).
-* Default is `1` (30 arc-seconds or 0.008333333° at the equator).
+* Default is `1` (30 arc-seconds or 0.008333333Â° at the equator).
 * Higher values will multiply the original 30 arcsec resolution by the specified factor.}
 
 \item{path}{directory to store the result of the download/processing. Default to NULL (no output is stored locally).
@@ -67,6 +143,11 @@ NA in all rasters of the final SpatRaster object. It is useful only when the out
 \item{scale}{Character with value "small", "medium", or "large". It represents the scale at
 which the country/continent shapefile are retrieved using the rnaturalearthdata package. Large implies a better
 definition of the borders of the shapefile (scale 1:10). The default is "medium". It is useful only when setting the argument country or continent.}
+
+\item{land}{Logical, with default FALSE. If TRUE, the extent is intersected with the global land boundary
+from Natural Earth (at the scale defined by the `scale` argument). This is useful for clipping marine/pelagic 
+regions to land only, or for ensuring that buffered areas do not extend into the ocean. 
+Note: This does not apply to point extractions (pointsdf without buffer).}
 }
 \value{
 A `list` object (class `envar_par`) containing:
@@ -92,7 +173,7 @@ retrieved variables are perfectly aligned and stacked.
 
 ## How it works
 1. **Extent Definition:** You can define the study area using a shapefile (`sf` object),
-   a `country` name, or a `continent` name.
+   a `country` name, a `continent` name, or various biogeographic boundary types.
 2. **Resolution:** The `res` argument sets the target resolution as a multiplier of
    the base 30 arc-seconds (~1 km at equator).
 3. **Buffering:** An optional buffer can be applied to expand the study area or create
@@ -123,6 +204,39 @@ italy_inland <- var_get(country = "Italy", crs = 3035, buffer = -10)
 
 # Points with buffer to create extraction area
 points_area <- var_get(pointsdf = Apollo, buffer = 10, crs = 4326)
+
+# Using alpha hull to define species range from occurrence points
+species_range <- var_get(pointsdf = species_occurrences, alpha_hull = TRUE)
+
+# Alpha hull with buffer (buffer applied after alpha hull creation)
+species_range_buffered <- var_get(pointsdf = species_occurrences, alpha_hull = TRUE, buffer = 50)
+
+# Alpha hull clipped to land boundary
+species_range_land <- var_get(pointsdf = species_occurrences, alpha_hull = TRUE, land = TRUE)
+
+# Alpha hull with buffer and land intersection
+species_range_full <- var_get(pointsdf = species_occurrences, alpha_hull = TRUE, buffer = 25, land = TRUE)
+
+# Using zoogeographic regions
+palearctic <- var_get(zoorealm = "Palearctic")
+
+# Using mountain regions
+alps_gmba <- var_get(mountain_region = "European Alps")
+
+# Using glacier regions
+arctic_glaciers <- var_get(glacier_region_20 = "Arctic Canada North")
+
+# Using freshwater ecoregions
+danube <- var_get(freshwater_ecoregion = 404)
+
+# Using marine ecoregions
+mediterranean <- var_get(marine_realm = "Temperate Northern Atlantic")
+
+# Using pelagic provinces
+atlantic_pelagic <- var_get(pelagic_realm = "Atlantic")
+
+# Clip marine realm to land only
+land_only <- var_get(marine_realm = "Temperate Northern Atlantic", land = TRUE)
 }
 
 }

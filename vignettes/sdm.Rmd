@@ -46,11 +46,13 @@ We use a set of 2971 records of the species in Europe obtained with a search on 
 
 ```{r,results='hide',message =FALSE,warning=FALSE}
 # load required R package
-require(envar)
+require(envar) # loads envar and dplyr packages
 require(dismo)
 require(spatialEco)
 require(ENMeval)
 require(raster)
+require(sf)
+require(terra)
 
 # load occurrence data 
 data(Apollo)
@@ -166,18 +168,22 @@ The tuned model has a good predictive performance and a limited overfitting. Thi
 
 ```{r,results='hide',message =FALSE,warning=FALSE}
 # use 'envar' to define predictors over the prediction area (European Alps)
-predictorsAlps <- var_get(shape=Alps, crs=3035) %>% 
+predictorsAlps <- var_get(shape = Alps, crs = 3035) %>% 
                   chelsa(vars = c("bio1", "bio4", "bio12", "bio15"), years = "1981-2010") %>% 
-                  esalandcover(vars= c("meadow", "water", "shannon")) %>% 
-                  topography(vars = c("slope", "northness"))
+                  esalandcover(vars = c("meadow", "water", "shannon")) %>% 
+                  topography(vars = c("slope", "northness")) %>% 
+                  extr_check(calib_points = Apollo, crs = 4326)
+
+# set as NA cells where extrapolation occurs
 
 # predict with the best model over the European Alps
-prediction <- dismo::predict(sdm_best, predictorsAlps)
+prediction <- dismo::predict(sdm_best, predictorsAlps$data)
 ```
 
 ```{r, echo=FALSE, out.width="100%", fig.align='center'}
 knitr::include_graphics("images/Prediction.png")
 ```
+
 
 ## Conclusion
 

@@ -1,27 +1,37 @@
-# R/soil.R
+# R/gdppast.R
 
-#' Download and process Harmonized World Soil Database v2.0
+#' Download and process Historical Real GDP and Electricity Consumption
 #'
 #' This function downloads, processes, and extracts variables from the
-#' Harmonized World Soil Database v2.0 (HWSD v2.0). The variable corresponds 
-#' to a global raster file at 1 km resolution representing soil types.
+#' global 1km gridded revised real gross domestic product and electricity 
+#' consumption dataset (1992–2019).
 #'
 #' Available variables (working synonyms in parentheses):
 #'
-#' 1 - "hwsd" ("soil", "type", "soiltype", "soil type")
+#' Economic Metrics:
+#' 
+#' 1 - "gdp" ("gross domestic product", "real gdp", "economy", "economic output", "gross product")
+#' 
+#' Energy Metrics:
+#' 
+#' 2 - "electricity" ("electricity consumption", "energy", "energy consumption", "power", "ec", "electric")
+#'
+#' Years available: 1992 to 2019.
 #'
 #' Citation:
 #'
-#' FAO & IIASA. (2023). "Harmonized World Soil Database v2.0." 
-#' Food and Agriculture Organization of the United Nations, Rome and 
-#' International Institute for Applied Systems Analysis, Laxenburg, Austria.
-#' https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/
+#' Chen, J., Gao, M., Cheng, S. et al. (2022). "Global 1 km x 1 km gridded revised 
+#' real gross domestic product and electricity consumption during 1992–2019 based 
+#' on calibrated nighttime light data." Sci Data 9, 202.
+#' https://doi.org/10.1038/s41597-022-01302-0
+#'
+#' Note: Please cite original sources of primary datasets where appropriate.
 #'
 #' @param x The output from `var_get()` defining the area or locations for extraction, 
 #' the reference system, and the buffer. 
 #' Leave this empty and use `var_get()` to define parameters for download.
-#' @param vars Character vector of one or more variables to download and process.
-#'        Defaults to "hwsd" if left empty.
+#' @param vars Character vector of variables to download ("gdp" or "electricity").
+#' @param year Numeric vector of years to download. Available range: 1992-2019.
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
@@ -29,21 +39,32 @@
 #'
 #' @examples
 #' \dontrun{
+#' # Get GDP for 2000 and 2010
 #' processed <- var_get(country= "Italy", crs=3035) %>% 
-#' soil(vars=c("soil"))
+#' gdppast(vars="gdp", year=c(2000, 2010))
+#'
+#' # Get Electricity and GDP for 2019
+#' processed <- var_get(country= "Vietnam") %>% 
+#' gdppast(vars=c("electricity", "gdp"), year=2019)
 #'   }
 #' @export
 
-soil <- function(x, vars = NULL, ...) {
+gdppast <- function(x, vars, year, ...) {
   
   # --------------------------------------------------------------------
   # Citation displayed on execution
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
-    "Using Harmonized World Soil Database v2.0.\n",
-    "Citation: FAO & IIASA. (2023). Harmonized World Soil Database v2.0.\n",
-    "DOI: {.url https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/}\n"
+    "Using Historical GDP and Electricity Consumption layers.\n",
+    "Citation: Chen, J., Gao, M., Cheng, S. et al. (2022). Sci Data 9, 202.\n",
+    "DOI: {.url https://doi.org/10.1038/s41597-022-01302-0}\n"
   ))
+  
+  # Validate Year
+  if (missing(year)) cli::cli_abort("Argument {.arg year} is required.")
+  if (any(year < 1992 | year > 2019)) {
+    cli::cli_abort("Years must be between 1992 and 2019.")
+  }
   
   par_list <- get_par(x)
   
@@ -57,9 +78,9 @@ soil <- function(x, vars = NULL, ...) {
     is_raster_input <- TRUE
     set_na=par_list$set_na
     path = par_list$path
+    land = par_list$land
     # Track cumulative global extent
     current_global_extent <- par_list$global_extent
-    land = par_list$land
   } else if (par_list$type == "point") {
     points <- par_list$mask
     bbox_points <- par_list$bbox
@@ -78,15 +99,13 @@ soil <- function(x, vars = NULL, ...) {
   # --------------------------------------------------------------------
   # Friendly-name -> canonical code mapping
   # --------------------------------------------------------------------
-  # There is effectively one variable, but we allow multiple synonyms
-  soil_lookup <- list(
-    "hwsd" = c("soil", "type", "soiltype", "soil type", "hwsd")
+  gdp_lookup <- list(
+    # Economic Metrics
+    "gdp" = c("gross domestic product", "real gdp", "economy", "economic output", "gross product", "gdp"),
+    
+    # Energy Metrics
+    "electricity" = c("electricity consumption", "energy", "energy consumption", "power", "ec", "electric", "electricity")
   )
-  
-  # Default to "hwsd" if vars is empty/NULL
-  if (is.null(vars)) {
-    vars <- "hwsd"
-  }
   
   # Normalizer: convert to lowercase, remove punctuation, normalize whitespace
   normalize_string <- function(s) {
@@ -98,8 +117,8 @@ soil <- function(x, vars = NULL, ...) {
   
   # Build synonym -> canonical map
   syn2canon <- list()
-  for (canon in names(soil_lookup)) {
-    for (syn in soil_lookup[[canon]]) {
+  for (canon in names(gdp_lookup)) {
+    for (syn in gdp_lookup[[canon]]) {
       syn2canon[[normalize_string(syn)]] <- canon
     }
     syn2canon[[normalize_string(canon)]] <- canon
@@ -107,7 +126,7 @@ soil <- function(x, vars = NULL, ...) {
   
   # Convert requested vars to canonical codes AND keep mapping to original names
   requested_codes <- character(0)
-  code_to_user_name <- list() # Maps canonical code -> user's original name
+  code_to_user_name <- list() 
   unmapped <- character(0)
   
   for (v in vars) {
@@ -127,7 +146,7 @@ soil <- function(x, vars = NULL, ...) {
   
   if (length(unmapped) > 0) {
     cli::cli_abort(c(
-      "Unknown HWSD variables:",
+      "Unknown variables:",
       "x" = "{.val {unmapped}}"
     ))
   }
@@ -135,45 +154,79 @@ soil <- function(x, vars = NULL, ...) {
   # --------------------------------------------------------------------
   # Helper: Download, process, and clean up a single file
   # --------------------------------------------------------------------
-  handle_file <- function(url, dest_file, canon, user_name) {
-    temp_dir <- fs::path_temp("envar/soil")
-    fs::dir_create(temp_dir)
+  handle_file <- function(url, dest_file, canon, user_name, yr) {
+    # We use a specific temp directory structure to handle the nested zips
+    temp_base <- fs::path_temp("envar/gdppast")
+    fs::dir_create(temp_base)
     
-    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {user_name}}...")
+    # Define the big zip output path
+    big_zip_name <- if(canon == "gdp") "Real_GDP.zip" else "Electricity.zip"
+    big_zip_path <- file.path(temp_base, big_zip_name)
     
-    success <- download_file(url, dest_file)
+    # Step 1: Download the BIG zip only if it doesn't exist or is invalid
+    # We cache the big zip within the session temp to avoid re-downloading 300MB+ for every year loop
+    if (!file.exists(big_zip_path)) {
+      cli::cli_alert_info("Downloading main archive for {.val {canon}}...")
+      success <- download_file(url, big_zip_path)
+      if (!success) {
+        cli::cli_alert_warning("Failed to download main archive from {.url {url}}.")
+        return(NULL)
+      }
+    }
     
-    if (!success) {
-      cli::cli_alert_warning("Failed to download {.val {user_name}} from {.url {url}}.")
+    # Step 2: Extract the specific Year Zip from the Big Zip
+    # Structure:
+    # GDP: "updated real GDP/1992.zip"
+    # Electricity: "updated electricity consumption/1992.zip"
+    
+    inner_folder <- if(canon == "gdp") "updated real GDP" else "updated electricity consumption"
+    inner_zip_name <- paste0(yr, ".zip")
+    path_inside_zip <- file.path(inner_folder, inner_zip_name)
+    
+    # We unzip strictly the specific year zip file
+    unzip_success <- try(utils::unzip(big_zip_path, files = path_inside_zip, exdir = temp_base, overwrite = TRUE), silent=TRUE)
+    
+    extracted_inner_zip <- file.path(temp_base, inner_folder, inner_zip_name)
+    
+    if (inherits(unzip_success, "try-error") || !file.exists(extracted_inner_zip)) {
+      cli::cli_alert_warning("Could not find year {.val {yr}} inside the archive.")
       return(NULL)
     }
     
-    # HWSD comes in a zip, so we must unzip it first
-    cli::cli_alert_info("Unzipping {.val {basename(dest_file)}}...")
-    unzip_dir <- file.path(temp_dir, "unzipped")
-    fs::dir_create(unzip_dir)
-    utils::unzip(dest_file, exdir = unzip_dir)
+    # Step 3: Extract the TIF from the Year Zip
+    # Structure inside year zip:
+    # GDP: "1992GDP.tif"
+    # Electricity: "EC1992.tif"
     
-    # Target the .bil file specifically
-    raster_file <- file.path(unzip_dir, "HWSD2.bil")
+    tif_name <- if(canon == "gdp") paste0(yr, "GDP.tif") else paste0("EC", yr, ".tif")
     
-    if (!fs::file_exists(raster_file)) {
-      cli::cli_alert_warning("Expected raster file {.val HWSD2.bil} not found in archive.")
-      fs::file_delete(dest_file)
-      fs::dir_delete(unzip_dir)
+    # Unzip the final TIF
+    utils::unzip(extracted_inner_zip, files = tif_name, exdir = temp_base, overwrite = TRUE)
+    
+    final_tif_path <- file.path(temp_base, tif_name)
+    
+    if (!file.exists(final_tif_path)) {
+      cli::cli_alert_warning("Could not extract TIF {.val {tif_name}}.")
       return(NULL)
     }
+    
+    # Now treat final_tif_path as dest_file for processing
+    dest_file <- final_tif_path
+    
+    # Construct a descriptive name: e.g. "gdp_2000" or "electricity_1995"
+    final_layer_name <- paste0(user_name, "_", yr)
     
     if (is_raster_input) {
-      layer <- try(terra::rast(raster_file), silent = TRUE)
+      layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
-        cli::cli_alert_warning("Could not read raster {.val {raster_file}}.")
-        fs::file_delete(dest_file)
-        fs::dir_delete(unzip_dir)
+        cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
-      cli::cli_alert_info("Processing layer {.val {user_name}}...")
+      cli::cli_alert_info("Processing layer {.val {final_layer_name}}...")
       
       # Process layer using standard helper
       result <- process_raster_layer(
@@ -204,7 +257,7 @@ soil <- function(x, vars = NULL, ...) {
       }
       
       # Assign user-requested name to layer
-      names(layer1) <- user_name
+      names(layer1) <- final_layer_name
       
       if (is.null(processed_stack)) {
         processed_stack <<- layer1
@@ -212,23 +265,25 @@ soil <- function(x, vars = NULL, ...) {
         processed_stack <<- c(processed_stack, layer1)
       }
       
-      cli::cli_alert_success("Processed and added {.val {user_name}} to stack.")
+      cli::cli_alert_success("Processed and added {.val {final_layer_name}} to stack.")
       
       rm(layer, layer1)
       gc()
-      fs::file_delete(dest_file)
-      fs::dir_delete(unzip_dir)
+      # Clean up the specific year TIF and inner zip, but keep big zip for next loop
+      fs::file_delete(final_tif_path)
+      fs::file_delete(extracted_inner_zip)
       
     } else {
       
-      cli::cli_alert_info("Extracting values from {.val {user_name}}...")
+      cli::cli_alert_info("Extracting values from {.val {final_layer_name}}...")
       
-      extracted <- try(process_points(file = raster_file, points = points), silent = TRUE)
+      extracted <- try(process_points(file = dest_file, points = points), silent = TRUE)
       
       if (inherits(extracted, "try-error")) {
-        cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
-        fs::file_delete(dest_file)
-        fs::dir_delete(unzip_dir)
+        cli::cli_alert_warning("Extraction failed for {.val {final_layer_name}}.")
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
@@ -236,7 +291,7 @@ soil <- function(x, vars = NULL, ...) {
       
       if (ncol(extracted) >= 2) {
         # Use user-requested name for the column
-        names(extracted)[ncol(extracted)] <- user_name
+        names(extracted)[ncol(extracted)] <- final_layer_name
       }
       
       if (is.null(extracted_df)) {
@@ -245,34 +300,54 @@ soil <- function(x, vars = NULL, ...) {
         extracted_df <<- merge(extracted_df, extracted[, c(1, ncol(extracted))], by = "ID", all = TRUE)
       }
       
-      cli::cli_alert_success("Extracted {.val {user_name}} successfully.")
+      cli::cli_alert_success("Extracted {.val {final_layer_name}} successfully.")
       
       rm(extracted)
       gc()
-      fs::file_delete(dest_file)
-      fs::dir_delete(unzip_dir)
+      # Clean up specific year files
+      fs::file_delete(final_tif_path)
+      fs::file_delete(extracted_inner_zip)
     }
   }
   
   # --------------------------------------------------------------------
-  # Loop through requested variables
+  # Loop through requested variables AND years
   # --------------------------------------------------------------------
-  # Since there is only one source file for this function, we define it directly.
-  full_url <- "https://s3.eu-west-1.amazonaws.com/data.gaezdev.aws.fao.org/HWSD/HWSD2_RASTER.zip"
   
-  cli::cli_alert_info("Starting the download of HWSD data...")
+  cli::cli_alert_info("Processing GDP/Electricity data...")
   
+  # Define base URLs for the massive zip files
+  url_gdp <- "https://figshare.com/ndownloader/files/31456837"
+  url_ec  <- "https://figshare.com/ndownloader/files/31456843"
+  
+  # Double loop: For every requested variable, loop through every requested year
   for (canon in requested_codes) {
-    # For this specific dataset, the filename/URL is constant regardless of the code
-    filename <- "HWSD2_RASTER.zip"
-    url <- full_url
-    dest <- file.path(fs::path_temp("envar/soil"), filename)
     
-    # Get the user's original name for this canonical code
+    # Determine URL based on variable type
+    if (canon == "gdp") {
+      url <- url_gdp
+    } else {
+      url <- url_ec
+    }
+    
     user_name <- code_to_user_name[[canon]]
     
-    handle_file(url, dest, canon, user_name)
+    for (yr in year) {
+      # Pass canon, user_name, and year to the handler
+      # The destination file argument is placeholder here, as the handler manages nested extraction
+      # We just pass a dummy path for consistency with the signature logic, 
+      # though handle_file constructs the specific path internally.
+      dummy_dest <- file.path(fs::path_temp("envar/gdppast"), paste0(canon, "_", yr, ".tif"))
+      
+      handle_file(url, dummy_dest, canon, user_name, yr)
+    }
   }
+  
+  # Cleanup: We can optionally remove the big zips here if we want to save space,
+  # or leave them in temp for the session. Let's clean explicitly to be safe.
+  # fs::dir_delete(fs::path_temp("envar/gdppast")) 
+  # (Commented out to allow subsequent calls to be faster in same session, 
+  # OS usually handles temp cleanup)
   
   # --------------------------------------------------------------------
   # Return output
@@ -304,6 +379,7 @@ soil <- function(x, vars = NULL, ...) {
     
     # Attach global extent as attribute for downstream functions
     if (is_global) {
+      
       if (land == TRUE){
         cli::cli_alert_info(paste0(
           "Global masking with land boundary from Natural Earth database...\n",
@@ -321,10 +397,10 @@ soil <- function(x, vars = NULL, ...) {
       attr(processed_stack, "global_extent") <- current_global_extent
       attr(processed_stack, "is_global") <- TRUE
     }
+    
     attr(processed_stack, "set_na") <- set_na
     attr(processed_stack, "path") <- path
-    attr(processed_stack, "land")<-land
-    
+    attr(processed_stack, "land") <- land
     
     # remove NAs if necessary
     if (set_na==TRUE){
@@ -342,6 +418,7 @@ soil <- function(x, vars = NULL, ...) {
     if (!is.null(path)){
       terra::writeRaster(processed_stack, path, overwrite = TRUE)
     }
+    
     cli::cli_alert_success("All layers processed and stacked successfully")
     return(processed_stack)
   } else {

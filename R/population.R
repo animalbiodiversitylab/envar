@@ -1,27 +1,35 @@
-# R/soil.R
+# R/population.R
 
-#' Download and process Harmonized World Soil Database v2.0
+#' Download and process Global Population Projections (SSP)
 #'
 #' This function downloads, processes, and extracts variables from the
-#' Harmonized World Soil Database v2.0 (HWSD v2.0). The variable corresponds 
-#' to a global raster file at 1 km resolution representing soil types.
+#' Global Population Projections dataset (Wang et al., 2022).
+#' It provides 1-km grid population distributions from 2020 to 2100 
+#' under five Shared Socioeconomic Pathways (SSPs).
 #'
 #' Available variables (working synonyms in parentheses):
 #'
-#' 1 - "hwsd" ("soil", "type", "soiltype", "soil type")
+#' Population Counts:
+#' 
+#' 1 - "population" ("pop", "inhabitants", "residents", "people", "count", "census")
+#'
+#' Use the arguments `year` and `ssp` to filter the specific data required.
 #'
 #' Citation:
 #'
-#' FAO & IIASA. (2023). "Harmonized World Soil Database v2.0." 
-#' Food and Agriculture Organization of the United Nations, Rome and 
-#' International Institute for Applied Systems Analysis, Laxenburg, Austria.
-#' https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/
+#' Wang, X., Meng, X. & Long, Y. (2022). "Projecting 1 km-grid population 
+#' distributions from 2020 to 2100 globally under shared socioeconomic pathways." 
+#' Sci Data 9, 563.
+#' https://doi.org/10.1038/s41597-022-01675-x
+#'
+#' Note: Please cite original sources of primary datasets where appropriate.
 #'
 #' @param x The output from `var_get()` defining the area or locations for extraction, 
 #' the reference system, and the buffer. 
 #' Leave this empty and use `var_get()` to define parameters for download.
-#' @param vars Character vector of one or more variables to download and process.
-#'        Defaults to "hwsd" if left empty.
+#' @param vars Character vector. Use "population" (or synonyms).
+#' @param year Numeric vector. Years to download. Available from 2020 to 2100 in 5-year intervals (e.g., c(2020, 2050)).
+#' @param ssp Numeric vector. Shared Socioeconomic Pathways to download (1, 2, 3, 4, or 5).
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
@@ -29,20 +37,20 @@
 #'
 #' @examples
 #' \dontrun{
-#' processed <- var_get(country= "Italy", crs=3035) %>% 
-#' soil(vars=c("soil"))
+#' processed <- var_get(country = "Italy", crs = 3035) %>% 
+#'   population(vars = "population", year = 2050, ssp = 2)
 #'   }
 #' @export
 
-soil <- function(x, vars = NULL, ...) {
+population <- function(x, vars, year = 2020, ssp = 1, ...) {
   
   # --------------------------------------------------------------------
   # Citation displayed on execution
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
-    "Using Harmonized World Soil Database v2.0.\n",
-    "Citation: FAO & IIASA. (2023). Harmonized World Soil Database v2.0.\n",
-    "DOI: {.url https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/}\n"
+    "Using Global Population Projections (Wang et al., 2022).\n",
+    "Citation: Wang, X., Meng, X. & Long, Y. (2022). Sci Data 9, 563.\n",
+    "DOI: {.url https://doi.org/10.1038/s41597-022-01675-x}\n"
   ))
   
   par_list <- get_par(x)
@@ -55,11 +63,11 @@ soil <- function(x, vars = NULL, ...) {
     crs  <- par_list$crs
     is_global <- isTRUE(par_list$is_global)
     is_raster_input <- TRUE
-    set_na=par_list$set_na
+    set_na = par_list$set_na
     path = par_list$path
+    land = par_list$land
     # Track cumulative global extent
     current_global_extent <- par_list$global_extent
-    land = par_list$land
   } else if (par_list$type == "point") {
     points <- par_list$mask
     bbox_points <- par_list$bbox
@@ -78,17 +86,10 @@ soil <- function(x, vars = NULL, ...) {
   # --------------------------------------------------------------------
   # Friendly-name -> canonical code mapping
   # --------------------------------------------------------------------
-  # There is effectively one variable, but we allow multiple synonyms
-  soil_lookup <- list(
-    "hwsd" = c("soil", "type", "soiltype", "soil type", "hwsd")
+  pop_lookup <- list(
+    "population" = c("population", "pop", "inhabitants", "residents", "people", "count", "census")
   )
   
-  # Default to "hwsd" if vars is empty/NULL
-  if (is.null(vars)) {
-    vars <- "hwsd"
-  }
-  
-  # Normalizer: convert to lowercase, remove punctuation, normalize whitespace
   normalize_string <- function(s) {
     s <- tolower(s)
     s <- gsub("[[:punct:]]", " ", s)
@@ -96,28 +97,24 @@ soil <- function(x, vars = NULL, ...) {
     trimws(s)
   }
   
-  # Build synonym -> canonical map
   syn2canon <- list()
-  for (canon in names(soil_lookup)) {
-    for (syn in soil_lookup[[canon]]) {
+  for (canon in names(pop_lookup)) {
+    for (syn in pop_lookup[[canon]]) {
       syn2canon[[normalize_string(syn)]] <- canon
     }
     syn2canon[[normalize_string(canon)]] <- canon
   }
   
-  # Convert requested vars to canonical codes AND keep mapping to original names
   requested_codes <- character(0)
-  code_to_user_name <- list() # Maps canonical code -> user's original name
+  code_to_user_name <- list() 
   unmapped <- character(0)
   
   for (v in vars) {
     key <- normalize_string(v)
     if (!is.null(syn2canon[[key]])) {
       canon <- syn2canon[[key]]
-      # Only add if not already present (avoid duplicates)
       if (!(canon %in% requested_codes)) {
         requested_codes <- c(requested_codes, canon)
-        # Store the user's original name for this canonical code
         code_to_user_name[[canon]] <- v
       }
     } else {
@@ -127,55 +124,98 @@ soil <- function(x, vars = NULL, ...) {
   
   if (length(unmapped) > 0) {
     cli::cli_abort(c(
-      "Unknown HWSD variables:",
+      "Unknown Population variables:",
       "x" = "{.val {unmapped}}"
     ))
+  }
+  
+  # Validate Year and SSP arguments
+  valid_years <- seq(2020, 2100, by = 5)
+  if (any(!year %in% valid_years)) {
+    cli::cli_abort("Years must be in 5-year intervals from 2020 to 2100 (e.g., 2020, 2025...).")
+  }
+  
+  if (any(!ssp %in% 1:5)) {
+    cli::cli_abort("SSP must be an integer between 1 and 5.")
   }
   
   # --------------------------------------------------------------------
   # Helper: Download, process, and clean up a single file
   # --------------------------------------------------------------------
-  handle_file <- function(url, dest_file, canon, user_name) {
-    temp_dir <- fs::path_temp("envar/soil")
-    fs::dir_create(temp_dir)
+  handle_file <- function(url, dest_file, canon, user_name, target_filename) {
     
-    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {user_name}}...")
+    # We define the zip location based on the url hash
+    zip_name <- paste0("ssp_download_", digest::digest(url, algo="md5"), ".zip")
+    zip_dest <- file.path(fs::path_temp("envar/pop"), zip_name)
+    fs::dir_create(fs::path_temp("envar/pop"))
     
-    success <- download_file(url, dest_file)
-    
-    if (!success) {
-      cli::cli_alert_warning("Failed to download {.val {user_name}} from {.url {url}}.")
-      return(NULL)
+    # 1. Download Zip if not exists
+    if (!fs::file_exists(zip_dest)) {
+      cli::cli_alert_info("Downloading dataset for {.val {user_name}} (this may take time)...")
+      success <- download_file(url, zip_dest)
+      if (!success) {
+        cli::cli_alert_warning("Failed to download data from {.url {url}}.")
+        return(NULL)
+      }
     }
     
-    # HWSD comes in a zip, so we must unzip it first
-    cli::cli_alert_info("Unzipping {.val {basename(dest_file)}}...")
-    unzip_dir <- file.path(temp_dir, "unzipped")
-    fs::dir_create(unzip_dir)
-    utils::unzip(dest_file, exdir = unzip_dir)
-    
-    # Target the .bil file specifically
-    raster_file <- file.path(unzip_dir, "HWSD2.bil")
-    
-    if (!fs::file_exists(raster_file)) {
-      cli::cli_alert_warning("Expected raster file {.val HWSD2.bil} not found in archive.")
-      fs::file_delete(dest_file)
-      fs::dir_delete(unzip_dir)
-      return(NULL)
+    # 2. Extract specific TIF
+    if (!fs::file_exists(dest_file)) {
+      cli::cli_alert_info("Extracting {.val {target_filename}}...")
+      
+      # Robust extraction: List files in zip to find the actual path
+      zip_contents <- try(unzip(zip_dest, list = TRUE), silent = TRUE)
+      
+      if (inherits(zip_contents, "try-error")) {
+        cli::cli_alert_warning("Could not list contents of zip file.")
+        return(NULL)
+      }
+      
+      # Find the file that ends with our target filename (ignoring parent folders)
+      # e.g., if target is "SSP5_2100.tif", matches "folder/SSP5_2100.tif" or "SSP5_2100.tif"
+      match_idx <- grep(paste0(target_filename, "$"), zip_contents$Name, ignore.case = TRUE)
+      
+      if (length(match_idx) == 0) {
+        cli::cli_alert_warning("File {.val {target_filename}} not found inside the downloaded archive.")
+        return(NULL)
+      }
+      
+      # Use the actual path found in the zip
+      actual_internal_path <- zip_contents$Name[match_idx[1]]
+      
+      try_unzip <- try(unzip(zip_dest, files = actual_internal_path, exdir = fs::path_temp("envar/pop")), silent = TRUE)
+      
+      extracted_path <- file.path(fs::path_temp("envar/pop"), actual_internal_path)
+      
+      if (inherits(try_unzip, "try-error") || !fs::file_exists(extracted_path)) {
+        cli::cli_alert_warning("Could not extract {.val {actual_internal_path}} from archive.")
+        return(NULL)
+      }
+      
+      # Move/Rename to dest_file for consistency
+      fs::file_move(extracted_path, dest_file)
+      
+      # Clean up the directory structure created by unzip if it was nested
+      internal_dir <- dirname(extracted_path)
+      if (internal_dir != fs::path_temp("envar/pop")) {
+        # Try to clean up empty parent folders if extraction created them
+        try(fs::dir_delete(file.path(fs::path_temp("envar/pop"), strsplit(actual_internal_path, "/")[[1]][1])), silent=TRUE)
+      }
     }
     
+    # 3. Standard Processing
     if (is_raster_input) {
-      layer <- try(terra::rast(raster_file), silent = TRUE)
+      layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
-        cli::cli_alert_warning("Could not read raster {.val {raster_file}}.")
-        fs::file_delete(dest_file)
-        fs::dir_delete(unzip_dir)
+        cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
       cli::cli_alert_info("Processing layer {.val {user_name}}...")
       
-      # Process layer using standard helper
       result <- process_raster_layer(
         layer = layer,
         grid = grid,
@@ -187,23 +227,17 @@ soil <- function(x, vars = NULL, ...) {
       )
       
       if (is_global) {
-        # For global processing, result is a list with layer and extent
         layer1 <- result$layer
         new_extent <- result$extent
-        
-        # Update the cumulative global extent
         current_global_extent <<- new_extent
         
-        # If we have existing layers and extent changed, crop them
         if (!is.null(processed_stack)) {
           processed_stack <<- align_stack_to_extent(processed_stack, new_extent)
         }
       } else {
-        # For regional processing, result is just the layer
         layer1 <- result
       }
       
-      # Assign user-requested name to layer
       names(layer1) <- user_name
       
       if (is.null(processed_stack)) {
@@ -216,26 +250,27 @@ soil <- function(x, vars = NULL, ...) {
       
       rm(layer, layer1)
       gc()
-      fs::file_delete(dest_file)
-      fs::dir_delete(unzip_dir)
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
       
     } else {
       
       cli::cli_alert_info("Extracting values from {.val {user_name}}...")
       
-      extracted <- try(process_points(file = raster_file, points = points), silent = TRUE)
+      extracted <- try(process_points(file = dest_file, points = points), silent = TRUE)
       
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
-        fs::file_delete(dest_file)
-        fs::dir_delete(unzip_dir)
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
       extracted <- data.frame(extracted)
       
       if (ncol(extracted) >= 2) {
-        # Use user-requested name for the column
         names(extracted)[ncol(extracted)] <- user_name
       }
       
@@ -249,29 +284,47 @@ soil <- function(x, vars = NULL, ...) {
       
       rm(extracted)
       gc()
-      fs::file_delete(dest_file)
-      fs::dir_delete(unzip_dir)
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
     }
   }
   
   # --------------------------------------------------------------------
   # Loop through requested variables
   # --------------------------------------------------------------------
-  # Since there is only one source file for this function, we define it directly.
-  full_url <- "https://s3.eu-west-1.amazonaws.com/data.gaezdev.aws.fao.org/HWSD/HWSD2_RASTER.zip"
   
-  cli::cli_alert_info("Starting the download of HWSD data...")
+  ssp_urls <- list(
+    "1" = "https://figshare.com/ndownloader/files/34829160",
+    "2" = "https://figshare.com/ndownloader/files/34829370",
+    "3" = "https://figshare.com/ndownloader/files/45894312",
+    "4" = "https://figshare.com/ndownloader/files/34829385",
+    "5" = "https://figshare.com/ndownloader/files/34829391"
+  )
   
-  for (canon in requested_codes) {
-    # For this specific dataset, the filename/URL is constant regardless of the code
-    filename <- "HWSD2_RASTER.zip"
-    url <- full_url
-    dest <- file.path(fs::path_temp("envar/soil"), filename)
+  cli::cli_alert_info("Processing Global Population data...")
+  
+  for (s in ssp) {
+    current_url <- ssp_urls[[as.character(s)]]
     
-    # Get the user's original name for this canonical code
-    user_name <- code_to_user_name[[canon]]
-    
-    handle_file(url, dest, canon, user_name)
+    for (y in year) {
+      
+      # The filename we are looking for inside the zip (ignoring folder path)
+      target_filename <- paste0("SSP", s, "_", y, ".tif")
+      
+      # Canonical name for reference
+      canon <- paste0("population_ssp", s, "_", y)
+      
+      # Destination for the extracted TIF
+      dest <- file.path(fs::path_temp("envar/pop"), target_filename)
+      
+      # User name construction
+      base_name <- code_to_user_name[["population"]]
+      if (is.null(base_name)) base_name <- "population"
+      user_name_combo <- paste0(base_name, "_ssp", s, "_", y)
+      
+      handle_file(current_url, dest, canon, user_name_combo, target_filename)
+    }
   }
   
   # --------------------------------------------------------------------
@@ -280,7 +333,6 @@ soil <- function(x, vars = NULL, ...) {
   if (is_raster_input) {
     if (is.null(processed_stack)) cli::cli_abort("No layers were successfully processed")
     
-    # If x was already a SpatRaster (from previous function), combine
     if (inherits(x, "SpatRaster")) {
       if (is_global) {
         processed_stack <- combine_global_rasters(
@@ -289,20 +341,14 @@ soil <- function(x, vars = NULL, ...) {
           current_global_extent = current_global_extent
         )
       } else {
-        # Regional mode: resample new layers to match input raster exactly
-        # This ensures perfect alignment for stacking
         if (!terra::compareGeom(x, processed_stack, stopOnError = FALSE)) {
           cli::cli_alert_info("Aligning new layers to match input raster geometry...")
           processed_stack <- terra::resample(processed_stack, x, method = "bilinear")
-          
         }
         processed_stack <- c(x, processed_stack)
       }
-      
-      
     }
     
-    # Attach global extent as attribute for downstream functions
     if (is_global) {
       if (land == TRUE){
         cli::cli_alert_info(paste0(
@@ -317,51 +363,40 @@ soil <- function(x, vars = NULL, ...) {
         
         processed_stack <-terra::crop(terra::mask(processed_stack, land_sf), land_sf)
       }
-      
       attr(processed_stack, "global_extent") <- current_global_extent
       attr(processed_stack, "is_global") <- TRUE
     }
+    
     attr(processed_stack, "set_na") <- set_na
     attr(processed_stack, "path") <- path
-    attr(processed_stack, "land")<-land
+    attr(processed_stack, "land") <- land
     
-    
-    # remove NAs if necessary
     if (set_na==TRUE){
-      
       cli::cli_alert_info("Applying NA mask...")
-      
       master_mask <- sum(processed_stack)
-      # Apply that master mask to the whole stack
       processed_stack <- terra::mask(processed_stack, master_mask)
-      
     }
-    
-    # write if requested
     
     if (!is.null(path)){
       terra::writeRaster(processed_stack, path, overwrite = TRUE)
     }
+    
     cli::cli_alert_success("All layers processed and stacked successfully")
     return(processed_stack)
   } else {
     if (is.null(extracted_df)) cli::cli_abort("No values extracted successfully")
-    # Merge with previous data if x was a data.frame
+    
     if (inherits(x, "data.frame") && !inherits(x, "sf")) {
       extracted_df <- merge(x, extracted_df[, c(1, 4:ncol(extracted_df))], by = c("ID"), all = TRUE)
-      # Preserve CRS from previous extraction
       prev_crs <- attr(x, "envar_crs")
       if (!is.null(prev_crs)) {
         crs <- prev_crs
       }
     }
     
-    # Store the CRS as an attribute for downstream functions
-    # This ensures the CRS is preserved when chaining point extractions
     attr(extracted_df, "envar_crs") <- crs
     attr(extracted_df, "path") <- path
     
-    # write if requested
     if (!is.null(path)){
       write.csv(extracted_df, path)
     }

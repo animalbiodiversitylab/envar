@@ -13,3 +13,15 @@
     )
   }
 }
+
+.onAttach <- function(libname, pkgname) {
+  if (interactive()) {
+    # Define the command and the escape codes
+    cmd <- paste0("citation('", pkgname, "')")
+    
+    # This creates a 'run' link supported by RStudio
+    link <- paste0("\033]8;;x-r-run:", cmd, "\a", cmd, "\033]8;;\a")
+    
+    packageStartupMessage("If using the package for a publication please cite as: ", link)
+  }
+}

@@ -86,6 +86,7 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
     is_raster_input <- TRUE
     set_na=par_list$set_na
     path = par_list$path
+    land = par_list$land
     # Track cumulative global extent
     current_global_extent <- par_list$global_extent
   } else if (par_list$type == "point") {
@@ -153,6 +154,7 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
   
   # Build synonym -> canonical map
   syn2canon <- list()
+  
   for (canon in names(esa_lookup)) {
     for (syn in esa_lookup[[canon]]) {
       syn2canon[[normalize_string(syn)]] <- canon
@@ -207,9 +209,9 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
       layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
-        if (!is_global) {
-          fs::file_delete(dest_file)
-        }
+        # if (!is_global) {
+        #   fs::file_delete(dest_file)
+        # }
         return(NULL)
       }
       
@@ -256,9 +258,9 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
       
       rm(layer, layer1)
       gc()
-      if (!is_global) {
-        fs::file_delete(dest_file)
-      }
+#      if (!is_global) {
+#        fs::file_delete(dest_file)
+#     }
       
     } else {
       
@@ -268,9 +270,9 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
       
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
-        if (!is_global) {
-          fs::file_delete(dest_file)
-        }
+        # if (!is_global) {
+        #   fs::file_delete(dest_file)
+        # }
         return(NULL)
       }
       
@@ -301,7 +303,7 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
   # Loop through requested variables
   # --------------------------------------------------------------------
   
-  cli::cli_alert_info("Starting the download of Global Land Cover data...")
+  cli::cli_alert_info("Starting the download of ESA global land cover data...")
   
   for (canon in requested_codes) {
     filename <- paste0(canon, ".tif")
@@ -348,16 +350,30 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
     
     # Attach global extent as attribute for downstream functions
     if (is_global) {
+      if (land == TRUE){
+        cli::cli_alert_info(paste0(
+          "Global masking with land boundary from Natural Earth database...\n",
+          "Website: {.url https://www.naturalearthdata.com/}\n"
+        ))
+        invisible(capture.output(suppressMessages(suppressWarnings(land_sf <- rnaturalearth::ne_download(
+          scale = "medium",
+          type = "land",
+          category = "physical",
+          returnclass = "sf")))))
+        
+        processed_stack <-terra::crop(terra::mask(processed_stack, land_sf), land_sf)
+      }
+      
       attr(processed_stack, "global_extent") <- current_global_extent
       attr(processed_stack, "is_global") <- TRUE
     }
     
     attr(processed_stack, "set_na") <- set_na
     attr(processed_stack, "path") <- path
-    
+    attr(processed_stack, "land") <- land
     
     # remove NAs if necessary
-    if (set_na==TRUE){
+    if (isTRUE(set_na)){
       
       cli::cli_alert_info("Applying NA mask...")
       

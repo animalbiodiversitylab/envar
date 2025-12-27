@@ -1,27 +1,77 @@
-# R/soil.R
+# R/soilclimate.R
 
-#' Download and process Harmonized World Soil Database v2.0
+#' Download and process Soil Bioclimatic and Temperature layers
 #'
-#' This function downloads, processes, and extracts variables from the
-#' Harmonized World Soil Database v2.0 (HWSD v2.0). The variable corresponds 
-#' to a global raster file at 1 km resolution representing soil types.
+#' This function downloads, processes, and extracts soil bioclimatic variables 
+#' and monthly soil temperatures from the Global Soil Temperature dataset 
+#' (Lembrechts et al., 2022).
 #'
 #' Available variables (working synonyms in parentheses):
 #'
-#' 1 - "hwsd" ("soil", "type", "soiltype", "soil type")
+#' Bioclimatic Variables:
+#' 
+#' SBIO1 - "SBIO1" ("annual mean temperature", "annual mean", "amt")
+#' 
+#' SBIO2 - "SBIO2" ("mean diurnal range", "mean diurnal", "mdr")
+#' 
+#' SBIO3 - "SBIO3" ("isothermality")
+#' 
+#' SBIO4 - "SBIO4" ("temperature seasonality", "seasonality")
+#' 
+#' SBIO5 - "SBIO5" ("max temperature warmest month", "max temp", "warmest month")
+#' 
+#' SBIO6 - "SBIO6" ("min temperature coldest month", "min temp", "coldest month")
+#' 
+#' SBIO7 - "SBIO7" ("temperature annual range", "annual range", "tar")
+#' 
+#' SBIO8 - "SBIO8" ("mean temperature wettest quarter", "wettest quarter")
+#' 
+#' SBIO9 - "SBIO9" ("mean temperature driest quarter", "driest quarter")
+#' 
+#' SBIO10 - "SBIO10" ("mean temperature warmest quarter", "warmest quarter")
+#' 
+#' SBIO11 - "SBIO11" ("mean temperature coldest quarter", "coldest quarter")
+#'
+#' Monthly Mean Soil Temperatures:
+#' 
+#' soilT01 - "soilT01" ("january mean", "january", "jan")
+#' 
+#' soilT02 - "soilT02" ("february mean", "february", "feb")
+#' 
+#' soilT03 - "soilT03" ("march mean", "march", "mar")
+#' 
+#' soilT04 - "soilT04" ("april mean", "april", "apr")
+#' 
+#' soilT05 - "soilT05" ("may mean", "may")
+#' 
+#' soilT06 - "soilT06" ("june mean", "june", "jun")
+#' 
+#' soilT07 - "soilT07" ("july mean", "july", "jul")
+#' 
+#' soilT08 - "soilT08" ("august mean", "august", "aug")
+#' 
+#' soilT09 - "soilT09" ("september mean", "september", "sep")
+#' 
+#' soilT10 - "soilT10" ("october mean", "october", "oct")
+#' 
+#' soilT11 - "soilT11" ("november mean", "november", "nov")
+#' 
+#' soilT12 - "soilT12" ("december mean", "december", "dec")
 #'
 #' Citation:
 #'
-#' FAO & IIASA. (2023). "Harmonized World Soil Database v2.0." 
-#' Food and Agriculture Organization of the United Nations, Rome and 
-#' International Institute for Applied Systems Analysis, Laxenburg, Austria.
-#' https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/
+#' Lembrechts, Jonas J., et al. (2022). "Global maps of soil temperature." 
+#' Global Change Biology 28, no. 9: 3110-3144.
+#' https://doi.org/10.1111/gcb.16060
+#'
+#' Note: Please cite original sources of primary datasets where appropriate.
 #'
 #' @param x The output from `var_get()` defining the area or locations for extraction, 
 #' the reference system, and the buffer. 
 #' Leave this empty and use `var_get()` to define parameters for download.
 #' @param vars Character vector of one or more variables to download and process.
-#'        Defaults to "hwsd" if left empty.
+#' @param depth Character string defining the soil depth range. 
+#' Options are "0-5" (default) or "5-15".
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
@@ -30,20 +80,28 @@
 #' @examples
 #' \dontrun{
 #' processed <- var_get(country= "Italy", crs=3035) %>% 
-#' soil(vars=c("soil"))
-#'   }
+#' soilclimate(vars=c("SBIO1", "SBIO10"), depth="5-15")
+#'    }
 #' @export
 
-soil <- function(x, vars = NULL, ...) {
+soilclimate <- function(x, vars, depth = "0-5", ...) {
   
   # --------------------------------------------------------------------
   # Citation displayed on execution
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
-    "Using Harmonized World Soil Database v2.0.\n",
-    "Citation: FAO & IIASA. (2023). Harmonized World Soil Database v2.0.\n",
-    "DOI: {.url https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/}\n"
+    "Using Global maps of soil temperature.\n",
+    "Citation: Lembrechts JJ et al. (2022). Global Change Biology 28(9): 3110-3144.\n",
+    "DOI: {.url https://doi.org/10.1111/gcb.16060}\n"
   ))
+  
+  # Validate depth argument
+  if (!depth %in% c("0-5", "5-15")) {
+    cli::cli_abort(c(
+      "Invalid depth argument.",
+      "i" = "Supported depths are: {.val 0-5} and {.val 5-15}."
+    ))
+  }
   
   par_list <- get_par(x)
   
@@ -57,9 +115,9 @@ soil <- function(x, vars = NULL, ...) {
     is_raster_input <- TRUE
     set_na=par_list$set_na
     path = par_list$path
+    land = par_list$land
     # Track cumulative global extent
     current_global_extent <- par_list$global_extent
-    land = par_list$land
   } else if (par_list$type == "point") {
     points <- par_list$mask
     bbox_points <- par_list$bbox
@@ -78,15 +136,61 @@ soil <- function(x, vars = NULL, ...) {
   # --------------------------------------------------------------------
   # Friendly-name -> canonical code mapping
   # --------------------------------------------------------------------
-  # There is effectively one variable, but we allow multiple synonyms
   soil_lookup <- list(
-    "hwsd" = c("soil", "type", "soiltype", "soil type", "hwsd")
+    # Bioclimatic Variables
+    "SBIO1"  = c("annual mean temperature", "annual mean", "amt"),
+    "SBIO2"  = c("mean diurnal range", "mean diurnal", "mdr"),
+    "SBIO3"  = c("isothermality", "iso"),
+    "SBIO4"  = c("temperature seasonality", "seasonality", "temp seasonality"),
+    "SBIO5"  = c("max temperature warmest month", "max temp", "warmest month"),
+    "SBIO6"  = c("min temperature coldest month", "min temp", "coldest month"),
+    "SBIO7"  = c("temperature annual range", "annual range", "tar"),
+    "SBIO8"  = c("mean temperature wettest quarter", "wettest quarter"),
+    "SBIO9"  = c("mean temperature driest quarter", "driest quarter"),
+    "SBIO10" = c("mean temperature warmest quarter", "warmest quarter"),
+    "SBIO11" = c("mean temperature coldest quarter", "coldest quarter"),
+    
+    # Monthly Means
+    "soilT01" = c("january mean", "january", "jan"),
+    "soilT02" = c("february mean", "february", "feb"),
+    "soilT03" = c("march mean", "march", "mar"),
+    "soilT04" = c("april mean", "april", "apr"),
+    "soilT05" = c("may mean", "may"),
+    "soilT06" = c("june mean", "june", "jun"),
+    "soilT07" = c("july mean", "july", "jul"),
+    "soilT08" = c("august mean", "august", "aug"),
+    "soilT09" = c("september mean", "september", "sep"),
+    "soilT10" = c("october mean", "october", "oct"),
+    "soilT11" = c("november mean", "november", "nov"),
+    "soilT12" = c("december mean", "december", "dec")
   )
   
-  # Default to "hwsd" if vars is empty/NULL
-  if (is.null(vars)) {
-    vars <- "hwsd"
-  }
+  # Mapping from Canonical Code to Filename Base (Zenodo naming convention)
+  filename_base_map <- list(
+    "SBIO1"  = "SBIO1_Annual_Mean_Temperature",
+    "SBIO2"  = "SBIO2_Mean_Diurnal_Range",
+    "SBIO3"  = "SBIO3_Isothermality",
+    "SBIO4"  = "SBIO4_Temperature_Seasonality",
+    "SBIO5"  = "SBIO5_Max_Temperature_of_Warmest_Month",
+    "SBIO6"  = "SBIO6_Min_Temperature_of_Coldest_Month",
+    "SBIO7"  = "SBIO7_Temperature_Annual_Range",
+    "SBIO8"  = "SBIO8_Mean_Temperature_of_Wettest_Quarter",
+    "SBIO9"  = "SBIO9_Mean_Temperature_of_Driest_Quarter",
+    "SBIO10" = "SBIO10_Mean_Temperature_of_Warmest_Quarter",
+    "SBIO11" = "SBIO11_Mean_Temperature_of_Coldest_Quarter",
+    "soilT01" = "soilT_1",
+    "soilT02" = "soilT_2",
+    "soilT03" = "soilT_3",
+    "soilT04" = "soilT_4",
+    "soilT05" = "soilT_5",
+    "soilT06" = "soilT_6",
+    "soilT07" = "soilT_7",
+    "soilT08" = "soilT_8",
+    "soilT09" = "soilT_9",
+    "soilT10" = "soilT_10",
+    "soilT11" = "soilT_11",
+    "soilT12" = "soilT_12"
+  )
   
   # Normalizer: convert to lowercase, remove punctuation, normalize whitespace
   normalize_string <- function(s) {
@@ -127,7 +231,7 @@ soil <- function(x, vars = NULL, ...) {
   
   if (length(unmapped) > 0) {
     cli::cli_abort(c(
-      "Unknown HWSD variables:",
+      "Unknown Soil Climate variables:",
       "x" = "{.val {unmapped}}"
     ))
   }
@@ -148,28 +252,13 @@ soil <- function(x, vars = NULL, ...) {
       return(NULL)
     }
     
-    # HWSD comes in a zip, so we must unzip it first
-    cli::cli_alert_info("Unzipping {.val {basename(dest_file)}}...")
-    unzip_dir <- file.path(temp_dir, "unzipped")
-    fs::dir_create(unzip_dir)
-    utils::unzip(dest_file, exdir = unzip_dir)
-    
-    # Target the .bil file specifically
-    raster_file <- file.path(unzip_dir, "HWSD2.bil")
-    
-    if (!fs::file_exists(raster_file)) {
-      cli::cli_alert_warning("Expected raster file {.val HWSD2.bil} not found in archive.")
-      fs::file_delete(dest_file)
-      fs::dir_delete(unzip_dir)
-      return(NULL)
-    }
-    
     if (is_raster_input) {
-      layer <- try(terra::rast(raster_file), silent = TRUE)
+      layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
-        cli::cli_alert_warning("Could not read raster {.val {raster_file}}.")
-        fs::file_delete(dest_file)
-        fs::dir_delete(unzip_dir)
+        cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
@@ -216,19 +305,21 @@ soil <- function(x, vars = NULL, ...) {
       
       rm(layer, layer1)
       gc()
-      fs::file_delete(dest_file)
-      fs::dir_delete(unzip_dir)
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
       
     } else {
       
       cli::cli_alert_info("Extracting values from {.val {user_name}}...")
       
-      extracted <- try(process_points(file = raster_file, points = points), silent = TRUE)
+      extracted <- try(process_points(file = dest_file, points = points), silent = TRUE)
       
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
-        fs::file_delete(dest_file)
-        fs::dir_delete(unzip_dir)
+        if (!is_global) {
+          fs::file_delete(dest_file)
+        }
         return(NULL)
       }
       
@@ -249,23 +340,32 @@ soil <- function(x, vars = NULL, ...) {
       
       rm(extracted)
       gc()
-      fs::file_delete(dest_file)
-      fs::dir_delete(unzip_dir)
+      if (!is_global) {
+        fs::file_delete(dest_file)
+      }
     }
   }
   
   # --------------------------------------------------------------------
   # Loop through requested variables
   # --------------------------------------------------------------------
-  # Since there is only one source file for this function, we define it directly.
-  full_url <- "https://s3.eu-west-1.amazonaws.com/data.gaezdev.aws.fao.org/HWSD/HWSD2_RASTER.zip"
+  base_url <- "https://zenodo.org/records/4558732/files"
   
-  cli::cli_alert_info("Starting the download of HWSD data...")
+  # Format depth string for filename (0-5 -> 0_5cm)
+  depth_str <- paste0(gsub("-", "_", depth), "cm")
+  
+  cli::cli_alert_info(paste0("Processing Global Soil Temperature data (Depth: ", depth, ")..."))
   
   for (canon in requested_codes) {
-    # For this specific dataset, the filename/URL is constant regardless of the code
-    filename <- "HWSD2_RASTER.zip"
-    url <- full_url
+    # Construct filename based on map and depth
+    # Structure: {BaseName}_{Depth}.tif
+    file_base <- filename_base_map[[canon]]
+    filename <- paste0(file_base, "_", depth_str, ".tif")
+    
+    # Zenodo requires ?download=1 appended to the URL
+    url <- paste0(file.path(base_url, filename), "?download=1")
+    
+    # Destination file (remove query string for local saving)
     dest <- file.path(fs::path_temp("envar/soil"), filename)
     
     # Get the user's original name for this canonical code
@@ -317,10 +417,10 @@ soil <- function(x, vars = NULL, ...) {
         
         processed_stack <-terra::crop(terra::mask(processed_stack, land_sf), land_sf)
       }
-      
       attr(processed_stack, "global_extent") <- current_global_extent
       attr(processed_stack, "is_global") <- TRUE
     }
+    
     attr(processed_stack, "set_na") <- set_na
     attr(processed_stack, "path") <- path
     attr(processed_stack, "land")<-land
@@ -342,6 +442,7 @@ soil <- function(x, vars = NULL, ...) {
     if (!is.null(path)){
       terra::writeRaster(processed_stack, path, overwrite = TRUE)
     }
+    
     cli::cli_alert_success("All layers processed and stacked successfully")
     return(processed_stack)
   } else {

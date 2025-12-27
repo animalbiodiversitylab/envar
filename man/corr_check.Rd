@@ -7,28 +7,43 @@
 corr_check(x)
 }
 \arguments{
-\item{x}{A `SpatRaster`, `data.frame`, or a list containing `extracted_df`.}
+\item{x}{A `SpatRaster`, `data.frame`, or a list containing `data` or `extracted_df`
+(e.g., output from `extr_check()`).}
 }
 \value{
 A `list` object containing:
 \itemize{
-  \item `data`: The input data used.
+  \item `data`: The input environmental data used.
   \item `correlation_matrix`: Pearson correlation matrix.
   \item `vif`: Variance Inflation Factor data frame.
   \item `summary`: Character vector highlighting high correlation or VIF.
   \item `plot_path`: Path to the saved correlation plot.
+  \item Any additional elements from input list (e.g., `extrapolation` from `extr_check()`).
 }
 }
 \description{
-`corr_check()` is the optional end point for the **envar** package workflow. 
+`corr_check()` is an optional function for the **envar** package workflow. 
 It allows you to check for variable correlation and multi-collinearity among 
-the variables over the study area.
+the variables over the study area. It can be used before or after `extr_check()`.
 }
 \examples{
 \dontrun{
+# Example 1: Basic usage after environmental variable extraction
 processed_bilayer_corr_check <- var_get(country = "Italy", crs=3035, buffer = 10) \%>\% 
   esalandcover(vars=c("ice")) \%>\% 
   chelsa(vars=c("pr"), months= 12, year=2015) \%>\% 
+  corr_check()
+
+# Example 2: Chain with extr_check() (corr_check before extr_check)
+result <- var_get(country = "Italy") \%>\% 
+  chelsa(vars = c("bio1", "bio12")) \%>\% 
+  corr_check() \%>\%
+  extr_check(calib_points = my_points)
+
+# Example 3: Chain with extr_check() (extr_check before corr_check)
+result <- var_get(country = "Italy") \%>\% 
+  chelsa(vars = c("bio1", "bio12")) \%>\% 
+  extr_check(calib_points = my_points) \%>\%
   corr_check()
 }
 }
