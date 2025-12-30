@@ -73,19 +73,34 @@ reference:
       - protection
       - esalandcover
       - earthenvlandcover
+      - geososlandcover
+      - gcamlandcover
+      - pftlandcover
+      - biooracle
       - heterogeneity
       - aridity
       - cloudcover
       - climatezones
       - soil
+      - soilclimate
+      - gdppast
+      - gdpfuture
+      - population
+      - habitat
       
   - title: Correlation
     desc: Function for identifying correlated variables
     contents:
       - corr_check
       
+  - title: Extrapolation
+    desc: Function for mapping extrapolation to prediction areas
+    contents:
+      - extr_check
+      
   - title: Datasets
     desc: Included data for examples and testing
     contents:
       - Alps
       - Apollo
+      - Europe

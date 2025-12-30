@@ -2,9 +2,9 @@
 % Please edit documentation in R/habitat.R
 \name{habitat}
 \alias{habitat}
-\title{Download and process IUCN Global Habitat Classification layers}
+\title{Download and process IUCN Habitat Classification layers}
 \usage{
-habitat(x, vars, level = 1, year = 2019, ...)
+habitat(x, vars, level = 1, ...)
 }
 \arguments{
 \item{x}{The output from `var_get()` defining the area or locations for extraction, 
@@ -13,9 +13,7 @@ Leave this empty and use `var_get()` to define parameters for download.}
 
 \item{vars}{Character vector of one or more variables to download and process.}
 
-\item{level}{Integer. The level of habitat detail (1 for broad, 2 for detailed). Default is 1.}
-
-\item{year}{Integer. The year of the dataset (2016, 2017, 2018, or 2019). Default is 2019.}
+\item{level}{Integer. The classification level to download. 1 (broad) or 2 (detailed). Defaults to 1.}
 
 \item{...}{Additional arguments (currently unused).}
 }
@@ -24,168 +22,71 @@ If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` sta
 }
 \description{
 This function downloads, processes, and extracts variables from the
-IUCN Global Habitat Classification dataset. Each variable corresponds to a 
-global fractional cover map representing habitat types for a specific year.
+IUCN Global Habitat Classification Fractions dataset (Jung et al., 2020).
+The data is available at Level 1 (broad) and Level 2 (detailed) classifications.
 }
 \details{
-Available variables for Level 1 (broad habitat types):
+Available variables (Level 1):
 
-1 - "Forest" ("forest", "woodland")
+1 - "100_Forest"
 
-2 - "Savanna" ("savanna")
+2 - "200_Savanna"
 
-3 - "Shrubland" ("shrubland", "shrub")
+3 - "300_Shrubland"
 
-4 - "Grassland" ("grassland", "grass")
+4 - "400_Grassland"
 
-5 - "Wetlands inland" ("wetlands inland", "inland wetlands", "wetland")
+5 - "500_Wetlands inland"
 
-6 - "Rocky Areas" ("rocky areas", "rocky", "rocks")
+6 - "600_Rocky Areas"
 
-7 - "Desert" ("desert")
+7 - "800_Desert"
 
-8 - "Marine - Neritic" ("marine neritic", "neritic")
+8 - "900_Marine - Neritic"
 
-9 - "Marine - Oceanic" ("marine oceanic", "oceanic")
+9 - "1000_Marine - Oceanic"
 
-10 - "Marine - Deep Ocean Floor" ("marine deep ocean floor", "deep ocean floor")
+10 - "1100_Marine - Deep Ocean Floor"
 
-11 - "Marine - Intertidal" ("marine intertidal", "intertidal")
+11 - "1200_Marine - Intertidal"
 
-12 - "Artificial - Terrestrial" ("artificial terrestrial", "artificial", "urban")
+12 - "1400_Artificial - Terrestrial"
 
-Available variables for Level 2 (detailed habitat types):
+Available variables (Level 2 - Selection):
 
-Forest:
+Forests: "101_Forest - Boreal", "104_Forest - Temperate", "105_Forest - Subtropical-tropical dry", "106_Forest - Subtropical-tropical moist lowland", "107_Forest - Subtropical-tropical mangrove vegetation", "108_Forest - Subtropical-tropical swamp"
 
-1 - "Forest" ("forest")
+Savannas: "201_Savanna - Dry", "202_Savanna - Moist"
 
-2 - "Forest - Boreal" ("forest boreal", "boreal forest")
+Shrublands: "303_Shrubland - Boreal", "304_Shrubland - Temperate", "305_Shrubland - Subtropical-tropical dry", "306_Shrubland - Subtropical-tropical moist", "308_Shrubland - Mediterranean-type"
 
-3 - "Forest - Subarctic" ("forest subarctic")
+Grasslands: "401_Grassland - Tundra", "404_Grassland - Temperate", "405_Grassland - Subtropical-tropical dry", "1402_Pastureland"
 
-4 - "Forest - Subantarctic" ("forest subantarctic")
+Wetlands: "501_Wetlands inland - Permanent rivers-streams-creeks", "504_Wetlands inland - Bogs, marshes, swamps, fens, peatlands", "505_Wetlands inland - Permanent freshwater lakes"
 
-5 - "Forest - Temperate" ("forest temperate")
+Deserts: "801_Desert - Hot", "802_Desert - Temperate", "803_Desert - Cold"
 
-6 - "Forest - Subtropical-tropical dry" ("forest subtropical tropical dry", "dry forest")
+Artificial: "1401_Arable Land", "1403_Plantations", "1405_Urban Areas"
 
-7 - "Forest - Subtropical-tropical moist lowland" ("forest subtropical tropical moist lowland", "moist lowland forest")
-
-8 - "Forest - Subtropical-tropical mangrove vegetation" ("forest mangrove", "mangrove")
-
-9 - "Forest - Subtropical-tropical swamp" ("forest swamp", "swamp forest")
-
-10 - "Forest - Subtropical-tropical moist montane" ("forest montane", "montane forest")
-
-Savanna:
-
-11 - "Savanna" ("savanna")
-
-12 - "Savanna - Dry" ("savanna dry")
-
-13 - "Savanna - Moist" ("savanna moist")
-
-Shrubland:
-
-14 - "Shrubland" ("shrubland")
-
-15 - "Shrubland - Subarctic" ("shrubland subarctic")
-
-16 - "Shrubland - Subantarctic" ("shrubland subantarctic")
-
-17 - "Shrubland - Boreal" ("shrubland boreal")
-
-18 - "Shrubland - Temperate" ("shrubland temperate")
-
-19 - "Shrubland - Subtropical-tropical dry" ("shrubland dry")
-
-20 - "Shrubland - Subtropical-tropical moist" ("shrubland moist")
-
-21 - "Shrubland - Subtropical-tropical high altitude" ("shrubland high altitude")
-
-22 - "Shrubland - Mediterranean-type" ("shrubland mediterranean")
-
-Grassland:
-
-23 - "Grassland" ("grassland")
-
-24 - "Grassland - Tundra" ("grassland tundra", "tundra")
-
-25 - "Grassland - Subarctic" ("grassland subarctic")
-
-26 - "Grassland - Subantarctic" ("grassland subantarctic")
-
-27 - "Grassland - Temperate" ("grassland temperate")
-
-28 - "Grassland - Subtropical-tropical dry" ("grassland dry")
-
-29 - "Grassland - Subtropical-tropical seasonally wet-flood" ("grassland seasonally wet", "grassland flood")
-
-30 - "Grassland - Subtropical-tropical high altitude" ("grassland high altitude")
-
-Wetlands:
-
-31 - "Wetlands inland" ("wetlands inland")
-
-32 - "Wetlands inland - Permanent rivers-streams-creeks" ("rivers", "streams")
-
-33 - "Wetlands inland - Bogs, marshes, swamps, fens, peatlands" ("bogs", "marshes", "swamps", "peatlands")
-
-34 - "Wetlands inland - Permanent freshwater lakes" ("freshwater lakes", "lakes")
-
-35 - "Wetlands inland - Tundra wetlands" ("tundra wetlands")
-
-36 - "Wetlands inland - Alpine wetlands" ("alpine wetlands")
-
-Rocky Areas & Deserts:
-
-37 - "Rocky Areas" ("rocky areas")
-
-38 - "Desert" ("desert")
-
-39 - "Desert - Hot" ("desert hot")
-
-40 - "Desert - Temperate" ("desert temperate")
-
-41 - "Desert - Cold" ("desert cold")
-
-Marine:
-
-42 - "Marine - Neritic" ("marine neritic")
-
-43 - "Marine - Oceanic" ("marine oceanic")
-
-44 - "Marine - Deep Ocean Floor" ("marine deep ocean")
-
-45 - "Marine - Intertidal" ("marine intertidal")
-
-Artificial:
-
-46 - "Artificial - Terrestrial" ("artificial terrestrial")
-
-47 - "Arable Land" ("arable land", "arable")
-
-48 - "Pastureland" ("pastureland", "pasture")
-
-49 - "Plantations" ("plantations")
-
-50 - "Rural Gardens" ("rural gardens")
-
-51 - "Urban Areas" ("urban areas", "urban")
+(Note: Synonyms are supported, e.g., "Forest", "Boreal Forest", "Mangrove", "Urban")
 
 Citation:
 
-Jung, M., Dahal, P.R., Butchart, S.H.M., Donald, P.F., De Lamo, X., Lesiv, M., Kapos, V., Rondinini, C., Visconti, P., (2020). 
-"A global map of terrestrial habitat types." 
-Sci. Data 7, 256. 
+Jung, M., Dahal, P.R., Butchart, S.H.M., Donald, P.F., De Lamo, X., Lesiv, M., Kapos, V., Rondinini, C., Visconti, P., (2020).
+"A global map of terrestrial habitat types."
+Sci. Data 7, 256.
 https://doi.org/10.1038/s41597-020-00599-8
 
 Note: Please cite original sources of primary datasets where appropriate.
 }
 \examples{
 \dontrun{
+# Level 1 extraction
 processed <- var_get(country= "Italy", crs=3035) \%>\% 
-habitat(vars=c("Forest", "Savanna"), level=1, year=2019)
-   }
+  habitat(vars=c("Forest", "Artificial"), level = 1)
+
+# Level 2 extraction
+processed_l2 <- var_get(country= "Brazil", crs=3035) \%>\% 
+  habitat(vars=c("Mangrove", "Tropical moist lowland forest"), level = 2)
+  }
 }

@@ -1,4 +1,4 @@
-# R/futurelandcover.R
+# R/gcamlandcover.R
 
 #' Download and process Global Future Land Use/Cover layers (2020-2100)
 #'
@@ -57,7 +57,7 @@
 #' }
 #' @export
 
-futurelandcover <- function(x, vars = "landcover", ssp = 126, year = 2020, ...) {
+gcamlandcover <- function(x, vars = "landcover", ssp = 126, year = 2020, ...) {
   
   # --------------------------------------------------------------------
   # Citation displayed on execution
