@@ -64,7 +64,7 @@ accessibility <- function(x, vars, ...) {
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using Global Accessibility Indicators.\n",
-    "Citation: Nelson, A., Weiss, D.J., van Etten, J. et al. (2019). A suite of global accessibility indicators. Sci Data 6, 266.\n",
+    "Citation: Nelson A, Weiss DJ, van Etten J et al (2019). A suite of global accessibility indicators. Scientific Data.\n",
     "DOI: {.url https://doi.org/10.1038/s41597-019-0265-5}\n"
   ))
   
@@ -159,7 +159,7 @@ accessibility <- function(x, vars, ...) {
     syn2canon[[normalize_string(canon)]] <- canon
   }
   
-  # Convert requested vars to canonical codes AND keep mapping to original names
+  # Convert requested vars to canonical codes and keep mapping to original names
   requested_codes <- character(0)
   code_to_user_name <- list() # Maps canonical code -> user's original name
   unmapped <- character(0)
@@ -396,7 +396,7 @@ accessibility <- function(x, vars, ...) {
     # This ensures the CRS is preserved when chaining point extractions
     attr(extracted_df, "envar_crs") <- crs
     attr(extracted_df, "path") <- path
-    # write if requested
+    # Write if requested
     if (!is.null(path)){
       write.csv(extracted_df, path)
     }

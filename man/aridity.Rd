@@ -35,22 +35,19 @@ raster representing aridity index or potential evapotranspiration values.
 
 \strong{Monthly Aridity Index}
 \itemize{
-  \item "ai_v3_01.tif" to "ai_v3_12.tif"
-  \item Synonyms: "aridity index january" ... "december", "ai jan" ... "dec", "ai 01" ... "12"
+  \item "ai_v3_01.tif" ... "ai_v3_12.tif" ("aridity index january"..."december", "ai jan"..."dec", "ai 01"..."12")
 }
 
 \strong{Monthly Potential Evapotranspiration (ET0)}
 \itemize{
-  \item "et0_v3_01.tif" to "et0_v3_12.tif"
-  \item Synonyms: "et0 january" ... "december", "et0 jan" ... "dec", "et0 01" ... "12"
+  \item "et0_v3_01.tif" ... "et0_v3_12.tif" ("et0 january"..."december", "et0 jan"..."dec", "et0 01"..."12")
 }
 
 \strong{Citation:}\cr
-Zomer, R. J., Xu, J., & Trabucco, A. (2022). "Version 3 of the Global Aridity 
-Index and Potential Evapotranspiration Database." Scientific Data, 9, 409.
+Zomer RJ, Xu J, Trabucco A (2022). "Version 3 of the Global Aridity Index and Potential Evapotranspiration Database." Scientific Data 9, 409.
 https://doi.org/10.1038/s41597-022-01493-1
 
-\strong{Note:} Data is downloaded from Figshare (Article ID 7504448).
+Note: Data is downloaded from Figshare (Article ID 7504448).
 }
 \examples{
 \dontrun{

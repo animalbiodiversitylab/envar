@@ -18,22 +18,19 @@
 #'
 #' \strong{Monthly Aridity Index}
 #' \itemize{
-#'   \item "ai_v3_01.tif" to "ai_v3_12.tif"
-#'   \item Synonyms: "aridity index january" ... "december", "ai jan" ... "dec", "ai 01" ... "12"
+#'   \item "ai_v3_01.tif" ... "ai_v3_12.tif" ("aridity index january"..."december", "ai jan"..."dec", "ai 01"..."12")
 #' }
 #'
 #' \strong{Monthly Potential Evapotranspiration (ET0)}
 #' \itemize{
-#'   \item "et0_v3_01.tif" to "et0_v3_12.tif"
-#'   \item Synonyms: "et0 january" ... "december", "et0 jan" ... "dec", "et0 01" ... "12"
+#'   \item "et0_v3_01.tif" ... "et0_v3_12.tif" ("et0 january"..."december", "et0 jan"..."dec", "et0 01"..."12")
 #' }
 #'
 #' \strong{Citation:}\cr
-#' Zomer, R. J., Xu, J., & Trabucco, A. (2022). "Version 3 of the Global Aridity 
-#' Index and Potential Evapotranspiration Database." Scientific Data, 9, 409.
+#' Zomer RJ, Xu J, Trabucco A (2022). "Version 3 of the Global Aridity Index and Potential Evapotranspiration Database." Scientific Data 9, 409.
 #' https://doi.org/10.1038/s41597-022-01493-1
 #'
-#' \strong{Note:} Data is downloaded from Figshare (Article ID 7504448).
+#' Note: Data is downloaded from Figshare (Article ID 7504448).
 #' 
 #' @param x The output from `var_get()` defining the area or locations for extraction, 
 #' the reference system, and the buffer. 
@@ -62,7 +59,7 @@ aridity <- function(x, vars, ...) {
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using Global Aridity Index and ET0 Database v3.\n",
-    "Citation: Zomer, R. J., Xu, J., & Trabucco, A. (2022). Version 3 of the Global Aridity Index and Potential Evapotranspiration Database. Scientific Data.\n",
+    "Citation: Zomer RJ, Xu J, Trabucco A (2022). Version 3 of the Global Aridity Index and Potential Evapotranspiration Database. Scientific Data.\n",
     "DOI: {.url https://doi.org/10.1038/s41597-022-01493-1}\n"
   ))
   
@@ -115,15 +112,15 @@ aridity <- function(x, vars, ...) {
     }
   }
   
-  # Build Friendly Name Dictionary
+  # Build friendly name dictionary
   aridity_lookup <- list()
   
-  # Annual Variables
+  # Annual variables
   aridity_lookup[["ai_v3_yr.tif"]]     <- c("aridity index annual", "ai annual", "aridity annual", "ai year")
   aridity_lookup[["et0_v3_yr.tif"]]    <- c("et0 annual", "potential evapotranspiration annual", "evapotranspiration annual", "et0 year")
   aridity_lookup[["et0_v3_yr_sd.tif"]] <- c("et0 standard deviation", "et0 sd", "et0 variability", "et0 annual sd")
   
-  # Monthly AI Variables (Jan-Dec)
+  # Monthly aridity index variables (Jan-Dec)
   for (i in 1:12) {
     code <- sprintf("ai_v3_%02d.tif", i)
     m_name <- tolower(month.name[i])
@@ -135,7 +132,7 @@ aridity <- function(x, vars, ...) {
     )
   }
   
-  # Monthly ET0 Variables (Jan-Dec)
+  # Monthly potential evapotranspiration variables (Jan-Dec)
   for (i in 1:12) {
     code <- sprintf("et0_v3_%02d.tif", i)
     m_name <- tolower(month.name[i])
@@ -164,7 +161,7 @@ aridity <- function(x, vars, ...) {
     syn2canon[[normalize_string(canon)]] <- canon
   }
   
-  # Convert requested vars to canonical codes AND keep mapping to original names
+  # Convert requested vars to canonical codes and keep mapping to original names
   requested_codes <- character(0)
   code_to_user_name <- list() # Maps canonical code -> user's original name
   unmapped <- character(0)
@@ -173,7 +170,7 @@ aridity <- function(x, vars, ...) {
     key <- normalize_string(v)
     if (!is.null(syn2canon[[key]])) {
       canon <- syn2canon[[key]]
-      # Only add if not already present (avoid duplicates)
+      # Only add if not already present
       if (!(canon %in% requested_codes)) {
         requested_codes <- c(requested_codes, canon)
         # Store the user's original name for this canonical code
@@ -199,7 +196,7 @@ aridity <- function(x, vars, ...) {
     temp_dir <- fs::path_temp("envar/aridity")
     fs::dir_create(temp_dir)
     
-    # 1. Identify necessary zips based on the requested variable
+    # Identify necessary zips based on the requested variable
     sub_zip_name <- file_to_zip[canon]
     main_zip_file <- file.path(temp_dir, "Global_Aridity_ET0_v3.zip")
     sub_zip_file <- file.path(temp_dir, paste0(sub_zip_name, ".zip"))
@@ -226,7 +223,7 @@ aridity <- function(x, vars, ...) {
       })
     }
     
-    # --- Inspect sub-zip content to find the actual file path ---
+    # Inspect sub-zip content to find the actual file path
     cli::cli_alert_info("Locating {.val {user_name}} inside {.val {sub_zip_name}}...")
     
     # List files inside the sub-zip
@@ -237,7 +234,7 @@ aridity <- function(x, vars, ...) {
       return(NULL)
     }
     
-    # Search for the file in the zip list (matches "folder/file.tif" or "file.tif")
+    # Search for the file in the zip list
     target_file_in_zip <- grep(paste0(canon, "$"), zip_contents$Name, value = TRUE)
     
     if (length(target_file_in_zip) == 0) {
@@ -245,11 +242,9 @@ aridity <- function(x, vars, ...) {
       return(NULL)
     }
     
-    # Use the first match (usually there's only one)
     target_file_in_zip <- target_file_in_zip[1]
     final_tif <- file.path(temp_dir, target_file_in_zip)
     
-    # Only extract if not already extracted
     if (!fs::file_exists(final_tif)) {
       cli::cli_alert_info("Extracting {.val {user_name}}...")
       tryCatch({
@@ -260,7 +255,7 @@ aridity <- function(x, vars, ...) {
       })
     }
     
-    # 3. Process the extracted TIF
+    # Process the extracted TIF
     if (is_raster_input) {
       layer <- try(terra::rast(final_tif), silent = TRUE)
       if (inherits(layer, "try-error")) {
@@ -378,7 +373,6 @@ aridity <- function(x, vars, ...) {
         )
       } else {
         # Regional mode: resample new layers to match input raster exactly
-        # This ensures perfect alignment for stacking
         if (!terra::compareGeom(x, processed_stack, stopOnError = FALSE)) {
           cli::cli_alert_info("Aligning new layers to match input raster geometry...")
           processed_stack <- terra::resample(processed_stack, x, method = "bilinear")
@@ -413,7 +407,7 @@ aridity <- function(x, vars, ...) {
     attr(processed_stack, "path") <- path
     attr(processed_stack, "land") <- land
     
-    # remove NAs if necessary
+    # Remove NAs if necessary
     if (set_na==TRUE){
       
       cli::cli_alert_info("Applying NA mask...")
@@ -423,8 +417,6 @@ aridity <- function(x, vars, ...) {
       processed_stack <- terra::mask(processed_stack, master_mask)
       
     }
-    
-    # write if requested
     
     if (!is.null(path)){
       terra::writeRaster(processed_stack, path, overwrite = TRUE)
@@ -445,13 +437,11 @@ aridity <- function(x, vars, ...) {
     }
     
     # Store the CRS as an attribute for downstream functions
-    # This ensures the CRS is preserved when chaining point extractions
     attr(extracted_df, "envar_crs") <- crs
     attr(extracted_df, "path") <- path
     
     cli::cli_alert_success("Extraction completed successfully")
     
-    # write if requested
     if (!is.null(path)){
       write.csv(extracted_df, path)
     }
