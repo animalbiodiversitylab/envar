@@ -5,59 +5,42 @@
 #' This function downloads, processes, and extracts variables from the
 #' Bio-ORACLE v3.0 dataset.
 #'
-#' Available variables (working synonyms in parentheses and ""):
+#' @details
+#' \strong{Available variables} (working synonyms in parentheses and ""):
 #' 
-#' 1 - "thetao" (Ocean temperature; [ºC]) ("temperature", "temp", "sea temperature")
-#' 
-#' 2 - "so" (Salinity; [-]) ("sal", "salt", "saltiness")
-#' 
-#' 3 - "sws" (Sea water velocity; [m.s-1]) ("velocity", "current speed", "speed")
-#' 
-#' 4 - "swd" (Sea water direction; [degree]) ("direction", "current direction")
-#' 
-#' 5 - "no3" (Nitrate; [mmol . m-3]) ("nitrate")
-#' 
-#' 6 - "po4" (Phosphate; [mmol . m-3]) ("phosphate")
-#' 
-#' 7 - "si" (Silicate; [mmol . m-3]) ("silicate", "silicon")
-#' 
-#' 8 - "o2" (Dissolved molecular oxygen; [mmol . m-3]) ("oxygen", "dissolved oxygen", "o2")
-#' 
-#' 9 - "dfe" (Iron; [mmol . m-3]) ("iron", "fe")
-#' 
-#' 10 - "phyc" (Primary productivity; [mmol . m-3]) ("productivity", "pp", "primary production")
-#' 
-#' 11 - "ph" (pH; [-]) ("acidity")
-#' 
-#' 12 - "chl" (Chlorophyll; [mg . m-3]) ("chlorophyll", "chla")
-#' 
-#' 13 - "sithick" (Sea ice thickness; [m]) ("ice thickness")
-#' 
-#' 14 - "siconc" (Sea ice cover; [Fraction]) ("ice cover", "sea ice")
-#' 
-#' 15 - "clt" (Cloud cover; [%]) ("cloud", "clouds")
-#' 
-#' 16 - "mlotst" (Mixed layer depth; [m]) ("mld", "mixed layer")
-#' 
-#' 17 - "tas" (Air temperature; [ºC]) ("air temperature", "air temp")
-#' 
-#' 18 - "par" (Photosynt. Avail. Radiation; [E.m-2.day-1]) ("light", "radiation")
-#' 
-#' 19 - "kdpar" (Diffuse attenuation; [m-1]) ("attenuation", "turbidity")
-#' 
-#' 20 - "bathymetry" (Bathymetry; [m]) ("depth", "elevation", "altitude")
-#' 
-#' 21 - "slope" (Topographic slope; [-]) ("topographic slope")
-#' 
-#' 22 - "aspect" (Topographic aspect; [-]) ("topographic aspect")
-#' 
-#' 23 - "tpi" (Topographic position index; [-]) ("topographic position index")
-#' 
-#' 24 - "tri" (Terrain ruggedness index; [-]) ("terrain ruggedness index", "ruggedness")
+#' \itemize{
+#'   \item 1 - "thetao" (Ocean temperature; [ºC]) ("temperature", "temp", "sea temperature")
+#'   \item 2 - "so" (Salinity; [-]) ("sal", "salt", "saltiness")
+#'   \item 3 - "sws" (Sea water velocity; [m.s-1]) ("velocity", "current speed", "speed")
+#'   \item 4 - "swd" (Sea water direction; [degree]) ("direction", "current direction")
+#'   \item 5 - "no3" (Nitrate; [mmol . m-3]) ("nitrate")
+#'   \item 6 - "po4" (Phosphate; [mmol . m-3]) ("phosphate")
+#'   \item 7 - "si" (Silicate; [mmol . m-3]) ("silicate", "silicon")
+#'   \item 8 - "o2" (Dissolved molecular oxygen; [mmol . m-3]) ("oxygen", "dissolved oxygen", "o2")
+#'   \item 9 - "dfe" (Iron; [mmol . m-3]) ("iron", "fe")
+#'   \item 10 - "phyc" (Primary productivity; [mmol . m-3]) ("productivity", "pp", "primary production")
+#'   \item 11 - "ph" (pH; [-]) ("acidity")
+#'   \item 12 - "chl" (Chlorophyll; [mg . m-3]) ("chlorophyll", "chla")
+#'   \item 13 - "sithick" (Sea ice thickness; [m]) ("ice thickness")
+#'   \item 14 - "siconc" (Sea ice cover; [Fraction]) ("ice cover", "sea ice")
+#'   \item 15 - "clt" (Cloud cover; [%]) ("cloud", "clouds")
+#'   \item 16 - "mlotst" (Mixed layer depth; [m]) ("mld", "mixed layer")
+#'   \item 17 - "tas" (Air temperature; [ºC]) ("air temperature", "air temp")
+#'   \item 18 - "par" (Photosynt. Avail. Radiation; [E.m-2.day-1]) ("light", "radiation")
+#'   \item 19 - "kdpar" (Diffuse attenuation; [m-1]) ("attenuation", "turbidity")
+#'   \item 20 - "bathymetry" (Bathymetry; [m]) ("depth", "elevation", "altitude")
+#'   \item 21 - "slope" (Topographic slope; [-]) ("topographic slope")
+#'   \item 22 - "aspect" (Topographic aspect; [-]) ("topographic aspect")
+#'   \item 23 - "tpi" (Topographic position index; [-]) ("topographic position index")
+#'   \item 24 - "tri" (Terrain ruggedness index; [-]) ("terrain ruggedness index", "ruggedness")
+#' }
 #'
-#' Citation:
-#' Assis, J., et al. (2024). "Bio-ORACLE v3.0. Pushing marine data layers to the CMIP6 Earth system models of climate change research." 
-#' Global Ecology and Biogeography. DOI: {.url https://doi.org/10.1111/geb.13813}
+#' \strong{Citation:}\cr
+#' Assis J, Fernández Bejarano SJ, Salazar VW, Schepers L, Gouvêa L, Fragkopoulou E,
+#' Leclercq F, Vanhoorne B, Tyberghein L, Serrão EA, Verbruggen H, De Clerck O (2024).
+#' "Bio-ORACLE v3.0. Pushing marine data layers to the CMIP6 Earth system models of 
+#' climate change research." Global Ecology and Biogeography, 33, e13813.
+#' https://doi.org/10.1111/geb.13813
 #'
 #' @param x The output from `var_get()` defining the area or locations.
 #' @param vars Character vector of one or more variables or synonyms to download.
@@ -67,6 +50,14 @@
 #' @param algorithm Character. Statistic to apply (max, mean, min, ltmax, ltmin, range). Default "mean".
 #' @param ... Additional arguments.
 #'
+#' @return
+#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+#'
+#' @examples
+#' \dontrun{
+#' processed <- var_get(country= "Italy", crs=3035) %>% 
+#' biooracle(vars=c("temperature", "salinity"))
+#'   }
 #' @export
 
 biooracle <- function(x, vars, realm = "surface", years = "2000-2010", 
@@ -77,7 +68,7 @@ biooracle <- function(x, vars, realm = "surface", years = "2000-2010",
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using Bio-ORACLE data.\n",
-    "Citation: Assis, J., et al. (2024). Bio-ORACLE v3.0. Pushing marine data layers to the CMIP6 Earth system models of climate change research. Global Ecology and Biogeography.\n",
+    "Citation: Assis J, Fernández Bejarano SJ, Salazar VW, Schepers L, Gouvêa L, Fragkopoulou E, Leclercq F, Vanhoorne B, Tyberghein L, Serrão EA, Verbruggen H, De Clerck O (2024). Bio-ORACLE v3.0. Pushing marine data layers to the CMIP6 Earth system models of climate change research. Global Ecology and Biogeography.\n",
     "DOI: {.url https://doi.org/10.1111/geb.13813}"
   ))
   
@@ -101,7 +92,7 @@ biooracle <- function(x, vars, realm = "surface", years = "2000-2010",
   extracted_df <- NULL
   
   # --------------------------------------------------------------------
-  # Synonym Mapping Logic
+  # Friendly-name -> canonical code mapping
   # --------------------------------------------------------------------
   oracle_lookup <- list(
     "thetao"     = c("temperature", "temp", "sea temperature", "ocean temperature"),
