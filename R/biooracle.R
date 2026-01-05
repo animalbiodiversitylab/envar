@@ -36,7 +36,7 @@
 #' }
 #'
 #' \strong{Citation:}\cr
-#' Assis J, Fernández Bejarano SJ, Salazar VW, Schepers L, Gouvêa L, Fragkopoulou E, Leclercq F, Vanhoorne B, Tyberghein L, Serrão EA, Verbruggen H, De Clerck O (2024). "Bio-ORACLE v3.0. Pushing marine data layers to the CMIP6 Earth system models of climate change research." Global Ecology and Biogeography.
+#' Assis J, Fernández Bejarano SJ, Salazar VW, Schepers L, Gouvêa L, Fragkopoulou E, Leclercq F, Vanhoorne B, Tyberghein L, Serrão EA, Verbruggen H, De Clerck O (2024). "Bio-ORACLE v3.0. Pushing marine data layers to the CMIP6 Earth system models of climate change research." Global Ecology and Biogeography, 33, e13813.
 #' https://doi.org/10.1111/geb.13813
 #'
 #' @param x The output from `var_get()` defining the area or locations.
