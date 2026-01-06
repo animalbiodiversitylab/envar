@@ -42,10 +42,12 @@ _envar_ is an _R_ package that enables the download of a wide range of environme
 
 # 2. Load the package
 
-First we load the _envar_ package. When executing this command, other five packages (`dplyr`, `terra`, `sf`, `corrplot`, `usdm`) will be automatically loaded to ensure the full functionality of the package.
+First we load _envar_. When executing this command, another package (`dplyr`) will be automatically loaded to ensure the full functionality of the package. However, other packages are often required for plotting and further analyses and we also load them here for later use.
 
-```{r,eval=FALSE,results='hide',message =FALSE,warning=FALSE}
-library(envar)
+```{r, results='hide',message =FALSE,warning=FALSE}
+require(envar)
+require(terra)
+require(sf)
 ```
 
 # 3. Set study area

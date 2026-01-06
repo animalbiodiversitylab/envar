@@ -40,10 +40,14 @@ devtools::load_all()
 
 This document provides a comprehensive reference for all the environmental variables available in the _envar R_ package and the sources from which they can be retrieved. Each section describes a data source, lists the available variables with their synonyms, provides usage examples, and includes proper citations. Sources are grouped based on the category to which they belong (e.g. land cover, climate, etc.). For each source, the available variables are listed alongside synonyms that can be used inside the vars argument interchangeably (except for the chelsa and worldclim functions that do not allow the use of synonyms and the exact codes must be used).
 
-The first step is to load the library. When executing this command, other five packages (`dplyr`, `terra`, `sf`, `corrplot`, `usdm`) will be automatically loaded to ensure the full functionality of the package.
+# Load package
 
-```{r,results='hide',message =FALSE,warning=FALSE}
-library(envar)
+When executing this command, another package (`dplyr`) will be automatically loaded to ensure the full functionality of the package. However, other packages are often required for plotting and further analyses and we also load them here for later use.
+
+```{r, results='hide',message =FALSE,warning=FALSE}
+require(envar)
+require(terra)
+require(sf)
 ```
 
 # Climate
