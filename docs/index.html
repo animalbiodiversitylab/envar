@@ -93,22 +93,26 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install using the "remotes" package</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://remotes.r-lib.org" class="external-link">remotes</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"animalbiodiversitylab/envar"</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                         build_vignettes<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"animalbiodiversitylab/envar"</span>, </span>
+<span>                        dependencies <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                        build_vignettes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># or alternatively using the "devtools" package</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"animalbiodiversitylab/envar"</span>, dependencies <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>                         build_vignettes<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span></span>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"animalbiodiversitylab/envar"</span>, </span>
+<span>                         dependencies <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                         build_vignettes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p>Until the scientific article relative to the package is published, the github repository is set as private and to install the package (for testing and revision) you can run the code here:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://remotes.r-lib.org" class="external-link">remotes</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"animalbiodiversitylab/envar"</span>, </span>
 <span>                        auth_token <span class="op">=</span> <span class="st">"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"</span>, </span>
-<span>                        upgrade<span class="op">=</span><span class="st">"never"</span>, </span>
-<span>                        dependencies<span class="op">=</span><span class="cn">TRUE</span>,</span>
-<span>                        build_vignettes<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span>                        upgrade <span class="op">=</span> <span class="st">"never"</span>, </span>
+<span>                        dependencies <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>                        build_vignettes <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># This code will install the package. To run the examples and vignettes, </span></span>
 <span><span class="co">#you will need to load the package as follows:</span></span>
@@ -141,14 +145,14 @@
 <div class="section level2">
 <h2 id="dependencies">Dependencies<a class="anchor" aria-label="anchor" href="#dependencies"></a>
 </h2>
-<p><code>envar</code> depends on <code>terra</code>, <code>dplyr</code>, <code>httr</code>, <code>sf</code>, <code>rnaturalearth</code>, <code>rnaturalearthdata</code>, <code>exactextractr</code>, <code>usdm</code>, <code>corrplot</code>, <code>cli</code>, <code>fs</code>, and <code>utils</code>.</p>
+<p><code>envar</code> depends on <code>terra</code>, <code>dplyr</code>, <code>httr</code>, <code>sf</code>, <code>rnaturalearth</code>, <code>rnaturalearthdata</code>, <code>exactextractr</code>, <code>usdm</code>, <code>corrplot</code>, <code>cli</code>, <code>fs</code>, <code>rangeBuilder</code>, and <code>utils</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
 <p>Please cite the <em>envar R</em> package when using it in publications, and the citation(s) associated with each source retrieved. The citations specific to each source are printed in the console during the download process. To cite the package, please use:</p>
 <blockquote>
-<p>Simoncini A, Bertoncini M, Cerofolini A, Dalpasso A, Falaschi M, Lo Parrino E (2025) envar: an R package to streamline the retrieval and processing of environmental variables. Submitted to Ecography.</p>
+<p>Simoncini A, Bertoncini M, Cerofolini A, Dalpasso A, Falaschi M, Lo Parrino E (2025) envar: an R package to streamline the retrieval and processing of environmental variables for macroecology and biogeography. Submitted to Ecography.</p>
 </blockquote>
 </div>
 <div class="section level2">
@@ -161,26 +165,25 @@
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># download variables (e.g., the percentage cover of trees and the slope) over a </span></span>
+<span><span class="co"># download variables (e.g., the percentage cover of trees, ice and the slope) over a </span></span>
 <span><span class="co"># study area (in this case, the "Alps" shapefile already included in </span></span>
 <span><span class="co"># the package)</span></span>
-<span></span>
-<span><span class="va">processed_vars</span> <span class="op">=</span> <span class="fu"><a href="reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, res <span class="op">=</span> <span class="fl">1</span>, crs<span class="op">=</span><span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trees"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="reference/topography.html">topography</a></span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"slope"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">processed_vars</span> <span class="op">=</span> <span class="fu"><a href="reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, res <span class="op">=</span> <span class="fl">1</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trees"</span>, <span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="reference/topography.html">topography</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"slope"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>We will get a set of variables already cropped to the desired area of study, and presented as a SpatRaster file with multiple layers corresponding to the different variables:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># visualize the result</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">processed_vars</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="do">## class       : SpatRaster </span></span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="do">## dimensions  : 636, 961, 2  (nrow, ncol, nlyr)</span></span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="do">## resolution  : 1000, 1000  (x, y)</span></span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="do">## extent      : 3893175, 4854175, 2216131, 2852131  (xmin, xmax, ymin, ymax)</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="do">## dimensions  : 689, 1073, 3  (nrow, ncol, nlyr)</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="do">## resolution  : 994.8978, 994.8978  (x, y)</span></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="do">## extent      : 3845222, 4912747, 2192710, 2878194  (xmin, xmax, ymin, ymax)</span></span>
 <span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="do">## coord. ref. : ETRS89-extended / LAEA Europe (EPSG:3035) </span></span>
 <span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="do">## source(s)   : memory</span></span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="do">## names       : trees,    slope </span></span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="do">## min values  :     0,  0.00000 </span></span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="do">## max values  :   100, 44.31425</span></span></code></pre></div>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="do">## names       :    trees,      ice,    slope </span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="do">## min values  :  0.00000,  0.00000,  0.00000 </span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="do">## max values  : 99.99088, 99.62656, 37.86851</span></span></code></pre></div>
 <p>For a more in-depth explanation and examples refer to the <strong><a href="https://envarpackage.netlify.app/articles/intro">Get started</a></strong> page.</p>
 </div>
 </div>

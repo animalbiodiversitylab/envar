@@ -98,7 +98,7 @@ We are glad that you found a :bug: and you can report it on the GitHub Issues ta
 
 ## Dependencies  
 
-`envar` depends on `terra`, `dplyr`, `httr`, `sf`, `rnaturalearth`, `rnaturalearthdata`, `exactextractr`, `usdm`, `corrplot`, `cli`, `fs`, and `utils`.
+`envar` depends on `terra`, `dplyr`, `httr`, `sf`, `rnaturalearth`, `rnaturalearthdata`, `exactextractr`, `usdm`, `corrplot`, `cli`, `fs`, `rangeBuilder`, and `utils`.
 
 ## Citation
 

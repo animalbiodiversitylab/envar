@@ -965,7 +965,7 @@ plot(processed[[1]])
 
 ## GDP past
 
-This function downloads, processes, and extracts variables from the global 1km gridded revised real gross domestic product and electricity consumption dataset (1992–2019) [@chen2022gdp].
+This function downloads, processes, and extracts variables from the global 1km gridded revised real gross domestic product and electricity consumption dataset (1992–2019) [@chen2022b].
 
 **Available variables (2 total)**
 
@@ -990,7 +990,7 @@ plot(processed)
 
 ## GDP future
 
-This function downloads, processes, and extracts variables from the global gridded GDP projections compatible with the five Shared Socioeconomic Pathways (SSPs) for the period 1850–2100 [@murakami2021].
+This function downloads, processes, and extracts variables from the global gridded GDP projections compatible with the five Shared Socioeconomic Pathways (SSPs) for the period 1850–2100 [@wang2022gdp].
 
 **Available variables (1 total)**
 
@@ -1021,7 +1021,7 @@ plot(processed)
 
 ## Population
 
-This function downloads, processes, and extracts variables from the Global Population Projections dataset [@wang2022]. It provides 1-km grid population distributions from 2020 to 2100 under five Shared Socioeconomic Pathways (SSPs).
+This function downloads, processes, and extracts variables from the Global Population Projections dataset [@wang2022population]. It provides 1-km grid population distributions from 2020 to 2100 under five Shared Socioeconomic Pathways (SSPs).
 
 **Available variables (1 total)**
 

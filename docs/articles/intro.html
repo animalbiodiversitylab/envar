@@ -108,11 +108,17 @@ within a single R pipeline.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install using the "remotes" package</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://remotes.r-lib.org" class="external-link">remotes</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
-<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"animalbiodiversitylab/envar"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"animalbiodiversitylab/envar"</span>, </span>
+<span>                        upgrade<span class="op">=</span><span class="st">"never"</span>, </span>
+<span>                        dependencies<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span>                        build_vignettes<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># or alternatively using the "devtools" package</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"animalbiodiversitylab/envar"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"animalbiodiversitylab/envar"</span>, </span>
+<span>                        upgrade<span class="op">=</span><span class="st">"never"</span>, </span>
+<span>                        dependencies<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span>                        build_vignettes<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 <p>Until the scientific article relative to the package is published,
 the github repository is set as private and to install the package (for
 testing and revision) you can run the code here:<br></p>
@@ -123,17 +129,19 @@ testing and revision) you can run the code here:<br></p>
 <span>                        auth_token <span class="op">=</span> <span class="st">"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"</span>, </span>
 <span>                        upgrade<span class="op">=</span><span class="st">"never"</span>, </span>
 <span>                        dependencies<span class="op">=</span><span class="cn">TRUE</span>,</span>
-<span>                        build_vignettes<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<span>                        build_vignettes<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="load-the-library">Load the library<a class="anchor" aria-label="anchor" href="#load-the-library"></a>
 </h2>
-<p>When executing this command, other five packages (<code>dplyr</code>,
-<code>terra</code>, <code>sf</code>, <code>corrplot</code>,
-<code>usdm</code>) will be automatically loaded to ensure the full
-functionality of the package.</p>
+<p>When executing this command, another package (<code>dplyr</code>)
+will be automatically loaded to ensure the full functionality of the
+package. However, other packages are often required for plotting and
+further analyses and we also load them here for later use.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://envarpackage.netlify.app">envar</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://envarpackage.netlify.app">envar</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="full-working-example">Full working example<a class="anchor" aria-label="anchor" href="#full-working-example"></a>
@@ -148,8 +156,9 @@ in the package as the object <code><a href="../reference/Alps.html">Alps()</a></
 “res”), the coordinate reference system (argument “crs”), and an
 eventual buffer (in km) by which to expand the study area (argument
 “buffer”). The default resolution is always 30 arcseconds (0.008333333°,
-or ~ 1 km) at the equator, and “res” specifies a factor by which to
-aggregate (the default is 1 and doesn’t apply any change).</p>
+or ~ 1 km) at the equator, except for the <code><a href="../reference/biooracle.html">biooracle()</a></code>
+function, and “res” specifies a factor by which to aggregate (the
+default is 1 and doesn’t apply any change).</p>
 <p>Then, the “%&gt;%” is used to concatenate different commands. The
 next step is to set the specific functions that are used to download and
 process variables from different sources (see the <strong><a href="https://envarpackage.netlify.app/reference/">reference</a></strong>
@@ -167,32 +176,58 @@ km resolution global land cover based on the ESA 30 m land cover <span class="ci
 <code><a href="../reference/corr_check.html">corr_check()</a></code> function to identify and remove highly
 correlated variables. This function must always be called as the last
 one in the pipeline.</p>
+<p>It is also possible to call the <code><a href="../reference/extr_check.html">extr_check()</a></code> function at
+the bottom of the code to enable an automatic test of extrapolation,
+regardless of whether you requested already a <code><a href="../reference/corr_check.html">corr_check()</a></code>.
+Ecological models often produce spurious predictions when predicting in
+environmental conditions not present in the calibration range <span class="citation">(Elith <em>et al.</em> 2010)</span>. This problem can
+arise under two conditions: 1) at least a variable has values outside
+the calibration range - strict extrapolation -, or 2) all variables fall
+in the calibration range, but novel combinations of predictor values are
+met - combinatorial extrapolation - <span class="citation">(Zurell
+<em>et al.</em> 2012)</span>. Inside the function it is possible to
+specify if strict and/or combinatorial extrapolation has to be checked
+(argument “type” - default to strict only), and it is necessary to
+specify the calibration points as data.frame with X and Y columns
+(argument “calib_points”) and the CRS of those coordinates (argument
+“calib_crs”) if different from the default (EPSG:4326). Extrapolation is
+checked creating an environmental overlap mask, through the <em>mecofun
+R</em> package <span class="citation">(Zurell <em>et al.</em>
+2012)</span>. To check extrapolation we assume that a dataset of 2648
+occurrences of the <em>Parnassius apollo</em> butterfly (dataset
+<code><a href="../reference/Apollo.html">Apollo()</a></code> already included in the package) was used to train
+any model and that we want to apply the model to the European Alps later
+on.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span>, res <span class="op">=</span> <span class="fl">2</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op">%&gt;%</span> </span>
+<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span>, res <span class="op">=</span> <span class="fl">2</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>             <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1"</span>, <span class="st">"bio4"</span>, <span class="st">"bio10"</span>, <span class="st">"bio12"</span>, <span class="st">"bio19"</span><span class="op">)</span>,</span>
-<span>                    years <span class="op">=</span> <span class="st">"1981-2010"</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>             <span class="fu"><a href="../reference/topography.html">topography</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"elevation"</span>, <span class="st">"slope"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>             <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trees"</span>, <span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
-<span>             <span class="fu"><a href="../reference/corr_check.html">corr_check</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<span>                    years <span class="op">=</span> <span class="st">"1981-2010"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>             <span class="fu"><a href="../reference/topography.html">topography</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"elevation"</span>, <span class="st">"slope"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>             <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trees"</span>, <span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>             <span class="fu"><a href="../reference/corr_check.html">corr_check</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>             <span class="fu"><a href="../reference/extr_check.html">extr_check</a></span><span class="op">(</span>calib_points <span class="op">=</span> <span class="va">Apollo</span>, type <span class="op">=</span> <span class="st">"strict"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="output-overview">Output overview<a class="anchor" aria-label="anchor" href="#output-overview"></a>
 </h2>
-<p>If the correlation analysis is performed, the output is a list.
-Otherwise, it is a SpatRaster (object to be used within the <em>terra
-R</em> package), either with a single layer or with multiple layers if
-multiple variables were specified. If the output is a list, it contains
-the following elements: “data” (the SpatRaster or data.frame with your
-data), “correlation_matrix” containing a matrix of Pairwise Pearson’s
-correlation coefficients between all variables, “vif” a data.frame
-containing the Variance Inflation Factors for each variable, a “summary”
-that reports if and which variables have a Pearson’s correlation
-coefficient higher than |0.6| and/or a VIF higher than 3. Lastly, the
-“plot_path” specifies the local directory to which a plot of the
-Pearson’s pairwise correlation was saved.</p>
+<p>If the correlation and/or extrapolation analysis/es is/are performed,
+the output is a list. Otherwise, it is a SpatRaster (object to be used
+within the <em>terra R</em> package), either with a single layer or with
+multiple layers if multiple variables were specified. If the output is a
+list, it contains the following elements: “data” (the SpatRaster or
+data.frame with your data), “correlation_matrix” containing a matrix of
+Pairwise Pearson’s correlation coefficients between all variables, “vif”
+a data.frame containing the Variance Inflation Factors for each
+variable, a “summary” that reports if and which variables have a
+Pearson’s correlation coefficient higher than |0.6| and/or a VIF higher
+than 3. The “plot_path” specifies the local directory to which a plot of
+the Pearson’s pairwise correlation was saved. An “extrapolation” object
+will then be one layer - two if both strict and extrapolation are
+checked - reporting as 1 cells of extrapolation and 0 cells of no
+extrapolation.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot the first two variables</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">$</span><span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">$</span><span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="intro_files/figure-html/unnamed-chunk-7-1.png" width="480" style="display: block; margin: auto;"></p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># View the Pearson's pairwise correlation matrix</span></span>
@@ -241,7 +276,16 @@ species distributions is mediated by other co-varying factors such as
 climate) we can remove it. To obtain a set of uncorrelated variables we
 might thus want to sub-set our variables as follows.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">uncorrelated_vars</span> <span class="op">&lt;-</span> <span class="va">processed</span><span class="op">$</span><span class="va">data</span><span class="op">[[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1_1981-2010"</span>, <span class="st">"bio12_1981-2010"</span>, <span class="st">"trees"</span>, <span class="st">"ice"</span><span class="op">)</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># define a set of uncorrelated variables</span></span>
+<span><span class="va">uncorrelated_vars</span> <span class="op">&lt;-</span> <span class="va">processed</span><span class="op">$</span><span class="va">data</span><span class="op">[[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1_1981-2010"</span>, <span class="st">"bio12_1981-2010"</span>, <span class="st">"trees"</span>, <span class="st">"ice"</span><span class="op">)</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
+<p>We can also see where extrapolation occurs in our study area. This
+map can be used alongside any ecological prediction (e.g., species
+distribution models applied over the European Alps), to interpret more
+carefully predictions in areas where extrapolation is found.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># visualize the raster map of where extrapolation occurs (1 = extrapolation, 0 = no extrapolation)</span></span>
+<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">$</span><span class="va">extrapolation</span><span class="op">$</span><span class="va">strict</span><span class="op">)</span></span></code></pre></div>
+<p><img src="intro_files/figure-html/unnamed-chunk-12-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
@@ -263,6 +307,11 @@ Malczyk, J. &amp; Jetz, W. (2018). A suite of global, cross-scale
 topographic variables for environmental and biodiversity modeling.
 <em>Scientific Data</em>, <em>5</em>, 180040.
 </div>
+<div id="ref-elith2010" class="csl-entry">
+Elith, J., Kearney, M. &amp; Phillips, S. (2010). The art of modelling
+range-shifting species. <em>Methods in Ecology and Evolution</em>,
+<em>1</em>, 330–342.
+</div>
 <div id="ref-karger2017" class="csl-entry">
 Karger, D.N., Conrad, O., Böhner, J., Kawohl, T., Kreft, H., Soria-Auza,
 R.W., Zimmermann, N.E., Linder, H.P. &amp; Kessler, M. (2017).
@@ -273,6 +322,12 @@ Climatologies at high resolution for the earth’s land surface areas.
 Lo Parrino, E., Simoncini, A., Ficetola, G.F. &amp; Falaschi, M. (2025).
 Global 1-km land cover for ecological modelling from very high
 resolution imagery. <em>EcoEvoRxiv</em>, in press.
+</div>
+<div id="ref-zurell2012" class="csl-entry">
+Zurell, D., Elith, J. &amp; Schröder, B. (2012). Predicting to new
+environments: Tools for visualizing model behaviour and impacts on
+mapped distributions. <em>Diversity and Distributions</em>, <em>18</em>,
+628–634.
 </div>
 </div>
 </div>

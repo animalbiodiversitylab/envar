@@ -29,6 +29,7 @@ spatial extent, resolution, and coordinate reference system (CRS) for the study 
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials"><li><a class="dropdown-item" href="../articles/package_overview.html">Package overview</a></li>
     <li><a class="dropdown-item" href="../articles/variables.html">Available variables</a></li>
+    <li><a class="dropdown-item" href="../articles/sdm.html">Species distribution models</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -56,10 +57,30 @@ spatial extent, resolution, and coordinate reference system (CRS) for the study 
 <span>  country <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  continent <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  shape <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  ecoregion <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  biome <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  realm <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  zooregion <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  zoorealm <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mountain_region <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  glacier_region_19 <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  glacier_region_20 <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  freshwater_ecoregion <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  marine_ecoregion <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  marine_realm <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  marine_province <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  pelagic_province <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  pelagic_biome <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  pelagic_realm <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  pointsdf <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  alpha_hull <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  buffer <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>  res <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  crs <span class="op">=</span> <span class="st">"EPSG:4326"</span></span>
+<span>  path <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  crs <span class="op">=</span> <span class="st">"EPSG:4326"</span>,</span>
+<span>  set_na <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  scale <span class="op">=</span> <span class="st">"medium"</span>,</span>
+<span>  land <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -84,8 +105,98 @@ Used to generate the extent if `shape` and `country` are NULL.</p></dd>
 If `shape` is provided, `country` and `continent` are ignored.</p></dd>
 
 
+<dt id="arg-ecoregion">ecoregion<a class="anchor" aria-label="anchor" href="#arg-ecoregion"></a></dt>
+<dd><p>Character. The name of a terrestrial ecoregion from Dinerstein et al. (2017).
+Uses the ECO_NAME column from the Ecoregions2017 dataset.</p></dd>
+
+
+<dt id="arg-biome">biome<a class="anchor" aria-label="anchor" href="#arg-biome"></a></dt>
+<dd><p>Character. The name of a biome from Dinerstein et al. (2017).
+Uses the BIOME_NAME column from the Ecoregions2017 dataset.</p></dd>
+
+
+<dt id="arg-realm">realm<a class="anchor" aria-label="anchor" href="#arg-realm"></a></dt>
+<dd><p>Character. The name of a biogeographic realm from Dinerstein et al. (2017).
+Uses the REALM column from the Ecoregions2017 dataset.</p></dd>
+
+
+<dt id="arg-zooregion">zooregion<a class="anchor" aria-label="anchor" href="#arg-zooregion"></a></dt>
+<dd><p>Character. The name of a zoogeographic region from Holt et al. (2013).
+Uses the Regions column from the CMEC dataset.</p></dd>
+
+
+<dt id="arg-zoorealm">zoorealm<a class="anchor" aria-label="anchor" href="#arg-zoorealm"></a></dt>
+<dd><p>Character. The name of a zoogeographic realm from Holt et al. (2013).
+Uses the Realm column from the CMEC newRealms dataset.</p></dd>
+
+
+<dt id="arg-mountain-region">mountain_region<a class="anchor" aria-label="anchor" href="#arg-mountain-region"></a></dt>
+<dd><p>Character. The name of a mountain region from the GMBA Mountain
+Inventory v2.0 (Snethlage et al. 2022). Uses the MapName column.</p></dd>
+
+
+<dt id="arg-glacier-region-">glacier_region_19<a class="anchor" aria-label="anchor" href="#arg-glacier-region-"></a></dt>
+<dd><p>Character. The name of a glacier region based on RGI v6.0 (2017)
+first-order regions. Uses the RGI_CODE column.</p></dd>
+
+
+<dt id="arg-glacier-region-">glacier_region_20<a class="anchor" aria-label="anchor" href="#arg-glacier-region-"></a></dt>
+<dd><p>Character. The name of a glacier region based on GTN-G 2023
+first-order regions. Uses the o1region column.</p></dd>
+
+
+<dt id="arg-freshwater-ecoregion">freshwater_ecoregion<a class="anchor" aria-label="anchor" href="#arg-freshwater-ecoregion"></a></dt>
+<dd><p>Character or Numeric. The FEOW_ID of a freshwater ecoregion
+from Abell et al. (2008). Uses the FEOW_ID column from the FEOW dataset.</p></dd>
+
+
+<dt id="arg-marine-ecoregion">marine_ecoregion<a class="anchor" aria-label="anchor" href="#arg-marine-ecoregion"></a></dt>
+<dd><p>Character. The name of a marine ecoregion from Spalding et al. (2007).
+Uses the ECOREGION column from the MEOW dataset (TYPE == "MEOW").</p></dd>
+
+
+<dt id="arg-marine-realm">marine_realm<a class="anchor" aria-label="anchor" href="#arg-marine-realm"></a></dt>
+<dd><p>Character. The name of a marine realm from Spalding et al. (2007).
+Uses the REALM column from the MEOW dataset (TYPE == "MEOW").</p></dd>
+
+
+<dt id="arg-marine-province">marine_province<a class="anchor" aria-label="anchor" href="#arg-marine-province"></a></dt>
+<dd><p>Character. The name of a marine province from Spalding et al. (2007).
+Uses the PROVINC column from the MEOW dataset (TYPE == "MEOW").</p></dd>
+
+
+<dt id="arg-pelagic-province">pelagic_province<a class="anchor" aria-label="anchor" href="#arg-pelagic-province"></a></dt>
+<dd><p>Character. The name of a pelagic province from Spalding et al. (2012).
+Uses the PROVINC column from the PPOW dataset (TYPE == "PPOW").</p></dd>
+
+
+<dt id="arg-pelagic-biome">pelagic_biome<a class="anchor" aria-label="anchor" href="#arg-pelagic-biome"></a></dt>
+<dd><p>Character. The name of a pelagic biome from Spalding et al. (2012).
+Uses the BIOME column from the PPOW dataset (TYPE == "PPOW").</p></dd>
+
+
+<dt id="arg-pelagic-realm">pelagic_realm<a class="anchor" aria-label="anchor" href="#arg-pelagic-realm"></a></dt>
+<dd><p>Character. The name of a pelagic realm from Spalding et al. (2012).
+Uses the REALM column from the PPOW dataset (TYPE == "PPOW").</p></dd>
+
+
 <dt id="arg-pointsdf">pointsdf<a class="anchor" aria-label="anchor" href="#arg-pointsdf"></a></dt>
 <dd><p>Data.frame with columns X and Y representing point coordinates.</p></dd>
+
+
+<dt id="arg-alpha-hull">alpha_hull<a class="anchor" aria-label="anchor" href="#arg-alpha-hull"></a></dt>
+<dd><p>Logical. If TRUE, creates an alpha hull polygon around the occurrence
+points using the `getDynamicAlphaHull` function from the rangeBuilder package (Rabosky et al.
+2016) to model species distribution ranges. The initialAlpha is set to 2 and gradually
+increased until a polygon captures at least 99<!-- % of occurrence records. This method optimizes  -->
+the balance between identifying distinct clusters as unique polygons and avoiding excessive
+fragmentation (Roll et al. 2017). Can be used in conjunction with `buffer` (applied after
+alpha hull creation) and `land` (intersects result with land boundary). Default is FALSE.</p>
+<p>References:
+* Rabosky ARD, et al. (2016). BAMMtools: an R package for the analysis of evolutionary
+  dynamics on phylogenetic trees. Methods in Ecology and Evolution 7:701-707.
+* Roll U, et al. (2017). The global distribution of tetrapods reveals a need for targeted
+  reptile conservation. Nature Ecology &amp; Evolution 1:1677-1682.</p></dd>
 
 
 <dt id="arg-buffer">buffer<a class="anchor" aria-label="anchor" href="#arg-buffer"></a></dt>
@@ -105,8 +216,14 @@ like EPSG:4326, meters for projected CRS like EPSG:3035 or ESRI:54009).
 <dd><p>Numeric. The target spatial resolution multiplier.
 * This controls the cell size of the output raster stack.
 * Must be a positive integer (e.g., `1`, `5`, `10`).
-* Default is `1` (30 arc-seconds or 0.008333333° at the equator).
+* Default is `1` (30 arc-seconds or 0.008333333Â° at the equator).
 * Higher values will multiply the original 30 arcsec resolution by the specified factor.</p></dd>
+
+
+<dt id="arg-path">path<a class="anchor" aria-label="anchor" href="#arg-path"></a></dt>
+<dd><p>directory to store the result of the download/processing. Default to NULL (no output is stored locally).
+It works only if no corr_check() is specified. Specify the path including the file name and the extension (e.g. "../Out/rastername.tif" if the final
+export is a SpatRaster; or "../Out/extracteddataframe.csv" if the output is a data.frame).</p></dd>
 
 
 <dt id="arg-crs">crs<a class="anchor" aria-label="anchor" href="#arg-crs"></a></dt>
@@ -119,6 +236,24 @@ like EPSG:4326, meters for projected CRS like EPSG:3035 or ESRI:54009).
 * Note: ESRI codes (53000-54999, 100000+) are automatically recognized and prefixed
   with "ESRI:" internally.</p></dd>
 
+
+<dt id="arg-set-na">set_na<a class="anchor" aria-label="anchor" href="#arg-set-na"></a></dt>
+<dd><p>Logical, with default FALSE. If TRUE, any cell that is NA in at least one raster is set to be
+NA in all rasters of the final SpatRaster object. It is useful only when the output is a SpatRaster and not a point extraction.</p></dd>
+
+
+<dt id="arg-scale">scale<a class="anchor" aria-label="anchor" href="#arg-scale"></a></dt>
+<dd><p>Character with value "small", "medium", or "large". It represents the scale at
+which the country/continent shapefile are retrieved using the rnaturalearthdata package. Large implies a better
+definition of the borders of the shapefile (scale 1:10). The default is "medium". It is useful only when setting the argument country or continent.</p></dd>
+
+
+<dt id="arg-land">land<a class="anchor" aria-label="anchor" href="#arg-land"></a></dt>
+<dd><p>Logical, with default FALSE. If TRUE, the extent is intersected with the global land boundary
+from Natural Earth (at the scale defined by the `scale` argument). This is useful for clipping marine/pelagic
+regions to land only, or for ensuring that buffered areas do not extend into the ocean.
+Note: This does not apply to point extractions (pointsdf without buffer).</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -129,7 +264,9 @@ like EPSG:4326, meters for projected CRS like EPSG:3035 or ESRI:54009).
   * `bbox`: The bounding box of the study area.
   * `crs`: The target coordinate reference system.
   * `type`: The type of input ("polygon", "admin", or "point").
-  * `is_global`: Logical, TRUE if processing global extent.</p>
+  * `is_global`: Logical, TRUE if processing global extent.
+  * `set_na`: Logical, TRUE if user wants to apply an NA mask.
+  * `path`: User-specified path to store the result.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -139,7 +276,7 @@ functions (like `chelsa()`, `worldclim()`, `topography()`, etc.) to ensure all
 retrieved variables are perfectly aligned and stacked.</p>
 <p>## How it works
 1. **Extent Definition:** You can define the study area using a shapefile (`sf` object),
-   a `country` name, or a `continent` name.
+   a `country` name, a `continent` name, or various biogeographic boundary types.
 2. **Resolution:** The `res` argument sets the target resolution as a multiplier of
    the base 30 arc-seconds (~1 km at equator).
 3. **Buffering:** An optional buffer can be applied to expand the study area or create
@@ -160,15 +297,51 @@ retrieved variables are perfectly aligned and stacked.</p>
 <span class="r-in"><span><span class="co"># Basic usage with a country</span></span></span>
 <span class="r-in"><span><span class="va">italy_grid</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># With a projected CRS and positive buffer (expand by 50 km)</span></span></span>
-<span class="r-in"><span><span class="va">italy_buffered</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs <span class="op">=</span> <span class="fl">3035</span>, buffer <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># Download with a shapefile</span></span></span>
+<span class="r-in"><span><span class="va">processed_alps</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>shape <span class="op">=</span> <span class="st">"Alps"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span><span class="fu"><a href="esalandcover.html">esalandcover</a></span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># With a negative buffer (shrink by 100 km to exclude coastal areas)</span></span></span>
-<span class="r-in"><span><span class="va">italy_inland</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs <span class="op">=</span> <span class="fl">54009</span>, buffer <span class="op">=</span> <span class="op">-</span><span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="co"># With a projected CRS and positive buffer (expand by 10 km)</span></span></span>
+<span class="r-in"><span><span class="va">italy_buffered</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs <span class="op">=</span> <span class="fl">3035</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># With a negative buffer (shrink by 10 km to exclude coastal areas)</span></span></span>
+<span class="r-in"><span><span class="va">italy_inland</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs <span class="op">=</span> <span class="fl">3035</span>, buffer <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Points with buffer to create extraction area</span></span></span>
-<span class="r-in"><span><span class="va">points_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>X <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">11.25</span>, <span class="fl">12.5</span><span class="op">)</span>, Y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">43.77</span>, <span class="fl">41.9</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">points_area</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">points_df</span>, buffer <span class="op">=</span> <span class="fl">10</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">points_area</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">Apollo</span>, buffer <span class="op">=</span> <span class="fl">10</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Using alpha hull to define species range from occurrence points</span></span></span>
+<span class="r-in"><span><span class="va">species_range</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">species_occurrences</span>, alpha_hull <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Alpha hull with buffer (buffer applied after alpha hull creation)</span></span></span>
+<span class="r-in"><span><span class="va">species_range_buffered</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">species_occurrences</span>, alpha_hull <span class="op">=</span> <span class="cn">TRUE</span>, buffer <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Alpha hull clipped to land boundary</span></span></span>
+<span class="r-in"><span><span class="va">species_range_land</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">species_occurrences</span>, alpha_hull <span class="op">=</span> <span class="cn">TRUE</span>, land <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Alpha hull with buffer and land intersection</span></span></span>
+<span class="r-in"><span><span class="va">species_range_full</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">species_occurrences</span>, alpha_hull <span class="op">=</span> <span class="cn">TRUE</span>, buffer <span class="op">=</span> <span class="fl">25</span>, land <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Using zoogeographic regions</span></span></span>
+<span class="r-in"><span><span class="va">palearctic</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>zoorealm <span class="op">=</span> <span class="st">"Palearctic"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Using mountain regions</span></span></span>
+<span class="r-in"><span><span class="va">alps_gmba</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>mountain_region <span class="op">=</span> <span class="st">"European Alps"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Using glacier regions</span></span></span>
+<span class="r-in"><span><span class="va">arctic_glaciers</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>glacier_region_20 <span class="op">=</span> <span class="st">"Arctic Canada North"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Using freshwater ecoregions</span></span></span>
+<span class="r-in"><span><span class="va">danube</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>freshwater_ecoregion <span class="op">=</span> <span class="fl">404</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Using marine ecoregions</span></span></span>
+<span class="r-in"><span><span class="va">mediterranean</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>marine_realm <span class="op">=</span> <span class="st">"Temperate Northern Atlantic"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Using pelagic provinces</span></span></span>
+<span class="r-in"><span><span class="va">atlantic_pelagic</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>pelagic_realm <span class="op">=</span> <span class="st">"Atlantic"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Clip marine realm to land only</span></span></span>
+<span class="r-in"><span><span class="va">land_only</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>marine_realm <span class="op">=</span> <span class="st">"Temperate Northern Atlantic"</span>, land <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>

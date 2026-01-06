@@ -25,13 +25,17 @@ incorporating all the most recent fixes.
 ``` r
 # install using the "remotes" package
 if (!require(remotes)) install.packages("remotes")
-remotes::install_github("animalbiodiversitylab/envar", dependencies = TRUE,
-                         build_vignettes=TRUE)
+
+remotes::install_github("animalbiodiversitylab/envar", 
+                        dependencies = TRUE,
+                        build_vignettes = FALSE)
 
 # or alternatively using the "devtools" package
 if (!require(devtools)) install.packages("devtools")
-devtools::install_github("animalbiodiversitylab/envar", dependencies = TRUE,
-                         build_vignettes=TRUE)
+
+devtools::install_github("animalbiodiversitylab/envar", 
+                         dependencies = TRUE,
+                         build_vignettes = FALSE)
 ```
 
 Until the scientific article relative to the package is published, the
@@ -43,9 +47,9 @@ if (!require(remotes)) install.packages("remotes")
 
 remotes::install_github("animalbiodiversitylab/envar", 
                         auth_token = "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", 
-                        upgrade="never", 
-                        dependencies=TRUE,
-                        build_vignettes=TRUE)
+                        upgrade = "never", 
+                        dependencies = TRUE,
+                        build_vignettes = FALSE)
 
 # This code will install the package. To run the examples and vignettes, 
 #you will need to load the package as follows:
@@ -81,7 +85,7 @@ to rapidly fix the issue.
 
 `envar` depends on `terra`, `dplyr`, `httr`, `sf`, `rnaturalearth`,
 `rnaturalearthdata`, `exactextractr`, `usdm`, `corrplot`, `cli`, `fs`,
-and `utils`.
+`rangeBuilder`, and `utils`.
 
 ## Citation
 
@@ -92,7 +96,8 @@ process. To cite the package, please use:
 
 > Simoncini A, Bertoncini M, Cerofolini A, Dalpasso A, Falaschi M, Lo
 > Parrino E (2025) envar: an R package to streamline the retrieval and
-> processing of environmental variables. Submitted to Ecography.
+> processing of environmental variables for macroecology and
+> biogeography. Submitted to Ecography.
 
 ## Usage
 
@@ -106,13 +111,12 @@ library(envar)
 library(dplyr)
 library(terra)
 
-# download variables (e.g., the percentage cover of trees and the slope) over a 
+# download variables (e.g., the percentage cover of trees, ice and the slope) over a 
 # study area (in this case, the "Alps" shapefile already included in 
 # the package)
-
-processed_vars = var_get(shape = Alps, res = 1, crs=3035) %>% 
-  esalandcover(vars = c("trees")) %>% 
-  topography(vars=c("slope"))
+processed_vars = var_get(shape = Alps, res = 1, crs = 3035) %>% 
+  esalandcover(vars = c("trees", "ice")) %>% 
+  topography(vars = c("slope"))
 ```
 
 We will get a set of variables already cropped to the desired area of
@@ -125,14 +129,14 @@ print(processed_vars)
 ```
 
     ## class       : SpatRaster 
-    ## dimensions  : 636, 961, 2  (nrow, ncol, nlyr)
-    ## resolution  : 1000, 1000  (x, y)
-    ## extent      : 3893175, 4854175, 2216131, 2852131  (xmin, xmax, ymin, ymax)
+    ## dimensions  : 689, 1073, 3  (nrow, ncol, nlyr)
+    ## resolution  : 994.8978, 994.8978  (x, y)
+    ## extent      : 3845222, 4912747, 2192710, 2878194  (xmin, xmax, ymin, ymax)
     ## coord. ref. : ETRS89-extended / LAEA Europe (EPSG:3035) 
     ## source(s)   : memory
-    ## names       : trees,    slope 
-    ## min values  :     0,  0.00000 
-    ## max values  :   100, 44.31425
+    ## names       :    trees,      ice,    slope 
+    ## min values  :  0.00000,  0.00000,  0.00000 
+    ## max values  : 99.99088, 99.62656, 37.86851
 
 For a more in-depth explanation and examples refer to the **[Get
 started](https://envarpackage.netlify.app/articles/intro)** page.
