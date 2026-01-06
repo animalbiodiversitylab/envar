@@ -244,11 +244,35 @@ processed_mountain_region <- var_get(mountain_region = "European Alps") %>%
 plot(processed_mountain_region)
 ```
 
-### 3.3.4. Glacier regions
+### 3.3.4. CMEC mountain regions
+
+The Center for Macroecology, Evolution and Climate at the University of Copenhagen has developed another classification of mountain regions  [@rahbek2019]. We make available through the package the mountain regions so defined (135). To see the available mountain regions and their names check the original publication.
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+processed_mountain_region_cmec <- var_get(mountain_region_cmec = "Alps and central European outliers") %>%
+  esalandcover(vars = c("tree"))
+```
+
+```{r}
+plot(processed_mountain_region_cmec)
+```
+
+### 3.3.5. Glacier regions
+
+The Randolph Glacier Inventory team defined a set of 19 (old version) or 20 (new version) glacier regions that are broad areas that encompass different mountainous and polar areas of the globe [@pfeffer2014]. Here, we make available both the 19 regions classification and the 20 regions classification. The numeric code of the region must be inserted.
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+processed_glacier_region <- var_get(glacier_region_19 = "11") %>%
+  esalandcover(vars = c("ice"))
+```
+
+```{r}
+plot(processed_glacier_region)
+```
 
 
 
-### 3.3.5. Freshwater ecoregions
+### 3.3.6. Freshwater ecoregions
 
 Freshwater ecoregions have been widely used in ecological studies following their definition by [@abell2008]. As the provided shapefile does not include the full names of freshwater ecoregions but only their numeric IDs, instead of the name the user must insert the ecoregion ID. Check the interactive interface **[here](https://www.feow.org/ecoregions/interactive-map)** to find out the available freshwater ecoregions and their IDs. We consider the Florida Peninsula (ID = 156) as an example here.
 
@@ -261,7 +285,7 @@ processed_freshwater_ecoregion <- var_get(freshwater_ecoregion = 156) %>%
 plot(processed_freshwater_ecoregion)
 ```
 
-### 3.3.6. Marine regions
+### 3.3.7. Marine regions
 
 Marine regions are available from two different data references; the first one is the Marine Ecoregions Of the World (MEOW) [@spalding2007], which provides a classification of coastal and shelf areas. The second one is the Pelagic Provinces Of the World (PPOW) [@spalding2012], providing an inventory of surface pelagic waters. The available arguments are "marine_ecoregion, "marine_realm", and "marine_province" for MEOW, and "pelagic_province", "pelagic_biome", and "pelagic_realm" for PPOW. You can explore the MEOW available names **[here](https://databasin.org/maps/new/#datasets=3b6b12e7bcca419990c9081c0af254a2)** and the PPOW available names through the relative publication.
 

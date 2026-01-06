@@ -6,19 +6,17 @@
 ## Download environmental variables in R
 
 The *envar R* package streamlines the retrieval and processing of
-environmental variables for ecological modelling. When conducting an
-ecological analysis, the response of one or more variable(s) is modelled
-as a function of one or more predictor(s). When variables are not
-directly collected, global and already published maps can be used to
-define variable values. This process is often time-consuming and
-requires the standardization of different sources to the same study area
-and/or the extraction of value across study points and/or the conversion
-to a common coordinate reference system. *envar* is an *R* package that
+environmental variables for ecological modelling. Preparing variables
+for macroecology and biogeography is time-consuming and requires the
+standardization of different sources to the same study area and/or the
+extraction of value across study points and/or the conversion to a
+common coordinate reference system. *envar* is an *R* package that
 allows the download of a wide range of environmental variables from
 different pre-existing sources, to make the whole process of retrieving
-variables easier and faster, and integrated within the R environment.
+variables easier and faster, and well integrated within the R
+environment.
 
-## Example of package purpose and use
+## Purpose and use
 
 This graphic illustration depicts an ecological modelling framework and
 the use of the *envar* package to retrieve variables while checking for
@@ -26,12 +24,7 @@ correlation and extrapolation. See below how to install the package and
 for more detailed explanation check **[Get
 started](https://envarpackage.netlify.app/articles/intro)**.
 
-<div class="zoom">
-
-<p>
-
-<img src="reference/figures/Fig1.png" alt="Main workflow"></img>
-</p>
+<img src="man/figures/Fig1.png" align="center" height="153" alt="" />
 
 </div>
 
