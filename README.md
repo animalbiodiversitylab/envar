@@ -6,25 +6,17 @@
 ## Download environmental variables in R
 
 The *envar R* package streamlines the retrieval and processing of
-environmental variables for ecological modelling. Selecting a proper set
-of environmental variables is a cornerstone of any ecological study but
-is often relegated to a simplistic use of a few widespread variables.
-When conducting an ecological analysis, the response of one or more
-variable(s) is modelled as a function of one or more predictor(s). When
-variables are not directly collected in the field or through remote
-sensing, and information on the spatial location of samples is
-available, global and already published maps can be used to define
-variable values. This process is often time-consuming and requires the
-standardization of different sources to the same study area and/or the
-extraction of value across study points and/or the conversion to a
-common coordinate reference system. *envar* is an *R* package that
+environmental variables for ecological modelling. When conducting an
+ecological analysis, the response of one or more variable(s) is modelled
+as a function of one or more predictor(s). When variables are not
+directly collected, global and already published maps can be used to
+define variable values. This process is often time-consuming and
+requires the standardization of different sources to the same study area
+and/or the extraction of value across study points and/or the conversion
+to a common coordinate reference system. *envar* is an *R* package that
 allows the download of a wide range of environmental variables from
 different pre-existing sources, to make the whole process of retrieving
 variables easier and faster, and integrated within the R environment.
-The user can thus avoid to manually download and process different
-variables from different sources, and instead focus on the analysis
-itself and integrate the downloaded and processed variables within a
-single R pipeline.
 
 ## Example of package purpose and use
 
@@ -34,7 +26,10 @@ correlation and extrapolation. See below how to install the package and
 for more detailed explanation check **[Get
 started](https://envarpackage.netlify.app/articles/intro)**.
 
-<img src="https://github.com/animalbiodiversitylab/envar/blob/main/man/figures/Fig1.png" alt="workflow example" width="100%" style="display: block; margin: auto;" />
+<p align="center">
+
+<img src="man/figures/Fig1.png" width="100%" alt="workflow example">
+</p>
 
 <figure>
 <img src="man/figures/Fig1.png" alt="workflow example" />
