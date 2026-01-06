@@ -78,7 +78,13 @@
 <div class="section level2">
 <h2 id="download-environmental-variables-in-r">Download environmental variables in R<a class="anchor" aria-label="anchor" href="#download-environmental-variables-in-r"></a>
 </h2>
-<p>The <em>envar R</em> package streamlines the retrieval and processing of environmental variables for ecological modelling. Selecting a proper set of environmental variables is a cornerstone of any ecological study but is often relegated to a simplistic use of a few widespread variables.</p>
+<p>The <em>envar R</em> package streamlines the retrieval and processing of environmental variables for ecological modelling. Selecting a proper set of environmental variables is a cornerstone of any ecological study but is often relegated to a simplistic use of a few widespread variables. When conducting an ecological analysis, the response of one or more variable(s) is modelled as a function of one or more predictor(s). When variables are not directly collected in the field or through remote sensing, and information on the spatial location of samples is available, global and already published maps can be used to define variable values. This process is often time-consuming and requires the standardization of different sources to the same study area and/or the extraction of value across study points and/or the conversion to a common coordinate reference system. <em>envar</em> is an <em>R</em> package that allows the download of a wide range of environmental variables from different pre-existing sources, to make the whole process of retrieving variables easier and faster, and integrated within the R environment. The user can thus avoid to manually download and process different variables from different sources, and instead focus on the analysis itself and integrate the downloaded and processed variables within a single R pipeline.</p>
+</div>
+<div class="section level2">
+<h2 id="example-of-package-purpose-and-use">Example of package purpose and use<a class="anchor" aria-label="anchor" href="#example-of-package-purpose-and-use"></a>
+</h2>
+<p>This graphic illustration depicts an ecological modelling framework and the use of the <em>envar</em> package to retrieve variables while checking for correlation and extrapolation. See below how to install the package and for more detailed explanation check <strong><a href="https://envarpackage.netlify.app/articles/intro">Get started</a></strong>.</p>
+<p><img src="reference/figures/Fig1.png" width="100%" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -174,16 +180,16 @@
 <p>We will get a set of variables already cropped to the desired area of study, and presented as a SpatRaster file with multiple layers corresponding to the different variables:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># visualize the result</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">processed_vars</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="do">## class       : SpatRaster </span></span>
-<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a><span class="do">## dimensions  : 689, 1073, 3  (nrow, ncol, nlyr)</span></span>
-<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a><span class="do">## resolution  : 994.8978, 994.8978  (x, y)</span></span>
-<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="do">## extent      : 3845222, 4912747, 2192710, 2878194  (xmin, xmax, ymin, ymax)</span></span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="do">## coord. ref. : ETRS89-extended / LAEA Europe (EPSG:3035) </span></span>
-<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="do">## source(s)   : memory</span></span>
-<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a><span class="do">## names       :    trees,      ice,    slope </span></span>
-<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a><span class="do">## min values  :  0.00000,  0.00000,  0.00000 </span></span>
-<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a><span class="do">## max values  : 99.99088, 99.62656, 37.86851</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">processed_vars</span><span class="op">)</span></span>
+<span><span class="co">#&gt; class       : SpatRaster </span></span>
+<span><span class="co">#&gt; dimensions  : 689, 1073, 3  (nrow, ncol, nlyr)</span></span>
+<span><span class="co">#&gt; resolution  : 994.8978, 994.8978  (x, y)</span></span>
+<span><span class="co">#&gt; extent      : 3845222, 4912747, 2192710, 2878194  (xmin, xmax, ymin, ymax)</span></span>
+<span><span class="co">#&gt; coord. ref. : ETRS89-extended / LAEA Europe (EPSG:3035) </span></span>
+<span><span class="co">#&gt; source(s)   : memory</span></span>
+<span><span class="co">#&gt; names       :    trees,      ice,    slope </span></span>
+<span><span class="co">#&gt; min values  :  0.00000,  0.00000,  0.00000 </span></span>
+<span><span class="co">#&gt; max values  : 99.99088, 99.62656, 37.86851</span></span></code></pre></div>
 <p>For a more in-depth explanation and examples refer to the <strong><a href="https://envarpackage.netlify.app/articles/intro">Get started</a></strong> page.</p>
 </div>
 </div>

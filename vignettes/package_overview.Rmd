@@ -58,7 +58,7 @@ Below, we illustrate a set of download examples covering all possible customizat
 
 ### 3.1.1. Single layer 
 
-We here show an example of download of a single variable from a single source, in this case the 1 km land cover based on ESA [@loparrino2025]. The variable is downloaded and maintains its original extent. If not aggregated, the original grid resolution of any source is always 30 arcseconds (0.008333333°, or ~ 1 km) at the equator.
+We here show an example of download of a single variable from a single source, in this case the 1 km land cover based on ESA [@loparrino2025]. The variable is downloaded and maintains its original extent. If not aggregated, the original grid resolution of any source is always 30 arcseconds (0.00833°, or ~ 1 km) at the equator.
 
 ```{r,results='hide',message =FALSE,warning=FALSE}
 processed_singlelayer_lc <- var_get() %>% 

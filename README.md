@@ -9,6 +9,32 @@ The *envar R* package streamlines the retrieval and processing of
 environmental variables for ecological modelling. Selecting a proper set
 of environmental variables is a cornerstone of any ecological study but
 is often relegated to a simplistic use of a few widespread variables.
+When conducting an ecological analysis, the response of one or more
+variable(s) is modelled as a function of one or more predictor(s). When
+variables are not directly collected in the field or through remote
+sensing, and information on the spatial location of samples is
+available, global and already published maps can be used to define
+variable values. This process is often time-consuming and requires the
+standardization of different sources to the same study area and/or the
+extraction of value across study points and/or the conversion to a
+common coordinate reference system. *envar* is an *R* package that
+allows the download of a wide range of environmental variables from
+different pre-existing sources, to make the whole process of retrieving
+variables easier and faster, and integrated within the R environment.
+The user can thus avoid to manually download and process different
+variables from different sources, and instead focus on the analysis
+itself and integrate the downloaded and processed variables within a
+single R pipeline.
+
+## Example of package purpose and use
+
+This graphic illustration depicts an ecological modelling framework and
+the use of the *envar* package to retrieve variables while checking for
+correlation and extrapolation. See below how to install the package and
+for more detailed explanation check **[Get
+started](https://envarpackage.netlify.app/articles/intro)**.
+
+<img src="man/figures/Fig1.png" width="100%" style="display: block; margin: auto;" />
 
 ## Installation
 
@@ -126,17 +152,16 @@ corresponding to the different variables:
 ``` r
 # visualize the result
 print(processed_vars)
+#> class       : SpatRaster 
+#> dimensions  : 689, 1073, 3  (nrow, ncol, nlyr)
+#> resolution  : 994.8978, 994.8978  (x, y)
+#> extent      : 3845222, 4912747, 2192710, 2878194  (xmin, xmax, ymin, ymax)
+#> coord. ref. : ETRS89-extended / LAEA Europe (EPSG:3035) 
+#> source(s)   : memory
+#> names       :    trees,      ice,    slope 
+#> min values  :  0.00000,  0.00000,  0.00000 
+#> max values  : 99.99088, 99.62656, 37.86851
 ```
-
-    ## class       : SpatRaster 
-    ## dimensions  : 689, 1073, 3  (nrow, ncol, nlyr)
-    ## resolution  : 994.8978, 994.8978  (x, y)
-    ## extent      : 3845222, 4912747, 2192710, 2878194  (xmin, xmax, ymin, ymax)
-    ## coord. ref. : ETRS89-extended / LAEA Europe (EPSG:3035) 
-    ## source(s)   : memory
-    ## names       :    trees,      ice,    slope 
-    ## min values  :  0.00000,  0.00000,  0.00000 
-    ## max values  : 99.99088, 99.62656, 37.86851
 
 For a more in-depth explanation and examples refer to the **[Get
 started](https://envarpackage.netlify.app/articles/intro)** page.

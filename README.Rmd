@@ -12,12 +12,12 @@ is_check <-
   any(c("_R_CHECK_TIMINGS_", "_R_CHECK_LICENSE_") %in% names(Sys.getenv())) ||
   !identical(Sys.getenv("MY_UNIVERSE"), "") ||
   any(c("CI", "GITHUB_ACTIONS", "GITHUB_SHA") %in% names(Sys.getenv()))
+
 knitr::opts_chunk$set(
-  fig.height = h,
-  fig.width = w,
-  fig.align = "center",
-  eval = !is_check,
-  root.dir = normalizePath("../..")
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
 )
 ```
 
@@ -32,7 +32,18 @@ devtools::load_all()
 
 ## Download environmental variables in R
 
-The _envar R_ package streamlines the retrieval and processing of environmental variables for ecological modelling. Selecting a proper set of environmental variables is a cornerstone of any ecological study but is often relegated to a simplistic use of a few widespread variables.
+The _envar R_ package streamlines the retrieval and processing of environmental variables for ecological modelling. Selecting a proper set of environmental variables is a cornerstone of any ecological study but is often relegated to a simplistic use of a few widespread variables. When conducting an ecological analysis, the response of one or more variable(s) is modelled as a function of one or more predictor(s). When variables are not directly collected in the field or through remote sensing, and information on the spatial location of samples is available, global and already published maps can be used to define variable values. This process is often time-consuming and requires the standardization of different sources to the same study area and/or the extraction of value across study points and/or the conversion to a common coordinate reference system. _envar_ is an _R_ package that allows the download of a wide range of environmental variables from different pre-existing sources, to make the whole process of retrieving variables easier and faster, and integrated within the R environment. The user can thus avoid to manually download and process different variables from different sources, and instead focus on the analysis itself and integrate the downloaded and processed variables within a single R pipeline. 
+
+## Example of package purpose and use
+
+This graphic illustration depicts an ecological modelling framework and the use
+of the _envar_ package to retrieve variables while checking for correlation and
+extrapolation. See below how to install the package and for more detailed explanation
+check **[Get started](https://envarpackage.netlify.app/articles/intro)**.
+
+```{r, echo=FALSE, out.width="100%", fig.align='center'}
+knitr::include_graphics("man/figures/Fig1.png")
+```
 
 ## Installation
 
@@ -112,9 +123,9 @@ Here we provide a short example showing how the _envar R_ package can be used to
 
 ```{r, results = "hide", message = FALSE, warning = FALSE}
 # load packages
-library(envar)
-library(dplyr)
-library(terra)
+require(envar)
+require(terra)
+require(sf)
 
 # download variables (e.g., the percentage cover of trees, ice and the slope) over a 
 # study area (in this case, the "Alps" shapefile already included in 
