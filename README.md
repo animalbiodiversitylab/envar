@@ -30,7 +30,7 @@ started](https://envarpackage.netlify.app/articles/intro)**.
 
 <p>
 
-<img src="man/figures/Fig1.png" alt="Main workflow"></img>
+<img src="reference/figures/Fig1.png" alt="Main workflow"></img>
 </p>
 
 </div>

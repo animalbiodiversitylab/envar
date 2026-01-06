@@ -617,11 +617,11 @@ process_extent <- function(shape = NULL,
     ))
     
     tryCatch({
-      url <- "https://data.earthenv.org/mountains/standard/GMBA_Inventory_v2.0_standard_300.zip"
-      temp_dir <- fs::path_temp("mountain_data")
+      url <- "https://macroecology.ku.dk/resources/mountain_regions/mountainregions2.zip"
+      temp_dir <- fs::path_temp("mountain_data_cmec")
       fs::dir_create(temp_dir)
       
-      zip_path <- file.path(temp_dir, "GMBA_Inventory_v2.0_standard_300.zip")
+      zip_path <- file.path(temp_dir, "mountainregions2.zip")
       extract_dir <- file.path(temp_dir, "extracted")
       
       download_success <- download_file(url, zip_path)
@@ -630,7 +630,7 @@ process_extent <- function(shape = NULL,
         utils::unzip(zip_path, exdir = extract_dir)
         
         # Find the shapefile
-        shp_file <- file.path(extract_dir, "GMBA_Inventory_v2.0_standard_300.shp")
+        shp_file <- file.path(extract_dir, "CMEC_Mountains_Enh2018.shp")
         if (!file.exists(shp_file)) {
           shp_file <- fs::dir_ls(extract_dir, recurse = TRUE, glob = "*.shp")
           if (length(shp_file) == 0) {
@@ -640,7 +640,7 @@ process_extent <- function(shape = NULL,
         }
         
         mountains_sf <- sf::read_sf(shp_file)
-        extent_info$mask <- mountains_sf[mountains_sf$MapName == mountain_region, ]
+        extent_info$mask <- mountains_sf[mountains_sf$Name == mountain_region_cmec, ]
         
         if (nrow(extent_info$mask) == 0) {
           # Try partial matching

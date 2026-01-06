@@ -42,7 +42,7 @@ extrapolation. See below how to install the package and for more detailed explan
 check **[Get started](https://envarpackage.netlify.app/articles/intro)**.
 
 <div class="zoom">
-<p><img src="man/figures/Fig1.png" alt="Main workflow"></img></p>
+<p><img src="reference/figures/Fig1.png" alt="Main workflow"></img></p>
 </div>
 
 ## Installation
