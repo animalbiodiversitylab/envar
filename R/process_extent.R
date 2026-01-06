@@ -10,6 +10,7 @@ process_extent <- function(shape = NULL,
                            zooregion = NULL,
                            zoorealm = NULL,
                            mountain_region = NULL,
+                           mountain_region_cmec = NULL,
                            glacier_region_19 = NULL,
                            glacier_region_20 = NULL,
                            freshwater_ecoregion = NULL,
@@ -38,6 +39,7 @@ process_extent <- function(shape = NULL,
     zooregion = !is.null(zooregion),
     zoorealm = !is.null(zoorealm),
     mountain_region = !is.null(mountain_region),
+    mountain_region_cmec = !is.null(mountain_region_cmec),
     glacier_region_19 = !is.null(glacier_region_19),
     glacier_region_20 = !is.null(glacier_region_20),
     freshwater_ecoregion = !is.null(freshwater_ecoregion),
@@ -534,9 +536,84 @@ process_extent <- function(shape = NULL,
     cli::cli_alert_info(paste0(
       "Study area is defined based on the work: \n",
       "Snethlage MA, Geschke J, Ranipeta A, et al. (2022). GMBA Mountain Inventory v2. GMBA-EarthEnv.\n",
-      "DOI: {.url https://doi.org/10.48601/earthenv-t9k2-1407}\n",
-      "See also: Korner C, et al. (2017). A global inventory of mountains for bio-geographical applications. Alpine Botany 127: 1-15.\n",
-      "DOI: {.url https://doi.org/10.1007/s00035-016-0182-6}\n"
+      "DOI: {.url https://doi.org/10.48601/earthenv-t9k2-1407}\n"
+    ))
+    
+    tryCatch({
+      url <- "https://data.earthenv.org/mountains/standard/GMBA_Inventory_v2.0_standard_300.zip"
+      temp_dir <- fs::path_temp("mountain_data")
+      fs::dir_create(temp_dir)
+      
+      zip_path <- file.path(temp_dir, "GMBA_Inventory_v2.0_standard_300.zip")
+      extract_dir <- file.path(temp_dir, "extracted")
+      
+      download_success <- download_file(url, zip_path)
+      
+      if (download_success) {
+        utils::unzip(zip_path, exdir = extract_dir)
+        
+        # Find the shapefile
+        shp_file <- file.path(extract_dir, "GMBA_Inventory_v2.0_standard_300.shp")
+        if (!file.exists(shp_file)) {
+          shp_file <- fs::dir_ls(extract_dir, recurse = TRUE, glob = "*.shp")
+          if (length(shp_file) == 0) {
+            cli::cli_abort("No .shp file found in the extracted archive.")
+          }
+          shp_file <- shp_file[1]
+        }
+        
+        mountains_sf <- sf::read_sf(shp_file)
+        extent_info$mask <- mountains_sf[mountains_sf$MapName == mountain_region, ]
+        
+        if (nrow(extent_info$mask) == 0) {
+          # Try partial matching
+          matches <- grep(mountain_region, mountains_sf$MapName, ignore.case = TRUE, value = TRUE)
+          if (length(matches) > 0) {
+            cli::cli_abort("Mountain region '{mountain_region}' not found. Did you mean one of: {paste(head(matches, 10), collapse = ', ')}?")
+          } else {
+            cli::cli_abort("Mountain region '{mountain_region}' not found.")
+          }
+        }
+        
+      } else {
+        cli::cli_abort("Process stopped due to download failure.")
+      }
+      
+    }, error = function(e) {
+      cli::cli_abort("Mountain region not found: {e$message}")
+    })
+    
+    # Transform to target CRS
+    extent_info$mask <- sf::st_transform(extent_info$mask, crs)
+    
+    if (buffer != 0) {
+      buffer_dist <- convert_buffer_to_units(buffer, crs)
+      extent_buffered <- sf::st_buffer(extent_info$mask, dist = buffer_dist)
+      extent_info$bbox <- sf::st_bbox(extent_buffered)
+      extent_info$mask <- extent_buffered
+    } else {
+      extent_info$bbox <- sf::st_bbox(extent_info$mask)
+    }
+    
+    # Apply land intersection if requested
+    if (land) {
+      land_sf <- get_land_boundary(scale)
+      extent_info$mask <- apply_land_intersection(extent_info$mask, land_sf, crs)
+      extent_info$bbox <- sf::st_bbox(extent_info$mask)
+    }
+    
+    return(extent_info)
+  }
+  
+  # ----- 4.1 MOUNTAIN REGIONS (CMEC) ------
+  if (!is.null(mountain_region_cmec)) {
+    extent_info$type <- "polygon"
+    cli::cli_alert_info("Downloading CMEC mountain regions shapefile")
+    
+    cli::cli_alert_info(paste0(
+      "Study area is defined based on the work: \n",
+      "Rahbek, C., Borregaard, M. K., Colwell, R. K., et al. (2019). Humboldt’s enigma: What causes global patterns of mountain biodiversity?. Science 365, 1108-1113.\n",
+      "DOI: {.url https://doi.org/10.1126/science.aax0149}\n"
     ))
     
     tryCatch({

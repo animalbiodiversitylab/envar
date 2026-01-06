@@ -26,15 +26,14 @@ correlation and extrapolation. See below how to install the package and
 for more detailed explanation check **[Get
 started](https://envarpackage.netlify.app/articles/intro)**.
 
-<p align="center">
+<div class="zoom">
 
-<img src="man/figures/Fig1.png" width="100%" alt="workflow example">
+<p>
+
+<img src="man/figures/Fig1.png" alt="Main workflow"></img>
 </p>
 
-<figure>
-<img src="man/figures/Fig1.png" alt="workflow example" />
-<figcaption aria-hidden="true">workflow example</figcaption>
-</figure>
+</div>
 
 ## Installation
 

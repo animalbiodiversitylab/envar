@@ -238,7 +238,7 @@ var_get <- function(country = NULL,
   # Check for global extent with buffer
   is_global <- is.null(country) && is.null(continent) && is.null(shape) && 
     is.null(pointsdf) && is.null(realm) && is.null(ecoregion) && is.null(biome) &&
-    is.null(zooregion) && is.null(zoorealm) && is.null(mountain_region) &&
+    is.null(zooregion) && is.null(zoorealm) && is.null(mountain_region) && is.null(mountain_region_cmec) &&
     is.null(glacier_region_19) && is.null(glacier_region_20) && 
     is.null(freshwater_ecoregion) && is.null(marine_ecoregion) && 
     is.null(marine_realm) && is.null(marine_province) &&
@@ -279,6 +279,7 @@ var_get <- function(country = NULL,
     zooregion = zooregion,
     zoorealm = zoorealm,
     mountain_region = mountain_region,
+    mountain_region_cmec = mountain_region_cmec,
     glacier_region_19 = glacier_region_19,
     glacier_region_20 = glacier_region_20,
     freshwater_ecoregion = freshwater_ecoregion,
