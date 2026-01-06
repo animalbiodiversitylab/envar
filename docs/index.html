@@ -84,7 +84,10 @@
 <h2 id="example-of-package-purpose-and-use">Example of package purpose and use<a class="anchor" aria-label="anchor" href="#example-of-package-purpose-and-use"></a>
 </h2>
 <p>This graphic illustration depicts an ecological modelling framework and the use of the <em>envar</em> package to retrieve variables while checking for correlation and extrapolation. See below how to install the package and for more detailed explanation check <strong><a href="https://envarpackage.netlify.app/articles/intro">Get started</a></strong>.</p>
-<p><img src="reference/figures/Fig1.png" width="100%" style="display: block; margin: auto;"></p>
+<p><img src="https://github.com/animalbiodiversitylab/envar/blob/main/man/figures/Fig1.png" alt="workflow example" width="100%" style="display: block; margin: auto;"></p>
+<figure><img src="reference/figures/Fig1.png" alt="workflow example"><figcaption aria-hidden="true">
+workflow example
+</figcaption></figure>
 </div>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
@@ -167,9 +170,9 @@
 <p>Here we provide a short example showing how the <em>envar R</em> package can be used to retrieve and process environmental variables for a specific use case. To begin with, we will load the required packages.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># load packages</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://envarpackage.netlify.app">envar</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://envarpackage.netlify.app">envar</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># download variables (e.g., the percentage cover of trees, ice and the slope) over a </span></span>
 <span><span class="co"># study area (in this case, the "Alps" shapefile already included in </span></span>

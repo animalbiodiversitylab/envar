@@ -34,7 +34,12 @@ correlation and extrapolation. See below how to install the package and
 for more detailed explanation check **[Get
 started](https://envarpackage.netlify.app/articles/intro)**.
 
-<img src="man/figures/Fig1.png" width="100%" style="display: block; margin: auto;" />
+<img src="https://github.com/animalbiodiversitylab/envar/blob/main/man/figures/Fig1.png" alt="workflow example" width="100%" style="display: block; margin: auto;" />
+
+<figure>
+<img src="man/figures/Fig1.png" alt="workflow example" />
+<figcaption aria-hidden="true">workflow example</figcaption>
+</figure>
 
 ## Installation
 
@@ -133,9 +138,9 @@ case. To begin with, we will load the required packages.
 
 ``` r
 # load packages
-library(envar)
-library(dplyr)
-library(terra)
+require(envar)
+require(terra)
+require(sf)
 
 # download variables (e.g., the percentage cover of trees, ice and the slope) over a 
 # study area (in this case, the "Alps" shapefile already included in 
