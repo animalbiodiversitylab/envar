@@ -488,10 +488,10 @@ process_extent <- function(shape = NULL,
           # then to target CRS
           zooregions_sf <- sf::st_transform(zooregions_sf, "EPSG:4326")
           
-          extent_info$mask <- zooregions_sf[zooregions_sf$Region == zooregion, ]
+          extent_info$mask <- zooregions_sf[zooregions_sf$Regions == zooregion, ]
           
           if (nrow(extent_info$mask) == 0) {
-            available_regions <- unique(zooregions_sf$Region)
+            available_regions <- unique(zooregions_sf$Regions)
             cli::cli_abort("Zooregion '{zooregion}' not found. Available regions: {paste(available_regions, collapse = ', ')}")
           }
         }

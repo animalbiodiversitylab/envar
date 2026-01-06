@@ -54,7 +54,7 @@ This function downloads, processes, and extracts variables from the CHELSA (Clim
 
 The following variables are available. Please note the distinction between "Monthly" time-series data and "Climatologies". There is only one code-name for each variable and no working synonyms, differently from most other functions of the package, and in parentheses is the meaning. Climatologies are available for 30-year periods: 1981-2010, 2011-2040, 2041-2070, 2071-2100.
 
-**Available variables**
+**Available variables (67 total)**
 
 Monthly time-series (Available years: 1980 - 2018):
 
@@ -178,24 +178,24 @@ plot(processed[[1]])
 
 This function downloads, processes, and extracts variables from the WorldClim climate dataset [@fick2017]. Each variable corresponds to a global raster representing climate variables at approximately 1-km resolution. It supports both Historical (v2.1, 1970-2000) and Future (CMIP6) data. 
 
-**Available variables:**
+**Available variables (8 total)**
 
 Temperature:
 
-* **tmin** - min temp
-* **tmax** - max temp
-* **tavg** - average temp
+* 1 - **tmin** - min temp
+* 2 - **tmax** - max temp
+* 3 - **tavg** - average temp
 
 Precipitation:
 
-* **prec** - precipitation, pr
+* 4 - **prec** - precipitation, pr
 
 Physical:
 
-* **srad** - solar radiation
-* **wind** - wind speed
-* **vapr** - water vapor
-* **elev** - elevation
+* 5 - **srad** - solar radiation
+* 6 - **wind** - wind speed
+* 7 - **vapr** - water vapor
+* 8 - **elev** - elevation
 
 Bioclimatic:
 
@@ -222,9 +222,9 @@ processed <- var_get(shape = Alps, crs = 3035) %>%
 
 This function downloads, processes, and extracts variables from the High-resolution (1 km) Köppen-Geiger maps dataset [@beck2023]. Each variable corresponds to a global GeoTIFF representing climate classification zones based on historical data or future CMIP6 projections.
 
-**Available variables:**
+**Available variables (1 total)**
 
-* **zones** - koppengeiger, climate, climatezones, koppen, koppen geiger
+* 1 - **zones** - koppengeiger, climate, climatezones, koppen, koppen geiger
 
 Time periods ("years" argument):
 
@@ -263,37 +263,37 @@ plot(processed[[1]])
 
 This function downloads, processes, and extracts variables from the EarthEnv Global Cloud Cover dataset [@wilson2016]. Each variable corresponds to a global Cloud-Optimized GeoTIFF (COG) representing cloud cover dynamics.
 
-**Available variables:**
+**Available variables (21 total)**
 
 Metrics:
 
-* **MODCF_CloudForestPrediction** - cloud forest prediction, cloud forest, cfp
-* **MODCF_interannualSD** - inter-annual variability, interannual sd, interannual variability
-* **MODCF_intraannualSD** - intra-annual variability, intraannual sd, intraannual variability
-* **MODCF_meanannual** - mean annual, annual mean, annual
-* **MODCF_spatialSD_1deg** - spatial variability, spatial sd, spatial sd 1deg
+* 1 - **MODCF_CloudForestPrediction** - cloud forest prediction, cloud forest, cfp
+* 2 - **MODCF_interannualSD** - inter-annual variability, interannual sd, interannual variability
+* 3 - **MODCF_intraannualSD** - intra-annual variability, intraannual sd, intraannual variability
+* 4 - **MODCF_meanannual** - mean annual, annual mean, annual
+* 5 - **MODCF_spatialSD_1deg** - spatial variability, spatial sd, spatial sd 1deg
 
 Seasonality:
 
-* **MODCF_seasonality_concentration** - seasonality concentration, concentration
-* **MODCF_seasonality_rgb** - seasonality rgb, rgb
-* **MODCF_seasonality_theta** - seasonality theta, theta
-* **MODCF_seasonality_visct** - seasonality single band, seasonality visct, seasonality color
+* 6 - **MODCF_seasonality_concentration** - seasonality concentration, concentration
+* 7 - **MODCF_seasonality_rgb** - seasonality rgb, rgb
+* 8 - **MODCF_seasonality_theta** - seasonality theta, theta
+* 9 - **MODCF_seasonality_visct** - seasonality single band, seasonality visct, seasonality color
 
 Monthly means:
 
-* **MODCF_monthlymean_01** - january mean, january, jan
-* **MODCF_monthlymean_02** - february mean, february, feb
-* **MODCF_monthlymean_03** - march mean, march, mar
-* **MODCF_monthlymean_04** - april mean, april, apr
-* **MODCF_monthlymean_05** - may mean, may
-* **MODCF_monthlymean_06** - june mean, june, jun
-* **MODCF_monthlymean_07** - july mean, july, jul
-* **MODCF_monthlymean_08** - august mean, august, aug
-* **MODCF_monthlymean_09** - september mean, september, sep
-* **MODCF_monthlymean_10** - october mean, october, oct
-* **MODCF_monthlymean_11** - november mean, november, nov
-* **MODCF_monthlymean_12** - december mean, december, dec
+* 10 - **MODCF_monthlymean_01** - january mean, january, jan
+* 11 - **MODCF_monthlymean_02** - february mean, february, feb
+* 12 - **MODCF_monthlymean_03** - march mean, march, mar
+* 13 - **MODCF_monthlymean_04** - april mean, april, apr
+* 14 - **MODCF_monthlymean_05** - may mean, may
+* 15 - **MODCF_monthlymean_06** - june mean, june, jun
+* 16 - **MODCF_monthlymean_07** - july mean, july, jul
+* 17 - **MODCF_monthlymean_08** - august mean, august, aug
+* 18 - **MODCF_monthlymean_09** - september mean, september, sep
+* 19 - **MODCF_monthlymean_10** - october mean, october, oct
+* 20 - **MODCF_monthlymean_11** - november mean, november, nov
+* 21 - **MODCF_monthlymean_12** - december mean, december, dec
 
 ```{r,results = "hide", message = FALSE, warning = FALSE}
 processed <- var_get(shape = Alps, crs = 3035) %>% 
@@ -309,25 +309,25 @@ plot(processed[[1]])
 
 This function downloads, processes, and extracts variables from the Global Aridity Index and ET0 Database v3 [@zomer2022]. Each variable corresponds to a global raster representing aridity index or potential evapotranspiration values.
 
-**Available variables:**
+**Available variables (27 total)**
 
 Annual variables:
 
-* **ai_v3_yr.tif** - aridity index annual, ai annual, aridity annual, ai year
-* **et0_v3_yr.tif** - et0 annual, potential evapotranspiration annual, evapotranspiration annual, et0 year
-* **et0_v3_yr_sd.tif** - et0 standard deviation, et0 sd, et0 variability, et0 annual sd
+* 1 - **ai_v3_yr.tif** - aridity index annual, ai annual, aridity annual, ai year
+* 2 - **et0_v3_yr.tif** - et0 annual, potential evapotranspiration annual, evapotranspiration annual, et0 year
+* 3 - **et0_v3_yr_sd.tif** - et0 standard deviation, et0 sd, et0 variability, et0 annual sd
 
 Monthly Aridity Index (ai_v3_01.tif to ai_v3_12.tif):
 
-* **ai_v3_01.tif** - aridity index january, ai january, ai jan, ai 1
-* **ai_v3_02.tif** - aridity index february, ai february, ai feb, ai 2
-* ... (continues for all 12 months)
+* 4 - **ai_v3_01.tif** - aridity index january, ai january, ai jan, ai 1
+* 5 - **ai_v3_02.tif** - aridity index february, ai february, ai feb, ai 2
+* 6-15 - ... (continues for all 12 months)
 
 Monthly ET0 (et0_v3_01.tif to et0_v3_12.tif):
 
-* **et0_v3_01.tif** - et0 january, potential evapotranspiration january, et0 jan, et0 1
-* **et0_v3_02.tif** - et0 february, potential evapotranspiration february, et0 feb, et0 2
-* ... (continues for all 12 months)
+* 16 - **et0_v3_01.tif** - et0 january, potential evapotranspiration january, et0 jan, et0 1
+* 17 - **et0_v3_02.tif** - et0 february, potential evapotranspiration february, et0 feb, et0 2
+* 18-27 - ... (continues for all 12 months)
 
 ```{r,results = "hide", message = FALSE, warning = FALSE}
 processed <- var_get(shape = Alps, crs = 3035) %>% 
@@ -338,23 +338,398 @@ processed <- var_get(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
+# Land cover
+
+## EarthEnv land cover
+
+This function downloads, processes, and extracts variables from the EarthEnv Consensus Land Cover dataset [@tuanmu2014]. Each variable corresponds to a global raster representing a specific land cover class at 1 km resolution.
+
+**Available variables (12 total)**
+
+* 1 - **consensus_full_class_1** - evergreen deciduous needleleaf trees, needleleaf trees, needleleaf, conifer
+* 2 - **consensus_full_class_2** - evergreen broadleaf trees, evergreen broadleaf, broadleaf evergreen
+* 3 - **consensus_full_class_3** - deciduous broadleaf trees, deciduous broadleaf, broadleaf deciduous
+* 4 - **consensus_full_class_4** - mixed other trees, mixed trees, other trees, mixed forest
+* 5 - **consensus_full_class_5** - shrubs, shrubland, shrub
+* 6 - **consensus_full_class_6** - herbaceous vegetation, herbaceous, grassland, grass, herbs
+* 7 - **consensus_full_class_7** - cultivated and managed vegetation, cultivated, managed vegetation, agriculture, crops, cropland
+* 8 - **consensus_full_class_8** - regularly flooded vegetation, flooded vegetation, flooded, wetland
+* 9 - **consensus_full_class_9** - urban built up, urban, built up, built-up, artificial surface
+* 10 - **consensus_full_class_10** - snow ice, snow, ice, glacier, permafrost
+* 11 - **consensus_full_class_11** - barren, barren land, bare ground, bare
+* 12 - **consensus_full_class_12** - open water, water, water bodies
+
+```{r,results = "hide", message = FALSE, warning = FALSE}
+processed <- var_get(shape = Alps, crs = 3035) %>% 
+  earthenvlandcover(vars = c("snow ice"))
+```
+
+```{r}
+plot(processed[[1]])
+```
+
+## ESA land cover
+
+This function downloads, processes, and extracts variables from the Global 1 km Land Cover dataset [@loparrino2025]. Each variable corresponds to a global raster representing a specific land cover class or diversity index derived from very high-resolution imagery.
+
+**Available variables (15 total)**
+
+* 1 - **wetland** - wetlands, swamp, marsh, bog, fen
+* 2 - **bare** - bare ground, bare soil, desert, unvegetated
+* 3 - **built** - built area, built up, urban, artificial, impervious
+* 4 - **cropland** - agriculture, agricultural, crop, crops, farming
+* 5 - **grass** - grassland, grass land, meadow, pasture, prairie
+* 6 - **ice** - snow, snow and ice, glacier, ice, permafrost
+* 7 - **land_perc** - percentage of land, land percentage, land cover fraction, land fraction
+* 8 - **mangrove** - mangroves
+* 9 - **moss** - mosses, lichen, lichens, moss and lichen
+* 10 - **shrub** - shrubland, scrub, bush, thicket
+* 11 - **tree** - trees, forest, woodland, canopy, canopy cover
+* 12 - **water** - surface water, lake, river, freshwater
+* 13 - **simpson** - simpson index, diversity simpson, simpson diversity
+* 14 - **shannon** - shannon index, entropy, shannon entropy, shannon diversity
+* 15 - **evenness** - evenness index, pielou, pielou evenness, species evenness
+
+```{r,results = "hide", message = FALSE, warning = FALSE}
+processed <- var_get(shape = Alps, crs = 3035) %>% 
+  esalandcover(vars = c("tree", "water"))
+```
+
+```{r}
+plot(processed[[1]])
+```
+
+## Hybrid land cover
+
+This function downloads, processes, and extracts land cover variables from the Hybrid Global Annual 1-km IGBP Land Cover Maps dataset [@luo2024]. The data covers the period from 2000 to 2020.
+
+**Available variables (1 total)**
+
+* 1 - **landcover** - cover, land, lc, igbp, hybrid
+
+Note: If the `vars` argument is left empty, the function will default to downloading the land cover map. You must specify the `year` argument (integer between 2000 and 2020).
+
+```{r,results = "hide", message = FALSE, warning = FALSE}
+processed <- var_get(shape = Alps, crs = 3035) %>% 
+  hybridlandcover(vars = "landcover", year = 2015)
+```
+
+```{r}
+plot(processed[[1]])
+```
+
+## GeoSOS land cover
+
+This function downloads, processes, and extracts variables from the Global Land-Use and Land-Cover Change Product (2010-2100) [@li2017]. The dataset provides global 1 km resolution rasters based on different IPCC scenarios.
+
+Land cover classification legend:
+
+* 1: Water
+* 2: Forest
+* 3: Grassland
+* 4: Farmland
+* 5: Urban
+* 6: Barren
+
+**Available variables (1 total)**
+
+* 1 - **landcover** - lc, cover, land cover, land use, lulc, classes
+
+Available scenarios (for years > 2010; 2010 is from MODIS baseline landcover):
+
+* A1B
+* A2
+* B1
+* B2
+
+Available years:
+
+* 2010
+* 2050
+* 2100
+
+```{r,results = "hide", message = FALSE, warning = FALSE}
+processed <- var_get(shape = Alps, crs = 3035) %>% 
+  geososlandcover(vars = "landcover", scenario = "A1B", year = 2050)
+```
+
+```{r}
+plot(processed[[1]])
+```
+
+## PFT land cover
+
+This function downloads, processes, and extracts land cover variables from the Global 7-land-types LULC projection dataset based on Plant Functional Types (PFT) with a 1-km resolution under socio-climatic scenarios [@chen2022a].
+
+**Available variables (1 total)**
+
+* 1 - **landcover** - cover, land, lulc, pft, projection
+
+Note: If the `vars` argument is left empty, the function will default to downloading the land cover map.
+
+Required arguments:
+
+`year`: Integer. Available years: 2020 to 2100 in 5-year intervals (2020, 2025, 2030, ..., 2100).
+
+`ssp`: Integer or character. The SSP-RCP scenario code. Available values:
+
+* 119 (SSP1-RCP1.9)
+* 126 (SSP1-RCP2.6)
+* 245 (SSP2-RCP4.5)
+* 370 (SSP3-RCP7.0)
+* 434 (SSP4-RCP3.4)
+* 460 (SSP4-RCP6.0)
+* 534 (SSP5-RCP3.4)
+* 585 (SSP5-RCP8.5)
+
+```{r,results = "hide", message = FALSE, warning = FALSE}
+processed <- var_get(shape = Alps, crs = 3035) %>% 
+  pftlandcover(vars = "landcover", year = 2050, ssp = 585)
+```
+
+```{r}
+plot(processed[[1]])
+```
+
+## GCAM land cover
+
+This function downloads, processes, and extracts simulated global land use and land cover (LULC) data for the period 2020-2100 [@gao2025].
+
+The data represents 1 km resolution LULC maps with the following integer codes:
+
+* 1: Cropland
+* 2: Forest
+* 3: Grassland
+* 4: Urban
+* 5: Barren
+* 6: Water
+
+**Available variables (1 total)**
+
+* 1 - **landcover** - The specific map is determined by the `year` and `ssp` arguments
+
+Available years:
+
+* 2020
+* 2030
+* 2050
+* 2070
+* 2100
+
+Available SSPs (Shared Socioeconomic Pathways):
+
+* 126 (SSP1-2.6)
+* 245 (SSP2-4.5)
+* 370 (SSP3-7.0)
+* 434 (SSP4-3.4)
+* 585 (SSP5-8.5)
+
+Note: The original data is in World Mercator projection and will be automatically reprojected to the CRS defined in `var_get()` (default: EPSG 4326).
+
+```{r,results = "hide", message = FALSE, warning = FALSE}
+processed <- var_get(shape = Alps, crs = 3035) %>% 
+  gcamlandcover(ssp = 585, year = 2050)
+```
+
+```{r}
+plot(processed[[1]])
+```
+
+# Landscape heterogeneity
+
+This function downloads, processes, and extracts variables from the EarthEnv habitat heterogeneity dataset (1-km resolution) [@tuanmu2015]. Each variable corresponds to a global Cloud-Optimized GeoTIFF (COG) representing different metrics of habitat heterogeneity derived from remote sensing data.
+
+**Available variables (14 total)**
+
+First-order statistics:
+
+* 1 - **cv** - coefficient of variation, coeff of variation
+* 2 - **evenness** - even
+* 3 - **range** - range
+* 4 - **shannon** - shannon index, shannon entropy
+* 5 - **simpson** - simpson index, simpson diversity
+* 6 - **std** - standard deviation, std dev
+
+Second-order statistics (Texture metrics):
+
+* 7 - **Contrast** - contrast
+* 8 - **Correlation** - correlation, corr
+* 9 - **Dissimilarity** - dissimilarity
+* 10 - **Entropy** - entropy, texture entropy
+* 11 - **Homogeneity** - homogeneity
+* 12 - **Maximum** - maximum, max
+* 13 - **Uniformity** - uniformity, uniform
+* 14 - **Variance** - variance, var
+
+```{r,results = "hide", message = FALSE, warning = FALSE}
+processed <- var_get(shape = Alps, crs = 3035) %>% 
+  heterogeneity(vars = c("shannon", "cv"))
+```
+
+```{r}
+plot(processed[[1]])
+```
+
+# Habitats
+
+This function downloads, processes, and extracts variables from the IUCN Global Habitat Classification Fractions dataset [@jung2020]. The data is available at Level 1 (broad) and Level 2 (detailed) classifications.
+
+**Available variables (Level 1 - 12 total)**
+
+* 1 - **100_Forest** - forest, 100
+* 2 - **200_Savanna** - savanna, 200
+* 3 - **300_Shrubland** - shrubland, 300
+* 4 - **400_Grassland** - grassland, 400
+* 5 - **500_Wetlands inland** - wetlands inland, wetlands, inland wetlands, 500
+* 6 - **600_Rocky Areas** - rocky areas, rocky, 600
+* 7 - **800_Desert** - desert, 800
+* 8 - **900_Marine - Neritic** - marine neritic, neritic, 900
+* 9 - **1000_Marine - Oceanic** - marine oceanic, oceanic, 1000
+* 10 - **1100_Marine - Deep Ocean Floor** - marine deep ocean floor, deep ocean floor, 1100
+* 11 - **1200_Marine - Intertidal** - marine intertidal, intertidal, 1200
+* 12 - **1400_Artificial - Terrestrial** - artificial terrestrial, artificial, terrestrial artificial, 1400
+
+**Available variables (selection from Level 2 - check original paper for a more careful description and complete list)**
+
+Forests:
+
+* 1 - **101_Forest - Boreal** - forest boreal, boreal forest, 101
+* 2 - **104_Forest - Temperate** - forest temperate, temperate forest, 104
+* 3 - **105_Forest - Subtropical-tropical dry** - forest subtropical tropical dry, dry forest, tropical dry forest, 105
+* 4 - **106_Forest - Subtropical-tropical moist lowland** - forest subtropical tropical moist lowland, moist lowland forest, tropical moist forest, 106
+* 5 - **107_Forest - Subtropical-tropical mangrove vegetation** - forest mangrove, mangrove, mangroves, 107
+* 6 - **108_Forest - Subtropical-tropical swamp** - forest swamp, swamp forest, tropical swamp, 108
+* 7 - **109_Forest - Subtropical-tropical moist montane** - forest moist montane, montane forest, cloud forest, 109
+
+Savannas:
+
+* 8 - **201_Savanna - Dry** - savanna dry, dry savanna, 201
+* 9 - **202_Savanna - Moist** - savanna moist, moist savanna, 202
+
+Shrublands:
+
+* 10 - **303_Shrubland - Boreal** - shrubland boreal, boreal shrubland, 303
+* 11 - **304_Shrubland - Temperate** - shrubland temperate, temperate shrubland, 304
+* 12 - **305_Shrubland - Subtropical-tropical dry** - shrubland dry, tropical dry shrubland, 305
+* 13 - **306_Shrubland - Subtropical-tropical moist** - shrubland moist, tropical moist shrubland, 306
+* 14 - **308_Shrubland - Mediterranean-type** - shrubland mediterranean, mediterranean shrubland, 308
+
+Grasslands:
+
+* 15 - **401_Grassland - Tundra** - grassland tundra, tundra, 401
+* 16 - **404_Grassland - Temperate** - grassland temperate, temperate grassland, 404
+* 17 - **405_Grassland - Subtropical-tropical dry** - grassland dry, tropical dry grassland, 405
+* 18 - **1402_Pastureland** - pastureland, pasture
+
+Wetlands:
+
+* 19 - **501_Wetlands inland - Permanent rivers-streams-creeks** - rivers, streams, creeks, 501
+* 20 - **504_Wetlands inland - Bogs, marshes, swamps, fens, peatlands** - bogs, marshes, swamps, fens, peatlands, 504
+* 21 - **505_Wetlands inland - Permanent freshwater lakes** - freshwater lakes, lakes, 505
+
+Deserts:
+
+* 22 - **801_Desert - Hot** - desert hot, hot desert, 801
+* 23 - **802_Desert - Temperate** - desert temperate, temperate desert, 802
+* 24 - **803_Desert - Cold** - desert cold, cold desert, 803
+
+Artificial:
+
+* 25 - **1401_Arable Land** - arable land, arable, 1401
+* 26 - **1403_Plantations** - plantations, plantation, 1403
+* 27 - **1405_Urban Areas** - urban areas, urban, 1405
+
+```{r,results = "hide", message = FALSE, warning = FALSE}
+processed <- var_get(shape = Alps, crs = 3035) %>% 
+  habitat(vars = c("Forest", "Artificial"), level = 1)
+```
+
+```{r}
+plot(processed[[1]])
+```
+
+# Soil characteristics
+
+## Harmonized World Soil Database
+
+This function downloads, processes, and extracts variables from the Harmonized World Soil Database v2.0 (HWSD v2.0) [@fao2023]. The variable corresponds to a global raster file at 1 km resolution representing soil types.
+
+**Available variables (1 total)**
+
+* 1 - **hwsd** - soil, type, soiltype, soil type
+
+```{r, results = "hide", message = FALSE, warning = FALSE}
+processed <- var_get(shape = Alps, crs = 3035) %>% 
+  soil()
+```
+
+```{r}
+plot(processed[[1]])
+```
+
+## Soil climate 
+
+This function downloads, processes, and extracts soil bioclimatic variables and monthly soil temperatures from the Global Soil Temperature dataset [@lembrechts2022].
+
+**Available variables (23 total)**
+
+Bioclimatic variables:
+
+* 1 - **SBIO1** - annual mean temperature, annual mean, amt
+* 2 - **SBIO2** - mean diurnal range, mean diurnal, mdr
+* 3 - **SBIO3** - isothermality, iso
+* 4 - **SBIO4** - temperature seasonality, seasonality, temp seasonality
+* 5 - **SBIO5** - max temperature warmest month, max temp, warmest month
+* 6 - **SBIO6** - min temperature coldest month, min temp, coldest month
+* 7 - **SBIO7** - temperature annual range, annual range, tar
+* 8 - **SBIO8** - mean temperature wettest quarter, wettest quarter
+* 9 - **SBIO9** - mean temperature driest quarter, driest quarter
+* 10 - **SBIO10** - mean temperature warmest quarter, warmest quarter
+* 11 - **SBIO11** - mean temperature coldest quarter, coldest quarter
+
+Monthly mean soil temperatures:
+
+* 12 - **soilT01** - january mean, january, jan
+* 13 - **soilT02** - february mean, february, feb
+* 14 - **soilT03** - march mean, march, mar
+* 15 - **soilT04** - april mean, april, apr
+* 16 - **soilT05** - may mean, may
+* 17 - **soilT06** - june mean, june, jun
+* 18 - **soilT07** - july mean, july, jul
+* 19 - **soilT08** - august mean, august, aug
+* 20 - **soilT09** - september mean, september, sep
+* 21 - **soilT10** - october mean, october, oct
+* 22 - **soilT11** - november mean, november, nov
+* 23 - **soilT12** - december mean, december, dec
+
+The `depth` argument defines the soil depth range in cm. Options are "0-5" (default) or "5-15".
+
+```{r,results = "hide", message = FALSE, warning = FALSE}
+processed <- var_get(shape = Alps, crs = 3035) %>% 
+  soilclimate(vars = c("SBIO1", "SBIO10"), depth = "5-15")
+```
+
+```{r}
+plot(processed[[1]])
+```
+
 # Topography
 
 This function downloads, processes, and extracts variables from the EarthEnv Topography dataset [@amatulli2018]. This dataset provides global, cross-scale topographic variables suitable for biodiversity and ecosystem modeling.
 
-**Available variables:**
+**Available variables (11 total)**
 
-* **elevation** - dem, height, alt, altitude
-* **slope** - slope
-* **aspect** - aspect
-* **roughness** - rough
-* **tri** - terrain ruggedness index, ruggedness
-* **tpi** - topographic position index, position
-* **vrm** - vector ruggedness measure
-* **pcurv** - profile curvature, profile curve
-* **tcurv** - tangential curvature, tangential curve
-* **eastness** - east
-* **northness** - north
+* 1 - **elevation** - dem, height, alt, altitude
+* 2 - **slope** - slope
+* 3 - **aspect** - aspect
+* 4 - **roughness** - rough
+* 5 - **tri** - terrain ruggedness index, ruggedness
+* 6 - **tpi** - topographic position index, position
+* 7 - **vrm** - vector ruggedness measure
+* 8 - **pcurv** - profile curvature, profile curve
+* 9 - **tcurv** - tangential curvature, tangential curve
+* 10 - **eastness** - east
+* 11 - **northness** - north
 
 Additional parameters:
 
@@ -370,239 +745,11 @@ processed <- var_get(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
-# Land cover
-
-## EarthEnv land cover
-
-This function downloads, processes, and extracts variables from the EarthEnv Consensus Land Cover dataset [@tuanmu2014]. Each variable corresponds to a global raster representing a specific land cover class at 1 km resolution.
-
-**Available variables:**
-
-* **consensus_full_class_1** - evergreen deciduous needleleaf trees, needleleaf trees, needleleaf, conifer
-* **consensus_full_class_2** - evergreen broadleaf trees, evergreen broadleaf, broadleaf evergreen
-* **consensus_full_class_3** - deciduous broadleaf trees, deciduous broadleaf, broadleaf deciduous
-* **consensus_full_class_4** - mixed other trees, mixed trees, other trees, mixed forest
-* **consensus_full_class_5** - shrubs, shrubland, shrub
-* **consensus_full_class_6** - herbaceous vegetation, herbaceous, grassland, grass, herbs
-* **consensus_full_class_7** - cultivated and managed vegetation, cultivated, managed vegetation, agriculture, crops, cropland
-* **consensus_full_class_8** - regularly flooded vegetation, flooded vegetation, flooded, wetland
-* **consensus_full_class_9** - urban built up, urban, built up, built-up, artificial surface
-* **consensus_full_class_10** - snow ice, snow, ice, glacier, permafrost
-* **consensus_full_class_11** - barren, barren land, bare ground, bare
-* **consensus_full_class_12** - open water, water, water bodies
-
-```{r,results = "hide", message = FALSE, warning = FALSE}
-processed <- var_get(shape = Alps, crs = 3035) %>% 
-  earthenvlandcover(vars = c("snow ice"))
-```
-
-```{r}
-plot(processed[[1]])
-```
-
-## ESA land cover
-
-This function downloads, processes, and extracts variables from the Global 1 km Land Cover dataset [@loparrino2025]. Each variable corresponds to a global raster representing a specific land cover class or diversity index derived from very high-resolution imagery.
-
-**Available variables:**
-
-* **wetland** - wetlands, swamp, marsh, bog, fen
-* **bare** - bare ground, bare soil, desert, unvegetated
-* **built** - built area, built up, urban, artificial, impervious
-* **cropland** - agriculture, agricultural, crop, crops, farming
-* **grass** - grassland, grass land, meadow, pasture, prairie
-* **ice** - snow, snow and ice, glacier, ice, permafrost
-* **land_perc** - percentage of land, land percentage, land cover fraction, land fraction
-* **mangrove** - mangroves
-* **moss** - mosses, lichen, lichens, moss and lichen
-* **shrub** - shrubland, scrub, bush, thicket
-* **tree** - trees, forest, woodland, canopy, canopy cover
-* **water** - surface water, lake, river, freshwater
-* **simpson** - simpson index, diversity simpson, simpson diversity
-* **shannon** - shannon index, entropy, shannon entropy, shannon diversity
-* **evenness** - evenness index, pielou, pielou evenness, species evenness
-
-```{r,results = "hide", message = FALSE, warning = FALSE}
-processed <- var_get(shape = Alps, crs = 3035) %>% 
-  esalandcover(vars = c("tree", "water"))
-```
-
-```{r}
-plot(processed[[1]])
-```
-
-# Landscape heterogeneity
-
-This function downloads, processes, and extracts variables from the EarthEnv habitat heterogeneity dataset (1-km resolution) [@tuanmu2015]. Each variable corresponds to a global Cloud-Optimized GeoTIFF (COG) representing different metrics of habitat heterogeneity derived from remote sensing data.
-
-**Available variables:**
-
-First-order statistics:
-
-* **cv** - coefficient of variation, coeff of variation
-* **evenness** - even
-* **range** - range
-* **shannon** - shannon index, shannon entropy
-* **simpson** - simpson index, simpson diversity
-* **std** - standard deviation, std dev
-
-Second-order statistics (Texture metrics):
-
-* **Contrast** - contrast
-* **Correlation** - correlation, corr
-* **Dissimilarity** - dissimilarity
-* **Entropy** - entropy, texture entropy
-* **Homogeneity** - homogeneity
-* **Maximum** - maximum, max
-* **Uniformity** - uniformity, uniform
-* **Variance** - variance, var
-
-```{r,results = "hide", message = FALSE, warning = FALSE}
-processed <- var_get(shape = Alps, crs = 3035) %>% 
-  heterogeneity(vars = c("shannon", "cv"))
-```
-
-```{r}
-plot(processed[[1]])
-```
-
-# Soil characteristics
-
-This function downloads, processes, and extracts variables from the Harmonized World Soil Database v2.0 (HWSD v2.0) [@fao2023]. The variable corresponds to a global raster file at 1 km resolution representing soil types.
-
-**Available variables:**
-
-* **hwsd** - soil, type, soiltype, soil type
-
-```{r, results = "hide", message = FALSE, warning = FALSE}
-processed <- var_get(shape = Alps, crs = 3035) %>% 
-  soil()
-```
-
-```{r}
-plot(processed[[1]])
-```
-
-
-# Human impact
-
-## SPECTRE
-
-This function downloads, processes, and extracts variables from the SPECTRE – Spatially Explicit ECosysTem ThREats dataset [@branco2024]. Each variable corresponds to a global Cloud-Optimized GeoTIFF (COG) representing a different anthropogenic or climatic threat. When using this source, cite [@branco2024] and also the original source for each variable (check references in [@branco2024]).
-
-**Available variables:**
-
-Land use and human pressure:
-
-* **1_1_MINING_AREA_cog** - mining area, mining_area, mining
-* **1_2_HAZARD_POTENTIAL_cog** - hazard potential, hazard
-* **1_3_HUMAN_DENSITY_cog** - human density, population, pop
-* **1_4_BUILT_AREA_cog** - built area, built
-* **1_5_ROAD_DENSITY_cog** - road density, roads, road
-* **1_6_FOOTPRINT_PERC_cog** - human footprint, footprint
-* **1_7_IMPACT_AREA_cog** - impacted area, impact area
-* **1_8_MODIF_AREA_cog** - modified area, modif area
-* **1_9_HUMAN_BIOMES_cog** - human biomes, biomes
-* **1_10_FIRE_OCCUR_cog** - fires, fire
-* **1_11_CROP_PERC_UNI_cog** - crops uni, crop uni, crop
-* **1_12_CROP_PERC_IIASA_cog** - crops iiasa, iiasa crops
-* **1_13_LIVESTOCK_MASS_cog** - livestock, livestock mass
-
-Forest loss:
-
-* **2_1_FOREST_LOSS_PERC_cog** - forest loss
-* **2_2_FOREST_TREND_cog** - forest trend
-
-Light pollution:
-
-* **3_1_LIGHT_MCDM2_cog** - light at night, night light, light
-
-Climate change:
-
-* **5_1_TEMP_TRENDS_cog** - temperature trends, temp trends
-* **5_2_TEMP_SIGNIF_cog** - temperature significance, temp signif
-* **5_3_CLIM_EXTREME_cog** - climate extremes
-* **5_4_CLIM_VELOCITY_cog** - climate velocity, velocity
-* **5_5_ARIDITY_TREND_cog** - aridity trend, aridity
-
-```{r,results = "hide", message = FALSE, warning = FALSE}
-processed <- var_get(shape = Alps, crs = 3035) %>% 
-  spectre(vars = c("forest loss", "light at night"))
-```
-
-```{r}
-plot(processed[[1]])
-```
-
-## Accessibility
-
-This function downloads, processes, and extracts variables from the Global Accessibility Indicators dataset [@nelson2019]. Each variable corresponds to a global raster representing the travelling time (in minutes) to cities or ports of specific sizes.
-
-**Available variables:**
-
-Cities:
-
-* **cities1** - cities 1, city 1, cities >5m, huge cities, travel time cities 1
-* **cities2** - cities 2, city 2, cities >1m, large cities, travel time cities 2
-* **cities3** - cities 3, city 3, medium cities, travel time cities 3
-* **cities4** - cities 4, city 4, small cities, travel time cities 4
-* **cities5** - cities 5, city 5, travel time cities 5
-* **cities6** - cities 6, city 6, travel time cities 6
-* **cities7** - cities 7, city 7, travel time cities 7
-* **cities8** - cities 8, city 8, towns, travel time cities 8
-* **cities9** - cities 9, city 9, small towns, travel time cities 9
-* **cities10** - cities 10, city 10, aggregated cities 1, travel time cities 10
-* **cities11** - cities 11, city 11, aggregated cities 2, travel time cities 11
-* **cities12** - cities 12, city 12, aggregated cities 3, travel time cities 12
-
-Ports:
-
-* **ports1** - ports 1, port 1, large ports, travel time ports 1
-* **ports2** - ports 2, port 2, medium ports, travel time ports 2
-* **ports3** - ports 3, port 3, small ports, travel time ports 3
-* **ports4** - ports 4, port 4, very small ports, travel time ports 4
-* **ports5** - ports 5, port 5, any port, all ports, travel time ports 5
-
-```{r,results = "hide", message = FALSE, warning = FALSE}
-processed <- var_get(shape = Alps, crs = 3035) %>% 
-  accessibility(vars = c("large cities", "ports1"))
-```
-
-```{r}
-plot(processed[[1]])
-```
-
-# Protected areas
-
-## IUCN protected areas
-
-This function downloads, processes, and extracts variables from the World Database of Protected Areas (WDPA) [@protectedplanet2025]. Each variable corresponds to a global raster representing different IUCN Management Categories of protected areas.
-
-**Available variables:**
-
-* **WDPA_IA** - strict nature reserve, strict reserve, 1a, ia, Ia (IUCN Category Ia)
-* **WDPA_IB** - wilderness area, wilderness, 1b, ib, Ib (IUCN Category Ib)
-* **WDPA_II** - national park, park, 2, ii, II (IUCN Category II)
-* **WDPA_III** - natural monument, monument, 3, iii, III (IUCN Category III)
-* **WDPA_IV** - habitat species management, habitat management, 4, iv, IV (IUCN Category IV)
-* **WDPA_V** - protected landscape, protected seascape, landscape, 5, v, V (IUCN Category V)
-* **WDPA_VI** - sustainable use, natural resources, 6, vi, VI (IUCN Category VI)
-* **WDPA_ALL** - all, combined, full, total, all protected areas (Combined/Full WDPA)
-
-```{r,results = "hide", message = FALSE, warning = FALSE}
-processed <- var_get(shape = Alps, crs = 3035) %>% 
-  protection(vars = c("national park", "WDPA_ALL"))
-```
-
-```{r}
-plot(processed[[1]])
-```
-
 # Freshwater environments
 
 This function downloads, processes, and extracts variables from the near-global freshwater-specific environmental variables dataset [@domisch2015]. These variables are available at a 1 km resolution and capture upstream catchment characteristics, including topography, land cover, soil, and climate.
 
-**Available variables:**
+**Available variables**
 
 The `freshwater()` function provides access to 324 near-global 1-km resolution layers. You can filter specific layers from within these collections using the **month** argument (for climatic variables) and **algorithm** argument (for topographic, soil, and aggregation methods).
 
@@ -610,47 +757,47 @@ The `freshwater()` function provides access to 324 near-global 1-km resolution l
 
 Use the month argument (1–12) to select specific months.
 
-* **monthly_tmin_average.nc** – monthly minimum temperature average, min temp average, tmin avg, tmin
-* **monthly_tmax_average.nc** – monthly maximum temperature average, max temp average, tmax avg, tmax
-* **monthly_tmin_weighted_average.nc** – monthly minimum temperature weighted, min temp weighted, tmin weighted
-* **monthly_tmax_weighted_average.nc** – monthly maximum temperature weighted, max temp weighted, tmax weighted
+* 1 - **monthly_tmin_average.nc** – monthly minimum temperature average, min temp average, tmin avg, tmin
+* 2 - **monthly_tmax_average.nc** – monthly maximum temperature average, max temp average, tmax avg, tmax
+* 3 - **monthly_tmin_weighted_average.nc** – monthly minimum temperature weighted, min temp weighted, tmin weighted
+* 4 - **monthly_tmax_weighted_average.nc** – monthly maximum temperature weighted, max temp weighted, tmax weighted
 
 **Precipitation**
 
-* **monthly_prec_sum.nc** – monthly upstream precipitation sum, precipitation sum, precip sum, prec
-* **monthly_prec_weighted_sum.nc** – monthly upstream precipitation weighted, precipitation weighted, precip weighted
+* 5 - **monthly_prec_sum.nc** – monthly upstream precipitation sum, precipitation sum, precip sum, prec
+* 6 - **monthly_prec_weighted_sum.nc** – monthly upstream precipitation weighted, precipitation weighted, precip weighted
 
 **Hydroclimatic**
 
-* **hydroclim_average+sum.nc** – hydroclimatic variables average, hydroclim average, hydroclim
-* **hydroclim_weighted_average+sum.nc** – hydroclimatic variables weighted, hydroclim weighted
+* 7 - **hydroclim_average+sum.nc** – hydroclimatic variables average, hydroclim average, hydroclim
+* 8 - **hydroclim_weighted_average+sum.nc** – hydroclimatic variables weighted, hydroclim weighted
 
 **Topography**
 
-* **elevation.nc** – upstream elevation, elevation, dem
-* **slope.nc** – upstream slope, slope
-* **flow_acc.nc** – stream length, flow accumulation, flow
+* 9 - **elevation.nc** – upstream elevation, elevation, dem
+* 10 - **slope.nc** – upstream slope, slope
+* 11 - **flow_acc.nc** – stream length, flow accumulation, flow
 
 **Land cover**
 
-* **landcover_minimum.nc** – upstream landcover minimum, landcover min
-* **landcover_maximum.nc** – upstream landcover maximum, landcover max
-* **landcover_range.nc** – upstream landcover range, landcover range
-* **landcover_average.nc** – upstream landcover average, landcover avg, landcover
-* **landcover_weighted_average.nc** – upstream landcover weighted, landcover weighted
+* 12 - **landcover_minimum.nc** – upstream landcover minimum, landcover min
+* 13 - **landcover_maximum.nc** – upstream landcover maximum, landcover max
+* 14 - **landcover_range.nc** – upstream landcover range, landcover range
+* 15 - **landcover_average.nc** – upstream landcover average, landcover avg, landcover
+* 16 - **landcover_weighted_average.nc** – upstream landcover weighted, landcover weighted
 
 **Geology & soil**
 
-* **geology_weighted_sum.nc** – upstream geology, geology weighted, geology
-* **soil_minimum.nc** – upstream soil minimum, soil min
-* **soil_maximum.nc** – upstream soil maximum, soil max
-* **soil_range.nc** – upstream soil range, soil range
-* **soil_average.nc** – upstream soil average, soil avg, soil
-* **soil_weighted_average.nc** – upstream soil weighted, soil weighted
+* 17 - **geology_weighted_sum.nc** – upstream geology, geology weighted, geology
+* 18 - **soil_minimum.nc** – upstream soil minimum, soil min
+* 19 - **soil_maximum.nc** – upstream soil maximum, soil max
+* 20 - **soil_range.nc** – upstream soil range, soil range
+* 21 - **soil_average.nc** – upstream soil average, soil avg, soil
+* 22 - **soil_weighted_average.nc** – upstream soil weighted, soil weighted
 
 **Quality control**
 
-* **quality_control.nc** – quality control, qc
+* 23 - **quality_control.nc** – quality control, qc
 
 **Using the month argument**
 
@@ -681,6 +828,253 @@ freshwater(vars = c("elevation", "slope", "tmin"), algorithm = "mn", month=12)
 plot(processed[[3]])
 ```
 
+# Marine environments
+
+This function downloads, processes, and extracts variables from the Bio-ORACLE v3.0 dataset [@assis2024].
+
+**Available variables (24 total)**
+
+* 1 - **thetao** - Ocean temperature [ºC] (temperature, temp, sea temperature)
+* 2 - **so** - Salinity [-] (sal, salt, saltiness)
+* 3 - **sws** - Sea water velocity [m.s-1] (velocity, current speed, speed)
+* 4 - **swd** - Sea water direction [degree] (direction, current direction)
+* 5 - **no3** - Nitrate [mmol.m-3] (nitrate)
+* 6 - **po4** - Phosphate [mmol.m-3] (phosphate)
+* 7 - **si** - Silicate [mmol.m-3] (silicate, silicon)
+* 8 - **o2** - Dissolved molecular oxygen [mmol.m-3] (oxygen, dissolved oxygen)
+* 9 - **dfe** - Iron [mmol.m-3] (iron, fe)
+* 10 - **phyc** - Primary productivity [mmol.m-3] (productivity, pp, primary production)
+* 11 - **ph** - pH [-] (acidity)
+* 12 - **chl** - Chlorophyll [mg.m-3] (chlorophyll, chla)
+* 13 - **sithick** - Sea ice thickness [m] (ice thickness)
+* 14 - **siconc** - Sea ice cover [Fraction] (ice cover, sea ice)
+* 15 - **clt** - Cloud cover [%] (cloud, clouds)
+* 16 - **mlotst** - Mixed layer depth [m] (mld, mixed layer)
+* 17 - **tas** - Air temperature [ºC] (air temperature, air temp)
+* 18 - **par** - Photosynthetically Available Radiation [E.m-2.day-1] (light, radiation)
+* 19 - **kdpar** - Diffuse attenuation [m-1] (attenuation, turbidity)
+* 20 - **bathymetry** - Bathymetry [m] (depth, elevation, altitude)
+* 21 - **slope** - Topographic slope [-] (topographic slope)
+* 22 - **aspect** - Topographic aspect [-] (topographic aspect)
+* 23 - **tpi** - Topographic position index [-] (topographic position index)
+* 24 - **tri** - Terrain ruggedness index [-] (terrain ruggedness index, ruggedness)
+
+Additional parameters:
+
+* **realm** - One of "surface" (default), "benthic_minimum", "benthic_average", or "benthic_maximum"
+* **years** - Decade range (e.g., "2000-2010" up to "2090-2100")
+* **ssp** - Shared Socioeconomic Pathway for future projections (119, 126, 245, 370, 460, 585)
+* **algorithm** - Statistic to apply (max, mean, min, ltmax, ltmin, range). Default "mean"
+
+```{r,results = "hide", message = FALSE, warning = FALSE}
+processed <- var_get(marine_ecoregion = "East African Coral Coast") %>% 
+  biooracle(vars = "o2", realm = "surface", years = "2000-2010")
+```
+
+```{r}
+plot(processed[[1]])
+```
+
+# Human impact
+
+## SPECTRE
+
+This function downloads, processes, and extracts variables from the SPECTRE – Spatially Explicit ECosysTem ThREats dataset [@branco2024]. Each variable corresponds to a global Cloud-Optimized GeoTIFF (COG) representing a different anthropogenic or climatic threat. When using this source, cite [@branco2024] and also the original source for each variable (check references in [@branco2024]).
+
+**Available variables (21 total)**
+
+Land use and human pressure:
+
+* 1 - **1_1_MINING_AREA_cog** - mining area, mining_area, mining
+* 2 - **1_2_HAZARD_POTENTIAL_cog** - hazard potential, hazard
+* 3 - **1_3_HUMAN_DENSITY_cog** - human density, population, pop
+* 4 - **1_4_BUILT_AREA_cog** - built area, built
+* 5 - **1_5_ROAD_DENSITY_cog** - road density, roads, road
+* 6 - **1_6_FOOTPRINT_PERC_cog** - human footprint, footprint
+* 7 - **1_7_IMPACT_AREA_cog** - impacted area, impact area
+* 8 - **1_8_MODIF_AREA_cog** - modified area, modif area
+* 9 - **1_9_HUMAN_BIOMES_cog** - human biomes, biomes
+* 10 - **1_10_FIRE_OCCUR_cog** - fires, fire
+* 11 - **1_11_CROP_PERC_UNI_cog** - crops uni, crop uni, crop
+* 12 - **1_12_CROP_PERC_IIASA_cog** - crops iiasa, iiasa crops
+* 13 - **1_13_LIVESTOCK_MASS_cog** - livestock, livestock mass
+
+Forest loss:
+
+* 14 - **2_1_FOREST_LOSS_PERC_cog** - forest loss
+* 15 - **2_2_FOREST_TREND_cog** - forest trend
+
+Light pollution:
+
+* 16 - **3_1_LIGHT_MCDM2_cog** - light at night, night light, light
+
+Climate change:
+
+* 17 - **5_1_TEMP_TRENDS_cog** - temperature trends, temp trends
+* 18 - **5_2_TEMP_SIGNIF_cog** - temperature significance, temp signif
+* 19 - **5_3_CLIM_EXTREME_cog** - climate extremes
+* 20 - **5_4_CLIM_VELOCITY_cog** - climate velocity, velocity
+* 21 - **5_5_ARIDITY_TREND_cog** - aridity trend, aridity
+
+```{r,results = "hide", message = FALSE, warning = FALSE}
+processed <- var_get(shape = Alps, crs = 3035) %>% 
+  spectre(vars = c("forest loss", "light at night"))
+```
+
+```{r}
+plot(processed[[1]])
+```
+
+## Accessibility
+
+This function downloads, processes, and extracts variables from the Global Accessibility Indicators dataset [@nelson2019]. Each variable corresponds to a global raster representing the travelling time (in minutes) to cities or ports of specific sizes.
+
+**Available variables (17 total)**
+
+Cities:
+
+* 1 - **cities1** - cities 1, city 1, cities >5m, huge cities, travel time cities 1
+* 2 - **cities2** - cities 2, city 2, cities >1m, large cities, travel time cities 2
+* 3 - **cities3** - cities 3, city 3, medium cities, travel time cities 3
+* 4 - **cities4** - cities 4, city 4, small cities, travel time cities 4
+* 5 - **cities5** - cities 5, city 5, travel time cities 5
+* 6 - **cities6** - cities 6, city 6, travel time cities 6
+* 7 - **cities7** - cities 7, city 7, travel time cities 7
+* 8 - **cities8** - cities 8, city 8, towns, travel time cities 8
+* 9 - **cities9** - cities 9, city 9, small towns, travel time cities 9
+* 10 - **cities10** - cities 10, city 10, aggregated cities 1, travel time cities 10
+* 11 - **cities11** - cities 11, city 11, aggregated cities 2, travel time cities 11
+* 12 - **cities12** - cities 12, city 12, aggregated cities 3, travel time cities 12
+
+Ports:
+
+* 13 - **ports1** - ports 1, port 1, large ports, travel time ports 1
+* 14 - **ports2** - ports 2, port 2, medium ports, travel time ports 2
+* 15 - **ports3** - ports 3, port 3, small ports, travel time ports 3
+* 16 - **ports4** - ports 4, port 4, very small ports, travel time ports 4
+* 17 - **ports5** - ports 5, port 5, any port, all ports, travel time ports 5
+
+```{r,results = "hide", message = FALSE, warning = FALSE}
+processed <- var_get(shape = Alps, crs = 3035) %>% 
+  accessibility(vars = c("large cities", "ports1"))
+```
+
+```{r}
+plot(processed[[1]])
+```
+
+## GDP past
+
+This function downloads, processes, and extracts variables from the global 1km gridded revised real gross domestic product and electricity consumption dataset (1992–2019) [@chen2022gdp].
+
+**Available variables (2 total)**
+
+Economic metrics:
+
+* 1 - **gdp** - gross domestic product, real gdp, economy, economic output, gross product
+
+Energy metrics:
+
+* 2 - **electricity** - electricity consumption, energy, energy consumption, power, ec, electric
+
+Years available: 1992 to 2019.
+
+```{r,results = "hide", message = FALSE, warning = FALSE}
+processed <- var_get(shape = Alps, crs = 3035) %>% 
+  gdppast(vars = "gdp", year = c(2000, 2010))
+```
+
+```{r}
+plot(processed)
+```
+
+## GDP future
+
+This function downloads, processes, and extracts variables from the global gridded GDP projections compatible with the five Shared Socioeconomic Pathways (SSPs) for the period 1850–2100 [@murakami2021].
+
+**Available variables (1 total)**
+
+Economic Metrics:
+
+* 1 - **gdp** - gross domestic product, future gdp, economic projection, economy, ssp gdp
+
+Scenarios (SSP):
+
+The `ssp` argument accepts integers 1 through 5, corresponding to:
+
+* SSP1: Sustainability
+* SSP2: Middle of the Road
+* SSP3: Regional Rivalry
+* SSP4: Inequality
+* SSP5: Fossil-fueled Development
+
+Years available: Decadal intervals from 1850 to 2100 (e.g., 2020, 2030, 2040...).
+
+```{r,results = "hide", message = FALSE, warning = FALSE}
+processed <- var_get(shape = Alps, crs = 3035) %>% 
+  gdpfuture(vars = "gdp", year = 2050, ssp = c(1, 5))
+```
+
+```{r}
+plot(processed)
+```
+
+## Population
+
+This function downloads, processes, and extracts variables from the Global Population Projections dataset [@wang2022]. It provides 1-km grid population distributions from 2020 to 2100 under five Shared Socioeconomic Pathways (SSPs).
+
+**Available variables (1 total)**
+
+Population Counts:
+
+* 1 - **population** - pop, inhabitants, residents, people, count, census
+
+Use the arguments `year` and `ssp` to filter the specific data required.
+
+Years available: 2020 to 2100 in 5-year intervals (e.g., 2020, 2025, 2030..., 2100).
+
+SSP Scenarios:
+
+* SSP1
+* SSP2
+* SSP3
+* SSP4
+* SSP5
+
+```{r,results = "hide", message = FALSE, warning = FALSE}
+processed <- var_get(shape = Alps, crs = 3035) %>% 
+  population(vars = "population", year = 2050, ssp = 2)
+```
+
+```{r}
+plot(processed)
+```
+
+# Protected areas
+
+## IUCN protected areas
+
+This function downloads, processes, and extracts variables from the World Database of Protected Areas (WDPA) [@protectedplanet2025]. Each variable corresponds to a global raster representing different IUCN Management Categories of protected areas.
+
+**Available variables (8 total)**
+
+* 1 - **WDPA_IA** - strict nature reserve, strict reserve, 1a, ia, Ia (IUCN Category Ia)
+* 2 - **WDPA_IB** - wilderness area, wilderness, 1b, ib, Ib (IUCN Category Ib)
+* 3 - **WDPA_II** - national park, park, 2, ii, II (IUCN Category II)
+* 4 - **WDPA_III** - natural monument, monument, 3, iii, III (IUCN Category III)
+* 5 - **WDPA_IV** - habitat species management, habitat management, 4, iv, IV (IUCN Category IV)
+* 6 - **WDPA_V** - protected landscape, protected seascape, landscape, 5, v, V (IUCN Category V)
+* 7 - **WDPA_VI** - sustainable use, natural resources, 6, vi, VI (IUCN Category VI)
+* 8 - **WDPA_ALL** - all, combined, full, total, all protected areas (Combined/Full WDPA)
+
+```{r,results = "hide", message = FALSE, warning = FALSE}
+processed <- var_get(shape = Alps, crs = 3035) %>% 
+  protection(vars = c("national park", "WDPA_ALL"))
+```
+
+```{r}
+plot(processed)
+```
 
 # Conclusion
 

@@ -42,17 +42,18 @@ In this tutorial we show how _envar_ can be used to streamline a species distrib
 
 ## Occurrence points
 
-We use a set of 2971 records of the species in Europe obtained with a search on the **[Global Biodiversity Information Facility](https://www.gbif.org)**, filtering records with a positional uncertainty lower than 1 km. Additionally, we keep only one record among those in the same or adjacent cells, using the _GeoThinneR_ package [@mestretomas2025], to reduce the negative influence of spatial autocorrelation [@boria2014]. The resulting dataset is included in the package assets (`Alps()`) and can be accessed after loading the package in the R session. 
+We use a set of 2648 records of the species in continental Europe obtained with a search on the **[Global Biodiversity Information Facility](https://www.gbif.org)**, filtering records with a positional uncertainty lower than 1 km. Additionally, we keep only one record among those in the same or adjacent cells, using the _GeoThinneR_ package [@mestretomas2025], to reduce the negative influence of spatial autocorrelation [@boria2014]. The resulting dataset is included in the package assets (`Alps()`) and can be accessed after loading the package in the R session. 
 
 ```{r,results='hide',message =FALSE,warning=FALSE}
 # load required R package
 require(envar) # loads envar and dplyr packages
+require(terra)
+require(raster)
+require(sf)
 require(dismo)
 require(spatialEco)
 require(ENMeval)
-require(raster)
-require(sf)
-require(terra)
+require(PresenceAbsence)
 
 # load occurrence data 
 data(Apollo)
@@ -68,15 +69,19 @@ First, through _envar_ we define a template raster at ~ 1 km resolution and cove
 
 ```{r,results='hide',message =FALSE,warning=FALSE}
 # create a layer of sampling effort, as we need a template raster
-occ_sf <- st_as_sf(Apollo, coords=c("X", "Y"), crs=4326)
+occ_sf <- st_as_sf(Apollo, coords = c("X", "Y"), crs=4326)
 occ_sf <- st_transform(occ_sf, 3035)
 
-# use 'envar' to create a template raster with a 10 km buffer
-template <- var_get(shape=occ_sf, buffer = 10, crs=3035) %>% 
-            esalandcover(vars="ice")
+# use 'envar' to create a template raster with a 100 km buffer
+template <- var_get(shape = occ_sf, buffer = 100, crs = 3035) %>% 
+            esalandcover(vars = "ice")
 
 # create sampling bias raster
-dens_ras <- spatialEco::sp.kde(x=occ_sf, ref=template, standardize=TRUE, mask=TRUE, res = res(template))
+dens_ras <- spatialEco::sp.kde(x = occ_sf, 
+                               ref = template, 
+                               standardize = TRUE, 
+                               mask = TRUE, 
+                               res = res(template))
 
 # pick background points proportionally to the sampling effort
 bg_points <- as.data.frame(dismo::randomPoints(raster::raster(dens_ras), 10000, prob = TRUE))
@@ -98,38 +103,38 @@ Then, we extract predictor values over presence and background points, for a set
 
 ```{r,results='hide',message =FALSE,warning=FALSE}
 # divide data in spatial blocks for model calibration
-occ_points <- cbind(st_drop_geometry(occ_sf),st_coordinates(occ_sf))
+occ_points <- cbind(st_drop_geometry(occ_sf), st_coordinates(occ_sf))
 block <- ENMeval::get.block(occ_points, bg_points, orientation = "lat_lon")
 
 # use 'envar' to extract predictor values at calibration points and check correlations 
 occ_points$pa <- rep(1, nrow(occ_points));bg_points$pa <- rep(0, nrow(bg_points));data<-rbind(occ_points,bg_points)
 
 # extract predictor values and check for correlation with 'envar'
-predictors <- var_get(pointsdf=data[,c("X", "Y")], crs=3035) %>% 
+predictors <- var_get(pointsdf = data[,c("X", "Y")], crs=3035) %>% 
               chelsa(vars = c("bio1", "bio4", "bio12", "bio15"), years =         "1981-2010") %>% 
-              esalandcover(vars= c("meadow", "tree", "water", "shannon")) %>% 
+              esalandcover(vars = c("meadow", "tree", "water", "shannon")) %>% 
               topography(vars = c("slope", "northness")) %>% 
               corr_check()
 ```
 
-We can then check the VIF
+We can then check the Variance Inflation Factor (VIF):
 
 ```{r}
 # View the Variance Inflation Factor values
 print(predictors$vif)
 ```
 
-And the Pearson pairwise correlation coefficients
+And the Pearson pairwise correlation coefficients:
 
 ```{r, echo=FALSE, out.width="100%", fig.align='center'}
 knitr::include_graphics("images/Corr_plot_apollo.png")
 ```
 
-Tree and meadow cover have a VIF ≥ 3 and are negatively correlated with Pearson’s correlations ≥ |0.6|. Thus, we remove one of these variables (tree).
+Slope and annual mean temperature (bio1) are negatively correlated with Pearson’s correlations ≥ |0.6|. No variables have a VIF higher than 3. Thus, we remove one of these variables; the one with a lower direct impact on the species physiology and distribution (slope).
 
 ```{r,results='hide',message =FALSE,warning=FALSE}
-# remove tree to avoid correlation issues
-predictors$data <- predictors$data[, !names(predictors$data) %in% c("tree")]
+# remove slope to avoid correlation issues
+predictors$data <- predictors$data[, !names(predictors$data) %in% c("slope")]
 
 data <- cbind(predictors$data, data$pa); colnames(data)[colnames(data)=="data$pa"] <- "pa"
 ```
@@ -141,25 +146,25 @@ Then, we fine-tune the hyperparameters of Maxent models [@phillips2006], using t
 ```{r,results='hide',message =FALSE,warning=FALSE}
 # Tune maxent models
 sdms <- ENMeval::ENMevaluate(
-  occs = data[data$pa=="1", c(2:(ncol(data)-1))],
-  bg = data[data$pa=="0", c(2:(ncol(data)-1))],
+  occs = data[data$pa == "1", c(2:(ncol(data)-1))],
+  bg = data[data$pa == "0", c(2:(ncol(data)-1))],
   RMvalues = c(1:8),
   fc = c("L", "LQ", "LQH"),
   partitions = "user",
   user.grp = block,
   algorithm = "maxent.jar")
 
-# row number of the best model (lowest overfitting)
-index <- which.min(sdms@results$auc.diff.avg)
+# row number of the best model (best test Boyce index)
+index <- which.max(sdms@results$cbi.val.avg)
 sdm_best <- sdms@models[[index]]
 ```
 
 ```{r}
 # show tuning table
-ordered <- sdms@results[order(sdms@results$auc.diff.avg), ]
+ordered <- sdms@results[order(sdms@results$cbi.val.avg), ]
 
 # best model metrics
-print(ordered[1, c("rm", "fc", "auc.val.avg", "auc.diff.avg", "cbi.val.avg")])
+print(ordered[1, c("rm", "fc", "cbi.val.avg", "cbi.val.sd", "auc.val.avg", "auc.val.sd", "auc.diff.avg", "auc.diff.sd")])
 ```
 
 ## Prediction in the Alps
@@ -170,21 +175,26 @@ The tuned model has a good predictive performance and a limited overfitting. Thi
 # use 'envar' to define predictors over the prediction area (European Alps)
 predictorsAlps <- var_get(shape = Alps, crs = 3035) %>% 
                   chelsa(vars = c("bio1", "bio4", "bio12", "bio15"), years = "1981-2010") %>% 
-                  esalandcover(vars = c("meadow", "water", "shannon")) %>% 
-                  topography(vars = c("slope", "northness")) %>% 
-                  extr_check(calib_points = Apollo, crs = 4326)
-
-# set as NA cells where extrapolation occurs
+                  esalandcover(vars = c("tree", "meadow", "water", "shannon")) %>% 
+                  topography(vars = c("northness")) %>% 
+                  extr_check(calib_points = data[,c("X", "Y")], calib_crs = 3035, type = "strict") 
 
 # predict with the best model over the European Alps
-prediction <- dismo::predict(sdm_best, predictorsAlps$data)
+predictionAlps <- dismo::predict(sdm_best, predictorsAlps$data)
 ```
+
+As we added the optional function "extr_check", we checked if the environmental conditions found in the prediction area are consistent with those that were provided to the models in the training phase. Here we only checked for "strict" extrapolation only (i.e. at least one predictor outside the range found during calibration) [@zurell2012]. 
+
+```{r}
+extr = predictorsAlps$extrapolation$strict
+plot(extr)
+```
+
+We can then plot the prediction of habitat suitability for _Parnassius apollo_ over the European Alps:
 
 ```{r, echo=FALSE, out.width="100%", fig.align='center'}
 knitr::include_graphics("images/Prediction.png")
 ```
-
-
 ## Conclusion
 
 By using _envar_ to retrieve data over a greater spatial area than the final prediction one, we were able to reduce the influence of niche truncation on the final output [@guisan2025]. Additionally, we could  discriminate the drivers of species distribution instead of the drivers of sampling bias, by picking bias-corrected background points in a template defined with _envar_.
