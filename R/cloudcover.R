@@ -154,7 +154,7 @@ cloudcover <- function(x, vars, ...) {
     syn2canon[[normalize_string(canon)]] <- canon
   }
   
-  # Convert requested vars to canonical codes AND keep mapping to original names
+  # Convert requested vars to canonical codes and keep mapping to original names
   requested_codes <- character(0)
   code_to_user_name <- list() # Maps canonical code -> user's original name
   unmapped <- character(0)
@@ -362,7 +362,7 @@ cloudcover <- function(x, vars, ...) {
     attr(processed_stack, "path") <- path
     attr(processed_stack, "land") <- land
     
-    # remove NAs if necessary
+    # Remove NAs if necessary
     if (set_na==TRUE){
       
       cli::cli_alert_info("Applying NA mask...")
@@ -372,8 +372,6 @@ cloudcover <- function(x, vars, ...) {
       processed_stack <- terra::mask(processed_stack, master_mask)
       
     }
-    
-    # write if requested
     
     if (!is.null(path)){
       terra::writeRaster(processed_stack, path, overwrite = TRUE)
@@ -398,7 +396,6 @@ cloudcover <- function(x, vars, ...) {
     attr(extracted_df, "envar_crs") <- crs
     attr(extracted_df, "path") <- path
     
-    # write if requested
     if (!is.null(path)){
       write.csv(extracted_df, path)
     }

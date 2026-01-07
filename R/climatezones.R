@@ -384,7 +384,7 @@ climatezones <- function(x, vars = "zones", years = "1991-2020", ssp = NULL, ...
     attr(processed_stack, "path") <- path
     attr(processed_stack, "land")<-land
     
-    # remove NAs if necessary
+    # Remove NAs if necessary
     if (set_na==TRUE){
       
       cli::cli_alert_info("Applying NA mask...")
@@ -394,8 +394,6 @@ climatezones <- function(x, vars = "zones", years = "1991-2020", ssp = NULL, ...
       processed_stack <- terra::mask(processed_stack, master_mask)
       
     }
-    
-    # write if requested
     
     if (!is.null(path)){
       terra::writeRaster(processed_stack, path, overwrite = TRUE)
@@ -419,7 +417,6 @@ climatezones <- function(x, vars = "zones", years = "1991-2020", ssp = NULL, ...
     attr(extracted_df, "envar_crs") <- crs
     attr(extracted_df, "path") <- path
     
-    # write if requested
     if (!is.null(path)){
       write.csv(extracted_df, path)
     }

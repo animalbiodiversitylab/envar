@@ -6,36 +6,26 @@
 #' EarthEnv Consensus Land Cover dataset. Each variable corresponds to a global
 #' raster representing a specific land cover class at 1-km resolution.
 #'
-#' Available variables (working synonyms in parentheses):
+#' @details
+#' \strong{Available variables} (working synonyms in parentheses):
 #'
-#' 1 - "consensus_full_class_1" ("evergreen deciduous needleleaf trees", "needleleaf trees", "needleleaf", "conifer")
-#' 
-#' 2 - "consensus_full_class_2" ("evergreen broadleaf trees", "evergreen broadleaf", "broadleaf evergreen")
-#' 
-#' 3 - "consensus_full_class_3" ("deciduous broadleaf trees", "deciduous broadleaf", "broadleaf deciduous")
-#' 
-#' 4 - "consensus_full_class_4" ("mixed other trees", "mixed trees", "other trees", "mixed forest")
-#' 
-#' 5 - "consensus_full_class_5" ("shrubs", "shrubland", "shrub")
-#' 
-#' 6 - "consensus_full_class_6" ("herbaceous vegetation", "herbaceous", "grassland", "grass", "herbs")
-#' 
-#' 7 - "consensus_full_class_7" ("cultivated and managed vegetation", "cultivated", "managed vegetation", "agriculture", "crops", "cropland")
-#' 
-#' 8 - "consensus_full_class_8" ("regularly flooded vegetation", "flooded vegetation", "flooded", "wetland")
-#' 
-#' 9 - "consensus_full_class_9" ("urban built up", "urban", "built up", "built-up", "artificial surface")
-#' 
-#' 10 - "consensus_full_class_10" ("snow ice", "snow", "ice", "glacier", "permafrost")
-#' 
-#' 11 - "consensus_full_class_11" ("barren", "barren land", "bare ground", "bare")
-#' 
-#' 12 - "consensus_full_class_12" ("open water", "water", "water bodies")
+#' \itemize{
+#'   \item 1 - "consensus_full_class_1" ("evergreen deciduous needleleaf trees", "needleleaf trees", "needleleaf", "conifer")
+#'   \item 2 - "consensus_full_class_2" ("evergreen broadleaf trees", "evergreen broadleaf", "broadleaf evergreen")
+#'   \item 3 - "consensus_full_class_3" ("deciduous broadleaf trees", "deciduous broadleaf", "broadleaf deciduous")
+#'   \item 4 - "consensus_full_class_4" ("mixed other trees", "mixed trees", "other trees", "mixed forest")
+#'   \item 5 - "consensus_full_class_5" ("shrubs", "shrubland", "shrub")
+#'   \item 6 - "consensus_full_class_6" ("herbaceous vegetation", "herbaceous", "grassland", "grass", "herbs")
+#'   \item 7 - "consensus_full_class_7" ("cultivated and managed vegetation", "cultivated", "managed vegetation", "agriculture", "crops", "cropland")
+#'   \item 8 - "consensus_full_class_8" ("regularly flooded vegetation", "flooded vegetation", "flooded", "wetland")
+#'   \item 9 - "consensus_full_class_9" ("urban built up", "urban", "built up", "built-up", "artificial surface")
+#'   \item 10 - "consensus_full_class_10" ("snow ice", "snow", "ice", "glacier", "permafrost")
+#'   \item 11 - "consensus_full_class_11" ("barren", "barren land", "bare ground", "bare")
+#'   \item 12 - "consensus_full_class_12" ("open water", "water", "water bodies")
+#' }
 #'
-#' Citation:
-#'
-#' Tuanmu, M.N., Jetz. W. (2014). "A global 1-km consensus land-cover product
-#' for biodiversity and ecosystem modeling." Global Ecology and Biogeography 23: 1031-1045.
+#' \strong{Citation:}\cr
+#' Tuanmu MN, Jetz W (2014). "A global 1-km consensus land-cover product for biodiversity and ecosystem modeling." Global Ecology and Biogeography 23, 1031-1045.
 #' https://doi.org/10.1111/geb.12182
 #'
 #' Note: Users should verify the terms of use for EarthEnv data provided 
@@ -68,7 +58,7 @@ earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
   
   cli::cli_alert_info(paste0(
     "Using EarthEnv Consensus Land Cover layers.\n",
-    "Citation: Tuanmu, M.N. and W. Jetz. (2014). A global 1-km consensus land-cover product for biodiversity and ecosystem modeling. Global Ecology and Biogeography.\n",
+    "Citation: Tuanmu MN, Jetz W (2014). A global 1-km consensus land-cover product for biodiversity and ecosystem modeling. Global Ecology and Biogeography 23, 1031-1045.\n",
     "DOI: {.url https://doi.org/10.1111/geb.12182}\n"
   ))
   
@@ -137,7 +127,7 @@ earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
     syn2canon[[normalize_string(canon)]] <- canon
   }
   
-  # Convert requested vars to canonical codes AND keep mapping to original names
+  # Convert requested vars to canonical codes and keep mapping to original names
   requested_codes <- character(0)
   code_to_user_name <- list() # Maps canonical code -> user's original name
   unmapped <- character(0)
@@ -346,7 +336,7 @@ earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
     attr(processed_stack, "path") <- path
     attr(processed_stack, "land")<-land
     
-    # remove NAs if necessary
+    # Remove NAs if necessary
     if (set_na==TRUE){
       
       cli::cli_alert_info("Applying NA mask...")
@@ -356,8 +346,6 @@ earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
       processed_stack <- terra::mask(processed_stack, master_mask)
       
     }
-    
-    # write if requested
     
     if (!is.null(path)){
       terra::writeRaster(processed_stack, path, overwrite = TRUE)
@@ -382,7 +370,6 @@ earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
     
     attr(extracted_df, "path") <- path
     
-    # write if requested
     if (!is.null(path)){
       write.csv(extracted_df, path)
     }
