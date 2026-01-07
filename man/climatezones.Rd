@@ -32,37 +32,41 @@ to a global GeoTIFF representing climate classification zones based on
 historical data or future CMIP6 projections.
 }
 \details{
-Available variables (working synonyms in parentheses):
+\strong{Available variables} (working synonyms in parentheses):
 
-1 - "zones" ("koppengeiger", "climate", "climatezones", "koppen", "koppen geiger")
+\itemize{
+  \item 1 - "zones" ("koppengeiger", "climate", "climatezones", "koppen", "koppen geiger")
+}
 
-Time Periods (years argument):
+\strong{Time Periods} (years argument):
 
-Historical:
-- "1901-1930"
-- "1931-1960"
-- "1961-1990"
-- "1991-2020" (default)
+\strong{Historical}
+\itemize{
+  \item "1901-1930"
+  \item "1931-1960"
+  \item "1961-1990"
+  \item "1991-2020" (default)
+}
 
-Future:
-- "2041-2070"
-- "2071-2099"
+\strong{Future}
+\itemize{
+  \item "2041-2070"
+  \item "2071-2099"
+}
 
-SSP Scenarios (ssp argument, required for future periods):
-- 119 (SSP1-1.9)
-- 126 (SSP1-2.6)
-- 245 (SSP2-4.5)
-- 370 (SSP3-7.0)
-- 434 (SSP4-3.4)
-- 460 (SSP4-6.0)
-- 585 (SSP5-8.5)
+\strong{SSP Scenarios} (ssp argument, required for future periods):
+\itemize{
+  \item 119 (SSP1-1.9)
+  \item 126 (SSP1-2.6)
+  \item 245 (SSP2-4.5)
+  \item 370 (SSP3-7.0)
+  \item 434 (SSP4-3.4)
+  \item 460 (SSP4-6.0)
+  \item 585 (SSP5-8.5)
+}
 
-Citation:
-
-Beck, H.E., T.R. McVicar, N. Vergopolan, A. Berg, N.J. Lutsko, A. Dufour, 
-Z. Zeng, X. Jiang, A.I.J.M. van Dijk, D.G. Miralles (2023). "High-resolution 
-(1 km) Köppen-Geiger maps for 1901-2099 based on constrained CMIP6 projections." 
-Scientific Data 10, 724.
+\strong{Citation:}\cr
+Beck HE, McVicar TR, Vergopolan N, Berg A, Lutsko NJ, Dufour A, Zeng Z, Jiang X, van Dijk AIJM, Miralles DG (2023). "High-resolution (1 km) Köppen-Geiger maps for 1901-2099 based on constrained CMIP6 projections." Scientific Data 10, 724.
 https://doi.org/10.1038/s41597-023-02549-6
 }
 \examples{

@@ -59,7 +59,7 @@ aridity <- function(x, vars, ...) {
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using Global Aridity Index and ET0 Database v3.\n",
-    "Citation: Zomer RJ, Xu J, Trabucco A (2022). Version 3 of the Global Aridity Index and Potential Evapotranspiration Database. Scientific Data.\n",
+    "Citation: Zomer RJ, Xu J, Trabucco A (2022). Version 3 of the Global Aridity Index and Potential Evapotranspiration Database. Scientific Data 9, 409.\n",
     "DOI: {.url https://doi.org/10.1038/s41597-022-01493-1}\n"
   ))
   
