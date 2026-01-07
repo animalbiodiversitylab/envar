@@ -92,9 +92,7 @@ catchment characteristics, including topography, land cover, soil, and climate.
 }
 
 \strong{Citation:}\cr
-Domisch, S., Amatulli, G. & Jetz, W. (2015). "Near-global freshwater-specific 
-environmental variables for biodiversity analyses in 1 km resolution." 
-Scientific Data, 2, 150073.
+Domisch S, Amatulli G, Jetz W (2015). "Near-global freshwater-specific environmental variables for biodiversity analyses in 1 km resolution." Scientific Data 2, 150073.
 https://doi.org/10.1038/sdata.2015.73
 
 Note: Please cite original sources of primary datasets where appropriate.

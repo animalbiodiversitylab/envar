@@ -62,9 +62,7 @@
 #' }
 #'
 #' \strong{Citation:}\cr
-#' Domisch, S., Amatulli, G. & Jetz, W. (2015). "Near-global freshwater-specific 
-#' environmental variables for biodiversity analyses in 1 km resolution." 
-#' Scientific Data, 2, 150073.
+#' Domisch S, Amatulli G, Jetz W (2015). "Near-global freshwater-specific environmental variables for biodiversity analyses in 1 km resolution." Scientific Data 2, 150073.
 #' https://doi.org/10.1038/sdata.2015.73
 #'
 #' Note: Please cite original sources of primary datasets where appropriate.
@@ -107,7 +105,7 @@ freshwater <- function(x, vars, year = NULL, month = NULL, algorithm = NULL, ...
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using EarthEnv Freshwater Environmental Variables.\n",
-    "Citation: Domisch, S., Amatulli, G. & Jetz, W. (2015). Near-global freshwater-specific environmental variables for biodiversity analyses in 1 km resolution. Scientific Data.\n",
+    "Citation: Domisch S, Amatulli G, Jetz W (2015). Near-global freshwater-specific environmental variables for biodiversity analyses in 1 km resolution. Scientific Data 2, 150073.\n",
     "DOI: {.url https://doi.org/10.1038/sdata.2015.73}\n"
   ))
   
@@ -444,7 +442,7 @@ freshwater <- function(x, vars, year = NULL, month = NULL, algorithm = NULL, ...
     attr(processed_stack, "path") <- path
     attr(processed_stack, "land") <- land
     
-    # remove NAs if necessary
+    # Remove NAs if necessary
     if (set_na==TRUE){
       
       cli::cli_alert_info("Applying NA mask...")
@@ -454,8 +452,6 @@ freshwater <- function(x, vars, year = NULL, month = NULL, algorithm = NULL, ...
       processed_stack <- terra::mask(processed_stack, master_mask)
       
     }
-    
-    # write if requested
     
     if (!is.null(path)){
       terra::writeRaster(processed_stack, path, overwrite = TRUE)
@@ -477,7 +473,7 @@ freshwater <- function(x, vars, year = NULL, month = NULL, algorithm = NULL, ...
     
     
     cli::cli_alert_success("Extraction completed successfully")
-    # write if requested
+    
     if (!is.null(path)){
       write.csv(extracted_df, path)
     }
