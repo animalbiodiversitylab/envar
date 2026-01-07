@@ -28,27 +28,28 @@ global gridded GDP projections compatible with the five Shared Socioeconomic
 Pathways (SSPs) for the period 1850–2100.
 }
 \details{
-Available variables (working synonyms in parentheses):
+\strong{Available variables} (working synonyms in parentheses):
+\itemize{
+  \item "gdp" ("gross domestic product", "future gdp", "economic projection", "economy", "ssp gdp")
+}
 
-Economic Metrics:
-
-1 - "gdp" ("gross domestic product", "future gdp", "economic projection", "economy", "ssp gdp")
-
-Scenarios (SSP):
+\strong{Scenarios (SSP)}
 The `ssp` argument accepts integers 1 through 5, corresponding to:
-SSP1: Sustainability
-SSP2: Middle of the Road
-SSP3: Regional Rivalry
-SSP4: Inequality
-SSP5: Fossil-fueled Development
+\itemize{
+  \item SSP1: Sustainability
+  \item SSP2: Middle of the Road
+  \item SSP3: Regional Rivalry
+  \item SSP4: Inequality
+  \item SSP5: Fossil-fueled Development
+}
 
-Years available: Decadal intervals from 1850 to 2100 (e.g., 2020, 2030, 2040...).
+\strong{Years available}
+\itemize{
+  \item Decadal intervals from 1850 to 2100 (e.g., 2020, 2030, 2040...).
+}
 
-Citation:
-
-Murakami, D., Yoshida, T., & Yamagata, Y. (2021). "Gridded GDP projections 
-compatible with the five SSPs (shared socioeconomic pathways)." 
-Frontiers in Built Environment 7: 760306.
+\strong{Citation:}\cr
+Murakami D, Yoshida T, Yamagata Y (2021). "Gridded GDP projections compatible with the five SSPs (shared socioeconomic pathways)." Frontiers in Built Environment 7, 760306.
 https://doi.org/10.3389/fbuil.2021.760306
 
 Note: Please cite original sources of primary datasets where appropriate.
@@ -57,10 +58,10 @@ Note: Please cite original sources of primary datasets where appropriate.
 \dontrun{
 # Get GDP for SSP1 and SSP5 in 2050
 processed <- var_get(country= "France", crs=3035) \%>\% 
-gdpfuture(vars="gdp", year=2050, ssp=c(1, 5))
+  gdpfuture(vars="gdp", year=2050, ssp=c(1, 5))
 
 # Get time series for SSP2
 processed <- var_get(country= "India") \%>\% 
-gdpfuture(vars="gdp", year=c(2020, 2030, 2040), ssp=2)
-  }
+  gdpfuture(vars="gdp", year=c(2020, 2030, 2040), ssp=2)
+}
 }
