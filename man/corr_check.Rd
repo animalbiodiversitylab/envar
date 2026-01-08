@@ -22,9 +22,17 @@ A `list` object containing:
 }
 }
 \description{
-`corr_check()` is an optional function for the **envar** package workflow. 
+`corr_check()` is an optional function for the `envar` package workflow. 
 It allows you to check for variable correlation and multi-collinearity among 
 the variables over the study area. It can be used before or after `extr_check()`.
+}
+\details{
+\strong{Citation:}\cr
+Wei T, Simko V (2021). "R package 'corrplot': Visualization of a Correlation Matrix." GitHub.
+https://github.com/taiyun/corrplot
+
+Naimi B, Hamm NA, Groen TA, Skidmore AK, Toxopeus AG (2014). "Where is positional uncertainty a problem for species distribution modelling?" Ecography 37, 191-203.
+https://doi.org/10.1111/j.1600-0587.2013.00205.x
 }
 \examples{
 \dontrun{

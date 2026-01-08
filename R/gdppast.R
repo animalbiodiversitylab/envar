@@ -6,24 +6,27 @@
 #' global 1km gridded revised real gross domestic product and electricity 
 #' consumption dataset (1992–2019).
 #'
-#' Available variables (working synonyms in parentheses):
+#' @details
+#' \strong{Available variables} (working synonyms in parentheses):
 #'
-#' Economic Metrics:
+#' \strong{Economic Metrics}
+#' \itemize{
+#'   \item "gdp" ("gross domestic product", "real gdp", "economy", "economic output", "gross product")
+#' }
 #' 
-#' 1 - "gdp" ("gross domestic product", "real gdp", "economy", "economic output", "gross product")
-#' 
-#' Energy Metrics:
-#' 
-#' 2 - "electricity" ("electricity consumption", "energy", "energy consumption", "power", "ec", "electric")
+#' \strong{Energy Metrics}
+#' \itemize{
+#'   \item "electricity" ("electricity consumption", "energy", "energy consumption", "power", "ec", "electric")
+#' }
 #'
-#' Years available: 1992 to 2019.
+#' \strong{Years available}
+#' \itemize{
+#'   \item 1992 to 2019.
+#' }
 #'
-#' Citation:
-#'
-#' Chen, J., Gao, M., Cheng, S. et al. (2022). "Global 1 km x 1 km gridded revised 
-#' real gross domestic product and electricity consumption during 1992–2019 based 
-#' on calibrated nighttime light data." Sci Data 9, 202.
-#' https://doi.org/10.1038/s41597-022-01302-0
+#' \strong{Citation:}\cr
+#' Chen J, Gao M, Cheng S et al (2022). "Global 1 km x 1 km gridded revised real gross domestic product and electricity consumption during 1992–2019 based on calibrated nighttime light data." Scientific Data 9, 202.
+#' https://doi.org/10.1038/s41597-022-01322-5
 #'
 #' Note: Please cite original sources of primary datasets where appropriate.
 #'
@@ -41,12 +44,12 @@
 #' \dontrun{
 #' # Get GDP for 2000 and 2010
 #' processed <- var_get(country= "Italy", crs=3035) %>% 
-#' gdppast(vars="gdp", year=c(2000, 2010))
+#'   gdppast(vars="gdp", year=c(2000, 2010))
 #'
 #' # Get Electricity and GDP for 2019
 #' processed <- var_get(country= "Vietnam") %>% 
-#' gdppast(vars=c("electricity", "gdp"), year=2019)
-#'   }
+#'   gdppast(vars=c("electricity", "gdp"), year=2019)
+#' }
 #' @export
 
 gdppast <- function(x, vars, year, ...) {
@@ -56,8 +59,8 @@ gdppast <- function(x, vars, year, ...) {
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using Historical GDP and Electricity Consumption layers.\n",
-    "Citation: Chen, J., Gao, M., Cheng, S. et al. (2022). Sci Data 9, 202.\n",
-    "DOI: {.url https://doi.org/10.1038/s41597-022-01302-0}\n"
+    "Citation: Chen J, Gao M, Cheng S et al (2022). Global 1 km x 1 km gridded revised real gross domestic product and electricity consumption during 1992–2019 based on calibrated nighttime light data. Scientific Data 9, 202.\n",
+    "DOI: {.url https://doi.org/10.1038/s41597-022-01322-5}\n"
   ))
   
   # Validate Year
@@ -155,7 +158,7 @@ gdppast <- function(x, vars, year, ...) {
   # Helper: Download, process, and clean up a single file
   # --------------------------------------------------------------------
   handle_file <- function(url, dest_file, canon, user_name, yr) {
-    # We use a specific temp directory structure to handle the nested zips
+    # Use a specific temp directory structure to handle the nested zips
     temp_base <- fs::path_temp("envar/gdppast")
     fs::dir_create(temp_base)
     
@@ -164,7 +167,7 @@ gdppast <- function(x, vars, year, ...) {
     big_zip_path <- file.path(temp_base, big_zip_name)
     
     # Step 1: Download the BIG zip only if it doesn't exist or is invalid
-    # We cache the big zip within the session temp to avoid re-downloading 300MB+ for every year loop
+    # Cache the big zip within the session temp to avoid re-downloading 300MB+ for every year loop
     if (!file.exists(big_zip_path)) {
       cli::cli_alert_info("Downloading main archive for {.val {canon}}...")
       success <- download_file(url, big_zip_path)
@@ -183,7 +186,7 @@ gdppast <- function(x, vars, year, ...) {
     inner_zip_name <- paste0(yr, ".zip")
     path_inside_zip <- file.path(inner_folder, inner_zip_name)
     
-    # We unzip strictly the specific year zip file
+    # Unzip strictly the specific year zip file
     unzip_success <- try(utils::unzip(big_zip_path, files = path_inside_zip, exdir = temp_base, overwrite = TRUE), silent=TRUE)
     
     extracted_inner_zip <- file.path(temp_base, inner_folder, inner_zip_name)
@@ -210,7 +213,7 @@ gdppast <- function(x, vars, year, ...) {
       return(NULL)
     }
     
-    # Now treat final_tif_path as dest_file for processing
+    # Treat final_tif_path as dest_file for processing
     dest_file <- final_tif_path
     
     # Construct a descriptive name: e.g. "gdp_2000" or "electricity_1995"
@@ -335,15 +338,13 @@ gdppast <- function(x, vars, year, ...) {
     for (yr in year) {
       # Pass canon, user_name, and year to the handler
       # The destination file argument is placeholder here, as the handler manages nested extraction
-      # We just pass a dummy path for consistency with the signature logic, 
-      # though handle_file constructs the specific path internally.
       dummy_dest <- file.path(fs::path_temp("envar/gdppast"), paste0(canon, "_", yr, ".tif"))
       
       handle_file(url, dummy_dest, canon, user_name, yr)
     }
   }
   
-  # Cleanup: We can optionally remove the big zips here if we want to save space,
+  # Cleanup: optionally remove the big zips here if we want to save space,
   # or leave them in temp for the session. Let's clean explicitly to be safe.
   # fs::dir_delete(fs::path_temp("envar/gdppast")) 
   # (Commented out to allow subsequent calls to be faster in same session, 
@@ -402,7 +403,7 @@ gdppast <- function(x, vars, year, ...) {
     attr(processed_stack, "path") <- path
     attr(processed_stack, "land") <- land
     
-    # remove NAs if necessary
+    # Remove NAs if necessary
     if (set_na==TRUE){
       
       cli::cli_alert_info("Applying NA mask...")
@@ -412,8 +413,6 @@ gdppast <- function(x, vars, year, ...) {
       processed_stack <- terra::mask(processed_stack, master_mask)
       
     }
-    
-    # write if requested
     
     if (!is.null(path)){
       terra::writeRaster(processed_stack, path, overwrite = TRUE)
@@ -438,7 +437,6 @@ gdppast <- function(x, vars, year, ...) {
     attr(extracted_df, "envar_crs") <- crs
     attr(extracted_df, "path") <- path
     
-    # write if requested
     if (!is.null(path)){
       write.csv(extracted_df, path)
     }

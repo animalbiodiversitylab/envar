@@ -64,7 +64,7 @@ accessibility <- function(x, vars, ...) {
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using Global Accessibility Indicators.\n",
-    "Citation: Nelson A, Weiss DJ, van Etten J et al (2019). A suite of global accessibility indicators. Scientific Data.\n",
+    "Citation: Nelson A, Weiss DJ, van Etten J et al (2019). A suite of global accessibility indicators. Scientific Data 6, 266.\n",
     "DOI: {.url https://doi.org/10.1038/s41597-019-0265-5}\n"
   ))
   

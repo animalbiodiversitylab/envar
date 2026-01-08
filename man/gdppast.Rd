@@ -26,24 +26,26 @@ global 1km gridded revised real gross domestic product and electricity
 consumption dataset (1992–2019).
 }
 \details{
-Available variables (working synonyms in parentheses):
+\strong{Available variables} (working synonyms in parentheses):
 
-Economic Metrics:
+\strong{Economic Metrics}
+\itemize{
+  \item "gdp" ("gross domestic product", "real gdp", "economy", "economic output", "gross product")
+}
 
-1 - "gdp" ("gross domestic product", "real gdp", "economy", "economic output", "gross product")
+\strong{Energy Metrics}
+\itemize{
+  \item "electricity" ("electricity consumption", "energy", "energy consumption", "power", "ec", "electric")
+}
 
-Energy Metrics:
+\strong{Years available}
+\itemize{
+  \item 1992 to 2019.
+}
 
-2 - "electricity" ("electricity consumption", "energy", "energy consumption", "power", "ec", "electric")
-
-Years available: 1992 to 2019.
-
-Citation:
-
-Chen, J., Gao, M., Cheng, S. et al. (2022). "Global 1 km x 1 km gridded revised 
-real gross domestic product and electricity consumption during 1992–2019 based 
-on calibrated nighttime light data." Sci Data 9, 202.
-https://doi.org/10.1038/s41597-022-01302-0
+\strong{Citation:}\cr
+Chen J, Gao M, Cheng S et al (2022). "Global 1 km x 1 km gridded revised real gross domestic product and electricity consumption during 1992–2019 based on calibrated nighttime light data." Scientific Data 9, 202.
+https://doi.org/10.1038/s41597-022-01322-5
 
 Note: Please cite original sources of primary datasets where appropriate.
 }
@@ -51,10 +53,10 @@ Note: Please cite original sources of primary datasets where appropriate.
 \dontrun{
 # Get GDP for 2000 and 2010
 processed <- var_get(country= "Italy", crs=3035) \%>\% 
-gdppast(vars="gdp", year=c(2000, 2010))
+  gdppast(vars="gdp", year=c(2000, 2010))
 
 # Get Electricity and GDP for 2019
 processed <- var_get(country= "Vietnam") \%>\% 
-gdppast(vars=c("electricity", "gdp"), year=2019)
-  }
+  gdppast(vars=c("electricity", "gdp"), year=2019)
+}
 }

@@ -1,21 +1,31 @@
 #' Check for Environmental Extrapolation
 #'
-#' `extr_check()` evaluates whether environmental conditions in the study area
+#' This function evaluates whether environmental conditions in the study area
 #' fall outside the range of conditions observed at calibration points. This helps 
 #' identify areas where Species Distribution Model (SDM) predictions may be unreliable
 #' due to extrapolation.
 #'
+#' @details
+#' \strong{Extrapolation types}
+#'
 #' Extrapolation can occur in two ways:
 #' \itemize{
-#'   \item **Strict extrapolation**: At least one variable is outside the range found 
-#'     in the calibration data (Elith et al., 2010).
-#'   \item **Combinatorial extrapolation**: Each variable is within the calibration range,
-#'     but the combination of predictors is new (Zurell et al., 2012).
+#'   \item \strong{Strict extrapolation}: At least one variable is outside the range found 
+#'     in the calibration data.
+#'   \item \strong{Combinatorial extrapolation}: Each variable is within the calibration range,
+#'     but the combination of predictors is new.
 #' }
 #'
 #' This function uses the environmental overlap mask approach from Zurell et al. (2012),
 #' implemented in the `mecofun` package. It uses 1 bin per variable for strict extrapolation 
 #' detection and 5 bins per variable for combinatorial extrapolation detection.
+#'
+#' \strong{Citations:}\cr
+#' Elith J, Kearney M, Phillips S (2010). "The art of modelling range-shifting species." Methods in Ecology and Evolution 1, 330-342.
+#' https://doi.org/10.1111/j.2041-210X.2010.00036.x
+#'
+#' Zurell D, Elith J, Schroeder B (2012). "Predicting to new environments: tools for visualizing model behaviour and impacts on mapped distributions." Diversity and Distributions 18, 628-634.
+#' https://doi.org/10.1111/j.1472-4642.2012.00887.x
 #'
 #' @param x A `SpatRaster`, `data.frame`, or a list containing the output from
 #'   previous pipeline steps (e.g., from `corr_check()`).
@@ -43,14 +53,6 @@
 #'     analog environments.
 #' }
 #'
-#' @references
-#' Elith J, Kearney M, Phillips S (2010). "The art of modelling range-shifting species."
-#' Methods in Ecology and Evolution, 1(4), 330-342. doi:10.1111/j.2041-210X.2010.00036.x
-#'
-#' Zurell D, Elith J, Schroeder B (2012). "Predicting to new environments: tools for 
-#' visualizing model behaviour and impacts on mapped distributions." Diversity and 
-#' Distributions, 18(6), 628-634. doi:10.1111/j.1472-4642.2012.00887.x
-#'
 #' @examples
 #' \dontrun{
 #' # Example 1: Check extrapolation after getting environmental variables
@@ -72,6 +74,7 @@
 #'   extr_check(calib_points = occ_points, type = "combinatorial")
 #' }
 #' @export
+
 extr_check <- function(x, 
                        calib_points, 
                        calib_crs = "EPSG:4326",
@@ -336,10 +339,8 @@ extr_check <- function(x,
   cli::cli_alert_info("Using {nrow(calib_env)} calibration points and {nrow(study_env_complete)} study area cells/points.")
   
   # -------------------------------------------------------------------------
-  
   # Calculate extrapolation using mecofun::eo_mask (or custom implementation for single variable)
   # -------------------------------------------------------------------------
-  
   
   results_list <- list()
   

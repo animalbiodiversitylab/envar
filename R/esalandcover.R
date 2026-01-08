@@ -7,43 +7,35 @@
 #' raster representing a specific land cover class or diversity index derived 
 #' from very high-resolution imagery.
 #'
-#' Available variables (working synonyms in parentheses):
+#' @details
+#' \strong{Available variables} (working synonyms in parentheses):
 #'
-#' 1 - "wetland" ("wetlands", "swamp", "marsh", "bog", "fen")
+#' \strong{Land Cover Classes}
+#' \itemize{
+#'   \item 1 - "wetland" ("wetlands", "swamp", "marsh", "bog", "fen")
+#'   \item 2 - "bare" ("bare ground", "bare soil", "desert", "unvegetated")
+#'   \item 3 - "built" ("built area", "built up", "urban", "artificial", "impervious")
+#'   \item 4 - "cropland" ("agriculture", "agricultural", "crop", "crops", "farming")
+#'   \item 5 - "grass" ("grassland", "grass land", "meadow", "pasture", "prairie")
+#'   \item 6 - "ice" ("snow", "snow and ice", "glacier", "ice", "permafrost")
+#'   \item 8 - "mangrove" ("mangroves")
+#'   \item 9 - "moss" ("mosses", "lichen", "lichens", "moss and lichen")
+#'   \item 10 - "shrub" ("shrubland", "scrub", "bush", "thicket")
+#'   \item 11 - "tree" ("trees", "forest", "woodland", "canopy", "canopy cover")
+#'   \item 12 - "water" ("surface water", "lake", "river", "freshwater")
+#' }
 #' 
-#' 2 - "bare" ("bare ground", "bare soil", "desert", "unvegetated")
-#' 
-#' 3 - "built" ("built area", "built up", "urban", "artificial", "impervious")
-#' 
-#' 4 - "cropland" ("agriculture", "agricultural", "crop", "crops", "farming")
-#' 
-#' 5 - "grass" ("grassland", "grass land", "meadow", "pasture", "prairie")
-#' 
-#' 6 - "ice" ("snow", "snow and ice", "glacier", "ice", "permafrost")
-#' 
-#' 7 - "land_perc" ("percentage of land", "land percentage", "land cover fraction", "land fraction")
-#' 
-#' 8 - "mangrove" ("mangroves")
-#' 
-#' 9 - "moss" ("mosses", "lichen", "lichens", "moss and lichen")
-#' 
-#' 10 - "shrub" ("shrubland", "scrub", "bush", "thicket")
-#' 
-#' 11 - "tree" ("trees", "forest", "woodland", "canopy", "canopy cover")
-#' 
-#' 12 - "water" ("surface water", "lake", "river", "freshwater")
-#' 
-#' 13 - "simpson" ("simpson index", "diversity simpson", "simpson diversity")
-#' 
-#' 14 - "shannon" ("shannon index", "entropy", "shannon entropy", "shannon diversity")
-#' 
-#' 15 - "evenness" ("evenness index", "pielou", "pielou evenness", "species evenness")
+#' \strong{Diversity & Metrics}
+#' \itemize{
+#'   \item 7 - "land_perc" ("percentage of land", "land percentage", "land cover fraction", "land fraction")
+#'   \item 13 - "simpson" ("simpson index", "diversity simpson", "simpson diversity")
+#'   \item 14 - "shannon" ("shannon index", "entropy", "shannon entropy", "shannon diversity")
+#'   \item 15 - "evenness" ("evenness index", "pielou", "pielou evenness", "species evenness")
+#' }
 #'
-#' Citation:
-#'
-#' Lo Parrino E, Simoncini A, Ficetola GF, Falaschi M (2025). "Global 1 km land cover 
-#' for macroecological modelling from very high resolution imagery." Figshare.  
-#' https://doi.org/10.6084/m9.figshare.22061801
+#' \strong{Citation:}\cr
+#' Lo Parrino E, Simoncini A, Ficetola GF, Falaschi M (2025). "Global 1 km land cover for macroecological modelling from very high resolution imagery." Figshare.
+#' https://doi.org/10.6084/m9.figshare.30665069
 #'
 #' Note: Users should verify the terms of use provided at https://figshare.com/s/4e7dee46628b530aee03
 #' 
@@ -51,6 +43,7 @@
 #' the reference system, and the buffer. 
 #' Leave this empty and use `var_get()` to define parameters for download.
 #' @param vars Character vector of one or more variables to download and process.
+#' @param discover Logical. If TRUE, creates a discovery map (unused in current implementation but kept for compatibility).
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
@@ -59,8 +52,8 @@
 #' @examples
 #' \dontrun{
 #' processed <- var_get(country= "Italy", crs=3035) %>% 
-#' esalandcover(vars=c("tree", "water"))
-#'     }
+#'   esalandcover(vars=c("tree", "water"))
+#' }
 #' @export
 
 esalandcover <- function(x, vars, discover=TRUE, ...) {
@@ -71,7 +64,7 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
   cli::cli_alert_info(paste0(
     "Using Global 1 km Land Cover variables.\n",
     "Citation: Lo Parrino E, Simoncini A, Ficetola GF, Falaschi M (2025). Global 1 km land cover for macroecological modelling from very high resolution imagery. Figshare.\n",
-    "DOI: {.url https://figshare.com/s/4e7dee46628b530aee03}\n"
+    "DOI: {.url https://doi.org/10.6084/m9.figshare.30665069}\n"
   ))
   
   par_list <- get_par(x)
@@ -372,7 +365,7 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
     attr(processed_stack, "path") <- path
     attr(processed_stack, "land") <- land
     
-    # remove NAs if necessary
+    # Remove NAs if necessary
     if (isTRUE(set_na)){
       
       cli::cli_alert_info("Applying NA mask...")
@@ -382,8 +375,6 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
       processed_stack <- terra::mask(processed_stack, master_mask)
       
     }
-    
-    # write if requested
     
     if (!is.null(path)){
     terra::writeRaster(processed_stack, path, overwrite = TRUE)
@@ -414,7 +405,6 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
     
     attr(extracted_df, "path") <- path
     
-    # write if requested
     if (!is.null(path)){
       write.csv(extracted_df, path)
     }

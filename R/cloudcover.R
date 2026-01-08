@@ -6,61 +6,44 @@
 #' EarthEnv Global Cloud Cover dataset. Each variable corresponds to a 
 #' global Cloud-Optimized GeoTIFF (COG) representing cloud cover dynamics.
 #'
-#' Available variables (working synonyms in parentheses):
+#' @details
+#' \strong{Available variables} (working synonyms in parentheses):
 #'
-#' Metrics:
-#' 
-#' 1 - "MODCF_CloudForestPrediction" ("cloud forest prediction", "cloud forest", "cfp")
-#' 
-#' 2 - "MODCF_interannualSD" ("inter-annual variability", "interannual sd", "interannual variability")
-#' 
-#' 3 - "MODCF_intraannualSD" ("intra-annual variability", "intraannual sd", "intraannual variability")
-#' 
-#' 4 - "MODCF_meanannual" ("mean annual", "annual mean", "annual")
-#' 
-#' 5 - "MODCF_spatialSD_1deg" ("spatial variability", "spatial sd", "spatial sd 1deg")
-#' 
-#' Seasonality:
-#' 
-#' 6 - "MODCF_seasonality_concentration" ("seasonality concentration", "concentration")
-#' 
-#' 7 - "MODCF_seasonality_rgb" ("seasonality rgb", "rgb")
-#' 
-#' 8 - "MODCF_seasonality_theta" ("seasonality theta", "theta")
-#' 
-#' 9 - "MODCF_seasonality_visct" ("seasonality single band", "seasonality visct", "seasonality color")
-#' 
-#' Monthly Means:
-#' 
-#' 10 - "MODCF_monthlymean_01" ("january mean", "january", "jan")
-#' 
-#' 11 - "MODCF_monthlymean_02" ("february mean", "february", "feb")
-#' 
-#' 12 - "MODCF_monthlymean_03" ("march mean", "march", "mar")
-#' 
-#' 13 - "MODCF_monthlymean_04" ("april mean", "april", "apr")
-#' 
-#' 14 - "MODCF_monthlymean_05" ("may mean", "may")
-#' 
-#' 15 - "MODCF_monthlymean_06" ("june mean", "june", "jun")
-#' 
-#' 16 - "MODCF_monthlymean_07" ("july mean", "july", "jul")
-#' 
-#' 17 - "MODCF_monthlymean_08" ("august mean", "august", "aug")
-#' 
-#' 18 - "MODCF_monthlymean_09" ("september mean", "september", "sep")
-#' 
-#' 19 - "MODCF_monthlymean_10" ("october mean", "october", "oct")
-#' 
-#' 20 - "MODCF_monthlymean_11" ("november mean", "november", "nov")
-#' 
-#' 21 - "MODCF_monthlymean_12" ("december mean", "december", "dec")
+#' \strong{Metrics}
+#' \itemize{
+#'   \item 1 - "MODCF_CloudForestPrediction" ("cloud forest prediction", "cloud forest", "cfp")
+#'   \item 2 - "MODCF_interannualSD" ("inter-annual variability", "interannual sd", "interannual variability")
+#'   \item 3 - "MODCF_intraannualSD" ("intra-annual variability", "intraannual sd", "intraannual variability")
+#'   \item 4 - "MODCF_meanannual" ("mean annual", "annual mean", "annual")
+#'   \item 5 - "MODCF_spatialSD_1deg" ("spatial variability", "spatial sd", "spatial sd 1deg")
+#' }
 #'
-#' Citation:
+#' \strong{Seasonality}
+#' \itemize{
+#'   \item 6 - "MODCF_seasonality_concentration" ("seasonality concentration", "concentration")
+#'   \item 7 - "MODCF_seasonality_rgb" ("seasonality rgb", "rgb")
+#'   \item 8 - "MODCF_seasonality_theta" ("seasonality theta", "theta")
+#'   \item 9 - "MODCF_seasonality_visct" ("seasonality single band", "seasonality visct", "seasonality color")
+#' }
 #'
-#' Wilson AM, Jetz W (2016). "Remotely Sensed High-Resolution Global Cloud 
-#' Dynamics for Predicting Ecosystem and Biodiversity Distributions." 
-#' PLoS Biol 14(3): e1002415.
+#' \strong{Monthly Means}
+#' \itemize{
+#'   \item 10 - "MODCF_monthlymean_01" ("january mean", "january", "jan")
+#'   \item 11 - "MODCF_monthlymean_02" ("february mean", "february", "feb")
+#'   \item 12 - "MODCF_monthlymean_03" ("march mean", "march", "mar")
+#'   \item 13 - "MODCF_monthlymean_04" ("april mean", "april", "apr")
+#'   \item 14 - "MODCF_monthlymean_05" ("may mean", "may")
+#'   \item 15 - "MODCF_monthlymean_06" ("june mean", "june", "jun")
+#'   \item 16 - "MODCF_monthlymean_07" ("july mean", "july", "jul")
+#'   \item 17 - "MODCF_monthlymean_08" ("august mean", "august", "aug")
+#'   \item 18 - "MODCF_monthlymean_09" ("september mean", "september", "sep")
+#'   \item 19 - "MODCF_monthlymean_10" ("october mean", "october", "oct")
+#'   \item 20 - "MODCF_monthlymean_11" ("november mean", "november", "nov")
+#'   \item 21 - "MODCF_monthlymean_12" ("december mean", "december", "dec")
+#' }
+#'
+#' \strong{Citation:}\cr
+#' Wilson AM, Jetz W (2016). "Remotely sensed high-resolution global cloud dynamics for predicting ecosystem and biodiversity distributions." PLoS Biol 14(3): e1002415.
 #' https://doi.org/10.1371/journal.pbio.1002415
 #'
 #' Note: Please cite original sources of primary datasets where appropriate.
@@ -88,7 +71,7 @@ cloudcover <- function(x, vars, ...) {
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using EarthEnv Global Cloud Cover layers.\n",
-    "Citation: Wilson AM, Jetz W (2016). PLoS Biol 14(3): e1002415.\n",
+    "Citation: Wilson AM, Jetz W (2016). Remotely sensed high-resolution global cloud dynamics for predicting ecosystem and biodiversity distributions. PLoS Biol 14(3): e1002415.\n",
     "DOI: {.url https://doi.org/10.1371/journal.pbio.1002415}\n"
   ))
   
@@ -171,7 +154,7 @@ cloudcover <- function(x, vars, ...) {
     syn2canon[[normalize_string(canon)]] <- canon
   }
   
-  # Convert requested vars to canonical codes AND keep mapping to original names
+  # Convert requested vars to canonical codes and keep mapping to original names
   requested_codes <- character(0)
   code_to_user_name <- list() # Maps canonical code -> user's original name
   unmapped <- character(0)
@@ -379,7 +362,7 @@ cloudcover <- function(x, vars, ...) {
     attr(processed_stack, "path") <- path
     attr(processed_stack, "land") <- land
     
-    # remove NAs if necessary
+    # Remove NAs if necessary
     if (set_na==TRUE){
       
       cli::cli_alert_info("Applying NA mask...")
@@ -389,8 +372,6 @@ cloudcover <- function(x, vars, ...) {
       processed_stack <- terra::mask(processed_stack, master_mask)
       
     }
-    
-    # write if requested
     
     if (!is.null(path)){
       terra::writeRaster(processed_stack, path, overwrite = TRUE)
@@ -415,7 +396,6 @@ cloudcover <- function(x, vars, ...) {
     attr(extracted_df, "envar_crs") <- crs
     attr(extracted_df, "path") <- path
     
-    # write if requested
     if (!is.null(path)){
       write.csv(extracted_df, path)
     }

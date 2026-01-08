@@ -5,30 +5,37 @@
 #' This function downloads, processes, and extracts simulated global land use 
 #' and land cover (LULC) data for the period 2020-2100.
 #'
-#' The data represents 1 km resolution LULC maps with the following integer codes:
-#' 1: Cropland, 2: Forest, 3: Grassland, 4: Urban, 5: Barren, 6: Water.
+#' @details
+#' The data represents 1 km resolution LULC maps. The original data is in 
+#' World Mercator projection and will be automatically reprojected to the 
+#' CRS defined in `var_get()`.
+#'
+#' \strong{Land cover codes}
+#' \itemize{
+#'   \item 1 - Cropland
+#'   \item 2 - Forest
+#'   \item 3 - Grassland
+#'   \item 4 - Urban
+#'   \item 5 - Barren
+#'   \item 6 - Water
+#' }
+#'
+#' \strong{Available Years}
+#' \itemize{
+#'   \item 2020, 2030, 2050, 2070, 2100
+#' }
+#'
+#' \strong{Available SSPs (Shared Socioeconomic Pathways)}
+#' \itemize{
+#'   \item 126 (SSP1-2.6)
+#'   \item 245 (SSP2-4.5)
+#'   \item 370 (SSP3-7.0)
+#'   \item 434 (SSP4-3.4)
+#'   \item 585 (SSP5-8.5)
+#' }
 #' 
-#' The original data is in World Mercator projection and will be automatically 
-#' reprojected to the CRS defined in `var_get()`.
-#'
-#' Available variables:
-#' The function primarily downloads "landcover". The specific map is determined 
-#' by the `year` and `ssp` arguments.
-#'
-#' Available Years:
-#' 2020, 2030, 2050, 2070, 2100
-#'
-#' Available SSPs (Shared Socioeconomic Pathways):
-#' 126 (SSP1-2.6)
-#' 245 (SSP2-4.5)
-#' 370 (SSP3-7.0)
-#' 434 (SSP4-3.4)
-#' 585 (SSP5-8.5)
-#'
-#' Citation:
-#' Zhang T, Cheng C, Wu X (2023). "Mapping the spatial heterogeneity of global 
-#' land use and land cover from 2020 to 2100 at a 1 km resolution." 
-#' Sci Data 10(1): 748.
+#' \strong{Citation:}\cr
+#' Zhang T, Cheng C, Wu X (2023). "Mapping the spatial heterogeneity of global land use and land cover from 2020 to 2100 at a 1 km resolution." Scientific Data 10, 748.
 #' https://doi.org/10.1038/s41597-023-02637-7
 #'
 #' @param x The output from `var_get()` defining the area or locations for extraction, 
@@ -49,11 +56,11 @@
 #' \dontrun{
 #' # Get Baseline (2020)
 #' processed <- var_get(country= "Italy", crs=4326) %>% 
-#'   futurelandcover(year = 2020)
+#'   gcamlandcover(year = 2020)
 #'
 #' # Get Future (SSP5-8.5 in 2050)
 #' processed <- var_get(country= "Italy", crs=4326) %>% 
-#'   futurelandcover(ssp = 585, year = 2050)
+#'   gcamlandcover(ssp = 585, year = 2050)
 #' }
 #' @export
 
@@ -64,7 +71,7 @@ gcamlandcover <- function(x, vars = "landcover", ssp = 126, year = 2020, ...) {
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using Global Future Land Use/Cover layers (2020-2100).\n",
-    "Citation: Zhang T, Cheng C, Wu X (2023). Sci Data 10(1): 748.\n",
+    "Citation: Zhang T, Cheng C, Wu X (2023). Mapping the spatial heterogeneity of global land use and land cover from 2020 to 2100 at a 1 km resolution. Scientific Data 10, 748.\n",
     "DOI: {.url https://doi.org/10.1038/s41597-023-02637-7}\n"
   ))
   
@@ -314,7 +321,7 @@ gcamlandcover <- function(x, vars = "landcover", ssp = 126, year = 2020, ...) {
       } else {
         if (!terra::compareGeom(x, processed_stack, stopOnError = FALSE)) {
           cli::cli_alert_info("Aligning new layers to match input raster geometry...")
-          # categorical data requires 'near' method
+          # Categorical data requires 'near' method
           processed_stack <- terra::resample(processed_stack, x, method = "near")
         }
         processed_stack <- c(x, processed_stack)
