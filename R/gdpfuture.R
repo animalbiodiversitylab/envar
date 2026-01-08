@@ -176,24 +176,31 @@ gdpfuture <- function(x, vars, year, ssp, ...) {
     # Check if the specific year exists in the zip before trying to unzip
     # Listing files in a huge zip can be slow, so we just try to unzip and catch error
     
-    dest_file <- file.path(temp_dir, tif_name)
+    temp_dest_file <- file.path(temp_dir, tif_name)
     
     # Unzip only the specific file
     cli::cli_alert_info("Extracting {.val {tif_name}} (SSP{.val {ssp_val}})...")
     
     unzip_success <- try(utils::unzip(big_zip_path, files = path_inside_zip, exdir = temp_dir, junkpaths = TRUE, overwrite = TRUE), silent=TRUE)
     
-    if (inherits(unzip_success, "try-error") || !file.exists(dest_file)) {
+    if (inherits(unzip_success, "try-error") || !file.exists(temp_dest_file)) {
       cli::cli_alert_warning("Could not find {.val {tif_name}} in SSP{.val {ssp_val}} folder. Check if year {.val {yr}} is available.")
       return(NULL)
     }
+    
+    # Copy to standardized path for extr_check compatibility
+    grids_dir <- fs::path_temp("envar/grids")
+    fs::dir_create(grids_dir)
+    dest_file <- file.path(grids_dir, paste0(final_layer_name, ".tif"))
+    fs::file_copy(temp_dest_file, dest_file, overwrite = TRUE)
+    #fs::file_delete(temp_dest_file)
     
     if (is_raster_input) {
       layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
         if (!is_global) {
-          fs::file_delete(dest_file)
+          #fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -241,7 +248,7 @@ gdpfuture <- function(x, vars, year, ssp, ...) {
       
       rm(layer, layer1)
       gc()
-      fs::file_delete(dest_file)
+      #fs::file_delete(dest_file)
       
     } else {
       
@@ -252,7 +259,7 @@ gdpfuture <- function(x, vars, year, ssp, ...) {
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {final_layer_name}}.")
         if (!is_global) {
-          fs::file_delete(dest_file)
+          #fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -274,7 +281,7 @@ gdpfuture <- function(x, vars, year, ssp, ...) {
       
       rm(extracted)
       gc()
-      fs::file_delete(dest_file)
+     # fs::file_delete(dest_file)
     }
   }
   

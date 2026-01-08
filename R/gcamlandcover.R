@@ -183,7 +183,7 @@ gcamlandcover <- function(x, vars = "landcover", ssp = 126, year = 2020, ...) {
       layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
-        if (!is_global) fs::file_delete(dest_file)
+        #if (!is_global) fs::file_delete(dest_file)
         return(NULL)
       }
       
@@ -234,7 +234,7 @@ gcamlandcover <- function(x, vars = "landcover", ssp = 126, year = 2020, ...) {
       
       cli::cli_alert_success("Processed and added {.val {user_name}} to stack.")
       rm(layer, layer1); gc()
-      if (!is_global) fs::file_delete(dest_file)
+      #if (!is_global) fs::file_delete(dest_file)
       
       # ----------------------------------------------------------------
       # POINT EXTRACTION
@@ -245,7 +245,7 @@ gcamlandcover <- function(x, vars = "landcover", ssp = 126, year = 2020, ...) {
       layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
-        if (!is_global) fs::file_delete(dest_file)
+        #if (!is_global) fs::file_delete(dest_file)
         return(NULL)
       }
       
@@ -276,7 +276,7 @@ gcamlandcover <- function(x, vars = "landcover", ssp = 126, year = 2020, ...) {
       
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
-        if (!is_global) fs::file_delete(dest_file)
+        #if (!is_global) fs::file_delete(dest_file)
         return(NULL)
       }
       
@@ -293,10 +293,10 @@ gcamlandcover <- function(x, vars = "landcover", ssp = 126, year = 2020, ...) {
       
       cli::cli_alert_success("Extracted {.val {user_name}} successfully.")
       rm(extracted); gc()
-      if (!is_global) fs::file_delete(dest_file)
+      #if (!is_global) fs::file_delete(dest_file)
       # Clean up temporary reprojected file if created
       if (exists("temp_reproj") && fs::file_exists(temp_reproj)) {
-        fs::file_delete(temp_reproj)
+        #fs::file_delete(temp_reproj)
       }
     }
   }
@@ -305,7 +305,7 @@ gcamlandcover <- function(x, vars = "landcover", ssp = 126, year = 2020, ...) {
   # Execute Download and Processing
   # --------------------------------------------------------------------
   filename <- paste0(file_label, ".tif")
-  dest <- file.path(fs::path_temp("envar/futurelandcover"), filename)
+  dest <- file.path(fs::path_temp("envar/grids"), paste0(label_name, ".tif"))
   
   handle_file(final_url, dest, label_name)
   

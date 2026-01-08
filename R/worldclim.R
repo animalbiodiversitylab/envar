@@ -213,7 +213,7 @@ worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NU
     
     process_layer(dest_file, layer_name)
     if (!is_global) {
-      fs::file_delete(dest_file)
+     # fs::file_delete(dest_file)
     }
   }
   
@@ -310,7 +310,7 @@ worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NU
           layer_name <- tools::file_path_sans_ext(basename(f))
           process_layer(full_path, layer_name)
           if (!is_global) {
-            fs::file_delete(full_path)
+          #  fs::file_delete(full_path)
           }
         }
       } else {
@@ -319,7 +319,7 @@ worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NU
       
       # Delete ZIP
       if (!is_global) {
-        fs::file_delete(dest_zip)
+       # fs::file_delete(dest_zip)
       }
     }
     
@@ -360,10 +360,10 @@ worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NU
             
             filename <- sprintf("wc2.1_30s_%s_%s_%s_%s.tif", url_cat, g, s, y)
             url <- sprintf("%s/%s/%s/%s", base_url_future, g, s, filename)
-            dest_file <- file.path(fs::path_temp("envar/grids"), filename)
             
             # Use descriptive layer name
             layer_name <- tools::file_path_sans_ext(filename)
+            dest_file <- file.path(fs::path_temp("envar/grids"), paste0(layer_name, ".tif"))
             
             handle_file(url, dest_file, layer_name)
           }

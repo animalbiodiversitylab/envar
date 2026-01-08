@@ -206,7 +206,7 @@ accessibility <- function(x, vars, ...) {
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
         if (!is_global) {
-          fs::file_delete(dest_file)
+         # fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -255,7 +255,7 @@ accessibility <- function(x, vars, ...) {
       rm(layer, layer1)
       gc()
       if (!is_global) {
-        fs::file_delete(dest_file)
+        #fs::file_delete(dest_file)
       }
       
     } else {
@@ -266,7 +266,7 @@ accessibility <- function(x, vars, ...) {
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
         if (!is_global) {
-          fs::file_delete(dest_file)
+         # fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -288,7 +288,7 @@ accessibility <- function(x, vars, ...) {
       rm(extracted)
       gc()
       if (!is_global) {
-        fs::file_delete(dest_file)
+        #fs::file_delete(dest_file)
       }
     }
   }
@@ -301,10 +301,10 @@ accessibility <- function(x, vars, ...) {
   for (canon in requested_codes) {
     filename <- paste0(canon, ".tif")
     url <- url_lookup[[canon]]
-    dest <- file.path(fs::path_temp("envar/grids"), filename)
     
     # Get the user's original name for this canonical code
     user_name <- code_to_user_name[[canon]]
+    dest <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".tif"))
     
     handle_file(url, dest, canon, user_name)
   }

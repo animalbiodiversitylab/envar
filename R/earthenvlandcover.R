@@ -175,7 +175,7 @@ earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
         if (!is_global) {
-          fs::file_delete(dest_file)
+          #fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -224,7 +224,7 @@ earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
       rm(layer, layer1)
       gc()
       if (!is_global) {
-        fs::file_delete(dest_file)
+        #fs::file_delete(dest_file)
       }
       
     } else {
@@ -236,7 +236,7 @@ earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
         if (!is_global) {
-          fs::file_delete(dest_file)
+          #fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -259,7 +259,7 @@ earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
       rm(extracted)
       gc()
       if (!is_global) {
-        fs::file_delete(dest_file)
+        #fs::file_delete(dest_file)
       }
     }
   }
@@ -278,10 +278,10 @@ earthenvlandcover <- function(x, vars, discover = TRUE, ...) {
   for (canon in requested_codes) {
     filename <- paste0(canon, ".tif")
     url <- file.path(base_url, filename)
-    dest <- file.path(fs::path_temp("envar/grids"), filename)
     
     # Get the user's original name for this canonical code
     user_name <- code_to_user_name[[canon]]
+    dest <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".tif"))
     
     handle_file(url, dest, canon, user_name)
   }

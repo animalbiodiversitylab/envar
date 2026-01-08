@@ -176,7 +176,7 @@ biooracle <- function(x, vars, realm = "surface", years = "2000-2010",
       layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
-        if (!is_global) fs::file_delete(dest_file)
+        if (!is_global) #fs::file_delete(dest_file)
         return(NULL)
       }
       
@@ -195,14 +195,14 @@ biooracle <- function(x, vars, realm = "surface", years = "2000-2010",
       
       cli::cli_alert_success("Processed and added {.val {user_name}} to stack.")
       rm(layer, layer1); gc()
-      if (!is_global) fs::file_delete(dest_file)
+      if (!is_global) #fs::file_delete(dest_file)
       
     } else {
       cli::cli_alert_info("Extracting values from {.val {user_name}}...")
       extracted <- try(process_points(file = dest_file, points = points), silent = TRUE)
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
-        if (!is_global) fs::file_delete(dest_file)
+        if (!is_global) #fs::file_delete(dest_file)
         return(NULL)
       }
       extracted <- data.frame(extracted)
@@ -211,7 +211,7 @@ biooracle <- function(x, vars, realm = "surface", years = "2000-2010",
       
       cli::cli_alert_success("Extracted {.val {user_name}} successfully.")
       rm(extracted); gc()
-      if (!is_global) fs::file_delete(dest_file)
+      if (!is_global) #fs::file_delete(dest_file)
     }
   }
   
@@ -245,8 +245,8 @@ biooracle <- function(x, vars, realm = "surface", years = "2000-2010",
     }
     
     url <- sprintf("https://erddap.bio-oracle.org/erddap/griddap/%s.nc?%s[%s][(-90.0):1:(90.0)][(-180.0):1:(180.0)]", dataset_id, var_call, time_query)
-    dest_file <- file.path(fs::path_temp("envar/grids"), paste0(canon, ".nc"))
     user_name <- code_to_user_name[[canon]]
+    dest_file <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".nc"))
     
     handle_file(url, dest_file, canon, user_name)
   }

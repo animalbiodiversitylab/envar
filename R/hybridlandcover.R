@@ -166,7 +166,7 @@ hybridlandcover <- function(x, vars = NULL, year = 2000, ...) {
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
         if (!is_global) {
-          fs::file_delete(dest_file)
+          #fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -216,7 +216,7 @@ hybridlandcover <- function(x, vars = NULL, year = 2000, ...) {
       rm(layer, layer1)
       gc()
       if (!is_global) {
-        fs::file_delete(dest_file)
+       # fs::file_delete(dest_file)
       }
       
     } else {
@@ -228,7 +228,7 @@ hybridlandcover <- function(x, vars = NULL, year = 2000, ...) {
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
         if (!is_global) {
-          fs::file_delete(dest_file)
+         # fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -251,7 +251,7 @@ hybridlandcover <- function(x, vars = NULL, year = 2000, ...) {
       rm(extracted)
       gc()
       if (!is_global) {
-        fs::file_delete(dest_file)
+     #   fs::file_delete(dest_file)
       }
     }
   }
@@ -272,10 +272,9 @@ hybridlandcover <- function(x, vars = NULL, year = 2000, ...) {
     base_url <- "https://zenodo.org/records/10488191/files/"
     url <- paste0(base_url, filename, "?download=1")
     
-    dest <- file.path(fs::path_temp("envar/hybridlandcover"), filename)
-    
     # Get the user's original name for this canonical code
     user_name <- code_to_user_name[[canon]]
+    dest <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".tif"))
     
     handle_file(url, dest, canon, user_name)
   }

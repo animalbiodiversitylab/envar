@@ -189,7 +189,7 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
         if (!is_global) {
-          fs::file_delete(dest_file)
+        #  fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -238,7 +238,7 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
       rm(layer, layer1)
       gc()
       if (!is_global) {
-        fs::file_delete(dest_file)
+       # fs::file_delete(dest_file)
       }
       
     } else {
@@ -249,7 +249,7 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
         if (!is_global) {
-          fs::file_delete(dest_file)
+          #fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -271,7 +271,7 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
       rm(extracted)
       gc()
       if (!is_global) {
-        fs::file_delete(dest_file)
+        #fs::file_delete(dest_file)
       }
     }
   }
@@ -304,10 +304,10 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
     file_name <- paste0(canon, "_1KM", current_alg, "_", source_filename_part, ".tif")
     
     url <- file.path(base_url, file_name)
-    dest <- file.path(fs::path_temp("envar/grids"), file_name)
     
     # Get the user's original name for this canonical code
     user_name <- code_to_user_name[[canon]]
+    dest <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".tif"))
     
     handle_file(url, dest, canon, user_name)
   }

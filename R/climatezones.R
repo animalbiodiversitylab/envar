@@ -197,7 +197,7 @@ climatezones <- function(x, vars = "zones", years = "1991-2020", ssp = NULL, ...
       layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
-        fs::file_delete(dest_file)
+        #fs::file_delete(dest_file)
         return(NULL)
       }
       
@@ -244,7 +244,7 @@ climatezones <- function(x, vars = "zones", years = "1991-2020", ssp = NULL, ...
       
       rm(layer, layer1)
       gc()
-      fs::file_delete(dest_file)
+      #fs::file_delete(dest_file)
       
     } else {
       
@@ -254,7 +254,7 @@ climatezones <- function(x, vars = "zones", years = "1991-2020", ssp = NULL, ...
       
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
-        fs::file_delete(dest_file)
+        #fs::file_delete(dest_file)
         return(NULL)
       }
       
@@ -275,7 +275,7 @@ climatezones <- function(x, vars = "zones", years = "1991-2020", ssp = NULL, ...
       
       rm(extracted)
       gc()
-      fs::file_delete(dest_file)
+      #fs::file_delete(dest_file)
     }
   }
   
@@ -325,7 +325,10 @@ climatezones <- function(x, vars = "zones", years = "1991-2020", ssp = NULL, ...
     current_file <- file.path(temp_dir, extracted_filename)
     
     if (file.exists(current_file)) {
-      unique_file <- file.path(temp_dir, paste0(layer_id, ".tif"))
+      # Move to standardized grids directory for extr_check compatibility
+      grids_dir <- fs::path_temp("envar/grids")
+      fs::dir_create(grids_dir)
+      unique_file <- file.path(grids_dir, paste0(layer_id, ".tif"))
       fs::file_move(current_file, unique_file)
       
       # Process

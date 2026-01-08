@@ -226,7 +226,7 @@ freshwater <- function(x, vars, year = NULL, month = NULL, algorithm = NULL, ...
       layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
-        if (!is_global) fs::file_delete(dest_file)
+        #if (!is_global) fs::file_delete(dest_file)
         return(NULL)
       }
       
@@ -316,7 +316,7 @@ freshwater <- function(x, vars, year = NULL, month = NULL, algorithm = NULL, ...
       
       rm(layer, layer1)
       gc()
-      if (!is_global) fs::file_delete(dest_file)
+      #if (!is_global) fs::file_delete(dest_file)
       
     } else {
       
@@ -326,7 +326,7 @@ freshwater <- function(x, vars, year = NULL, month = NULL, algorithm = NULL, ...
       
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
-        if (!is_global) fs::file_delete(dest_file)
+        #if (!is_global) fs::file_delete(dest_file)
         return(NULL)
       }
       
@@ -377,7 +377,7 @@ freshwater <- function(x, vars, year = NULL, month = NULL, algorithm = NULL, ...
       
       rm(extracted)
       gc()
-      if (!is_global) fs::file_delete(dest_file)
+      #if (!is_global) fs::file_delete(dest_file)
     }
   }
   
@@ -391,8 +391,8 @@ freshwater <- function(x, vars, year = NULL, month = NULL, algorithm = NULL, ...
   for (canon in requested_codes) {
     filename <- canon
     url <- file.path(base_url, filename)
-    dest <- file.path(fs::path_temp("envar/grids"), filename)
     user_name <- code_to_user_name[[canon]]
+    dest <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".nc"))
     handle_file(url, dest, canon, user_name)
   }
   

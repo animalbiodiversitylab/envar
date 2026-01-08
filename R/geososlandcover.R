@@ -178,7 +178,7 @@ geososlandcover <- function(x, vars, scenario = "A1B", year = 2010, discover = T
       layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
-        if (!is_global) fs::file_delete(dest_file)
+       # if (!is_global) fs::file_delete(dest_file)
         return(NULL)
       }
       
@@ -233,7 +233,7 @@ geososlandcover <- function(x, vars, scenario = "A1B", year = 2010, discover = T
       
       cli::cli_alert_success("Processed and added {.val {names(layer1)}} to stack.")
       rm(layer, layer1); gc()
-      if (!is_global) fs::file_delete(dest_file)
+      #if (!is_global) fs::file_delete(dest_file)
       
     } else {
       # Point extraction mode
@@ -243,7 +243,7 @@ geososlandcover <- function(x, vars, scenario = "A1B", year = 2010, discover = T
       layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
-        if (!is_global) fs::file_delete(dest_file)
+        #if (!is_global) fs::file_delete(dest_file)
         return(NULL)
       }
       
@@ -274,7 +274,7 @@ geososlandcover <- function(x, vars, scenario = "A1B", year = 2010, discover = T
       
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
-        if (!is_global) fs::file_delete(dest_file)
+        #if (!is_global) fs::file_delete(dest_file)
         return(NULL)
       }
       
@@ -291,10 +291,10 @@ geososlandcover <- function(x, vars, scenario = "A1B", year = 2010, discover = T
       
       cli::cli_alert_success("Extracted {.val {user_name}} successfully.")
       rm(extracted); gc()
-      if (!is_global) fs::file_delete(dest_file)
+      #if (!is_global) fs::file_delete(dest_file)
       # Clean up temporary reprojected file if created
       if (exists("temp_reproj") && fs::file_exists(temp_reproj)) {
-        fs::file_delete(temp_reproj)
+        #fs::file_delete(temp_reproj)
       }
     }
   }
@@ -306,8 +306,8 @@ geososlandcover <- function(x, vars, scenario = "A1B", year = 2010, discover = T
   
   for (canon in requested_codes) {
     filename <- paste0("geosos_", label_suffix, ".tif")
-    dest <- file.path(fs::path_temp("envar/grids"), filename)
     user_name <- code_to_user_name[[canon]]
+    dest <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".tif"))
     
     handle_file(url_to_use, dest, canon, user_name)
   }

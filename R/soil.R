@@ -159,17 +159,28 @@ soil <- function(x, vars = NULL, ...) {
     
     if (!fs::file_exists(raster_file)) {
       cli::cli_alert_warning("Expected raster file {.val HWSD2.bil} not found in archive.")
-      fs::file_delete(dest_file)
-      fs::dir_delete(unzip_dir)
+      #fs::file_delete(dest_file)
+      #fs::dir_delete(unzip_dir)
       return(NULL)
     }
     
+    # Copy to standardized path for extr_check compatibility
+    grids_dir <- fs::path_temp("envar/grids")
+    fs::dir_create(grids_dir)
+    cached_raster <- file.path(grids_dir, paste0(user_name, ".bil"))
+    fs::file_copy(raster_file, cached_raster, overwrite = TRUE)
+    # Also copy the .hdr file if it exists (needed for .bil format)
+    hdr_file <- file.path(unzip_dir, "HWSD2.hdr")
+    if (fs::file_exists(hdr_file)) {
+      fs::file_copy(hdr_file, file.path(grids_dir, paste0(user_name, ".hdr")), overwrite = TRUE)
+    }
+    
     if (is_raster_input) {
-      layer <- try(terra::rast(raster_file), silent = TRUE)
+      layer <- try(terra::rast(cached_raster), silent = TRUE)
       if (inherits(layer, "try-error")) {
-        cli::cli_alert_warning("Could not read raster {.val {raster_file}}.")
-        fs::file_delete(dest_file)
-        fs::dir_delete(unzip_dir)
+        cli::cli_alert_warning("Could not read raster {.val {cached_raster}}.")
+        #fs::file_delete(dest_file)
+        #fs::dir_delete(unzip_dir)
         return(NULL)
       }
       
@@ -216,19 +227,19 @@ soil <- function(x, vars = NULL, ...) {
       
       rm(layer, layer1)
       gc()
-      fs::file_delete(dest_file)
-      fs::dir_delete(unzip_dir)
+     # fs::file_delete(dest_file)
+      #fs::dir_delete(unzip_dir)
       
     } else {
       
       cli::cli_alert_info("Extracting values from {.val {user_name}}...")
       
-      extracted <- try(process_points(file = raster_file, points = points), silent = TRUE)
+      extracted <- try(process_points(file = cached_raster, points = points), silent = TRUE)
       
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
-        fs::file_delete(dest_file)
-        fs::dir_delete(unzip_dir)
+      #  fs::file_delete(dest_file)
+       # fs::dir_delete(unzip_dir)
         return(NULL)
       }
       
@@ -249,8 +260,8 @@ soil <- function(x, vars = NULL, ...) {
       
       rm(extracted)
       gc()
-      fs::file_delete(dest_file)
-      fs::dir_delete(unzip_dir)
+      #fs::file_delete(dest_file)
+      #fs::dir_delete(unzip_dir)
     }
   }
   

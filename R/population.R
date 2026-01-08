@@ -209,7 +209,7 @@ population <- function(x, vars, year = 2020, ssp = 1, ...) {
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
         if (!is_global) {
-          fs::file_delete(dest_file)
+         # fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -251,7 +251,7 @@ population <- function(x, vars, year = 2020, ssp = 1, ...) {
       rm(layer, layer1)
       gc()
       if (!is_global) {
-        fs::file_delete(dest_file)
+      #  fs::file_delete(dest_file)
       }
       
     } else {
@@ -263,7 +263,7 @@ population <- function(x, vars, year = 2020, ssp = 1, ...) {
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
         if (!is_global) {
-          fs::file_delete(dest_file)
+        #  fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -285,7 +285,7 @@ population <- function(x, vars, year = 2020, ssp = 1, ...) {
       rm(extracted)
       gc()
       if (!is_global) {
-        fs::file_delete(dest_file)
+       # fs::file_delete(dest_file)
       }
     }
   }
@@ -315,13 +315,13 @@ population <- function(x, vars, year = 2020, ssp = 1, ...) {
       # Canonical name for reference
       canon <- paste0("population_ssp", s, "_", y)
       
-      # Destination for the extracted TIF
-      dest <- file.path(fs::path_temp("envar/pop"), target_filename)
-      
       # User name construction
       base_name <- code_to_user_name[["population"]]
       if (is.null(base_name)) base_name <- "population"
       user_name_combo <- paste0(base_name, "_ssp", s, "_", y)
+      
+      # Destination for the extracted TIF - use user_name for extr_check compatibility
+      dest <- file.path(fs::path_temp("envar/grids"), paste0(user_name_combo, ".tif"))
       
       handle_file(current_url, dest, canon, user_name_combo, target_filename)
     }

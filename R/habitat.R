@@ -336,7 +336,7 @@ habitat <- function(x, vars, level = 1, ...) {
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
         if (!is_global) {
-          fs::file_delete(dest_file)
+          #fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -387,7 +387,7 @@ habitat <- function(x, vars, level = 1, ...) {
       # Clean up extracted TIF to save space, but keep Zip? 
       # Usually keeping extracted file is fine in temp.
       if (!is_global) {
-        fs::file_delete(dest_file)
+        #fs::file_delete(dest_file)
       }
       
     } else {
@@ -399,7 +399,7 @@ habitat <- function(x, vars, level = 1, ...) {
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
         if (!is_global) {
-          fs::file_delete(dest_file)
+          #fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -422,7 +422,7 @@ habitat <- function(x, vars, level = 1, ...) {
       rm(extracted)
       gc()
       if (!is_global) {
-        fs::file_delete(dest_file)
+        #fs::file_delete(dest_file)
       }
     }
   }
@@ -448,11 +448,13 @@ habitat <- function(x, vars, level = 1, ...) {
     zip_stem <- tools::file_path_sans_ext(zip_name)
     internal_file <- file.path(zip_stem, full_filename_base)
     
-    # Destination for extracted file (flattened)
-    dest <- file.path(temp_dir, full_filename_base)
-    
     # Get the user's original name for this canonical code
     user_name <- code_to_user_name[[canon]]
+    
+    # Destination for extracted file - use user_name for extr_check compatibility
+    grids_dir <- fs::path_temp("envar/grids")
+    fs::dir_create(grids_dir)
+    dest <- file.path(grids_dir, paste0(user_name, ".tif"))
     
     # Pass the ZIP url, but dest is the TIF
     handle_file(base_zip_url, dest, canon, user_name, internal_file)

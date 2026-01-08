@@ -257,7 +257,7 @@ soilclimate <- function(x, vars, depth = "0-5", ...) {
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
         if (!is_global) {
-          fs::file_delete(dest_file)
+          #fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -306,7 +306,7 @@ soilclimate <- function(x, vars, depth = "0-5", ...) {
       rm(layer, layer1)
       gc()
       if (!is_global) {
-        fs::file_delete(dest_file)
+        #fs::file_delete(dest_file)
       }
       
     } else {
@@ -318,7 +318,7 @@ soilclimate <- function(x, vars, depth = "0-5", ...) {
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
         if (!is_global) {
-          fs::file_delete(dest_file)
+          #fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -341,7 +341,7 @@ soilclimate <- function(x, vars, depth = "0-5", ...) {
       rm(extracted)
       gc()
       if (!is_global) {
-        fs::file_delete(dest_file)
+        #fs::file_delete(dest_file)
       }
     }
   }
@@ -365,11 +365,11 @@ soilclimate <- function(x, vars, depth = "0-5", ...) {
     # Zenodo requires ?download=1 appended to the URL
     url <- paste0(file.path(base_url, filename), "?download=1")
     
-    # Destination file (remove query string for local saving)
-    dest <- file.path(fs::path_temp("envar/soil"), filename)
-    
     # Get the user's original name for this canonical code
     user_name <- code_to_user_name[[canon]]
+    
+    # Destination file - use user_name for extr_check compatibility
+    dest <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".tif"))
     
     handle_file(url, dest, canon, user_name)
   }

@@ -240,7 +240,7 @@ pftlandcover <- function(x, vars = NULL, year = 2025, ssp = 585, ...) {
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
         if (!is_global) {
-          fs::file_delete(dest_file)
+         # fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -291,7 +291,7 @@ pftlandcover <- function(x, vars = NULL, year = 2025, ssp = 585, ...) {
       gc()
       
       if (!is_global) {
-        fs::file_delete(dest_file)
+       # fs::file_delete(dest_file)
       }
       
     } else {
@@ -303,7 +303,7 @@ pftlandcover <- function(x, vars = NULL, year = 2025, ssp = 585, ...) {
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
         if (!is_global) {
-          fs::file_delete(dest_file)
+        #  fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -326,7 +326,7 @@ pftlandcover <- function(x, vars = NULL, year = 2025, ssp = 585, ...) {
       rm(extracted)
       gc()
       if (!is_global) {
-        fs::file_delete(dest_file)
+       # fs::file_delete(dest_file)
       }
     }
   }
@@ -352,11 +352,13 @@ pftlandcover <- function(x, vars = NULL, year = 2025, ssp = 585, ...) {
     
     internal_filename <- paste0("global_SSP", ssp_num, "_RCP", rcp_num, "_", year, ".tif")
     
-    # Destination for the extracted TIF
-    dest <- file.path(temp_dir, internal_filename)
-    
     # Get the user's original name for this canonical code
     user_name <- code_to_user_name[[canon]]
+    
+    # Destination for the extracted TIF - use user_name for extr_check compatibility
+    grids_dir <- fs::path_temp("envar/grids")
+    fs::dir_create(grids_dir)
+    dest <- file.path(grids_dir, paste0(user_name, ".tif"))
     
     # Pass the ZIP url, but dest is the TIF
     handle_file(zip_url, dest, canon, user_name, internal_filename)

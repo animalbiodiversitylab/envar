@@ -590,7 +590,7 @@ plot(processed_bilayer_global_namask)
 
 If the "path" argument is used (default to NULL, i.e. no output stored locally), the retrieved and processed variables will be stored locally. Remember to specify the full path, including the filename and extension.
 
-```{r,results = "hide", message = FALSE, warning =FALSE}
+```{r,eval=FALSE,results = "hide", message = FALSE, warning =FALSE}
 processed_stored_raster <- var_get(shape = Alps, crs = 3035, path = "../Out/storedraster.tif") %>%
   esalandcover(vars = c("ice")) %>%
   chelsa(vars = c("pr"), months = 12, year = 2015)
@@ -600,7 +600,7 @@ processed_stored_raster <- var_get(shape = Alps, crs = 3035, path = "../Out/stor
 
 The same can be done if the output is a data.frame. In this case, the file written has to be a .csv file; specify the path accordingly. 
 
-```{r,results = "hide", message = FALSE, warning =FALSE}
+```{r,eval=FALSE,results = "hide", message = FALSE, warning =FALSE}
 processed_stored_raster <- var_get(shape = Alps, crs = 3035, path = "../Out/storedraster.tif") %>%
   esalandcover(vars = c("ice")) %>%
   chelsa(vars = c("pr"), months = 12, year = 2015)

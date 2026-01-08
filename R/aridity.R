@@ -255,12 +255,19 @@ aridity <- function(x, vars, ...) {
       })
     }
     
+    # Copy to standardized path for extr_check compatibility
+    grids_dir <- fs::path_temp("envar/grids")
+    fs::dir_create(grids_dir)
+    dest_file <- file.path(grids_dir, paste0(user_name, ".tif"))
+    fs::file_copy(final_tif, dest_file, overwrite = TRUE)
+    
     # Process the extracted TIF
     if (is_raster_input) {
-      layer <- try(terra::rast(final_tif), silent = TRUE)
+      layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
-        cli::cli_alert_warning("Could not read raster {.val {final_tif}}.")
-        if (fs::file_exists(final_tif)) fs::file_delete(final_tif)
+        cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
+        #if (fs::file_exists(final_tif)) fs::file_delete(final_tif)
+        #if (fs::file_exists(dest_file)) fs::file_delete(dest_file)
         return(NULL)
       }
       
@@ -307,18 +314,19 @@ aridity <- function(x, vars, ...) {
       
       rm(layer, layer1)
       gc()
-      # Delete the unzipped TIF to save space
-      if (fs::file_exists(final_tif)) fs::file_delete(final_tif)
+      # Delete the unzipped TIF to save space (keep dest_file for extr_check)
+      #if (fs::file_exists(final_tif)) fs::file_delete(final_tif)
       
     } else {
       
       cli::cli_alert_info("Extracting values from {.val {user_name}}...")
       
-      extracted <- try(process_points(file = final_tif, points = points), silent = TRUE)
+      extracted <- try(process_points(file = dest_file, points = points), silent = TRUE)
       
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
-        if (fs::file_exists(final_tif)) fs::file_delete(final_tif)
+        #if (fs::file_exists(final_tif)) fs::file_delete(final_tif)
+        #if (fs::file_exists(dest_file)) fs::file_delete(dest_file)
         return(NULL)
       }
       
@@ -339,7 +347,7 @@ aridity <- function(x, vars, ...) {
       
       rm(extracted)
       gc()
-      if (fs::file_exists(final_tif)) fs::file_delete(final_tif)
+      #if (fs::file_exists(final_tif)) fs::file_delete(final_tif)
     }
   }
   

@@ -301,10 +301,10 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
   for (canon in requested_codes) {
     filename <- paste0(canon, ".tif")
     url <- url_lookup[[canon]]
-    dest <- file.path(fs::path_temp("envar/grids"), filename)
     
     # Get the user's original name for this canonical code
     user_name <- code_to_user_name[[canon]]
+    dest <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".tif"))
     
     handle_file(url, dest, canon, user_name)
   }

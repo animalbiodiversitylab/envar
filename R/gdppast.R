@@ -213,18 +213,22 @@ gdppast <- function(x, vars, year, ...) {
       return(NULL)
     }
     
-    # Treat final_tif_path as dest_file for processing
-    dest_file <- final_tif_path
-    
     # Construct a descriptive name: e.g. "gdp_2000" or "electricity_1995"
     final_layer_name <- paste0(user_name, "_", yr)
+    
+    # Copy to standardized path for extr_check compatibility
+    grids_dir <- fs::path_temp("envar/grids")
+    fs::dir_create(grids_dir)
+    dest_file <- file.path(grids_dir, paste0(final_layer_name, ".tif"))
+    fs::file_copy(final_tif_path, dest_file, overwrite = TRUE)
+    #fs::file_delete(final_tif_path)
     
     if (is_raster_input) {
       layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
         if (!is_global) {
-          fs::file_delete(dest_file)
+         # fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -273,8 +277,8 @@ gdppast <- function(x, vars, year, ...) {
       rm(layer, layer1)
       gc()
       # Clean up the specific year TIF and inner zip, but keep big zip for next loop
-      fs::file_delete(final_tif_path)
-      fs::file_delete(extracted_inner_zip)
+      #fs::file_delete(final_tif_path)
+      #fs::file_delete(extracted_inner_zip)
       
     } else {
       
@@ -285,7 +289,7 @@ gdppast <- function(x, vars, year, ...) {
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {final_layer_name}}.")
         if (!is_global) {
-          fs::file_delete(dest_file)
+          #fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -308,8 +312,8 @@ gdppast <- function(x, vars, year, ...) {
       rm(extracted)
       gc()
       # Clean up specific year files
-      fs::file_delete(final_tif_path)
-      fs::file_delete(extracted_inner_zip)
+      #fs::file_delete(final_tif_path)
+      #fs::file_delete(extracted_inner_zip)
     }
   }
   
