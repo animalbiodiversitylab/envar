@@ -294,7 +294,7 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
       rm(extracted)
       gc()
       if (!is_global) {
-        fs::file_delete(dest_file)
+        #fs::file_delete(dest_file)
       }
     }
   }

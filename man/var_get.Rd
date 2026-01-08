@@ -14,6 +14,7 @@ var_get(
   zooregion = NULL,
   zoorealm = NULL,
   mountain_region = NULL,
+  mountain_region_cmec = NULL,
   glacier_region_19 = NULL,
   glacier_region_20 = NULL,
   freshwater_ecoregion = NULL,
@@ -63,6 +64,9 @@ Uses the Realm column from the CMEC newRealms dataset.}
 
 \item{mountain_region}{Character. The name of a mountain region from the GMBA Mountain
 Inventory v2.0 (Snethlage et al. 2022). Uses the MapName column.}
+
+\item{mountain_region_cmec}{Character. The name of a mountain region from the Center for Macroecology, 
+Evolution, and Climate definition of mountain areas (Rahbek et al. 2019). Uses the Name column.}
 
 \item{glacier_region_19}{Character. The name of a glacier region based on RGI v6.0 (2017)
 first-order regions. Uses the RGI_CODE column.}
