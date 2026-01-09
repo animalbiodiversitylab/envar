@@ -176,7 +176,7 @@ biooracle <- function(x, vars, realm = "surface", years = "2000-2010",
       layer <- try(terra::rast(dest_file), silent = TRUE)
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
-        if (!is_global) #fs::file_delete(dest_file)
+        #if (!is_global) fs::file_delete(dest_file)
         return(NULL)
       }
       
@@ -195,7 +195,7 @@ biooracle <- function(x, vars, realm = "surface", years = "2000-2010",
       
       cli::cli_alert_success("Processed and added {.val {user_name}} to stack.")
       rm(layer, layer1); gc()
-      if (!is_global) #fs::file_delete(dest_file)
+      #if (!is_global) fs::file_delete(dest_file)
       
     } else {
       cli::cli_alert_info("Extracting values from {.val {user_name}}...")
@@ -211,7 +211,7 @@ biooracle <- function(x, vars, realm = "surface", years = "2000-2010",
       
       cli::cli_alert_success("Extracted {.val {user_name}} successfully.")
       rm(extracted); gc()
-      if (!is_global) #fs::file_delete(dest_file)
+      #if (!is_global) fs::file_delete(dest_file)
     }
   }
   

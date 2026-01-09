@@ -16,7 +16,8 @@ Leave this empty and use `var_get()` to define parameters for download.}
 \item{...}{Additional arguments (currently unused).}
 }
 \value{
-If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
 This function downloads, processes, and extracts variables from the
@@ -25,64 +26,50 @@ corresponds to a global Cloud-Optimized GeoTIFF (COG) representing a
 different anthropogenic or climatic threat.
 }
 \details{
-Available variables (working synonyms in parentheses):
+\strong{Available variables} (working synonyms in parentheses):
 
-Land Use and Human Pressure:
+\strong{Land Use and Human Pressure}
+\itemize{
+  \item 1 - "1_1_MINING_AREA_cog" ("mining area", "mining_area", "mining")
+  \item 2 - "1_2_HAZARD_POTENTIAL_cog" ("hazard potential", "hazard")
+  \item 3 - "1_3_HUMAN_DENSITY_cog" ("human density", "population", "pop")
+  \item 4 - "1_4_BUILT_AREA_cog" ("built area", "built")
+  \item 5 - "1_5_ROAD_DENSITY_cog" ("road density", "roads", "road")
+  \item 6 - "1_6_FOOTPRINT_PERC_cog" ("human footprint", "footprint")
+  \item 7 - "1_7_IMPACT_AREA_cog" ("impacted area", "impact area")
+  \item 8 - "1_8_MODIF_AREA_cog" ("modified area", "modif area")
+  \item 9 - "1_9_HUMAN_BIOMES_cog" ("human biomes", "biomes")
+  \item 10 - "1_10_FIRE_OCCUR_cog" ("fires", "fire")
+  \item 11 - "1_11_CROP_PERC_UNI_cog" ("crops uni", "crop uni", "crop")
+  \item 12 - "1_12_CROP_PERC_IIASA_cog" ("crops iiasa", "iiasa crops")
+  \item 13 - "1_13_LIVESTOCK_MASS_cog" ("livestock", "livestock mass")
+}
 
-1 - "1_1_MINING_AREA_cog" ("mining area", "mining_area", "mining")
+\strong{Forest Loss}
+\itemize{
+  \item 14 - "2_1_FOREST_LOSS_PERC_cog" ("forest loss")
+  \item 15 - "2_2_FOREST_TREND_cog" ("forest trend")
+}
 
-2 - "1_2_HAZARD_POTENTIAL_cog" ("hazard potential", "hazard")
+\strong{Light Pollution}
+\itemize{
+  \item 16 - "3_1_LIGHT_MCDM2_cog" ("light at night", "night light", "light")
+}
 
-3 - "1_3_HUMAN_DENSITY_cog" ("human density", "population", "pop")
+\strong{Climate Change}
+\itemize{
+  \item 17 - "5_1_TEMP_TRENDS_cog" ("temperature trends", "temp trends")
+  \item 18 - "5_2_TEMP_SIGNIF_cog" ("temperature significance", "temp signif")
+  \item 19 - "5_3_CLIM_EXTREME_cog" ("climate extremes")
+  \item 20 - "5_4_CLIM_VELOCITY_cog" ("climate velocity", "velocity")
+  \item 21 - "5_5_ARIDITY_TREND_cog" ("aridity trend", "aridity")
+}
 
-4 - "1_4_BUILT_AREA_cog" ("built area", "built")
-
-5 - "1_5_ROAD_DENSITY_cog" ("road density", "roads", "road")
-
-6 - "1_6_FOOTPRINT_PERC_cog" ("human footprint", "footprint")
-
-7 - "1_7_IMPACT_AREA_cog" ("impacted area", "impact area")
-
-8 - "1_8_MODIF_AREA_cog" ("modified area", "modif area")
-
-9 - "1_9_HUMAN_BIOMES_cog" ("human biomes", "biomes")
-
-10 - "1_10_FIRE_OCCUR_cog" ("fires", "fire")
-
-11 - "1_11_CROP_PERC_UNI_cog" ("crops uni", "crop uni", "crop")
-
-12 - "1_12_CROP_PERC_IIASA_cog" ("crops iiasa", "iiasa crops")
-
-13 - "1_13_LIVESTOCK_MASS_cog" ("livestock", "livestock mass")
-
-Forest Loss:
-
-14 - "2_1_FOREST_LOSS_PERC_cog" ("forest loss")
-
-15 - "2_2_FOREST_TREND_cog" ("forest trend")
-
-Light Pollution:
-
-16 - "3_1_LIGHT_MCDM2_cog" ("light at night", "night light", "light")
-
-Climate Change:
-
-17 - "5_1_TEMP_TRENDS_cog" ("temperature trends", "temp trends")
-
-18 - "5_2_TEMP_SIGNIF_cog" ("temperature significance", "temp signif")
-
-19 - "5_3_CLIM_EXTREME_cog" ("climate extremes")
-
-20 - "5_4_CLIM_VELOCITY_cog" ("climate velocity", "velocity")
-
-21 - "5_5_ARIDITY_TREND_cog" ("aridity trend", "aridity")
-
-Citation:
-
+\strong{Citation:}\cr
 Branco, V. V., Capinha, C., Rocha, J., Correia, L. & Cardoso, P. (2024).
 "SPECTRE: standardized global spatial data on terrestrial SPecies and 
 ECosystems ThREats." Global Ecology and Biogeography, 34(1), e13949.
-https://doi.org/10.1111/geb.13949
+\url{https://doi.org/10.1111/geb.13949}
 
 Note: Many SPECTRE variables are derived from external primary datasets.
 Users should consult and cite the original sources listed in the SPECTRE
@@ -91,6 +78,6 @@ supplementary materials.
 \examples{
 \dontrun{
 processed <- var_get(country= "Italy", crs=3035) \%>\% 
-spectre(vars=c("forest loss", "light at night"))
+  spectre(vars=c("forest loss", "light at night"))
   }
 }

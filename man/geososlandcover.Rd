@@ -8,10 +8,10 @@ geososlandcover(x, vars, scenario = "A1B", year = 2010, discover = TRUE, ...)
 }
 \arguments{
 \item{x}{The output from `var_get()` defining the area or locations for extraction, 
-the reference system, and the buffer. 
+the reference system, and the buffer.
 Leave this empty and use `var_get()` to define parameters for download.}
 
-\item{vars}{Character vector of one or more variables to download (e.g., "landcover").}
+\item{vars}{Character vector of one or more variables to download and process.}
 
 \item{scenario}{Character. The IPCC scenario: "A1B", "A2", "B1", or "B2". Ignored if year is 2010.}
 
@@ -20,8 +20,8 @@ Leave this empty and use `var_get()` to define parameters for download.}
 \item{...}{Additional arguments (currently unused).}
 }
 \value{
-If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack. 
-If `var_get()` contained points without buffer: a `data.frame` of extracted values.
+If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
 This function downloads, processes, and extracts variables from the
@@ -29,29 +29,36 @@ Global Land-Use and Land-Cover Change Product (2010-2100). The dataset
 provides global 1 km resolution rasters based on different IPCC scenarios.
 }
 \details{
-Land cover classification legend:
-1: Water
-2: Forest
-3: Grassland
-4: Farmland  
-5: Urban
-6: Barren
+\strong{Available variables} (working synonyms in parentheses):
 
-Available variables (working synonyms in parentheses):
+\strong{Land Cover Classification}
+\itemize{
+  \item 1 - "landcover" (Categorical: 1=Water, 2=Forest, 3=Grassland, 4=Farmland, 5=Urban, 6=Barren) ("lc", "cover", "land cover", "land cover class", "land use", "lulc", "classes")
+}
 
-1 - "landcover" ("lc", "cover", "land cover", "land use", "lulc")
+\strong{Simulation Parameters}
+\itemize{
+  \item \strong{Years:} 2010, 2050, 2100 (Note: 2010 is the MODIS baseline).
+  \item \strong{Scenarios:} "A1B", "A2", "B1", "B2" (Ignored if year is 2010).
+}
 
-Available Scenarios (for years > 2010, 2010 is from MODIS baseline landcover): 
-"A1B", "A2", "B1", "B2"
-
-Available Years: 
-2010, 2050, 2100
-
-Citation:
+\strong{Citation:}\cr
 Xia Li, Guangzhao Chen, Xiaoping Liu, Xun Liang, Shaojian Wang, Yimin Chen, 
-Fengsong Pei & Xiaocong Xu (2017) A New Global Land-Use and Land-Cover Change 
+Fengsong Pei & Xiaocong Xu (2017). A New Global Land-Use and Land-Cover Change 
 Product at a 1-km Resolution for 2010 to 2100 Based on Human–Environment 
-Interactions, Annals of the American Association of Geographers, 107:5, 
+Interactions. Annals of the American Association of Geographers, 107:5, 
 1040-1059.
-DOI: {.url https://doi.org/10.1080/24694452.2017.1303357}
+DOI: \url{https://doi.org/10.1080/24694452.2017.1303357}
+}
+\examples{
+\dontrun{
+# Example 1: Download land cover for Italy in 2050 under scenario A1B
+processed <- var_get(country = "Italy", crs = 3035) \%>\% 
+  geososlandcover(vars = c("land cover"), year = 2050, scenario = "A1B")
+  
+# Example 2: Extract baseline (2010) values for specific points
+points_df <- data.frame(ID = 1:2, x = c(12, 13), y = c(42, 43))
+extracted <- var_get(data = points_df, crs = 4326) \%>\%
+  geososlandcover(vars = "lc", year = 2010)
+}
 }

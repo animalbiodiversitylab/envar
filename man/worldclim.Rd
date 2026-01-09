@@ -17,7 +17,7 @@ worldclim(
 }
 \arguments{
 \item{x}{The output from `var_get()` defining the area or locations for extraction, 
-the reference system, and the buffer. 
+the reference system, and the buffer.
 Leave this empty and use `var_get()` to define parameters for download.}
 
 \item{vars}{Character vector of one or more variables to download and process.}
@@ -32,11 +32,10 @@ or future data.}
 \item{gcm}{Character vector of General Circulation Models (for Future data).}
 
 \item{ssp}{Character or numeric vector of Shared Socioeconomic Pathways (e.g., "126", "585").}
-
-\item{...}{Additional arguments (currently unused).}
 }
 \value{
-If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
 This function downloads, processes, and extracts variables from the
@@ -45,44 +44,41 @@ representing climate variables at approximately 1-km resolution.
 It supports both Historical (v2.1, 1970-2000) and Future (CMIP6) data.
 }
 \details{
-Available variables (working synonyms in parentheses):
+\strong{Available variables} (working synonyms in parentheses):
 
-Temperature:
+\strong{Temperature}
+\itemize{
+  \item "tmin" ("min temp")
+  \item "tmax" ("max temp")
+  \item "tavg" ("average temp")
+}
 
-1 - "tmin" ("min temp")
+\strong{Precipitation}
+\itemize{
+  \item "prec" ("precipitation", "pr")
+}
 
-2 - "tmax" ("max temp")
+\strong{Physical}
+\itemize{
+  \item "srad" ("solar radiation")
+  \item "wind" ("wind speed")
+  \item "vapr" ("water vapor")
+  \item "elev" ("elevation")
+}
 
-3 - "tavg" ("average temp")
+\strong{Bioclimatic}
+\itemize{
+  \item "bio" (all 19 bioclimatic variables), or specific e.g., "bio1", "bio12"
+}
 
-Precipitation:
-
-4 - "prec" ("precipitation", "pr")
-
-Physical:
-
-5 - "srad" ("solar radiation")
-
-6 - "wind" ("wind speed")
-
-7 - "vapr" ("water vapor")
-
-8 - "elev" ("elevation")
-
-Bioclimatic:
-
-9 - "bio" (all 19 bioclimatic variables), or specific e.g., "bio1", "bio12"
-
-Citation:
-
-Fick, Stephen E., and Robert J. Hijmans. "WorldClim 2: new 1-km spatial 
-resolution climate surfaces for global land areas." International Journal 
-of Climatology 37, no. 12 (2017): 4302-4315.
+\strong{Citation:}\cr
+Fick, Stephen E., and Robert J. Hijmans (2017).
+"WorldClim 2: new 1-km spatial resolution climate surfaces for global land areas." International Journal of Climatology 37, no. 12: 4302-4315.
 https://doi.org/10.1002/joc.5086
 }
 \examples{
 \dontrun{
-processed <- var_get(country= "Italy", crs=3035) \%>\% 
-worldclim(vars=c("tmin", "bio1"), years="1970-2000")
+processed <- var_get(country = "Italy", crs = 3035) \%>\% 
+  worldclim(vars = c("tmin", "bio1"), years = "1970-2000")
   }
 }

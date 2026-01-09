@@ -63,6 +63,7 @@ spatial extent, resolution, and coordinate reference system (CRS) for the study 
 <span>  zooregion <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  zoorealm <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  mountain_region <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  mountain_region_cmec <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  glacier_region_19 <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  glacier_region_20 <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  freshwater_ecoregion <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -133,6 +134,11 @@ Uses the Realm column from the CMEC newRealms dataset.</p></dd>
 <dt id="arg-mountain-region">mountain_region<a class="anchor" aria-label="anchor" href="#arg-mountain-region"></a></dt>
 <dd><p>Character. The name of a mountain region from the GMBA Mountain
 Inventory v2.0 (Snethlage et al. 2022). Uses the MapName column.</p></dd>
+
+
+<dt id="arg-mountain-region-cmec">mountain_region_cmec<a class="anchor" aria-label="anchor" href="#arg-mountain-region-cmec"></a></dt>
+<dd><p>Character. The name of a mountain region from the Center for Macroecology,
+Evolution, and Climate definition of mountain areas (Rahbek et al. 2019). Uses the Name column.</p></dd>
 
 
 <dt id="arg-glacier-region-">glacier_region_19<a class="anchor" aria-label="anchor" href="#arg-glacier-region-"></a></dt>
@@ -298,7 +304,7 @@ retrieved variables are perfectly aligned and stacked.</p>
 <span class="r-in"><span><span class="va">italy_grid</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Download with a shapefile</span></span></span>
-<span class="r-in"><span><span class="va">processed_alps</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>shape <span class="op">=</span> <span class="st">"Alps"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span><span class="va">processed_alps</span> <span class="op">&lt;-</span> <span class="fu">var_get</span><span class="op">(</span>shape <span class="op">=</span> <span class="st">"Alps"</span><span class="op">)</span> <span class="op">%&gt;%</span> </span></span>
 <span class="r-in"><span><span class="fu"><a href="esalandcover.html">esalandcover</a></span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># With a projected CRS and positive buffer (expand by 10 km)</span></span></span>

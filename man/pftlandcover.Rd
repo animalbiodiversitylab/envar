@@ -11,7 +11,7 @@ pftlandcover(x, vars = NULL, year = 2025, ssp = 585, ...)
 the reference system, and the buffer. 
 Leave this empty and use `var_get()` to define parameters for download.}
 
-\item{vars}{Character vector of variables to download. Defaults to "landcover" if empty.}
+\item{vars}{Character vector of one or more variables to download and process.}
 
 \item{year}{Integer. The year of the projection (2020-2100, step 5). Defaults to 2025.}
 
@@ -20,7 +20,8 @@ Leave this empty and use `var_get()` to define parameters for download.}
 \item{...}{Additional arguments (currently unused).}
 }
 \value{
-If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
 This function downloads, processes, and extracts land cover variables from the
@@ -28,30 +29,20 @@ Global 7-land-types LULC projection dataset based on plant functional types (PFT
 with a 1-km resolution under socio-climatic scenarios (Chen et al., 2022).
 }
 \details{
-Available variables (working synonyms in parentheses):
+\strong{Available variables} (working synonyms in parentheses):
 
-1 - "landcover" ("cover", "land", "lulc", "pft")
+\strong{Land Cover}
+\itemize{
+  \item 1 - "landcover" ("cover", "land", "lulc", "pft", "projection")
+}
+
+\strong{Citation:}\cr
+Chen, G., Li, X. & Liu, X. (2022). Global land projection based on plant functional types 
+with a 1-km resolution under socio-climatic scenarios. Sci Data 9, 125.
+https://doi.org/10.1038/s41597-022-01209-6
 
 Note: If the `vars` argument is left empty, the function will default 
 to downloading the land cover map.
-
-Required Arguments:
-
-`year`: Integer. Available years: 2020 to 2100 in 5-year intervals 
-(2020, 2025, 2030, ..., 2100).
-
-`ssp`: Integer or Character. The SSP-RCP scenario code. 
-Available values: 119, 126, 245, 370, 434, 460, 534, 585.
-(e.g., 585 corresponds to SSP5-RCP8.5).
-
-Citation:
-
-Chen, G., Li, X. & Liu, X. (2022). "Global land projection based on plant functional types 
-with a 1-km resolution under socio-climatic scenarios." 
-Sci Data 9, 125.
-https://doi.org/10.1038/s41597-022-01209-6
-
-Note: Please cite original sources of primary datasets where appropriate.
 }
 \examples{
 \dontrun{

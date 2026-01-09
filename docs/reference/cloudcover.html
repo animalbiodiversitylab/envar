@@ -83,35 +83,30 @@ Leave this empty and use `var_get()` to define parameters for download.</p></dd>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Available variables (working synonyms in parentheses):</p>
-<p>Metrics:</p>
-<p>1 - "MODCF_CloudForestPrediction" ("cloud forest prediction", "cloud forest", "cfp")</p>
-<p>2 - "MODCF_interannualSD" ("inter-annual variability", "interannual sd", "interannual variability")</p>
-<p>3 - "MODCF_intraannualSD" ("intra-annual variability", "intraannual sd", "intraannual variability")</p>
-<p>4 - "MODCF_meanannual" ("mean annual", "annual mean", "annual")</p>
-<p>5 - "MODCF_spatialSD_1deg" ("spatial variability", "spatial sd", "spatial sd 1deg")</p>
-<p>Seasonality:</p>
-<p>6 - "MODCF_seasonality_concentration" ("seasonality concentration", "concentration")</p>
-<p>7 - "MODCF_seasonality_rgb" ("seasonality rgb", "rgb")</p>
-<p>8 - "MODCF_seasonality_theta" ("seasonality theta", "theta")</p>
-<p>9 - "MODCF_seasonality_visct" ("seasonality single band", "seasonality visct", "seasonality color")</p>
-<p>Monthly Means:</p>
-<p>10 - "MODCF_monthlymean_01" ("january mean", "january", "jan")</p>
-<p>11 - "MODCF_monthlymean_02" ("february mean", "february", "feb")</p>
-<p>12 - "MODCF_monthlymean_03" ("march mean", "march", "mar")</p>
-<p>13 - "MODCF_monthlymean_04" ("april mean", "april", "apr")</p>
-<p>14 - "MODCF_monthlymean_05" ("may mean", "may")</p>
-<p>15 - "MODCF_monthlymean_06" ("june mean", "june", "jun")</p>
-<p>16 - "MODCF_monthlymean_07" ("july mean", "july", "jul")</p>
-<p>17 - "MODCF_monthlymean_08" ("august mean", "august", "aug")</p>
-<p>18 - "MODCF_monthlymean_09" ("september mean", "september", "sep")</p>
-<p>19 - "MODCF_monthlymean_10" ("october mean", "october", "oct")</p>
-<p>20 - "MODCF_monthlymean_11" ("november mean", "november", "nov")</p>
-<p>21 - "MODCF_monthlymean_12" ("december mean", "december", "dec")</p>
-<p>Citation:</p>
-<p>Wilson AM, Jetz W (2016). "Remotely Sensed High-Resolution Global Cloud
-Dynamics for Predicting Ecosystem and Biodiversity Distributions."
-PLoS Biol 14(3): e1002415.
+    <p><strong>Available variables</strong> (working synonyms in parentheses):</p>
+<p><strong>Metrics</strong></p><ul><li><p>1 - "MODCF_CloudForestPrediction" ("cloud forest prediction", "cloud forest", "cfp")</p></li>
+<li><p>2 - "MODCF_interannualSD" ("inter-annual variability", "interannual sd", "interannual variability")</p></li>
+<li><p>3 - "MODCF_intraannualSD" ("intra-annual variability", "intraannual sd", "intraannual variability")</p></li>
+<li><p>4 - "MODCF_meanannual" ("mean annual", "annual mean", "annual")</p></li>
+<li><p>5 - "MODCF_spatialSD_1deg" ("spatial variability", "spatial sd", "spatial sd 1deg")</p></li>
+</ul><p><strong>Seasonality</strong></p><ul><li><p>6 - "MODCF_seasonality_concentration" ("seasonality concentration", "concentration")</p></li>
+<li><p>7 - "MODCF_seasonality_rgb" ("seasonality rgb", "rgb")</p></li>
+<li><p>8 - "MODCF_seasonality_theta" ("seasonality theta", "theta")</p></li>
+<li><p>9 - "MODCF_seasonality_visct" ("seasonality single band", "seasonality visct", "seasonality color")</p></li>
+</ul><p><strong>Monthly Means</strong></p><ul><li><p>10 - "MODCF_monthlymean_01" ("january mean", "january", "jan")</p></li>
+<li><p>11 - "MODCF_monthlymean_02" ("february mean", "february", "feb")</p></li>
+<li><p>12 - "MODCF_monthlymean_03" ("march mean", "march", "mar")</p></li>
+<li><p>13 - "MODCF_monthlymean_04" ("april mean", "april", "apr")</p></li>
+<li><p>14 - "MODCF_monthlymean_05" ("may mean", "may")</p></li>
+<li><p>15 - "MODCF_monthlymean_06" ("june mean", "june", "jun")</p></li>
+<li><p>16 - "MODCF_monthlymean_07" ("july mean", "july", "jul")</p></li>
+<li><p>17 - "MODCF_monthlymean_08" ("august mean", "august", "aug")</p></li>
+<li><p>18 - "MODCF_monthlymean_09" ("september mean", "september", "sep")</p></li>
+<li><p>19 - "MODCF_monthlymean_10" ("october mean", "october", "oct")</p></li>
+<li><p>20 - "MODCF_monthlymean_11" ("november mean", "november", "nov")</p></li>
+<li><p>21 - "MODCF_monthlymean_12" ("december mean", "december", "dec")</p></li>
+</ul><p><strong>Citation:</strong><br>
+Wilson AM, Jetz W (2016). "Remotely sensed high-resolution global cloud dynamics for predicting ecosystem and biodiversity distributions." PLoS Biol 14(3): e1002415.
 https://doi.org/10.1371/journal.pbio.1002415</p>
 <p>Note: Please cite original sources of primary datasets where appropriate.</p>
     </div>
@@ -119,7 +114,7 @@ https://doi.org/10.1371/journal.pbio.1002415</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="var_get.html">var_get</a></span><span class="op">(</span>country<span class="op">=</span> <span class="st">"Italy"</span>, crs<span class="op">=</span><span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
+<span class="r-in"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="var_get.html">var_get</a></span><span class="op">(</span>country<span class="op">=</span> <span class="st">"Italy"</span>, crs<span class="op">=</span><span class="fl">3035</span><span class="op">)</span> <span class="op">%&gt;%</span> </span></span>
 <span class="r-in"><span><span class="fu">cloudcover</span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean annual"</span>, <span class="st">"january"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>

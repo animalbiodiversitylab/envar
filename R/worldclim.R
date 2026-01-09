@@ -4,7 +4,7 @@
 #'
 #' This function downloads, processes, and extracts variables from the
 #' WorldClim climate dataset. Each variable corresponds to a global raster
-[cite_start]#' representing climate variables at approximately 1-km resolution[cite: 2].
+#' representing climate variables at approximately 1-km resolution.
 #' It supports both Historical (v2.1, 1970-2000) and Future (CMIP6) data.
 #'
 #' @details
@@ -41,9 +41,9 @@
 #' https://doi.org/10.1002/joc.5086
 #'
 #' @param x The output from `var_get()` defining the area or locations for extraction, 
-[cite_start]#' the reference system, and the buffer[cite: 4].
-[cite_start]#' Leave this empty and use `var_get()` to define parameters for download[cite: 5].
-[cite_start]#' @param vars Character vector of one or more variables to download and process[cite: 6].
+#' the reference system, and the buffer.
+#' Leave this empty and use `var_get()` to define parameters for download.
+#' @param vars Character vector of one or more variables to download and process.
 #' @param years Character vector of years or periods. For Historical: use "1970-2000" 
 #'        or "historical". For Future: use "2021-2040", "2041-2060", "2061-2080", "2081-2100".
 #' @param months Numeric vector (1-12) specifying which months to download. Only applies
@@ -51,11 +51,10 @@
 #'        or future data.
 #' @param gcm Character vector of General Circulation Models (for Future data).
 #' @param ssp Character or numeric vector of Shared Socioeconomic Pathways (e.g., "126", "585").
-#' @param ... Additional arguments (currently unused).
 #'
 #' @return
-[cite_start]#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables[cite: 8].
-[cite_start]#' If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values[cite: 9].
+#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+#' If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
 #' @examples
 #' \dontrun{

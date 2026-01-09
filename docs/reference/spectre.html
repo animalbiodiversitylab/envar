@@ -82,41 +82,38 @@ Leave this empty and use `var_get()` to define parameters for download.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.</p>
+    <p>If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Available variables (working synonyms in parentheses):</p>
-<p>Land Use and Human Pressure:</p>
-<p>1 - "1_1_MINING_AREA_cog" ("mining area", "mining_area", "mining")</p>
-<p>2 - "1_2_HAZARD_POTENTIAL_cog" ("hazard potential", "hazard")</p>
-<p>3 - "1_3_HUMAN_DENSITY_cog" ("human density", "population", "pop")</p>
-<p>4 - "1_4_BUILT_AREA_cog" ("built area", "built")</p>
-<p>5 - "1_5_ROAD_DENSITY_cog" ("road density", "roads", "road")</p>
-<p>6 - "1_6_FOOTPRINT_PERC_cog" ("human footprint", "footprint")</p>
-<p>7 - "1_7_IMPACT_AREA_cog" ("impacted area", "impact area")</p>
-<p>8 - "1_8_MODIF_AREA_cog" ("modified area", "modif area")</p>
-<p>9 - "1_9_HUMAN_BIOMES_cog" ("human biomes", "biomes")</p>
-<p>10 - "1_10_FIRE_OCCUR_cog" ("fires", "fire")</p>
-<p>11 - "1_11_CROP_PERC_UNI_cog" ("crops uni", "crop uni", "crop")</p>
-<p>12 - "1_12_CROP_PERC_IIASA_cog" ("crops iiasa", "iiasa crops")</p>
-<p>13 - "1_13_LIVESTOCK_MASS_cog" ("livestock", "livestock mass")</p>
-<p>Forest Loss:</p>
-<p>14 - "2_1_FOREST_LOSS_PERC_cog" ("forest loss")</p>
-<p>15 - "2_2_FOREST_TREND_cog" ("forest trend")</p>
-<p>Light Pollution:</p>
-<p>16 - "3_1_LIGHT_MCDM2_cog" ("light at night", "night light", "light")</p>
-<p>Climate Change:</p>
-<p>17 - "5_1_TEMP_TRENDS_cog" ("temperature trends", "temp trends")</p>
-<p>18 - "5_2_TEMP_SIGNIF_cog" ("temperature significance", "temp signif")</p>
-<p>19 - "5_3_CLIM_EXTREME_cog" ("climate extremes")</p>
-<p>20 - "5_4_CLIM_VELOCITY_cog" ("climate velocity", "velocity")</p>
-<p>21 - "5_5_ARIDITY_TREND_cog" ("aridity trend", "aridity")</p>
-<p>Citation:</p>
-<p>Branco, V. V., Capinha, C., Rocha, J., Correia, L. &amp; Cardoso, P. (2024).
+    <p><strong>Available variables</strong> (working synonyms in parentheses):</p>
+<p><strong>Land Use and Human Pressure</strong></p><ul><li><p>1 - "1_1_MINING_AREA_cog" ("mining area", "mining_area", "mining")</p></li>
+<li><p>2 - "1_2_HAZARD_POTENTIAL_cog" ("hazard potential", "hazard")</p></li>
+<li><p>3 - "1_3_HUMAN_DENSITY_cog" ("human density", "population", "pop")</p></li>
+<li><p>4 - "1_4_BUILT_AREA_cog" ("built area", "built")</p></li>
+<li><p>5 - "1_5_ROAD_DENSITY_cog" ("road density", "roads", "road")</p></li>
+<li><p>6 - "1_6_FOOTPRINT_PERC_cog" ("human footprint", "footprint")</p></li>
+<li><p>7 - "1_7_IMPACT_AREA_cog" ("impacted area", "impact area")</p></li>
+<li><p>8 - "1_8_MODIF_AREA_cog" ("modified area", "modif area")</p></li>
+<li><p>9 - "1_9_HUMAN_BIOMES_cog" ("human biomes", "biomes")</p></li>
+<li><p>10 - "1_10_FIRE_OCCUR_cog" ("fires", "fire")</p></li>
+<li><p>11 - "1_11_CROP_PERC_UNI_cog" ("crops uni", "crop uni", "crop")</p></li>
+<li><p>12 - "1_12_CROP_PERC_IIASA_cog" ("crops iiasa", "iiasa crops")</p></li>
+<li><p>13 - "1_13_LIVESTOCK_MASS_cog" ("livestock", "livestock mass")</p></li>
+</ul><p><strong>Forest Loss</strong></p><ul><li><p>14 - "2_1_FOREST_LOSS_PERC_cog" ("forest loss")</p></li>
+<li><p>15 - "2_2_FOREST_TREND_cog" ("forest trend")</p></li>
+</ul><p><strong>Light Pollution</strong></p><ul><li><p>16 - "3_1_LIGHT_MCDM2_cog" ("light at night", "night light", "light")</p></li>
+</ul><p><strong>Climate Change</strong></p><ul><li><p>17 - "5_1_TEMP_TRENDS_cog" ("temperature trends", "temp trends")</p></li>
+<li><p>18 - "5_2_TEMP_SIGNIF_cog" ("temperature significance", "temp signif")</p></li>
+<li><p>19 - "5_3_CLIM_EXTREME_cog" ("climate extremes")</p></li>
+<li><p>20 - "5_4_CLIM_VELOCITY_cog" ("climate velocity", "velocity")</p></li>
+<li><p>21 - "5_5_ARIDITY_TREND_cog" ("aridity trend", "aridity")</p></li>
+</ul><p><strong>Citation:</strong><br>
+Branco, V. V., Capinha, C., Rocha, J., Correia, L. &amp; Cardoso, P. (2024).
 "SPECTRE: standardized global spatial data on terrestrial SPecies and
 ECosystems ThREats." Global Ecology and Biogeography, 34(1), e13949.
-https://doi.org/10.1111/geb.13949</p>
+<a href="https://doi.org/10.1111/geb.13949" class="external-link">https://doi.org/10.1111/geb.13949</a></p>
 <p>Note: Many SPECTRE variables are derived from external primary datasets.
 Users should consult and cite the original sources listed in the SPECTRE
 supplementary materials.</p>
@@ -125,8 +122,8 @@ supplementary materials.</p>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="var_get.html">var_get</a></span><span class="op">(</span>country<span class="op">=</span> <span class="st">"Italy"</span>, crs<span class="op">=</span><span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
-<span class="r-in"><span><span class="fu">spectre</span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"forest loss"</span>, <span class="st">"light at night"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="var_get.html">var_get</a></span><span class="op">(</span>country<span class="op">=</span> <span class="st">"Italy"</span>, crs<span class="op">=</span><span class="fl">3035</span><span class="op">)</span> <span class="op">%&gt;%</span> </span></span>
+<span class="r-in"><span>  <span class="fu">spectre</span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"forest loss"</span>, <span class="st">"light at night"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

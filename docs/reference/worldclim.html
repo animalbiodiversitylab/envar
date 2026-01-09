@@ -103,43 +103,35 @@ or future data.</p></dd>
 <dt id="arg-ssp">ssp<a class="anchor" aria-label="anchor" href="#arg-ssp"></a></dt>
 <dd><p>Character or numeric vector of Shared Socioeconomic Pathways (e.g., "126", "585").</p></dd>
 
-
-<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
-<dd><p>Additional arguments (currently unused).</p></dd>
-
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.</p>
+    <p>If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Available variables (working synonyms in parentheses):</p>
-<p>Temperature:</p>
-<p>1 - "tmin" ("min temp")</p>
-<p>2 - "tmax" ("max temp")</p>
-<p>3 - "tavg" ("average temp")</p>
-<p>Precipitation:</p>
-<p>4 - "prec" ("precipitation", "pr")</p>
-<p>Physical:</p>
-<p>5 - "srad" ("solar radiation")</p>
-<p>6 - "wind" ("wind speed")</p>
-<p>7 - "vapr" ("water vapor")</p>
-<p>8 - "elev" ("elevation")</p>
-<p>Bioclimatic:</p>
-<p>9 - "bio" (all 19 bioclimatic variables), or specific e.g., "bio1", "bio12"</p>
-<p>Citation:</p>
-<p>Fick, Stephen E., and Robert J. Hijmans. "WorldClim 2: new 1-km spatial
-resolution climate surfaces for global land areas." International Journal
-of Climatology 37, no. 12 (2017): 4302-4315.
+    <p><strong>Available variables</strong> (working synonyms in parentheses):</p>
+<p><strong>Temperature</strong></p><ul><li><p>"tmin" ("min temp")</p></li>
+<li><p>"tmax" ("max temp")</p></li>
+<li><p>"tavg" ("average temp")</p></li>
+</ul><p><strong>Precipitation</strong></p><ul><li><p>"prec" ("precipitation", "pr")</p></li>
+</ul><p><strong>Physical</strong></p><ul><li><p>"srad" ("solar radiation")</p></li>
+<li><p>"wind" ("wind speed")</p></li>
+<li><p>"vapr" ("water vapor")</p></li>
+<li><p>"elev" ("elevation")</p></li>
+</ul><p><strong>Bioclimatic</strong></p><ul><li><p>"bio" (all 19 bioclimatic variables), or specific e.g., "bio1", "bio12"</p></li>
+</ul><p><strong>Citation:</strong><br>
+Fick, Stephen E., and Robert J. Hijmans (2017).
+"WorldClim 2: new 1-km spatial resolution climate surfaces for global land areas." International Journal of Climatology 37, no. 12: 4302-4315.
 https://doi.org/10.1002/joc.5086</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="var_get.html">var_get</a></span><span class="op">(</span>country<span class="op">=</span> <span class="st">"Italy"</span>, crs<span class="op">=</span><span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
-<span class="r-in"><span><span class="fu">worldclim</span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tmin"</span>, <span class="st">"bio1"</span><span class="op">)</span>, years<span class="op">=</span><span class="st">"1970-2000"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="var_get.html">var_get</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op">%&gt;%</span> </span></span>
+<span class="r-in"><span>  <span class="fu">worldclim</span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tmin"</span>, <span class="st">"bio1"</span><span class="op">)</span>, years <span class="op">=</span> <span class="st">"1970-2000"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>

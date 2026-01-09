@@ -16,7 +16,8 @@ Leave this empty and use `var_get()` to define parameters for download.}
 \item{...}{Additional arguments (currently unused).}
 }
 \value{
-If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
 This function downloads, processes, and extracts variables from the
@@ -50,8 +51,8 @@ metrics of habitat heterogeneity derived from remote sensing data.
 }
 
 \strong{Citation:}\cr
-Tuanmu, M.-N. & Jetz, W. (2015). "A global, remote sensing-based characterization 
-of terrestrial habitat heterogeneity for biodiversity and ecosystem modeling." 
+Tuanmu, M.-N. & Jetz, W. (2015).
+"A global, remote sensing-based characterization of terrestrial habitat heterogeneity for biodiversity and ecosystem modeling."
 Global Ecology and Biogeography, 24(11), 1329-1339.
 https://doi.org/10.1111/geb.12365
 
@@ -59,7 +60,8 @@ Note: Please cite original sources of primary datasets where appropriate.
 }
 \examples{
 \dontrun{
+# Example 1: Download Shannon Index and Coefficient of Variation for the Alps
 processed <- var_get(shape = Alps, crs = 3035) \%>\% 
-heterogeneity(vars=c("shannon", "cv"))
+  heterogeneity(vars = c("shannon", "cv"))
   }
 }

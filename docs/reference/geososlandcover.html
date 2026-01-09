@@ -70,7 +70,7 @@ Leave this empty and use `var_get()` to define parameters for download.</p></dd>
 
 
 <dt id="arg-vars">vars<a class="anchor" aria-label="anchor" href="#arg-vars"></a></dt>
-<dd><p>Character vector of one or more variables to download (e.g., "landcover").</p></dd>
+<dd><p>Character vector of one or more variables to download and process.</p></dd>
 
 
 <dt id="arg-scenario">scenario<a class="anchor" aria-label="anchor" href="#arg-scenario"></a></dt>
@@ -87,33 +87,38 @@ Leave this empty and use `var_get()` to define parameters for download.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack.
-If `var_get()` contained points without buffer: a `data.frame` of extracted values.</p>
+    <p>If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Land cover classification legend:
-1: Water
-2: Forest
-3: Grassland
-4: Farmland
-5: Urban
-6: Barren</p>
-<p>Available variables (working synonyms in parentheses):</p>
-<p>1 - "landcover" ("lc", "cover", "land cover", "land use", "lulc")</p>
-<p>Available Scenarios (for years &gt; 2010, 2010 is from MODIS baseline landcover):
-"A1B", "A2", "B1", "B2"</p>
-<p>Available Years:
-2010, 2050, 2100</p>
-<p>Citation:
+    <p><strong>Available variables</strong> (working synonyms in parentheses):</p>
+<p><strong>Land Cover Classification</strong></p><ul><li><p>1 - "landcover" (Categorical: 1=Water, 2=Forest, 3=Grassland, 4=Farmland, 5=Urban, 6=Barren) ("lc", "cover", "land cover", "land cover class", "land use", "lulc", "classes")</p></li>
+</ul><p><strong>Simulation Parameters</strong></p><ul><li><p><strong>Years:</strong> 2010, 2050, 2100 (Note: 2010 is the MODIS baseline).</p></li>
+<li><p><strong>Scenarios:</strong> "A1B", "A2", "B1", "B2" (Ignored if year is 2010).</p></li>
+</ul><p><strong>Citation:</strong><br>
 Xia Li, Guangzhao Chen, Xiaoping Liu, Xun Liang, Shaojian Wang, Yimin Chen,
-Fengsong Pei &amp; Xiaocong Xu (2017) A New Global Land-Use and Land-Cover Change
+Fengsong Pei &amp; Xiaocong Xu (2017). A New Global Land-Use and Land-Cover Change
 Product at a 1-km Resolution for 2010 to 2100 Based on Human–Environment
-Interactions, Annals of the American Association of Geographers, 107:5,
+Interactions. Annals of the American Association of Geographers, 107:5,
 1040-1059.
-DOI: .url https://doi.org/10.1080/24694452.2017.1303357</p>
+DOI: <a href="https://doi.org/10.1080/24694452.2017.1303357" class="external-link">https://doi.org/10.1080/24694452.2017.1303357</a></p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+<span class="r-in"><span><span class="co"># Example 1: Download land cover for Italy in 2050 under scenario A1B</span></span></span>
+<span class="r-in"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="var_get.html">var_get</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op">%&gt;%</span> </span></span>
+<span class="r-in"><span>  <span class="fu">geososlandcover</span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"land cover"</span><span class="op">)</span>, year <span class="op">=</span> <span class="fl">2050</span>, scenario <span class="op">=</span> <span class="st">"A1B"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  </span></span>
+<span class="r-in"><span><span class="co"># Example 2: Extract baseline (2010) values for specific points</span></span></span>
+<span class="r-in"><span><span class="va">points_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>ID <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12</span>, <span class="fl">13</span><span class="op">)</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">42</span>, <span class="fl">43</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">extracted</span> <span class="op">&lt;-</span> <span class="fu"><a href="var_get.html">var_get</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">points_df</span>, crs <span class="op">=</span> <span class="fl">4326</span><span class="op">)</span> <span class="op">%&gt;%</span></span></span>
+<span class="r-in"><span>  <span class="fu">geososlandcover</span><span class="op">(</span>vars <span class="op">=</span> <span class="st">"lc"</span>, year <span class="op">=</span> <span class="fl">2010</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

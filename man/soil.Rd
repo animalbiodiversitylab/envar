@@ -17,7 +17,8 @@ Defaults to "hwsd" if left empty.}
 \item{...}{Additional arguments (currently unused).}
 }
 \value{
-If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
 This function downloads, processes, and extracts variables from the
@@ -25,12 +26,14 @@ Harmonized World Soil Database v2.0 (HWSD v2.0). The variable corresponds
 to a global raster file at 1 km resolution representing soil types.
 }
 \details{
-Available variables (working synonyms in parentheses):
+\strong{Available variables} (working synonyms in parentheses):
 
-1 - "hwsd" ("soil", "type", "soiltype", "soil type")
+\strong{Soil Data}
+\itemize{
+  \item 1 - "hwsd" ("soil", "type", "soiltype", "soil type")
+}
 
-Citation:
-
+\strong{Citation:}\cr
 FAO & IIASA. (2023). "Harmonized World Soil Database v2.0." 
 Food and Agriculture Organization of the United Nations, Rome and 
 International Institute for Applied Systems Analysis, Laxenburg, Austria.

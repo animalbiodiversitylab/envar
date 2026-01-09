@@ -8,18 +8,18 @@ topography(x, vars, algorithm = "md", topo_source = "GMTED", ...)
 }
 \arguments{
 \item{x}{The output from `var_get()` defining the area or locations for extraction, 
-the reference system, and the buffer. 
+the reference system, and the buffer.
 Leave this empty and use `var_get()` to define parameters for download.}
 
 \item{vars}{Character vector of one or more variables to download and process.}
 
-\item{algorithm}{Character. The aggregation method/algorithm to use. 
+\item{algorithm}{Character. The aggregation method/algorithm to use.
 \itemize{
   \item Common options: "md" (median, default), "mn" (mean), "min", "max", "sd".
   \item Note: These codes directly affect the downloaded filename (e.g., \code{_1KMmd_}).
 }}
 
-\item{topo_source}{Character. The source of the data. 
+\item{topo_source}{Character. The source of the data.
 \itemize{
   \item "GMTED" (Global Multi-resolution Terrain Elevation Data) - Default.
   \item "SRTM" (Shuttle Radar Topography Mission).
@@ -28,7 +28,8 @@ Leave this empty and use `var_get()` to define parameters for download.}
 \item{...}{Additional arguments (currently unused).}
 }
 \value{
-If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
 This function downloads, processes, and extracts variables from the
@@ -38,31 +39,32 @@ topographic variables suitable for biodiversity and ecosystem modeling.
 \details{
 \strong{Available variables} (working synonyms in parentheses):
 
+\strong{[Topography Variables]}
 \itemize{
-  \item 1 - "elevation" ("dem", "height", "alt", "altitude")
-  \item 2 - "slope" 
-  \item 3 - "aspect"
-  \item 4 - "roughness" ("rough")
-  \item 5 - "tri" ("terrain ruggedness index", "ruggedness")
-  \item 6 - "tpi" ("topographic position index", "position")
-  \item 7 - "vrm" ("vector ruggedness measure")
-  \item 8 - "pcurv" ("profile curvature", "profile curve")
-  \item 9 - "tcurv" ("tangential curvature", "tangential curve")
-  \item 10 - "eastness" ("east")
-  \item 11 - "northness" ("north")
+  \item 1 - "elevation" ([m]) ("dem", "height", "alt", "altitude")
+  \item 2 - "slope" ([degrees])
+  \item 3 - "aspect" ([degrees])
+  \item 4 - "roughness" ([Index]) ("rough")
+  \item 5 - "tri" ([Index]) ("terrain ruggedness index", "ruggedness")
+  \item 6 - "tpi" ([Index]) ("topographic position index", "position")
+  \item 7 - "vrm" ([Index]) ("vector ruggedness measure")
+  \item 8 - "pcurv" ([radians/m]) ("profile curvature", "profile curve")
+  \item 9 - "tcurv" ([radians/m]) ("tangential curvature", "tangential curve")
+  \item 10 - "eastness" ([Index]) ("east")
+  \item 11 - "northness" ([Index]) ("north")
 }
 
 \strong{Citation:}\cr
-Amatulli, G., Domisch, S., Tuanmu, M.-N., Parmentier, B., Ranipeta, A.,
-Malczyk, J., and Jetz, W. (2018). "A suite of global, cross-scale topographic 
-variables for environmental and biodiversity modeling." Scientific Data 5: 180040.
+Amatulli, G., Domisch, S., Tuanmu, M.-N., Parmentier, B., Ranipeta, A., Malczyk, J., and Jetz, W. (2018).
+"A suite of global, cross-scale topographic variables for environmental and biodiversity modeling." Scientific Data.
 https://doi.org/10.1038/sdata.2018.40
 
 Note: Please cite original sources of primary datasets where appropriate.
 }
 \examples{
 \dontrun{
+# Example 1: Download elevation and slope for Italy
 processed <- var_get(country = "Italy", crs = 3035) \%>\% 
-topography(vars = c("elevation", "slope"))
+  topography(vars = c("elevation", "slope"))
   }
 }

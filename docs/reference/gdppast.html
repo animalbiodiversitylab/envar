@@ -87,17 +87,13 @@ Leave this empty and use `var_get()` to define parameters for download.</p></dd>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>Available variables (working synonyms in parentheses):</p>
-<p>Economic Metrics:</p>
-<p>1 - "gdp" ("gross domestic product", "real gdp", "economy", "economic output", "gross product")</p>
-<p>Energy Metrics:</p>
-<p>2 - "electricity" ("electricity consumption", "energy", "energy consumption", "power", "ec", "electric")</p>
-<p>Years available: 1992 to 2019.</p>
-<p>Citation:</p>
-<p>Chen, J., Gao, M., Cheng, S. et al. (2022). "Global 1 km x 1 km gridded revised
-real gross domestic product and electricity consumption during 1992–2019 based
-on calibrated nighttime light data." Sci Data 9, 202.
-https://doi.org/10.1038/s41597-022-01302-0</p>
+    <p><strong>Available variables</strong> (working synonyms in parentheses):</p>
+<p><strong>Economic Metrics</strong></p><ul><li><p>"gdp" ("gross domestic product", "real gdp", "economy", "economic output", "gross product")</p></li>
+</ul><p><strong>Energy Metrics</strong></p><ul><li><p>"electricity" ("electricity consumption", "energy", "energy consumption", "power", "ec", "electric")</p></li>
+</ul><p><strong>Years available</strong></p><ul><li><p>1992 to 2019.</p></li>
+</ul><p><strong>Citation:</strong><br>
+Chen J, Gao M, Cheng S et al (2022). "Global 1 km x 1 km gridded revised real gross domestic product and electricity consumption during 1992–2019 based on calibrated nighttime light data." Scientific Data 9, 202.
+https://doi.org/10.1038/s41597-022-01322-5</p>
 <p>Note: Please cite original sources of primary datasets where appropriate.</p>
     </div>
 
@@ -105,13 +101,13 @@ https://doi.org/10.1038/s41597-022-01302-0</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co"># Get GDP for 2000 and 2010</span></span></span>
-<span class="r-in"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="var_get.html">var_get</a></span><span class="op">(</span>country<span class="op">=</span> <span class="st">"Italy"</span>, crs<span class="op">=</span><span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
-<span class="r-in"><span><span class="fu">gdppast</span><span class="op">(</span>vars<span class="op">=</span><span class="st">"gdp"</span>, year<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">2010</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="var_get.html">var_get</a></span><span class="op">(</span>country<span class="op">=</span> <span class="st">"Italy"</span>, crs<span class="op">=</span><span class="fl">3035</span><span class="op">)</span> <span class="op">%&gt;%</span> </span></span>
+<span class="r-in"><span>  <span class="fu">gdppast</span><span class="op">(</span>vars<span class="op">=</span><span class="st">"gdp"</span>, year<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">2010</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Get Electricity and GDP for 2019</span></span></span>
-<span class="r-in"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="var_get.html">var_get</a></span><span class="op">(</span>country<span class="op">=</span> <span class="st">"Vietnam"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span></span>
-<span class="r-in"><span><span class="fu">gdppast</span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"electricity"</span>, <span class="st">"gdp"</span><span class="op">)</span>, year<span class="op">=</span><span class="fl">2019</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="var_get.html">var_get</a></span><span class="op">(</span>country<span class="op">=</span> <span class="st">"Vietnam"</span><span class="op">)</span> <span class="op">%&gt;%</span> </span></span>
+<span class="r-in"><span>  <span class="fu">gdppast</span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"electricity"</span>, <span class="st">"gdp"</span><span class="op">)</span>, year<span class="op">=</span><span class="fl">2019</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
