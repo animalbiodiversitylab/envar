@@ -7,33 +7,32 @@
 #' It provides 1-km grid population distributions from 2020 to 2100 
 #' under five Shared Socioeconomic Pathways (SSPs).
 #'
-#' Available variables (working synonyms in parentheses):
+#' @details
+#' \strong{Available variables} (working synonyms in parentheses):
 #'
-#' Population Counts:
-#' 
-#' 1 - "population" ("pop", "inhabitants", "residents", "people", "count", "census")
+#' \itemize{
+#'   \item 1 - "population" ([People]) ("pop", "inhabitants", "residents", "people", "count", "census")
+#' }
 #'
-#' Use the arguments `year` and `ssp` to filter the specific data required.
-#'
-#' Citation:
-#'
+#' \strong{Citation:}\cr
 #' Wang, X., Meng, X. & Long, Y. (2022). "Projecting 1 km-grid population 
 #' distributions from 2020 to 2100 globally under shared socioeconomic pathways." 
 #' Sci Data 9, 563.
-#' https://doi.org/10.1038/s41597-022-01675-x
+#' \url{https://doi.org/10.1038/s41597-022-01675-x}
 #'
 #' Note: Please cite original sources of primary datasets where appropriate.
 #'
 #' @param x The output from `var_get()` defining the area or locations for extraction, 
-#' the reference system, and the buffer. 
+#' the reference system, and the buffer.
 #' Leave this empty and use `var_get()` to define parameters for download.
-#' @param vars Character vector. Use "population" (or synonyms).
+#' @param vars Character vector of one or more variables to download and process.
 #' @param year Numeric vector. Years to download. Available from 2020 to 2100 in 5-year intervals (e.g., c(2020, 2050)).
 #' @param ssp Numeric vector. Shared Socioeconomic Pathways to download (1, 2, 3, 4, or 5).
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+#' If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
 #' @examples
 #' \dontrun{
@@ -41,7 +40,6 @@
 #'   population(vars = "population", year = 2050, ssp = 2)
 #'   }
 #' @export
-
 population <- function(x, vars, year = 2020, ssp = 1, ...) {
   
   # --------------------------------------------------------------------

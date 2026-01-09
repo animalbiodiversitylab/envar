@@ -6,33 +6,31 @@
 #' Hybrid Global Annual 1-km IGBP Land Cover Maps dataset (Luo et al., 2024).
 #' The data covers the period from 2000 to 2020.
 #'
-#' Available variables (working synonyms in parentheses):
+#' @details
+#' \strong{Available variables} (working synonyms in parentheses):
 #'
-#' 1 - "landcover" ("cover", "land", "lc", "igbp")
+#' \itemize{
+#'   \item 1 - "landcover" ("cover", "land", "lc", "igbp", "hybrid")
+#' }
 #'
-#' Note: If the `vars` argument is left empty, the function will default 
-#' to downloading the land cover map.
-#' 
-#' You must specify the `year` argument (integer between 2000 and 2020).
-#'
-#' Citation:
-#'
+#' \strong{Citation:}\cr
 #' Luo Y, Zhu Z, Zhao W, Li M, Chen J, Zhao P, Sun L, Zhang Y, Duanmu Z, Chen J (2024). 
 #' "Hybrid Global Annual 1-km IGBP Land Cover Maps for the Period 2000–2020." 
 #' Journal of Remote Sensing, 4, 0122.
 #' https://doi.org/10.34133/remotesensing.0122
 #'
-#' Note: Please cite original sources of primary datasets where appropriate.
+#' Note: You must specify the `year` argument (integer between 2000 and 2020).
 #'
 #' @param x The output from `var_get()` defining the area or locations for extraction, 
-#' the reference system, and the buffer. 
+#' the reference system, and the buffer.
 #' Leave this empty and use `var_get()` to define parameters for download.
-#' @param vars Character vector of variables to download. Defaults to "landcover" if empty.
+#' @param vars Character vector of one or more variables to download and process.
 #' @param year Integer. The year for which to download the land cover map (2000-2020). Defaults to 2000.
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+#' If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
 #' @examples
 #' \dontrun{
@@ -40,7 +38,6 @@
 #'   hybridlandcover(vars="landcover", year=2015)
 #'   }
 #' @export
-
 hybridlandcover <- function(x, vars = NULL, year = 2000, ...) {
   
   # --------------------------------------------------------------------
@@ -216,7 +213,7 @@ hybridlandcover <- function(x, vars = NULL, year = 2000, ...) {
       rm(layer, layer1)
       gc()
       if (!is_global) {
-       # fs::file_delete(dest_file)
+        # fs::file_delete(dest_file)
       }
       
     } else {
@@ -228,7 +225,7 @@ hybridlandcover <- function(x, vars = NULL, year = 2000, ...) {
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
         if (!is_global) {
-         # fs::file_delete(dest_file)
+          # fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -251,7 +248,7 @@ hybridlandcover <- function(x, vars = NULL, year = 2000, ...) {
       rm(extracted)
       gc()
       if (!is_global) {
-     #   fs::file_delete(dest_file)
+        #   fs::file_delete(dest_file)
       }
     }
   }

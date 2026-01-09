@@ -6,41 +6,33 @@
 #' Global 7-land-types LULC projection dataset based on plant functional types (PFT)
 #' with a 1-km resolution under socio-climatic scenarios (Chen et al., 2022).
 #'
-#' Available variables (working synonyms in parentheses):
+#' @details
+#' \strong{Available variables} (working synonyms in parentheses):
 #'
-#' 1 - "landcover" ("cover", "land", "lulc", "pft")
+#' \strong{Land Cover}
+#' \itemize{
+#'   \item 1 - "landcover" ("cover", "land", "lulc", "pft", "projection")
+#' }
+#'
+#' \strong{Citation:}\cr
+#' Chen, G., Li, X. & Liu, X. (2022). Global land projection based on plant functional types 
+#' with a 1-km resolution under socio-climatic scenarios. Sci Data 9, 125.
+#' https://doi.org/10.1038/s41597-022-01209-6
 #'
 #' Note: If the `vars` argument is left empty, the function will default 
 #' to downloading the land cover map.
 #'
-#' Required Arguments:
-#'
-#' `year`: Integer. Available years: 2020 to 2100 in 5-year intervals 
-#' (2020, 2025, 2030, ..., 2100).
-#'
-#' `ssp`: Integer or Character. The SSP-RCP scenario code. 
-#' Available values: 119, 126, 245, 370, 434, 460, 534, 585.
-#' (e.g., 585 corresponds to SSP5-RCP8.5).
-#'
-#' Citation:
-#'
-#' Chen, G., Li, X. & Liu, X. (2022). "Global land projection based on plant functional types 
-#' with a 1-km resolution under socio-climatic scenarios." 
-#' Sci Data 9, 125.
-#' https://doi.org/10.1038/s41597-022-01209-6
-#'
-#' Note: Please cite original sources of primary datasets where appropriate.
-#'
 #' @param x The output from `var_get()` defining the area or locations for extraction, 
 #' the reference system, and the buffer. 
 #' Leave this empty and use `var_get()` to define parameters for download.
-#' @param vars Character vector of variables to download. Defaults to "landcover" if empty.
+#' @param vars Character vector of one or more variables to download and process.
 #' @param year Integer. The year of the projection (2020-2100, step 5). Defaults to 2025.
 #' @param ssp Integer or Character. The SSP-RCP scenario code (119, 126, 245, 370, 434, 460, 534, 585). Defaults to 585.
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+#' If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
 #' @examples
 #' \dontrun{
@@ -49,7 +41,6 @@
 #'   pftlandcover(vars="landcover", year=2050, ssp=585)
 #'   }
 #' @export
-
 pftlandcover <- function(x, vars = NULL, year = 2025, ssp = 585, ...) {
   
   # --------------------------------------------------------------------

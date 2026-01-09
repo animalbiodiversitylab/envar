@@ -4,48 +4,46 @@
 #'
 #' This function downloads, processes, and extracts variables from the
 #' WorldClim climate dataset. Each variable corresponds to a global raster
-#' representing climate variables at approximately 1-km resolution.
+[cite_start]#' representing climate variables at approximately 1-km resolution[cite: 2].
 #' It supports both Historical (v2.1, 1970-2000) and Future (CMIP6) data.
 #'
-#' Available variables (working synonyms in parentheses):
+#' @details
+#' \strong{Available variables} (working synonyms in parentheses):
 #'
-#' Temperature:
-#' 
-#' 1 - "tmin" ("min temp")
-#' 
-#' 2 - "tmax" ("max temp")
-#' 
-#' 3 - "tavg" ("average temp")
-#' 
-#' Precipitation:
-#' 
-#' 4 - "prec" ("precipitation", "pr")
-#' 
-#' Physical:
-#' 
-#' 5 - "srad" ("solar radiation")
-#' 
-#' 6 - "wind" ("wind speed")
-#' 
-#' 7 - "vapr" ("water vapor")
-#' 
-#' 8 - "elev" ("elevation")
-#' 
-#' Bioclimatic:
-#' 
-#' 9 - "bio" (all 19 bioclimatic variables), or specific e.g., "bio1", "bio12"
+#' \strong{Temperature}
+#' \itemize{
+#'   \item "tmin" ("min temp")
+#'   \item "tmax" ("max temp")
+#'   \item "tavg" ("average temp")
+#' }
 #'
-#' Citation:
+#' \strong{Precipitation}
+#' \itemize{
+#'   \item "prec" ("precipitation", "pr")
+#' }
 #'
-#' Fick, Stephen E., and Robert J. Hijmans. "WorldClim 2: new 1-km spatial 
-#' resolution climate surfaces for global land areas." International Journal 
-#' of Climatology 37, no. 12 (2017): 4302-4315.
+#' \strong{Physical}
+#' \itemize{
+#'   \item "srad" ("solar radiation")
+#'   \item "wind" ("wind speed")
+#'   \item "vapr" ("water vapor")
+#'   \item "elev" ("elevation")
+#' }
+#'
+#' \strong{Bioclimatic}
+#' \itemize{
+#'   \item "bio" (all 19 bioclimatic variables), or specific e.g., "bio1", "bio12"
+#' }
+#'
+#' \strong{Citation:}\cr
+#' Fick, Stephen E., and Robert J. Hijmans (2017).
+#' "WorldClim 2: new 1-km spatial resolution climate surfaces for global land areas." International Journal of Climatology 37, no. 12: 4302-4315.
 #' https://doi.org/10.1002/joc.5086
 #'
 #' @param x The output from `var_get()` defining the area or locations for extraction, 
-#' the reference system, and the buffer. 
-#' Leave this empty and use `var_get()` to define parameters for download.
-#' @param vars Character vector of one or more variables to download and process.
+[cite_start]#' the reference system, and the buffer[cite: 4].
+[cite_start]#' Leave this empty and use `var_get()` to define parameters for download[cite: 5].
+[cite_start]#' @param vars Character vector of one or more variables to download and process[cite: 6].
 #' @param years Character vector of years or periods. For Historical: use "1970-2000" 
 #'        or "historical". For Future: use "2021-2040", "2041-2060", "2061-2080", "2081-2100".
 #' @param months Numeric vector (1-12) specifying which months to download. Only applies
@@ -56,15 +54,15 @@
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+[cite_start]#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables[cite: 8].
+[cite_start]#' If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values[cite: 9].
 #'
 #' @examples
 #' \dontrun{
-#' processed <- var_get(country= "Italy", crs=3035) %>% 
-#' worldclim(vars=c("tmin", "bio1"), years="1970-2000")
+#' processed <- var_get(country = "Italy", crs = 3035) %>% 
+#'   worldclim(vars = c("tmin", "bio1"), years = "1970-2000")
 #'   }
 #' @export
-
 worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL, 
                       ssp = NULL, ...) {
   

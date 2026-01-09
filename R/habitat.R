@@ -6,81 +6,70 @@
 #' IUCN Global Habitat Classification Fractions dataset (Jung et al., 2020).
 #' The data is available at Level 1 (broad) and Level 2 (detailed) classifications.
 #'
-#' Available variables (Level 1):
+#' @details
+#' \strong{Available variables} (working synonyms in parentheses):
 #'
-#' 1 - "100_Forest"
+#' \strong{Level 1 (Broad Categories)}
+#' \itemize{
+#'   \item "100_Forest" ([Fraction]) ("forest", "100")
+#'   \item "200_Savanna" ([Fraction]) ("savanna", "200")
+#'   \item "300_Shrubland" ([Fraction]) ("shrubland", "300")
+#'   \item "400_Grassland" ([Fraction]) ("grassland", "400")
+#'   \item "500_Wetlands inland" ([Fraction]) ("wetlands inland", "wetlands", "inland wetlands", "500")
+#'   \item "600_Rocky Areas" ([Fraction]) ("rocky areas", "rocky", "600")
+#'   \item "800_Desert" ([Fraction]) ("desert", "800")
+#'   \item "900_Marine - Neritic" ([Fraction]) ("marine neritic", "neritic", "900")
+#'   \item "1000_Marine - Oceanic" ([Fraction]) ("marine oceanic", "oceanic", "1000")
+#'   \item "1100_Marine - Deep Ocean Floor" ([Fraction]) ("marine deep ocean floor", "deep ocean floor", "1100")
+#'   \item "1200_Marine - Intertidal" ([Fraction]) ("marine intertidal", "intertidal", "1200")
+#'   \item "1400_Artificial - Terrestrial" ([Fraction]) ("artificial terrestrial", "artificial", "terrestrial artificial", "1400")
+#' }
 #'
-#' 2 - "200_Savanna"
+#' \strong{Level 2 (Detailed Categories - Selection)}
+#' \itemize{
+#'   \item "101_Forest - Boreal" ([Fraction]) ("forest boreal", "boreal forest", "101")
+#'   \item "104_Forest - Temperate" ([Fraction]) ("forest temperate", "temperate forest", "104")
+#'   \item "105_Forest - Subtropical-tropical dry" ([Fraction]) ("dry forest", "tropical dry forest", "105")
+#'   \item "106_Forest - Subtropical-tropical moist lowland" ([Fraction]) ("moist lowland forest", "tropical moist forest", "106")
+#'   \item "107_Forest - Subtropical-tropical mangrove vegetation" ([Fraction]) ("mangrove", "mangroves", "107")
+#'   \item "201_Savanna - Dry" ([Fraction]) ("dry savanna", "201")
+#'   \item "303_Shrubland - Boreal" ([Fraction]) ("boreal shrubland", "303")
+#'   \item "308_Shrubland - Mediterranean-type" ([Fraction]) ("mediterranean shrubland", "308")
+#'   \item "401_Grassland - Tundra" ([Fraction]) ("tundra", "401")
+#'   \item "1401_Arable Land" ([Fraction]) ("arable land", "cropland", "1401")
+#'   \item "1405_Urban Areas" ([Fraction]) ("urban areas", "urban", "city", "1405")
+#'   \item (See function code for full list of Level 2 variables)
+#' }
 #'
-#' 3 - "300_Shrubland"
-#'
-#' 4 - "400_Grassland"
-#'
-#' 5 - "500_Wetlands inland"
-#'
-#' 6 - "600_Rocky Areas"
-#'
-#' 7 - "800_Desert"
-#'
-#' 8 - "900_Marine - Neritic"
-#'
-#' 9 - "1000_Marine - Oceanic"
-#'
-#' 10 - "1100_Marine - Deep Ocean Floor"
-#'
-#' 11 - "1200_Marine - Intertidal"
-#'
-#' 12 - "1400_Artificial - Terrestrial"
-#'
-#' Available variables (Level 2 - Selection):
-#'
-#' Forests: "101_Forest - Boreal", "104_Forest - Temperate", "105_Forest - Subtropical-tropical dry", "106_Forest - Subtropical-tropical moist lowland", "107_Forest - Subtropical-tropical mangrove vegetation", "108_Forest - Subtropical-tropical swamp"
-#'
-#' Savannas: "201_Savanna - Dry", "202_Savanna - Moist"
-#'
-#' Shrublands: "303_Shrubland - Boreal", "304_Shrubland - Temperate", "305_Shrubland - Subtropical-tropical dry", "306_Shrubland - Subtropical-tropical moist", "308_Shrubland - Mediterranean-type"
-#'
-#' Grasslands: "401_Grassland - Tundra", "404_Grassland - Temperate", "405_Grassland - Subtropical-tropical dry", "1402_Pastureland"
-#'
-#' Wetlands: "501_Wetlands inland - Permanent rivers-streams-creeks", "504_Wetlands inland - Bogs, marshes, swamps, fens, peatlands", "505_Wetlands inland - Permanent freshwater lakes"
-#'
-#' Deserts: "801_Desert - Hot", "802_Desert - Temperate", "803_Desert - Cold"
-#'
-#' Artificial: "1401_Arable Land", "1403_Plantations", "1405_Urban Areas"
-#'
-#' (Note: Synonyms are supported, e.g., "Forest", "Boreal Forest", "Mangrove", "Urban")
-#'
-#' Citation:
-#'
-#' Jung, M., Dahal, P.R., Butchart, S.H.M., Donald, P.F., De Lamo, X., Lesiv, M., Kapos, V., Rondinini, C., Visconti, P., (2020).
-#' "A global map of terrestrial habitat types."
-#' Sci. Data 7, 256.
-#' https://doi.org/10.1038/s41597-020-00599-8
+#' \strong{Citation:}\cr
+#' Jung, M., Dahal, P.R., Butchart, S.H.M., Donald, P.F., De Lamo, X., Lesiv, M., Kapos, V., Rondinini, C., Visconti, P. (2020).
+#' "A global map of terrestrial habitat types." Scientific Data 7, 256.
+#' \doi{10.1038/s41597-020-00599-8}
 #'
 #' Note: Please cite original sources of primary datasets where appropriate.
-#'
+#' 
 #' @param x The output from `var_get()` defining the area or locations for extraction, 
-#' the reference system, and the buffer. 
+#' the reference system, and the buffer.
 #' Leave this empty and use `var_get()` to define parameters for download.
 #' @param vars Character vector of one or more variables to download and process.
 #' @param level Integer. The classification level to download. 1 (broad) or 2 (detailed). Defaults to 1.
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+#' If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
 #' @examples
 #' \dontrun{
-#' # Level 1 extraction
-#' processed <- var_get(country= "Italy", crs=3035) %>% 
-#'   habitat(vars=c("Forest", "Artificial"), level = 1)
+#' # Example 1: Level 1 extraction (Forest and Artificial)
+#' processed <- var_get(country = "Italy", crs = 3035) %>% 
+#'   habitat(vars = c("Forest", "Artificial"), level = 1)
 #'
-#' # Level 2 extraction
-#' processed_l2 <- var_get(country= "Brazil", crs=3035) %>% 
-#'   habitat(vars=c("Mangrove", "Tropical moist lowland forest"), level = 2)
+#' # Example 2: Level 2 extraction (Specific biomes)
+#' processed_l2 <- var_get(country = "Brazil", crs = 3035) %>% 
+#'   habitat(vars = c("Mangrove", "Tropical moist lowland forest"), level = 2)
 #'   }
 #' @export
-
 habitat <- function(x, vars, level = 1, ...) {
   
   # --------------------------------------------------------------------
