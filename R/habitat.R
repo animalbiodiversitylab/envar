@@ -292,7 +292,7 @@ habitat <- function(x, vars, level = 1, ...) {
     # Check if the specific TIF exists; if not, check/download zip and extract
     if (!file.exists(dest_file)) {
       temp_dir <- dirname(dest_file)
-      zip_dest <- file.path(temp_dir, basename(url))
+      zip_dest <- file.path(temp_dir, zip_name)  # Use zip_name, not basename(url) which includes ?download=1
       
       # 1. Ensure Zip exists
       if (!file.exists(zip_dest)) {
@@ -317,6 +317,14 @@ habitat <- function(x, vars, level = 1, ...) {
         # But for now strict mapping is safer.
         cli::cli_alert_warning("Could not extract {.val {internal_file}} from zip.")
         return(NULL)
+      }
+      
+      # Rename extracted file to dest_file
+      # junkpaths=TRUE extracts with original filename, need to rename to user_name.tif
+      extracted_filename <- basename(internal_file)
+      extracted_path <- file.path(temp_dir, extracted_filename)
+      if (file.exists(extracted_path) && extracted_path != dest_file) {
+        file.rename(extracted_path, dest_file)
       }
     }
     

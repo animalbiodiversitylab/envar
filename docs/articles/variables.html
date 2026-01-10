@@ -5,6 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="description" content="envar">
 <title>Variables • envar</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
@@ -12,14 +13,21 @@
 <link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png">
 <link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png">
 <link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png">
-<script src="../katex-auto.js"></script><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><link href="../deps/KaTex-0.16.10/katex.min.css" rel="stylesheet">
-<script src="../deps/KaTex-0.16.10/katex.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
+<script src="../deps/KaTex-0.16.10/katex.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
+<!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js" integrity="sha512-7O5pXpc0oCRrxk8RUfDYFgn0nO1t+jLuIOQdOMRp4APB7uZ4vSjspzp5y6YDtDs4VzUSTbWzBFZ/LKJhnyFOKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><link href="../extra.css" rel="stylesheet">
 <meta property="og:title" content="Variables">
-<!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-70466840-4"></script><script>
+<meta property="og:description" content="envar">
+<meta property="og:image" content="https://envarpackage.netlify.app/logo.png">
+<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+<![endif]--><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=UA-70466840-4"></script><script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
@@ -29,41 +37,47 @@
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
+    
 
-
-    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
-
+    <nav class="navbar fixed-top navbar-dark navbar-expand-lg bg-primary" data-bs-theme="dark"><div class="container">
+    
     <a class="navbar-brand me-2" href="../index.html">envar</a>
 
     <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.1</small>
 
-
+    
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
-<li class="nav-item"><a class="nav-link" href="../articles/intro.html">Get started</a></li>
-<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
-<li class="active nav-item dropdown">
-  <button class="nav-link dropdown-toggle" type="button" id="dropdown-tutorials" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Tutorials</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-tutorials">
-<li><a class="dropdown-item" href="../articles/package_overview.html">Package overview</a></li>
-    <li><a class="dropdown-item" href="../articles/variables.html">Available variables</a></li>
-    <li><a class="dropdown-item" href="../articles/sdm.html">Species distribution models</a></li>
-  </ul>
+<li class="nav-item">
+  <a class="nav-link" href="../articles/intro.html">Get started</a>
 </li>
-<li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
+<li class="nav-item">
+  <a class="nav-link" href="../reference/index.html">Reference</a>
+</li>
+<li class="active nav-item dropdown">
+  <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-tutorials">Tutorials</a>
+  <div class="dropdown-menu" aria-labelledby="dropdown-tutorials">
+    <a class="dropdown-item" href="../articles/package_overview.html">Package overview</a>
+    <a class="dropdown-item" href="../articles/variables.html">Available variables</a>
+    <a class="dropdown-item" href="../articles/sdm.html">Species distribution models</a>
+  </div>
+</li>
+<li class="nav-item">
+  <a class="nav-link" href="../news/index.html">Changelog</a>
+</li>
       </ul>
-<ul class="navbar-nav">
-<li class="nav-item"><form class="form-inline" role="search">
- <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
-</form></li>
-      </ul>
+<form class="form-inline my-2 my-lg-0" role="search">
+        <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
+</form>
+
+      <ul class="navbar-nav"></ul>
 </div>
 
-
+    
   </div>
 </nav><div class="container template-article">
 
@@ -75,7 +89,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>Variables</h1>
             
       
-
+      
       <div class="d-none name"><code>variables.Rmd</code></div>
     </div>
 
@@ -94,13 +108,18 @@ For each source, the available variables are listed alongside synonyms
 that can be used inside the vars argument interchangeably (except for
 the chelsa and worldclim functions that do not allow the use of synonyms
 and the exact codes must be used).</p>
-<p>The first step is to load the library. When executing this command,
-other five packages (<code>dplyr</code>, <code>terra</code>,
-<code>sf</code>, <code>corrplot</code>, <code>usdm</code>) will be
-automatically loaded to ensure the full functionality of the
-package.</p>
+</div>
+<div class="section level2">
+<h2 id="load-package">Load package<a class="anchor" aria-label="anchor" href="#load-package"></a>
+</h2>
+<p>When executing this command, another package (<code>dplyr</code>)
+will be automatically loaded to ensure the full functionality of the
+package. However, other packages are often required for plotting and
+further analyses and we also load them here for later use.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://envarpackage.netlify.app">envar</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://envarpackage.netlify.app">envar</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="climate">Climate<a class="anchor" aria-label="anchor" href="#climate"></a>
@@ -118,7 +137,7 @@ one code-name for each variable and no working synonyms, differently
 from most other functions of the package, and in parentheses is the
 meaning. Climatologies are available for 30-year periods: 1981-2010,
 2011-2040, 2041-2070, 2071-2100.</p>
-<p><strong>Available variables</strong></p>
+<p><strong>Available variables (67 total)</strong></p>
 <p>Monthly time-series (Available years: 1980 - 2018):</p>
 <ul>
 <li>1 - <strong>pr</strong> (Precipitation amount; mass per unit
@@ -298,7 +317,7 @@ download will not work.</p>
 <code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, years <span class="op">=</span> <span class="fl">2018</span>, months <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="variables_files/figure-html/unnamed-chunk-5-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
@@ -309,31 +328,23 @@ WorldClim climate dataset <span class="citation">(Fick &amp; Hijmans
 2017)</span>. Each variable corresponds to a global raster representing
 climate variables at approximately 1-km resolution. It supports both
 Historical (v2.1, 1970-2000) and Future (CMIP6) data.</p>
-<p><strong>Available variables:</strong></p>
+<p><strong>Available variables (8 total)</strong></p>
 <p>Temperature:</p>
 <ul>
-<li>
-<strong>tmin</strong> - min temp</li>
-<li>
-<strong>tmax</strong> - max temp</li>
-<li>
-<strong>tavg</strong> - average temp</li>
+<li>1 - <strong>tmin</strong> - min temp</li>
+<li>2 - <strong>tmax</strong> - max temp</li>
+<li>3 - <strong>tavg</strong> - average temp</li>
 </ul>
 <p>Precipitation:</p>
 <ul>
-<li>
-<strong>prec</strong> - precipitation, pr</li>
+<li>4 - <strong>prec</strong> - precipitation, pr</li>
 </ul>
 <p>Physical:</p>
 <ul>
-<li>
-<strong>srad</strong> - solar radiation</li>
-<li>
-<strong>wind</strong> - wind speed</li>
-<li>
-<strong>vapr</strong> - water vapor</li>
-<li>
-<strong>elev</strong> - elevation</li>
+<li>5 - <strong>srad</strong> - solar radiation</li>
+<li>6 - <strong>wind</strong> - wind speed</li>
+<li>7 - <strong>vapr</strong> - water vapor</li>
+<li>8 - <strong>elev</strong> - elevation</li>
 </ul>
 <p>Bioclimatic:</p>
 <ul>
@@ -364,10 +375,9 @@ Historical (v2.1, 1970-2000) and Future (CMIP6) data.</p>
 High-resolution (1 km) Köppen-Geiger maps dataset <span class="citation">(Beck <em>et al.</em> 2023)</span>. Each variable
 corresponds to a global GeoTIFF representing climate classification
 zones based on historical data or future CMIP6 projections.</p>
-<p><strong>Available variables:</strong></p>
+<p><strong>Available variables (1 total)</strong></p>
 <ul>
-<li>
-<strong>zones</strong> - koppengeiger, climate, climatezones,
+<li>1 - <strong>zones</strong> - koppengeiger, climate, climatezones,
 koppen, koppen geiger</li>
 </ul>
 <p>Time periods (“years” argument):</p>
@@ -397,7 +407,7 @@ koppen, koppen geiger</li>
 <code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/climatezones.html">climatezones</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="variables_files/figure-html/unnamed-chunk-8-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
@@ -407,78 +417,62 @@ koppen, koppen geiger</li>
 EarthEnv Global Cloud Cover dataset <span class="citation">(Wilson &amp;
 Jetz 2016)</span>. Each variable corresponds to a global Cloud-Optimized
 GeoTIFF (COG) representing cloud cover dynamics.</p>
-<p><strong>Available variables:</strong></p>
+<p><strong>Available variables (21 total)</strong></p>
 <p>Metrics:</p>
 <ul>
-<li>
-<strong>MODCF_CloudForestPrediction</strong> - cloud forest
+<li>1 - <strong>MODCF_CloudForestPrediction</strong> - cloud forest
 prediction, cloud forest, cfp</li>
-<li>
-<strong>MODCF_interannualSD</strong> - inter-annual variability,
+<li>2 - <strong>MODCF_interannualSD</strong> - inter-annual variability,
 interannual sd, interannual variability</li>
-<li>
-<strong>MODCF_intraannualSD</strong> - intra-annual variability,
+<li>3 - <strong>MODCF_intraannualSD</strong> - intra-annual variability,
 intraannual sd, intraannual variability</li>
-<li>
-<strong>MODCF_meanannual</strong> - mean annual, annual mean,
+<li>4 - <strong>MODCF_meanannual</strong> - mean annual, annual mean,
 annual</li>
-<li>
-<strong>MODCF_spatialSD_1deg</strong> - spatial variability, spatial
-sd, spatial sd 1deg</li>
+<li>5 - <strong>MODCF_spatialSD_1deg</strong> - spatial variability,
+spatial sd, spatial sd 1deg</li>
 </ul>
 <p>Seasonality:</p>
 <ul>
-<li>
-<strong>MODCF_seasonality_concentration</strong> - seasonality
+<li>6 - <strong>MODCF_seasonality_concentration</strong> - seasonality
 concentration, concentration</li>
-<li>
-<strong>MODCF_seasonality_rgb</strong> - seasonality rgb, rgb</li>
-<li>
-<strong>MODCF_seasonality_theta</strong> - seasonality theta,
+<li>7 - <strong>MODCF_seasonality_rgb</strong> - seasonality rgb,
+rgb</li>
+<li>8 - <strong>MODCF_seasonality_theta</strong> - seasonality theta,
 theta</li>
-<li>
-<strong>MODCF_seasonality_visct</strong> - seasonality single band,
-seasonality visct, seasonality color</li>
+<li>9 - <strong>MODCF_seasonality_visct</strong> - seasonality single
+band, seasonality visct, seasonality color</li>
 </ul>
 <p>Monthly means:</p>
 <ul>
-<li>
-<strong>MODCF_monthlymean_01</strong> - january mean, january,
+<li>10 - <strong>MODCF_monthlymean_01</strong> - january mean, january,
 jan</li>
-<li>
-<strong>MODCF_monthlymean_02</strong> - february mean, february,
-feb</li>
-<li>
-<strong>MODCF_monthlymean_03</strong> - march mean, march, mar</li>
-<li>
-<strong>MODCF_monthlymean_04</strong> - april mean, april, apr</li>
-<li>
-<strong>MODCF_monthlymean_05</strong> - may mean, may</li>
-<li>
-<strong>MODCF_monthlymean_06</strong> - june mean, june, jun</li>
-<li>
-<strong>MODCF_monthlymean_07</strong> - july mean, july, jul</li>
-<li>
-<strong>MODCF_monthlymean_08</strong> - august mean, august,
+<li>11 - <strong>MODCF_monthlymean_02</strong> - february mean,
+february, feb</li>
+<li>12 - <strong>MODCF_monthlymean_03</strong> - march mean, march,
+mar</li>
+<li>13 - <strong>MODCF_monthlymean_04</strong> - april mean, april,
+apr</li>
+<li>14 - <strong>MODCF_monthlymean_05</strong> - may mean, may</li>
+<li>15 - <strong>MODCF_monthlymean_06</strong> - june mean, june,
+jun</li>
+<li>16 - <strong>MODCF_monthlymean_07</strong> - july mean, july,
+jul</li>
+<li>17 - <strong>MODCF_monthlymean_08</strong> - august mean, august,
 aug</li>
-<li>
-<strong>MODCF_monthlymean_09</strong> - september mean, september,
-sep</li>
-<li>
-<strong>MODCF_monthlymean_10</strong> - october mean, october,
+<li>18 - <strong>MODCF_monthlymean_09</strong> - september mean,
+september, sep</li>
+<li>19 - <strong>MODCF_monthlymean_10</strong> - october mean, october,
 oct</li>
-<li>
-<strong>MODCF_monthlymean_11</strong> - november mean, november,
-nov</li>
-<li>
-<strong>MODCF_monthlymean_12</strong> - december mean, december,
-dec</li>
+<li>20 - <strong>MODCF_monthlymean_11</strong> - november mean,
+november, nov</li>
+<li>21 - <strong>MODCF_monthlymean_12</strong> - december mean,
+december, dec</li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/cloudcover.html">cloudcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"mean annual"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="variables_files/figure-html/unnamed-chunk-10-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
@@ -489,95 +483,39 @@ Global Aridity Index and ET0 Database v3 <span class="citation">(Zomer
 <em>et al.</em> 2022)</span>. Each variable corresponds to a global
 raster representing aridity index or potential evapotranspiration
 values.</p>
-<p><strong>Available variables:</strong></p>
+<p><strong>Available variables (27 total)</strong></p>
 <p>Annual variables:</p>
 <ul>
-<li>
-<strong>ai_v3_yr.tif</strong> - aridity index annual, ai annual,
+<li>1 - <strong>ai_v3_yr.tif</strong> - aridity index annual, ai annual,
 aridity annual, ai year</li>
-<li>
-<strong>et0_v3_yr.tif</strong> - et0 annual, potential
+<li>2 - <strong>et0_v3_yr.tif</strong> - et0 annual, potential
 evapotranspiration annual, evapotranspiration annual, et0 year</li>
-<li>
-<strong>et0_v3_yr_sd.tif</strong> - et0 standard deviation, et0 sd,
-et0 variability, et0 annual sd</li>
+<li>3 - <strong>et0_v3_yr_sd.tif</strong> - et0 standard deviation, et0
+sd, et0 variability, et0 annual sd</li>
 </ul>
 <p>Monthly Aridity Index (ai_v3_01.tif to ai_v3_12.tif):</p>
 <ul>
-<li>
-<strong>ai_v3_01.tif</strong> - aridity index january, ai january,
-ai jan, ai 1</li>
-<li>
-<strong>ai_v3_02.tif</strong> - aridity index february, ai february,
-ai feb, ai 2</li>
-<li>… (continues for all 12 months)</li>
+<li>4 - <strong>ai_v3_01.tif</strong> - aridity index january, ai
+january, ai jan, ai 1</li>
+<li>5 - <strong>ai_v3_02.tif</strong> - aridity index february, ai
+february, ai feb, ai 2</li>
+<li>6-15 - … (continues for all 12 months)</li>
 </ul>
 <p>Monthly ET0 (et0_v3_01.tif to et0_v3_12.tif):</p>
 <ul>
-<li>
-<strong>et0_v3_01.tif</strong> - et0 january, potential
+<li>16 - <strong>et0_v3_01.tif</strong> - et0 january, potential
 evapotranspiration january, et0 jan, et0 1</li>
-<li>
-<strong>et0_v3_02.tif</strong> - et0 february, potential
+<li>17 - <strong>et0_v3_02.tif</strong> - et0 february, potential
 evapotranspiration february, et0 feb, et0 2</li>
-<li>… (continues for all 12 months)</li>
+<li>18-27 - … (continues for all 12 months)</li>
 </ul>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/aridity.html">aridity</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"aridity index annual"</span>, <span class="st">"et0 january"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="variables_files/figure-html/unnamed-chunk-12-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
-</div>
-<div class="section level2">
-<h2 id="topography">Topography<a class="anchor" aria-label="anchor" href="#topography"></a>
-</h2>
-<p>This function downloads, processes, and extracts variables from the
-EarthEnv Topography dataset <span class="citation">(Amatulli <em>et
-al.</em> 2018)</span>. This dataset provides global, cross-scale
-topographic variables suitable for biodiversity and ecosystem
-modeling.</p>
-<p><strong>Available variables:</strong></p>
-<ul>
-<li>
-<strong>elevation</strong> - dem, height, alt, altitude</li>
-<li>
-<strong>slope</strong> - slope</li>
-<li>
-<strong>aspect</strong> - aspect</li>
-<li>
-<strong>roughness</strong> - rough</li>
-<li>
-<strong>tri</strong> - terrain ruggedness index, ruggedness</li>
-<li>
-<strong>tpi</strong> - topographic position index, position</li>
-<li>
-<strong>vrm</strong> - vector ruggedness measure</li>
-<li>
-<strong>pcurv</strong> - profile curvature, profile curve</li>
-<li>
-<strong>tcurv</strong> - tangential curvature, tangential curve</li>
-<li>
-<strong>eastness</strong> - east</li>
-<li>
-<strong>northness</strong> - north</li>
-</ul>
-<p>Additional parameters:</p>
-<ul>
-<li>
-<strong>algorithm</strong> - Aggregation method/algorithm to use.
-Options: “md” (median, default), “mn” (mean), “min”, “max”, “sd”.</li>
-<li>
-<strong>topo_source</strong> - Data source. Options: “GMTED”
-(default) or “SRTM”.</li>
-</ul>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/topography.html">topography</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"elevation"</span>, <span class="st">"slope"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<p><img src="variables_files/figure-html/unnamed-chunk-14-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="land-cover">Land cover<a class="anchor" aria-label="anchor" href="#land-cover"></a>
@@ -589,52 +527,40 @@ Options: “md” (median, default), “mn” (mean), “min”, “max”, “s
 EarthEnv Consensus Land Cover dataset <span class="citation">(Tuanmu
 &amp; Jetz 2014)</span>. Each variable corresponds to a global raster
 representing a specific land cover class at 1 km resolution.</p>
-<p><strong>Available variables:</strong></p>
+<p><strong>Available variables (12 total)</strong></p>
 <ul>
-<li>
-<strong>consensus_full_class_1</strong> - evergreen deciduous
+<li>1 - <strong>consensus_full_class_1</strong> - evergreen deciduous
 needleleaf trees, needleleaf trees, needleleaf, conifer</li>
-<li>
-<strong>consensus_full_class_2</strong> - evergreen broadleaf trees,
-evergreen broadleaf, broadleaf evergreen</li>
-<li>
-<strong>consensus_full_class_3</strong> - deciduous broadleaf trees,
-deciduous broadleaf, broadleaf deciduous</li>
-<li>
-<strong>consensus_full_class_4</strong> - mixed other trees, mixed
-trees, other trees, mixed forest</li>
-<li>
-<strong>consensus_full_class_5</strong> - shrubs, shrubland,
+<li>2 - <strong>consensus_full_class_2</strong> - evergreen broadleaf
+trees, evergreen broadleaf, broadleaf evergreen</li>
+<li>3 - <strong>consensus_full_class_3</strong> - deciduous broadleaf
+trees, deciduous broadleaf, broadleaf deciduous</li>
+<li>4 - <strong>consensus_full_class_4</strong> - mixed other trees,
+mixed trees, other trees, mixed forest</li>
+<li>5 - <strong>consensus_full_class_5</strong> - shrubs, shrubland,
 shrub</li>
-<li>
-<strong>consensus_full_class_6</strong> - herbaceous vegetation,
+<li>6 - <strong>consensus_full_class_6</strong> - herbaceous vegetation,
 herbaceous, grassland, grass, herbs</li>
-<li>
-<strong>consensus_full_class_7</strong> - cultivated and managed
+<li>7 - <strong>consensus_full_class_7</strong> - cultivated and managed
 vegetation, cultivated, managed vegetation, agriculture, crops,
 cropland</li>
-<li>
-<strong>consensus_full_class_8</strong> - regularly flooded
+<li>8 - <strong>consensus_full_class_8</strong> - regularly flooded
 vegetation, flooded vegetation, flooded, wetland</li>
-<li>
-<strong>consensus_full_class_9</strong> - urban built up, urban,
+<li>9 - <strong>consensus_full_class_9</strong> - urban built up, urban,
 built up, built-up, artificial surface</li>
-<li>
-<strong>consensus_full_class_10</strong> - snow ice, snow, ice,
+<li>10 - <strong>consensus_full_class_10</strong> - snow ice, snow, ice,
 glacier, permafrost</li>
-<li>
-<strong>consensus_full_class_11</strong> - barren, barren land, bare
-ground, bare</li>
-<li>
-<strong>consensus_full_class_12</strong> - open water, water, water
-bodies</li>
+<li>11 - <strong>consensus_full_class_11</strong> - barren, barren land,
+bare ground, bare</li>
+<li>12 - <strong>consensus_full_class_12</strong> - open water, water,
+water bodies</li>
 </ul>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/earthenvlandcover.html">earthenvlandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"snow ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<p><img src="variables_files/figure-html/unnamed-chunk-16-1.png" width="480" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="variables_files/figure-html/unnamed-chunk-14-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="esa-land-cover">ESA land cover<a class="anchor" aria-label="anchor" href="#esa-land-cover"></a>
@@ -644,56 +570,186 @@ Global 1 km Land Cover dataset <span class="citation">(Lo Parrino <em>et
 al.</em> 2025)</span>. Each variable corresponds to a global raster
 representing a specific land cover class or diversity index derived from
 very high-resolution imagery.</p>
-<p><strong>Available variables:</strong></p>
+<p><strong>Available variables (15 total)</strong></p>
 <ul>
-<li>
-<strong>wetland</strong> - wetlands, swamp, marsh, bog, fen</li>
-<li>
-<strong>bare</strong> - bare ground, bare soil, desert,
+<li>1 - <strong>wetland</strong> - wetlands, swamp, marsh, bog, fen</li>
+<li>2 - <strong>bare</strong> - bare ground, bare soil, desert,
 unvegetated</li>
-<li>
-<strong>built</strong> - built area, built up, urban, artificial,
-impervious</li>
-<li>
-<strong>cropland</strong> - agriculture, agricultural, crop, crops,
-farming</li>
-<li>
-<strong>grass</strong> - grassland, grass land, meadow, pasture,
+<li>3 - <strong>built</strong> - built area, built up, urban,
+artificial, impervious</li>
+<li>4 - <strong>cropland</strong> - agriculture, agricultural, crop,
+crops, farming</li>
+<li>5 - <strong>grass</strong> - grassland, grass land, meadow, pasture,
 prairie</li>
-<li>
-<strong>ice</strong> - snow, snow and ice, glacier, ice,
+<li>6 - <strong>ice</strong> - snow, snow and ice, glacier, ice,
 permafrost</li>
-<li>
-<strong>land_perc</strong> - percentage of land, land percentage,
-land cover fraction, land fraction</li>
-<li>
-<strong>mangrove</strong> - mangroves</li>
-<li>
-<strong>moss</strong> - mosses, lichen, lichens, moss and
+<li>7 - <strong>land_perc</strong> - percentage of land, land
+percentage, land cover fraction, land fraction</li>
+<li>8 - <strong>mangrove</strong> - mangroves</li>
+<li>9 - <strong>moss</strong> - mosses, lichen, lichens, moss and
 lichen</li>
-<li>
-<strong>shrub</strong> - shrubland, scrub, bush, thicket</li>
-<li>
-<strong>tree</strong> - trees, forest, woodland, canopy, canopy
+<li>10 - <strong>shrub</strong> - shrubland, scrub, bush, thicket</li>
+<li>11 - <strong>tree</strong> - trees, forest, woodland, canopy, canopy
 cover</li>
-<li>
-<strong>water</strong> - surface water, lake, river, freshwater</li>
-<li>
-<strong>simpson</strong> - simpson index, diversity simpson, simpson
-diversity</li>
-<li>
-<strong>shannon</strong> - shannon index, entropy, shannon entropy,
-shannon diversity</li>
-<li>
-<strong>evenness</strong> - evenness index, pielou, pielou evenness,
-species evenness</li>
+<li>12 - <strong>water</strong> - surface water, lake, river,
+freshwater</li>
+<li>13 - <strong>simpson</strong> - simpson index, diversity simpson,
+simpson diversity</li>
+<li>14 - <strong>shannon</strong> - shannon index, entropy, shannon
+entropy, shannon diversity</li>
+<li>15 - <strong>evenness</strong> - evenness index, pielou, pielou
+evenness, species evenness</li>
 </ul>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tree"</span>, <span class="st">"water"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="variables_files/figure-html/unnamed-chunk-16-1.png" width="480" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="hybrid-land-cover">Hybrid land cover<a class="anchor" aria-label="anchor" href="#hybrid-land-cover"></a>
+</h3>
+<p>This function downloads, processes, and extracts land cover variables
+from the Hybrid Global Annual 1-km IGBP Land Cover Maps dataset <span class="citation">(Luo <em>et al.</em> 2024)</span>. The data covers the
+period from 2000 to 2020.</p>
+<p><strong>Available variables (1 total)</strong></p>
+<ul>
+<li>1 - <strong>landcover</strong> - cover, land, lc, igbp, hybrid</li>
+</ul>
+<p>Note: If the <code>vars</code> argument is left empty, the function
+will default to downloading the land cover map. You must specify the
+<code>year</code> argument (integer between 2000 and 2020).</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/hybridlandcover.html">hybridlandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="st">"landcover"</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p><img src="variables_files/figure-html/unnamed-chunk-18-1.png" width="480" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="geosos-land-cover">GeoSOS land cover<a class="anchor" aria-label="anchor" href="#geosos-land-cover"></a>
+</h3>
+<p>This function downloads, processes, and extracts variables from the
+Global Land-Use and Land-Cover Change Product (2010-2100) <span class="citation">(Li <em>et al.</em> 2017)</span>. The dataset provides
+global 1 km resolution rasters based on different IPCC scenarios.</p>
+<p>Land cover classification legend:</p>
+<ul>
+<li>1: Water</li>
+<li>2: Forest</li>
+<li>3: Grassland</li>
+<li>4: Farmland</li>
+<li>5: Urban</li>
+<li>6: Barren</li>
+</ul>
+<p><strong>Available variables (1 total)</strong></p>
+<ul>
+<li>1 - <strong>landcover</strong> - lc, cover, land cover, land use,
+lulc, classes</li>
+</ul>
+<p>Available scenarios (for years &gt; 2010; 2010 is from MODIS baseline
+landcover):</p>
+<ul>
+<li>A1B</li>
+<li>A2</li>
+<li>B1</li>
+<li>B2</li>
+</ul>
+<p>Available years:</p>
+<ul>
+<li>2010</li>
+<li>2050</li>
+<li>2100</li>
+</ul>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/geososlandcover.html">geososlandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="st">"landcover"</span>, scenario <span class="op">=</span> <span class="st">"A1B"</span>, year <span class="op">=</span> <span class="fl">2050</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="variables_files/figure-html/unnamed-chunk-20-1.png" width="480" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="pft-land-cover">PFT land cover<a class="anchor" aria-label="anchor" href="#pft-land-cover"></a>
+</h3>
+<p>This function downloads, processes, and extracts land cover variables
+from the Global 7-land-types LULC projection dataset based on Plant
+Functional Types (PFT) with a 1-km resolution under socio-climatic
+scenarios <span class="citation">(Chen <em>et al.</em>
+2022b)</span>.</p>
+<p><strong>Available variables (1 total)</strong></p>
+<ul>
+<li>1 - <strong>landcover</strong> - cover, land, lulc, pft,
+projection</li>
+</ul>
+<p>Note: If the <code>vars</code> argument is left empty, the function
+will default to downloading the land cover map.</p>
+<p>Required arguments:</p>
+<p><code>year</code>: Integer. Available years: 2020 to 2100 in 5-year
+intervals (2020, 2025, 2030, …, 2100).</p>
+<p><code>ssp</code>: Integer or character. The SSP-RCP scenario code.
+Available values:</p>
+<ul>
+<li>119 (SSP1-RCP1.9)</li>
+<li>126 (SSP1-RCP2.6)</li>
+<li>245 (SSP2-RCP4.5)</li>
+<li>370 (SSP3-RCP7.0)</li>
+<li>434 (SSP4-RCP3.4)</li>
+<li>460 (SSP4-RCP6.0)</li>
+<li>534 (SSP5-RCP3.4)</li>
+<li>585 (SSP5-RCP8.5)</li>
+</ul>
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/pftlandcover.html">pftlandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="st">"landcover"</span>, year <span class="op">=</span> <span class="fl">2050</span>, ssp <span class="op">=</span> <span class="fl">585</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="variables_files/figure-html/unnamed-chunk-22-1.png" width="480" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="gcam-land-cover">GCAM land cover<a class="anchor" aria-label="anchor" href="#gcam-land-cover"></a>
+</h3>
+<p>This function downloads, processes, and extracts simulated global
+land use and land cover (LULC) data for the period 2020-2100 <span class="citation">(Gao <em>et al.</em> 2025)</span>.</p>
+<p>The data represents 1 km resolution LULC maps with the following
+integer codes:</p>
+<ul>
+<li>1: Cropland</li>
+<li>2: Forest</li>
+<li>3: Grassland</li>
+<li>4: Urban</li>
+<li>5: Barren</li>
+<li>6: Water</li>
+</ul>
+<p><strong>Available variables (1 total)</strong></p>
+<ul>
+<li>1 - <strong>landcover</strong> - The specific map is determined by
+the <code>year</code> and <code>ssp</code> arguments</li>
+</ul>
+<p>Available years:</p>
+<ul>
+<li>2020</li>
+<li>2030</li>
+<li>2050</li>
+<li>2070</li>
+<li>2100</li>
+</ul>
+<p>Available SSPs (Shared Socioeconomic Pathways):</p>
+<ul>
+<li>126 (SSP1-2.6)</li>
+<li>245 (SSP2-4.5)</li>
+<li>370 (SSP3-7.0)</li>
+<li>434 (SSP4-3.4)</li>
+<li>585 (SSP5-8.5)</li>
+</ul>
+<p>Note: The original data is in World Mercator projection and will be
+automatically reprojected to the CRS defined in <code><a href="../reference/var_get.html">var_get()</a></code>
+(default: EPSG 4326).</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/gcamlandcover.html">gcamlandcover</a></span><span class="op">(</span>ssp <span class="op">=</span> <span class="fl">585</span>, year <span class="op">=</span> <span class="fl">2050</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="variables_files/figure-html/unnamed-chunk-24-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div class="section level2">
@@ -704,272 +760,261 @@ EarthEnv habitat heterogeneity dataset (1-km resolution) <span class="citation">
 corresponds to a global Cloud-Optimized GeoTIFF (COG) representing
 different metrics of habitat heterogeneity derived from remote sensing
 data.</p>
-<p><strong>Available variables:</strong></p>
+<p><strong>Available variables (14 total)</strong></p>
 <p>First-order statistics:</p>
 <ul>
-<li>
-<strong>cv</strong> - coefficient of variation, coeff of
+<li>1 - <strong>cv</strong> - coefficient of variation, coeff of
 variation</li>
-<li>
-<strong>evenness</strong> - even</li>
-<li>
-<strong>range</strong> - range</li>
-<li>
-<strong>shannon</strong> - shannon index, shannon entropy</li>
-<li>
-<strong>simpson</strong> - simpson index, simpson diversity</li>
-<li>
-<strong>std</strong> - standard deviation, std dev</li>
+<li>2 - <strong>evenness</strong> - even</li>
+<li>3 - <strong>range</strong> - range</li>
+<li>4 - <strong>shannon</strong> - shannon index, shannon entropy</li>
+<li>5 - <strong>simpson</strong> - simpson index, simpson diversity</li>
+<li>6 - <strong>std</strong> - standard deviation, std dev</li>
 </ul>
 <p>Second-order statistics (Texture metrics):</p>
 <ul>
-<li>
-<strong>Contrast</strong> - contrast</li>
-<li>
-<strong>Correlation</strong> - correlation, corr</li>
-<li>
-<strong>Dissimilarity</strong> - dissimilarity</li>
-<li>
-<strong>Entropy</strong> - entropy, texture entropy</li>
-<li>
-<strong>Homogeneity</strong> - homogeneity</li>
-<li>
-<strong>Maximum</strong> - maximum, max</li>
-<li>
-<strong>Uniformity</strong> - uniformity, uniform</li>
-<li>
-<strong>Variance</strong> - variance, var</li>
+<li>7 - <strong>Contrast</strong> - contrast</li>
+<li>8 - <strong>Correlation</strong> - correlation, corr</li>
+<li>9 - <strong>Dissimilarity</strong> - dissimilarity</li>
+<li>10 - <strong>Entropy</strong> - entropy, texture entropy</li>
+<li>11 - <strong>Homogeneity</strong> - homogeneity</li>
+<li>12 - <strong>Maximum</strong> - maximum, max</li>
+<li>13 - <strong>Uniformity</strong> - uniformity, uniform</li>
+<li>14 - <strong>Variance</strong> - variance, var</li>
 </ul>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/heterogeneity.html">heterogeneity</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"shannon"</span>, <span class="st">"cv"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<p><img src="variables_files/figure-html/unnamed-chunk-20-1.png" width="480" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="variables_files/figure-html/unnamed-chunk-26-1.png" width="480" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level2">
+<h2 id="habitats">Habitats<a class="anchor" aria-label="anchor" href="#habitats"></a>
+</h2>
+<p>This function downloads, processes, and extracts variables from the
+IUCN Global Habitat Classification Fractions dataset <span class="citation">(Jung <em>et al.</em> 2020)</span>. The data is
+available at Level 1 (broad) and Level 2 (detailed) classifications.</p>
+<p><strong>Available variables (Level 1 - 12 total)</strong></p>
+<ul>
+<li>1 - <strong>100_Forest</strong> - forest, 100</li>
+<li>2 - <strong>200_Savanna</strong> - savanna, 200</li>
+<li>3 - <strong>300_Shrubland</strong> - shrubland, 300</li>
+<li>4 - <strong>400_Grassland</strong> - grassland, 400</li>
+<li>5 - <strong>500_Wetlands inland</strong> - wetlands inland,
+wetlands, inland wetlands, 500</li>
+<li>6 - <strong>600_Rocky Areas</strong> - rocky areas, rocky, 600</li>
+<li>7 - <strong>800_Desert</strong> - desert, 800</li>
+<li>8 - <strong>900_Marine - Neritic</strong> - marine neritic, neritic,
+900</li>
+<li>9 - <strong>1000_Marine - Oceanic</strong> - marine oceanic,
+oceanic, 1000</li>
+<li>10 - <strong>1100_Marine - Deep Ocean Floor</strong> - marine deep
+ocean floor, deep ocean floor, 1100</li>
+<li>11 - <strong>1200_Marine - Intertidal</strong> - marine intertidal,
+intertidal, 1200</li>
+<li>12 - <strong>1400_Artificial - Terrestrial</strong> - artificial
+terrestrial, artificial, terrestrial artificial, 1400</li>
+</ul>
+<p><strong>Available variables (selection from Level 2 - check original
+paper for a more careful description and complete list)</strong></p>
+<p>Forests:</p>
+<ul>
+<li>1 - <strong>101_Forest - Boreal</strong> - forest boreal, boreal
+forest, 101</li>
+<li>2 - <strong>104_Forest - Temperate</strong> - forest temperate,
+temperate forest, 104</li>
+<li>3 - <strong>105_Forest - Subtropical-tropical dry</strong> - forest
+subtropical tropical dry, dry forest, tropical dry forest, 105</li>
+<li>4 - <strong>106_Forest - Subtropical-tropical moist lowland</strong>
+- forest subtropical tropical moist lowland, moist lowland forest,
+tropical moist forest, 106</li>
+<li>5 - <strong>107_Forest - Subtropical-tropical mangrove
+vegetation</strong> - forest mangrove, mangrove, mangroves, 107</li>
+<li>6 - <strong>108_Forest - Subtropical-tropical swamp</strong> -
+forest swamp, swamp forest, tropical swamp, 108</li>
+<li>7 - <strong>109_Forest - Subtropical-tropical moist montane</strong>
+- forest moist montane, montane forest, cloud forest, 109</li>
+</ul>
+<p>Savannas:</p>
+<ul>
+<li>8 - <strong>201_Savanna - Dry</strong> - savanna dry, dry savanna,
+201</li>
+<li>9 - <strong>202_Savanna - Moist</strong> - savanna moist, moist
+savanna, 202</li>
+</ul>
+<p>Shrublands:</p>
+<ul>
+<li>10 - <strong>303_Shrubland - Boreal</strong> - shrubland boreal,
+boreal shrubland, 303</li>
+<li>11 - <strong>304_Shrubland - Temperate</strong> - shrubland
+temperate, temperate shrubland, 304</li>
+<li>12 - <strong>305_Shrubland - Subtropical-tropical dry</strong> -
+shrubland dry, tropical dry shrubland, 305</li>
+<li>13 - <strong>306_Shrubland - Subtropical-tropical moist</strong> -
+shrubland moist, tropical moist shrubland, 306</li>
+<li>14 - <strong>308_Shrubland - Mediterranean-type</strong> - shrubland
+mediterranean, mediterranean shrubland, 308</li>
+</ul>
+<p>Grasslands:</p>
+<ul>
+<li>15 - <strong>401_Grassland - Tundra</strong> - grassland tundra,
+tundra, 401</li>
+<li>16 - <strong>404_Grassland - Temperate</strong> - grassland
+temperate, temperate grassland, 404</li>
+<li>17 - <strong>405_Grassland - Subtropical-tropical dry</strong> -
+grassland dry, tropical dry grassland, 405</li>
+<li>18 - <strong>1402_Pastureland</strong> - pastureland, pasture</li>
+</ul>
+<p>Wetlands:</p>
+<ul>
+<li>19 - <strong>501_Wetlands inland - Permanent
+rivers-streams-creeks</strong> - rivers, streams, creeks, 501</li>
+<li>20 - <strong>504_Wetlands inland - Bogs, marshes, swamps, fens,
+peatlands</strong> - bogs, marshes, swamps, fens, peatlands, 504</li>
+<li>21 - <strong>505_Wetlands inland - Permanent freshwater
+lakes</strong> - freshwater lakes, lakes, 505</li>
+</ul>
+<p>Deserts:</p>
+<ul>
+<li>22 - <strong>801_Desert - Hot</strong> - desert hot, hot desert,
+801</li>
+<li>23 - <strong>802_Desert - Temperate</strong> - desert temperate,
+temperate desert, 802</li>
+<li>24 - <strong>803_Desert - Cold</strong> - desert cold, cold desert,
+803</li>
+</ul>
+<p>Artificial:</p>
+<ul>
+<li>25 - <strong>1401_Arable Land</strong> - arable land, arable,
+1401</li>
+<li>26 - <strong>1403_Plantations</strong> - plantations, plantation,
+1403</li>
+<li>27 - <strong>1405_Urban Areas</strong> - urban areas, urban,
+1405</li>
+</ul>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/habitat.html">habitat</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Forest"</span>, <span class="st">"Artificial"</span><span class="op">)</span>, level <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="variables_files/figure-html/unnamed-chunk-28-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="soil-characteristics">Soil characteristics<a class="anchor" aria-label="anchor" href="#soil-characteristics"></a>
 </h2>
+<div class="section level3">
+<h3 id="harmonized-world-soil-database">Harmonized World Soil Database<a class="anchor" aria-label="anchor" href="#harmonized-world-soil-database"></a>
+</h3>
 <p>This function downloads, processes, and extracts variables from the
-Harmonized World Soil Database v2.0 (HWSD v2.0) <span class="citation">(FAO &amp; IIASA 2023)</span>. The variable corresponds
-to a global raster file at 1 km resolution representing soil types.</p>
-<p><strong>Available variables:</strong></p>
+Harmonized World Soil Database v2.0 (HWSD v2.0) <span class="citation">(authors 2023)</span>. The variable corresponds to a
+global raster file at 1 km resolution representing soil types.</p>
+<p><strong>Available variables (1 total)</strong></p>
 <ul>
-<li>
-<strong>hwsd</strong> - soil, type, soiltype, soil type</li>
+<li>1 - <strong>hwsd</strong> - soil, type, soiltype, soil type</li>
 </ul>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/soil.html">soil</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<p><img src="variables_files/figure-html/unnamed-chunk-22-1.png" width="480" style="display: block; margin: auto;"></p>
-</div>
-<div class="section level2">
-<h2 id="human-impact">Human impact<a class="anchor" aria-label="anchor" href="#human-impact"></a>
-</h2>
-<div class="section level3">
-<h3 id="spectre">SPECTRE<a class="anchor" aria-label="anchor" href="#spectre"></a>
-</h3>
-<p>This function downloads, processes, and extracts variables from the
-SPECTRE – Spatially Explicit ECosysTem ThREats dataset <span class="citation">(Branco <em>et al.</em> 2024)</span>. Each variable
-corresponds to a global Cloud-Optimized GeoTIFF (COG) representing a
-different anthropogenic or climatic threat. When using this source, cite
-<span class="citation">(Branco <em>et al.</em> 2024)</span> and also the
-original source for each variable (check references in <span class="citation">(Branco <em>et al.</em> 2024)</span>).</p>
-<p><strong>Available variables:</strong></p>
-<p>Land use and human pressure:</p>
-<ul>
-<li>
-<strong>1_1_MINING_AREA_cog</strong> - mining area, mining_area,
-mining</li>
-<li>
-<strong>1_2_HAZARD_POTENTIAL_cog</strong> - hazard potential,
-hazard</li>
-<li>
-<strong>1_3_HUMAN_DENSITY_cog</strong> - human density, population,
-pop</li>
-<li>
-<strong>1_4_BUILT_AREA_cog</strong> - built area, built</li>
-<li>
-<strong>1_5_ROAD_DENSITY_cog</strong> - road density, roads,
-road</li>
-<li>
-<strong>1_6_FOOTPRINT_PERC_cog</strong> - human footprint,
-footprint</li>
-<li>
-<strong>1_7_IMPACT_AREA_cog</strong> - impacted area, impact
-area</li>
-<li>
-<strong>1_8_MODIF_AREA_cog</strong> - modified area, modif area</li>
-<li>
-<strong>1_9_HUMAN_BIOMES_cog</strong> - human biomes, biomes</li>
-<li>
-<strong>1_10_FIRE_OCCUR_cog</strong> - fires, fire</li>
-<li>
-<strong>1_11_CROP_PERC_UNI_cog</strong> - crops uni, crop uni,
-crop</li>
-<li>
-<strong>1_12_CROP_PERC_IIASA_cog</strong> - crops iiasa, iiasa
-crops</li>
-<li>
-<strong>1_13_LIVESTOCK_MASS_cog</strong> - livestock, livestock
-mass</li>
-</ul>
-<p>Forest loss:</p>
-<ul>
-<li>
-<strong>2_1_FOREST_LOSS_PERC_cog</strong> - forest loss</li>
-<li>
-<strong>2_2_FOREST_TREND_cog</strong> - forest trend</li>
-</ul>
-<p>Light pollution:</p>
-<ul>
-<li>
-<strong>3_1_LIGHT_MCDM2_cog</strong> - light at night, night light,
-light</li>
-</ul>
-<p>Climate change:</p>
-<ul>
-<li>
-<strong>5_1_TEMP_TRENDS_cog</strong> - temperature trends, temp
-trends</li>
-<li>
-<strong>5_2_TEMP_SIGNIF_cog</strong> - temperature significance,
-temp signif</li>
-<li>
-<strong>5_3_CLIM_EXTREME_cog</strong> - climate extremes</li>
-<li>
-<strong>5_4_CLIM_VELOCITY_cog</strong> - climate velocity,
-velocity</li>
-<li>
-<strong>5_5_ARIDITY_TREND_cog</strong> - aridity trend, aridity</li>
-</ul>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/spectre.html">spectre</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"forest loss"</span>, <span class="st">"light at night"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<p><img src="variables_files/figure-html/unnamed-chunk-24-1.png" width="480" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="variables_files/figure-html/unnamed-chunk-30-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
-<h3 id="accessibility">Accessibility<a class="anchor" aria-label="anchor" href="#accessibility"></a>
+<h3 id="soil-climate">Soil climate<a class="anchor" aria-label="anchor" href="#soil-climate"></a>
 </h3>
-<p>This function downloads, processes, and extracts variables from the
-Global Accessibility Indicators dataset <span class="citation">(A <em>et
-al.</em> 2019)</span>. Each variable corresponds to a global raster
-representing the travelling time (in minutes) to cities or ports of
-specific sizes.</p>
-<p><strong>Available variables:</strong></p>
-<p>Cities:</p>
+<p>This function downloads, processes, and extracts soil bioclimatic
+variables and monthly soil temperatures from the Global Soil Temperature
+dataset <span class="citation">(Lembrechts <em>et al.</em>
+2022)</span>.</p>
+<p><strong>Available variables (23 total)</strong></p>
+<p>Bioclimatic variables:</p>
 <ul>
-<li>
-<strong>cities1</strong> - cities 1, city 1, cities &gt;5m, huge
-cities, travel time cities 1</li>
-<li>
-<strong>cities2</strong> - cities 2, city 2, cities &gt;1m, large
-cities, travel time cities 2</li>
-<li>
-<strong>cities3</strong> - cities 3, city 3, medium cities, travel
-time cities 3</li>
-<li>
-<strong>cities4</strong> - cities 4, city 4, small cities, travel
-time cities 4</li>
-<li>
-<strong>cities5</strong> - cities 5, city 5, travel time cities
-5</li>
-<li>
-<strong>cities6</strong> - cities 6, city 6, travel time cities
-6</li>
-<li>
-<strong>cities7</strong> - cities 7, city 7, travel time cities
-7</li>
-<li>
-<strong>cities8</strong> - cities 8, city 8, towns, travel time
-cities 8</li>
-<li>
-<strong>cities9</strong> - cities 9, city 9, small towns, travel
-time cities 9</li>
-<li>
-<strong>cities10</strong> - cities 10, city 10, aggregated cities 1,
-travel time cities 10</li>
-<li>
-<strong>cities11</strong> - cities 11, city 11, aggregated cities 2,
-travel time cities 11</li>
-<li>
-<strong>cities12</strong> - cities 12, city 12, aggregated cities 3,
-travel time cities 12</li>
+<li>1 - <strong>SBIO1</strong> - annual mean temperature, annual mean,
+amt</li>
+<li>2 - <strong>SBIO2</strong> - mean diurnal range, mean diurnal,
+mdr</li>
+<li>3 - <strong>SBIO3</strong> - isothermality, iso</li>
+<li>4 - <strong>SBIO4</strong> - temperature seasonality, seasonality,
+temp seasonality</li>
+<li>5 - <strong>SBIO5</strong> - max temperature warmest month, max
+temp, warmest month</li>
+<li>6 - <strong>SBIO6</strong> - min temperature coldest month, min
+temp, coldest month</li>
+<li>7 - <strong>SBIO7</strong> - temperature annual range, annual range,
+tar</li>
+<li>8 - <strong>SBIO8</strong> - mean temperature wettest quarter,
+wettest quarter</li>
+<li>9 - <strong>SBIO9</strong> - mean temperature driest quarter, driest
+quarter</li>
+<li>10 - <strong>SBIO10</strong> - mean temperature warmest quarter,
+warmest quarter</li>
+<li>11 - <strong>SBIO11</strong> - mean temperature coldest quarter,
+coldest quarter</li>
 </ul>
-<p>Ports:</p>
+<p>Monthly mean soil temperatures:</p>
 <ul>
-<li>
-<strong>ports1</strong> - ports 1, port 1, large ports, travel time
-ports 1</li>
-<li>
-<strong>ports2</strong> - ports 2, port 2, medium ports, travel time
-ports 2</li>
-<li>
-<strong>ports3</strong> - ports 3, port 3, small ports, travel time
-ports 3</li>
-<li>
-<strong>ports4</strong> - ports 4, port 4, very small ports, travel
-time ports 4</li>
-<li>
-<strong>ports5</strong> - ports 5, port 5, any port, all ports,
-travel time ports 5</li>
+<li>12 - <strong>soilT01</strong> - january mean, january, jan</li>
+<li>13 - <strong>soilT02</strong> - february mean, february, feb</li>
+<li>14 - <strong>soilT03</strong> - march mean, march, mar</li>
+<li>15 - <strong>soilT04</strong> - april mean, april, apr</li>
+<li>16 - <strong>soilT05</strong> - may mean, may</li>
+<li>17 - <strong>soilT06</strong> - june mean, june, jun</li>
+<li>18 - <strong>soilT07</strong> - july mean, july, jul</li>
+<li>19 - <strong>soilT08</strong> - august mean, august, aug</li>
+<li>20 - <strong>soilT09</strong> - september mean, september, sep</li>
+<li>21 - <strong>soilT10</strong> - october mean, october, oct</li>
+<li>22 - <strong>soilT11</strong> - november mean, november, nov</li>
+<li>23 - <strong>soilT12</strong> - december mean, december, dec</li>
 </ul>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<p>The <code>depth</code> argument defines the soil depth range in cm.
+Options are “0-5” (default) or “5-15”.</p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/accessibility.html">accessibility</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"large cities"</span>, <span class="st">"ports1"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<p><img src="variables_files/figure-html/unnamed-chunk-26-1.png" width="480" style="display: block; margin: auto;"></p>
+<span>  <span class="fu"><a href="../reference/soilclimate.html">soilclimate</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SBIO1"</span>, <span class="st">"SBIO10"</span><span class="op">)</span>, depth <span class="op">=</span> <span class="st">"5-15"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="variables_files/figure-html/unnamed-chunk-32-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="protected-areas">Protected areas<a class="anchor" aria-label="anchor" href="#protected-areas"></a>
+<h2 id="topography">Topography<a class="anchor" aria-label="anchor" href="#topography"></a>
 </h2>
-<div class="section level3">
-<h3 id="iucn-protected-areas">IUCN protected areas<a class="anchor" aria-label="anchor" href="#iucn-protected-areas"></a>
-</h3>
 <p>This function downloads, processes, and extracts variables from the
-World Database of Protected Areas (WDPA) <span class="citation">(Protected Planet 2025)</span>. Each variable
-corresponds to a global raster representing different IUCN Management
-Categories of protected areas.</p>
-<p><strong>Available variables:</strong></p>
+EarthEnv Topography dataset <span class="citation">(Amatulli <em>et
+al.</em> 2018)</span>. This dataset provides global, cross-scale
+topographic variables suitable for biodiversity and ecosystem
+modeling.</p>
+<p><strong>Available variables (11 total)</strong></p>
+<ul>
+<li>1 - <strong>elevation</strong> - dem, height, alt, altitude</li>
+<li>2 - <strong>slope</strong> - slope</li>
+<li>3 - <strong>aspect</strong> - aspect</li>
+<li>4 - <strong>roughness</strong> - rough</li>
+<li>5 - <strong>tri</strong> - terrain ruggedness index, ruggedness</li>
+<li>6 - <strong>tpi</strong> - topographic position index, position</li>
+<li>7 - <strong>vrm</strong> - vector ruggedness measure</li>
+<li>8 - <strong>pcurv</strong> - profile curvature, profile curve</li>
+<li>9 - <strong>tcurv</strong> - tangential curvature, tangential
+curve</li>
+<li>10 - <strong>eastness</strong> - east</li>
+<li>11 - <strong>northness</strong> - north</li>
+</ul>
+<p>Additional parameters:</p>
 <ul>
 <li>
-<strong>WDPA_IA</strong> - strict nature reserve, strict reserve,
-1a, ia, Ia (IUCN Category Ia)</li>
+<strong>algorithm</strong> - Aggregation method/algorithm to use.
+Options: “md” (median, default), “mn” (mean), “min”, “max”, “sd”.</li>
 <li>
-<strong>WDPA_IB</strong> - wilderness area, wilderness, 1b, ib, Ib
-(IUCN Category Ib)</li>
-<li>
-<strong>WDPA_II</strong> - national park, park, 2, ii, II (IUCN
-Category II)</li>
-<li>
-<strong>WDPA_III</strong> - natural monument, monument, 3, iii, III
-(IUCN Category III)</li>
-<li>
-<strong>WDPA_IV</strong> - habitat species management, habitat
-management, 4, iv, IV (IUCN Category IV)</li>
-<li>
-<strong>WDPA_V</strong> - protected landscape, protected seascape,
-landscape, 5, v, V (IUCN Category V)</li>
-<li>
-<strong>WDPA_VI</strong> - sustainable use, natural resources, 6,
-vi, VI (IUCN Category VI)</li>
-<li>
-<strong>WDPA_ALL</strong> - all, combined, full, total, all
-protected areas (Combined/Full WDPA)</li>
+<strong>topo_source</strong> - Data source. Options: “GMTED”
+(default) or “SRTM”.</li>
 </ul>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/protection.html">protection</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"national park"</span>, <span class="st">"WDPA_ALL"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<p><img src="variables_files/figure-html/unnamed-chunk-28-1.png" width="480" style="display: block; margin: auto;"></p>
-</div>
+<span>  <span class="fu"><a href="../reference/topography.html">topography</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"elevation"</span>, <span class="st">"slope"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="variables_files/figure-html/unnamed-chunk-34-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="freshwater-environments">Freshwater environments<a class="anchor" aria-label="anchor" href="#freshwater-environments"></a>
@@ -979,7 +1024,7 @@ near-global freshwater-specific environmental variables dataset <span class="cit
 are available at a 1 km resolution and capture upstream catchment
 characteristics, including topography, land cover, soil, and
 climate.</p>
-<p><strong>Available variables:</strong></p>
+<p><strong>Available variables</strong></p>
 <p>The <code><a href="../reference/freshwater.html">freshwater()</a></code> function provides access to 324
 near-global 1-km resolution layers. You can filter specific layers from
 within these collections using the <strong>month</strong> argument (for
@@ -988,91 +1033,68 @@ topographic, soil, and aggregation methods).</p>
 <p><strong>Temperature (monthly)</strong></p>
 <p>Use the month argument (1–12) to select specific months.</p>
 <ul>
-<li>
-<strong>monthly_tmin_average.nc</strong> – monthly minimum
+<li>1 - <strong>monthly_tmin_average.nc</strong> – monthly minimum
 temperature average, min temp average, tmin avg, tmin</li>
-<li>
-<strong>monthly_tmax_average.nc</strong> – monthly maximum
+<li>2 - <strong>monthly_tmax_average.nc</strong> – monthly maximum
 temperature average, max temp average, tmax avg, tmax</li>
-<li>
-<strong>monthly_tmin_weighted_average.nc</strong> – monthly minimum
-temperature weighted, min temp weighted, tmin weighted</li>
-<li>
-<strong>monthly_tmax_weighted_average.nc</strong> – monthly maximum
-temperature weighted, max temp weighted, tmax weighted</li>
+<li>3 - <strong>monthly_tmin_weighted_average.nc</strong> – monthly
+minimum temperature weighted, min temp weighted, tmin weighted</li>
+<li>4 - <strong>monthly_tmax_weighted_average.nc</strong> – monthly
+maximum temperature weighted, max temp weighted, tmax weighted</li>
 </ul>
 <p><strong>Precipitation</strong></p>
 <ul>
-<li>
-<strong>monthly_prec_sum.nc</strong> – monthly upstream
+<li>5 - <strong>monthly_prec_sum.nc</strong> – monthly upstream
 precipitation sum, precipitation sum, precip sum, prec</li>
-<li>
-<strong>monthly_prec_weighted_sum.nc</strong> – monthly upstream
+<li>6 - <strong>monthly_prec_weighted_sum.nc</strong> – monthly upstream
 precipitation weighted, precipitation weighted, precip weighted</li>
 </ul>
 <p><strong>Hydroclimatic</strong></p>
 <ul>
-<li>
-<strong>hydroclim_average+sum.nc</strong> – hydroclimatic variables
-average, hydroclim average, hydroclim</li>
-<li>
-<strong>hydroclim_weighted_average+sum.nc</strong> – hydroclimatic
-variables weighted, hydroclim weighted</li>
+<li>7 - <strong>hydroclim_average+sum.nc</strong> – hydroclimatic
+variables average, hydroclim average, hydroclim</li>
+<li>8 - <strong>hydroclim_weighted_average+sum.nc</strong> –
+hydroclimatic variables weighted, hydroclim weighted</li>
 </ul>
 <p><strong>Topography</strong></p>
 <ul>
-<li>
-<strong>elevation.nc</strong> – upstream elevation, elevation,
+<li>9 - <strong>elevation.nc</strong> – upstream elevation, elevation,
 dem</li>
-<li>
-<strong>slope.nc</strong> – upstream slope, slope</li>
-<li>
-<strong>flow_acc.nc</strong> – stream length, flow accumulation,
-flow</li>
+<li>10 - <strong>slope.nc</strong> – upstream slope, slope</li>
+<li>11 - <strong>flow_acc.nc</strong> – stream length, flow
+accumulation, flow</li>
 </ul>
 <p><strong>Land cover</strong></p>
 <ul>
-<li>
-<strong>landcover_minimum.nc</strong> – upstream landcover minimum,
-landcover min</li>
-<li>
-<strong>landcover_maximum.nc</strong> – upstream landcover maximum,
-landcover max</li>
-<li>
-<strong>landcover_range.nc</strong> – upstream landcover range,
+<li>12 - <strong>landcover_minimum.nc</strong> – upstream landcover
+minimum, landcover min</li>
+<li>13 - <strong>landcover_maximum.nc</strong> – upstream landcover
+maximum, landcover max</li>
+<li>14 - <strong>landcover_range.nc</strong> – upstream landcover range,
 landcover range</li>
-<li>
-<strong>landcover_average.nc</strong> – upstream landcover average,
-landcover avg, landcover</li>
-<li>
-<strong>landcover_weighted_average.nc</strong> – upstream landcover
-weighted, landcover weighted</li>
+<li>15 - <strong>landcover_average.nc</strong> – upstream landcover
+average, landcover avg, landcover</li>
+<li>16 - <strong>landcover_weighted_average.nc</strong> – upstream
+landcover weighted, landcover weighted</li>
 </ul>
 <p><strong>Geology &amp; soil</strong></p>
 <ul>
-<li>
-<strong>geology_weighted_sum.nc</strong> – upstream geology, geology
-weighted, geology</li>
-<li>
-<strong>soil_minimum.nc</strong> – upstream soil minimum, soil
+<li>17 - <strong>geology_weighted_sum.nc</strong> – upstream geology,
+geology weighted, geology</li>
+<li>18 - <strong>soil_minimum.nc</strong> – upstream soil minimum, soil
 min</li>
-<li>
-<strong>soil_maximum.nc</strong> – upstream soil maximum, soil
+<li>19 - <strong>soil_maximum.nc</strong> – upstream soil maximum, soil
 max</li>
-<li>
-<strong>soil_range.nc</strong> – upstream soil range, soil
+<li>20 - <strong>soil_range.nc</strong> – upstream soil range, soil
 range</li>
-<li>
-<strong>soil_average.nc</strong> – upstream soil average, soil avg,
-soil</li>
-<li>
-<strong>soil_weighted_average.nc</strong> – upstream soil weighted,
-soil weighted</li>
+<li>21 - <strong>soil_average.nc</strong> – upstream soil average, soil
+avg, soil</li>
+<li>22 - <strong>soil_weighted_average.nc</strong> – upstream soil
+weighted, soil weighted</li>
 </ul>
 <p><strong>Quality control</strong></p>
 <ul>
-<li>
-<strong>quality_control.nc</strong> – quality control, qc</li>
+<li>23 - <strong>quality_control.nc</strong> – quality control, qc</li>
 </ul>
 <p><strong>Using the month argument</strong></p>
 <p>The month argument is used only for monthly variables (tmin, tmax,
@@ -1092,12 +1114,338 @@ patterns in filenames (e.g., “maximum”, “weighted”, “average”). When
 multiple variables are requested, the algorithm applies to the entire
 request, so multiple calls may be required if different algorithms are
 needed.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span><span class="fu"><a href="../reference/freshwater.html">freshwater</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"elevation"</span>, <span class="st">"slope"</span>, <span class="st">"tmin"</span><span class="op">)</span>, algorithm <span class="op">=</span> <span class="st">"mn"</span>, month<span class="op">=</span><span class="fl">12</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<p><img src="variables_files/figure-html/unnamed-chunk-30-1.png" width="480" style="display: block; margin: auto;"></p>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="variables_files/figure-html/unnamed-chunk-36-1.png" width="480" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level2">
+<h2 id="marine-environments">Marine environments<a class="anchor" aria-label="anchor" href="#marine-environments"></a>
+</h2>
+<p>This function downloads, processes, and extracts variables from the
+Bio-ORACLE v3.0 dataset <span class="citation">(Assis <em>et al.</em>
+2024)</span>.</p>
+<p><strong>Available variables (24 total)</strong></p>
+<ul>
+<li>1 - <strong>thetao</strong> - Ocean temperature [ºC] (temperature,
+temp, sea temperature)</li>
+<li>2 - <strong>so</strong> - Salinity [-] (sal, salt, saltiness)</li>
+<li>3 - <strong>sws</strong> - Sea water velocity [m.s-1] (velocity,
+current speed, speed)</li>
+<li>4 - <strong>swd</strong> - Sea water direction [degree] (direction,
+current direction)</li>
+<li>5 - <strong>no3</strong> - Nitrate [mmol.m-3] (nitrate)</li>
+<li>6 - <strong>po4</strong> - Phosphate [mmol.m-3] (phosphate)</li>
+<li>7 - <strong>si</strong> - Silicate [mmol.m-3] (silicate,
+silicon)</li>
+<li>8 - <strong>o2</strong> - Dissolved molecular oxygen [mmol.m-3]
+(oxygen, dissolved oxygen)</li>
+<li>9 - <strong>dfe</strong> - Iron [mmol.m-3] (iron, fe)</li>
+<li>10 - <strong>phyc</strong> - Primary productivity [mmol.m-3]
+(productivity, pp, primary production)</li>
+<li>11 - <strong>ph</strong> - pH [-] (acidity)</li>
+<li>12 - <strong>chl</strong> - Chlorophyll [mg.m-3] (chlorophyll,
+chla)</li>
+<li>13 - <strong>sithick</strong> - Sea ice thickness [m] (ice
+thickness)</li>
+<li>14 - <strong>siconc</strong> - Sea ice cover [Fraction] (ice cover,
+sea ice)</li>
+<li>15 - <strong>clt</strong> - Cloud cover [%] (cloud, clouds)</li>
+<li>16 - <strong>mlotst</strong> - Mixed layer depth [m] (mld, mixed
+layer)</li>
+<li>17 - <strong>tas</strong> - Air temperature [ºC] (air temperature,
+air temp)</li>
+<li>18 - <strong>par</strong> - Photosynthetically Available Radiation
+[E.m-2.day-1] (light, radiation)</li>
+<li>19 - <strong>kdpar</strong> - Diffuse attenuation [m-1]
+(attenuation, turbidity)</li>
+<li>20 - <strong>bathymetry</strong> - Bathymetry [m] (depth, elevation,
+altitude)</li>
+<li>21 - <strong>slope</strong> - Topographic slope [-] (topographic
+slope)</li>
+<li>22 - <strong>aspect</strong> - Topographic aspect [-] (topographic
+aspect)</li>
+<li>23 - <strong>tpi</strong> - Topographic position index [-]
+(topographic position index)</li>
+<li>24 - <strong>tri</strong> - Terrain ruggedness index [-] (terrain
+ruggedness index, ruggedness)</li>
+</ul>
+<p>Additional parameters:</p>
+<ul>
+<li>
+<strong>realm</strong> - One of “surface” (default),
+“benthic_minimum”, “benthic_average”, or “benthic_maximum”</li>
+<li>
+<strong>years</strong> - Decade range (e.g., “2000-2010” up to
+“2090-2100”)</li>
+<li>
+<strong>ssp</strong> - Shared Socioeconomic Pathway for future
+projections (119, 126, 245, 370, 460, 585)</li>
+<li>
+<strong>algorithm</strong> - Statistic to apply (max, mean, min,
+ltmax, ltmin, range). Default “mean”</li>
+</ul>
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>marine_ecoregion <span class="op">=</span> <span class="st">"East African Coral Coast"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/biooracle.html">biooracle</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="st">"o2"</span>, realm <span class="op">=</span> <span class="st">"surface"</span>, years <span class="op">=</span> <span class="st">"2000-2010"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="variables_files/figure-html/unnamed-chunk-38-1.png" width="480" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level2">
+<h2 id="human-impact">Human impact<a class="anchor" aria-label="anchor" href="#human-impact"></a>
+</h2>
+<div class="section level3">
+<h3 id="spectre">SPECTRE<a class="anchor" aria-label="anchor" href="#spectre"></a>
+</h3>
+<p>This function downloads, processes, and extracts variables from the
+SPECTRE – Spatially Explicit ECosysTem ThREats dataset <span class="citation">(Branco <em>et al.</em> 2024)</span>. Each variable
+corresponds to a global Cloud-Optimized GeoTIFF (COG) representing a
+different anthropogenic or climatic threat. When using this source, cite
+<span class="citation">(Branco <em>et al.</em> 2024)</span> and also the
+original source for each variable (check references in <span class="citation">(Branco <em>et al.</em> 2024)</span>).</p>
+<p><strong>Available variables (21 total)</strong></p>
+<p>Land use and human pressure:</p>
+<ul>
+<li>1 - <strong>1_1_MINING_AREA_cog</strong> - mining area, mining_area,
+mining</li>
+<li>2 - <strong>1_2_HAZARD_POTENTIAL_cog</strong> - hazard potential,
+hazard</li>
+<li>3 - <strong>1_3_HUMAN_DENSITY_cog</strong> - human density,
+population, pop</li>
+<li>4 - <strong>1_4_BUILT_AREA_cog</strong> - built area, built</li>
+<li>5 - <strong>1_5_ROAD_DENSITY_cog</strong> - road density, roads,
+road</li>
+<li>6 - <strong>1_6_FOOTPRINT_PERC_cog</strong> - human footprint,
+footprint</li>
+<li>7 - <strong>1_7_IMPACT_AREA_cog</strong> - impacted area, impact
+area</li>
+<li>8 - <strong>1_8_MODIF_AREA_cog</strong> - modified area, modif
+area</li>
+<li>9 - <strong>1_9_HUMAN_BIOMES_cog</strong> - human biomes,
+biomes</li>
+<li>10 - <strong>1_10_FIRE_OCCUR_cog</strong> - fires, fire</li>
+<li>11 - <strong>1_11_CROP_PERC_UNI_cog</strong> - crops uni, crop uni,
+crop</li>
+<li>12 - <strong>1_12_CROP_PERC_IIASA_cog</strong> - crops iiasa, iiasa
+crops</li>
+<li>13 - <strong>1_13_LIVESTOCK_MASS_cog</strong> - livestock, livestock
+mass</li>
+</ul>
+<p>Forest loss:</p>
+<ul>
+<li>14 - <strong>2_1_FOREST_LOSS_PERC_cog</strong> - forest loss</li>
+<li>15 - <strong>2_2_FOREST_TREND_cog</strong> - forest trend</li>
+</ul>
+<p>Light pollution:</p>
+<ul>
+<li>16 - <strong>3_1_LIGHT_MCDM2_cog</strong> - light at night, night
+light, light</li>
+</ul>
+<p>Climate change:</p>
+<ul>
+<li>17 - <strong>5_1_TEMP_TRENDS_cog</strong> - temperature trends, temp
+trends</li>
+<li>18 - <strong>5_2_TEMP_SIGNIF_cog</strong> - temperature
+significance, temp signif</li>
+<li>19 - <strong>5_3_CLIM_EXTREME_cog</strong> - climate extremes</li>
+<li>20 - <strong>5_4_CLIM_VELOCITY_cog</strong> - climate velocity,
+velocity</li>
+<li>21 - <strong>5_5_ARIDITY_TREND_cog</strong> - aridity trend,
+aridity</li>
+</ul>
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/spectre.html">spectre</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"forest loss"</span>, <span class="st">"light at night"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="variables_files/figure-html/unnamed-chunk-40-1.png" width="480" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="accessibility">Accessibility<a class="anchor" aria-label="anchor" href="#accessibility"></a>
+</h3>
+<p>This function downloads, processes, and extracts variables from the
+Global Accessibility Indicators dataset <span class="citation">(Nelson
+<em>et al.</em> 2019)</span>. Each variable corresponds to a global
+raster representing the travelling time (in minutes) to cities or ports
+of specific sizes.</p>
+<p><strong>Available variables (17 total)</strong></p>
+<p>Cities:</p>
+<ul>
+<li>1 - <strong>cities1</strong> - cities 1, city 1, cities &gt;5m, huge
+cities, travel time cities 1</li>
+<li>2 - <strong>cities2</strong> - cities 2, city 2, cities &gt;1m,
+large cities, travel time cities 2</li>
+<li>3 - <strong>cities3</strong> - cities 3, city 3, medium cities,
+travel time cities 3</li>
+<li>4 - <strong>cities4</strong> - cities 4, city 4, small cities,
+travel time cities 4</li>
+<li>5 - <strong>cities5</strong> - cities 5, city 5, travel time cities
+5</li>
+<li>6 - <strong>cities6</strong> - cities 6, city 6, travel time cities
+6</li>
+<li>7 - <strong>cities7</strong> - cities 7, city 7, travel time cities
+7</li>
+<li>8 - <strong>cities8</strong> - cities 8, city 8, towns, travel time
+cities 8</li>
+<li>9 - <strong>cities9</strong> - cities 9, city 9, small towns, travel
+time cities 9</li>
+<li>10 - <strong>cities10</strong> - cities 10, city 10, aggregated
+cities 1, travel time cities 10</li>
+<li>11 - <strong>cities11</strong> - cities 11, city 11, aggregated
+cities 2, travel time cities 11</li>
+<li>12 - <strong>cities12</strong> - cities 12, city 12, aggregated
+cities 3, travel time cities 12</li>
+</ul>
+<p>Ports:</p>
+<ul>
+<li>13 - <strong>ports1</strong> - ports 1, port 1, large ports, travel
+time ports 1</li>
+<li>14 - <strong>ports2</strong> - ports 2, port 2, medium ports, travel
+time ports 2</li>
+<li>15 - <strong>ports3</strong> - ports 3, port 3, small ports, travel
+time ports 3</li>
+<li>16 - <strong>ports4</strong> - ports 4, port 4, very small ports,
+travel time ports 4</li>
+<li>17 - <strong>ports5</strong> - ports 5, port 5, any port, all ports,
+travel time ports 5</li>
+</ul>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/accessibility.html">accessibility</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"large cities"</span>, <span class="st">"ports1"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p><img src="variables_files/figure-html/unnamed-chunk-42-1.png" width="480" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="gdp-past">GDP past<a class="anchor" aria-label="anchor" href="#gdp-past"></a>
+</h3>
+<p>This function downloads, processes, and extracts variables from the
+global 1km gridded revised real gross domestic product and electricity
+consumption dataset (1992–2019) <span class="citation">(Chen <em>et
+al.</em> 2022a)</span>.</p>
+<p><strong>Available variables (2 total)</strong></p>
+<p>Economic metrics:</p>
+<ul>
+<li>1 - <strong>gdp</strong> - gross domestic product, real gdp,
+economy, economic output, gross product</li>
+</ul>
+<p>Energy metrics:</p>
+<ul>
+<li>2 - <strong>electricity</strong> - electricity consumption, energy,
+energy consumption, power, ec, electric</li>
+</ul>
+<p>Years available: 1992 to 2019.</p>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/gdppast.html">gdppast</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="st">"gdp"</span>, year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2000</span>, <span class="fl">2010</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">)</span></span></code></pre></div>
+<p><img src="variables_files/figure-html/unnamed-chunk-44-1.png" width="480" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="gdp-future">GDP future<a class="anchor" aria-label="anchor" href="#gdp-future"></a>
+</h3>
+<p>This function downloads, processes, and extracts variables from the
+global gridded GDP projections compatible with the five Shared
+Socioeconomic Pathways (SSPs) for the period 1850–2100 <span class="citation">(Wang &amp; Sun 2022)</span>.</p>
+<p><strong>Available variables (1 total)</strong></p>
+<p>Economic Metrics:</p>
+<ul>
+<li>1 - <strong>gdp</strong> - gross domestic product, future gdp,
+economic projection, economy, ssp gdp</li>
+</ul>
+<p>Scenarios (SSP):</p>
+<p>The <code>ssp</code> argument accepts integers 1 through 5,
+corresponding to:</p>
+<ul>
+<li>SSP1: Sustainability</li>
+<li>SSP2: Middle of the Road</li>
+<li>SSP3: Regional Rivalry</li>
+<li>SSP4: Inequality</li>
+<li>SSP5: Fossil-fueled Development</li>
+</ul>
+<p>Years available: Decadal intervals from 1850 to 2100 (e.g., 2020,
+2030, 2040…).</p>
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/gdpfuture.html">gdpfuture</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="st">"gdp"</span>, year <span class="op">=</span> <span class="fl">2050</span>, ssp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">)</span></span></code></pre></div>
+<p><img src="variables_files/figure-html/unnamed-chunk-46-1.png" width="480" style="display: block; margin: auto;"></p>
+</div>
+<div class="section level3">
+<h3 id="population">Population<a class="anchor" aria-label="anchor" href="#population"></a>
+</h3>
+<p>This function downloads, processes, and extracts variables from the
+Global Population Projections dataset <span class="citation">(Wang
+<em>et al.</em> 2022)</span>. It provides 1-km grid population
+distributions from 2020 to 2100 under five Shared Socioeconomic Pathways
+(SSPs).</p>
+<p><strong>Available variables (1 total)</strong></p>
+<p>Population Counts:</p>
+<ul>
+<li>1 - <strong>population</strong> - pop, inhabitants, residents,
+people, count, census</li>
+</ul>
+<p>Use the arguments <code>year</code> and <code>ssp</code> to filter
+the specific data required.</p>
+<p>Years available: 2020 to 2100 in 5-year intervals (e.g., 2020, 2025,
+2030…, 2100).</p>
+<p>SSP Scenarios:</p>
+<ul>
+<li>SSP1</li>
+<li>SSP2</li>
+<li>SSP3</li>
+<li>SSP4</li>
+<li>SSP5</li>
+</ul>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/population.html">population</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="st">"population"</span>, year <span class="op">=</span> <span class="fl">2050</span>, ssp <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">)</span></span></code></pre></div>
+<p><img src="variables_files/figure-html/unnamed-chunk-48-1.png" width="480" style="display: block; margin: auto;"></p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="protected-areas">Protected areas<a class="anchor" aria-label="anchor" href="#protected-areas"></a>
+</h2>
+<div class="section level3">
+<h3 id="iucn-protected-areas">IUCN protected areas<a class="anchor" aria-label="anchor" href="#iucn-protected-areas"></a>
+</h3>
+<p>This function downloads, processes, and extracts variables from the
+World Database of Protected Areas (WDPA) <span class="citation">(Planet
+2025)</span>. Each variable corresponds to a global raster representing
+different IUCN Management Categories of protected areas.</p>
+<p><strong>Available variables (8 total)</strong></p>
+<ul>
+<li>1 - <strong>WDPA_IA</strong> - strict nature reserve, strict
+reserve, 1a, ia, Ia (IUCN Category Ia)</li>
+<li>2 - <strong>WDPA_IB</strong> - wilderness area, wilderness, 1b, ib,
+Ib (IUCN Category Ib)</li>
+<li>3 - <strong>WDPA_II</strong> - national park, park, 2, ii, II (IUCN
+Category II)</li>
+<li>4 - <strong>WDPA_III</strong> - natural monument, monument, 3, iii,
+III (IUCN Category III)</li>
+<li>5 - <strong>WDPA_IV</strong> - habitat species management, habitat
+management, 4, iv, IV (IUCN Category IV)</li>
+<li>6 - <strong>WDPA_V</strong> - protected landscape, protected
+seascape, landscape, 5, v, V (IUCN Category V)</li>
+<li>7 - <strong>WDPA_VI</strong> - sustainable use, natural resources,
+6, vi, VI (IUCN Category VI)</li>
+<li>8 - <strong>WDPA_ALL</strong> - all, combined, full, total, all
+protected areas (Combined/Full WDPA)</li>
+</ul>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="../reference/protection.html">protection</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"national park"</span>, <span class="st">"WDPA_ALL"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">)</span></span></code></pre></div>
+<p><img src="variables_files/figure-html/unnamed-chunk-50-1.png" width="480" style="display: block; margin: auto;"></p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>
@@ -1112,30 +1460,34 @@ from R after loading the package with ? (e.g., ?spectre).</p>
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
-<div id="ref-nelson2019" class="csl-entry">
-A, N., DJ, W., Etten J, van, A, C., T, M. &amp; J, K. (2019). A suite of
-global accessibility indicators. <em>Scientific Data</em>, <em>6</em>,
-266.
-</div>
 <div id="ref-amatulli2018" class="csl-entry">
-Amatulli, G., Domisch, S., Tuanmu, M.-N., Parmentier, B., Ranipeta, A.,
+Amatulli, G., Domisch, S., Tuanmu, M.N., Parmentier, B., Ranipeta, A.,
 Malczyk, J. &amp; Jetz, W. (2018). A suite of global, cross-scale
 topographic variables for environmental and biodiversity modeling.
 <em>Scientific Data</em>, <em>5</em>, 180040.
 </div>
+<div id="ref-assis2024" class="csl-entry">
+Assis, J., Fernández Bejarano, S.J., Salazar, V.W., Schepers, L.,
+Gouvêa, L., Fragkopoulou, E., Leclercq, F., Vanhoorne, B., Tyberghein,
+L. &amp; Serrão, E.A. (2024). Bio-ORACLE v3.0. Pushing marine data
+layers to the CMIP6 earth system models of climate change research.
+<em>Global Ecology and Biogeography</em>, <em>33</em>, e13813.
+</div>
+<div id="ref-fao2023" class="csl-entry">
+authors, M. (2023). Harmonized world soil database v2.0.
+</div>
 <div id="ref-beck2023" class="csl-entry">
 Beck, H.E., McVicar, T.R., Vergopolan, N., Berg, A., Lutsko, N.J.,
-Dufour, A., Zeng, Z., Jiang, X., Dijk, A.I.J.M. van &amp; Miralles, D.G.
-(2023). High-resolution (1 km) <span>K</span>öppen-<span>G</span>eiger
-maps for 1901-2099 based on constrained <span>CMIP6</span> projections.
-<em>Scientific Data</em>, <em>10</em>, 724.
+Dufour, A., Zeng, Z., Jiang, X., Dijk, A.I.J.M. van &amp; Miralles, D.J.
+(2023). High-resolution (1 km) köppen-geiger maps for 1901-2099 based on
+constrained CMIP6 projections. <em>Scientific Data</em>, <em>10</em>,
+724.
 </div>
 <div id="ref-branco2024" class="csl-entry">
 Branco, V.V., Capinha, C., Rocha, J., Correia, L. &amp; Cardoso, P.
-(2024). <span>SPECTRE</span>: Standardized global spatial data on
-terrestrial <span>SP</span>ecies and <span>EC</span>osystems
-<span>T</span>h<span>RE</span>ats. <em>Global Ecology and
-Biogeography</em>, <em>34</em>, e13949.
+(2024). SPECTRE: Standardized global spatial data on terrestrial species
+and ecosystems threats. <em>Global Ecology and Biogeography</em>,
+<em>34</em>, e13949.
 </div>
 <div id="ref-brun2022" class="csl-entry">
 Brun, P., Zimmermann, N.E., Hari, C., Pellissier, L. &amp; Karger, D.N.
@@ -1143,19 +1495,37 @@ Brun, P., Zimmermann, N.E., Hari, C., Pellissier, L. &amp; Karger, D.N.
 kilometre-resolution. <em>Earth System Science Data</em>, <em>14</em>,
 5573–5603.
 </div>
+<div id="ref-chen2022b" class="csl-entry">
+Chen, J., Gao, M., Cheng, S., Hou, W., Song, M., Liu, X. &amp; Liu, Y.
+(2022a). Global 1 km × 1 km gridded revised real gross domestic product
+and electricity consumption during 1992–2019 based on calibrated
+nighttime light data. <em>Scientific Data</em>, <em>9</em>, 202.
+</div>
+<div id="ref-chen2022a" class="csl-entry">
+Chen, G., Li, X. &amp; Liu, X. (2022b). Global land projection based on
+plant functional types with a 1-km resolution under socio-climatic
+scenarios. <em>Scientific Data</em>, <em>9</em>, 125.
+</div>
 <div id="ref-domisch2015" class="csl-entry">
 Domisch, S., Amatulli, G. &amp; Jetz, W. (2015). Near-global
 freshwater-specific environmental variables for biodiversity analyses in
 1 km resolution. <em>Scientific Data</em>, <em>2</em>, 150073.
 </div>
-<div id="ref-fao2023" class="csl-entry">
-FAO &amp; IIASA. (2023). Harmonized world soil database v2.0.
-</div>
 <div id="ref-fick2017" class="csl-entry">
-Fick, S.E. &amp; Hijmans, R.J. (2017). <span class="nocase">WorldClim 2:
-new 1-km spatial resolution climate surfaces for global land
-areas</span>. <em>International Journal of Climatology</em>,
-<em>37</em>, 4302–4315.
+Fick, S.E. &amp; Hijmans, R.J. (2017). WorldClim 2: New 1-km spatial
+resolution climate surfaces for global land areas. <em>International
+Journal of Climatology</em>, <em>37</em>, 4302–4315.
+</div>
+<div id="ref-gao2025" class="csl-entry">
+Gao, Y., McJeon, H., Ou, Y., Chen, L., Lv, J., Fang, D., Wang, Y., Ye,
+S., Song, C. &amp; Gao, P. (2025). Global land system maps at 1 km
+resolution for 1.5°c climate. <em>Scientific Data</em>, <em>12</em>,
+672.
+</div>
+<div id="ref-jung2020" class="csl-entry">
+Jung, M., Dahal, P.R., Butchart, S.H., Donald, P.F., De Lamo, X., Lesiv,
+M., Kapos, V., Rondinini, C. &amp; Visconti, P. (2020). A global map of
+terrestrial habitat types. <em>Scientific Data</em>, <em>7</em>, 256.
 </div>
 <div id="ref-karger2017" class="csl-entry">
 Karger, D.N., Conrad, O., Böhner, J., Kawohl, T., Kreft, H., Soria-Auza,
@@ -1163,25 +1533,60 @@ R.W., Zimmermann, N.E., Linder, H.P. &amp; Kessler, M. (2017).
 Climatologies at high resolution for the earth’s land surface areas.
 <em>Scientific Data</em>, <em>4</em>, 170122.
 </div>
+<div id="ref-lembrechts2022" class="csl-entry">
+Lembrechts, J.J., Hoogen, J. van den, Aalto, J., Ashcroft, M.B., De
+Frenne, P., Kemppinen, J., Kopecký, M., Luoto, M., Maclean, I.M. &amp;
+Crowther, T.W. et al. (2022). Global maps of soil temperature.
+<em>Global Change Biology</em>, <em>28</em>, 3110–3144.
+</div>
+<div id="ref-li2017" class="csl-entry">
+Li, X., Chen, G., Liu, X., Liang, X., Wang, S., Chen, Y., Pei, F. &amp;
+Xu, X. (2017). A new global land-use and land-cover change product at a
+1-km resolution for 2010 to 2100 based on human–environment
+interactions. <em>Annals of the American Association of
+Geographers</em>, <em>107</em>, 1040–1059.
+</div>
 <div id="ref-loparrino2025" class="csl-entry">
 Lo Parrino, E., Simoncini, A., Ficetola, G.F. &amp; Falaschi, M. (2025).
-Global 1-km land cover for ecological modelling from very high
-resolution imagery. <em>EcoEvoRxiv</em>, in press.
+<a href="https://doi.org/10.32942/X2QM0B" class="external-link">Global 1-km land cover for
+ecological modelling from very high resolution imagery</a>.
+<em>EcoEvoRxiv</em>, in press.
+</div>
+<div id="ref-luo2024" class="csl-entry">
+Luo, Y., Zhu, Z., Zhao, W., Li, M., Chen, J., Zhao, P., Sun, L., Zhang,
+Y., Duanmu, Z. &amp; Chen, J. (2024). Hybrid global annual 1-km IGBP
+land cover maps for the period 2000–2020. <em>Journal of Remote
+Sensing</em>, <em>4</em>, 0122.
+</div>
+<div id="ref-nelson2019" class="csl-entry">
+Nelson, A., Weiss, D.J., Etten, J. van, Cattaneo, A., McMenomy, T. &amp;
+Koo, J. (2019). A suite of global accessibility indicators.
+<em>Scientific Data</em>, <em>6</em>, 266.
 </div>
 <div id="ref-protectedplanet2025" class="csl-entry">
-Protected Planet. (2025). <a href="https://www.protectedplanet.net/en" class="external-link">World database of protected
-areas (<span>WDPA</span>)</a>.
+Planet, P. (2025). <a href="https://www.protectedplanet.net/en" class="external-link">World
+database of protected areas</a>.
 </div>
 <div id="ref-tuanmu2014" class="csl-entry">
-Tuanmu, M.-N. &amp; Jetz, W. (2014). A global 1-km consensus land-cover
+Tuanmu, M.N. &amp; Jetz, W. (2014). A global 1-km consensus land-cover
 product for biodiversity and ecosystem modelling. <em>Global Ecology and
 Biogeography</em>, <em>23</em>, 1031–1045.
 </div>
 <div id="ref-tuanmu2015" class="csl-entry">
-Tuanmu, M.-N. &amp; Jetz, W. (2015). A global, remote sensing-based
+Tuanmu, M.N. &amp; Jetz, W. (2015). A global, remote sensing-based
 characterization of terrestrial habitat heterogeneity for biodiversity
 and ecosystem modelling. <em>Global Ecology and Biogeography</em>,
 <em>24</em>, 1329–1339.
+</div>
+<div id="ref-wang2022population" class="csl-entry">
+Wang, X., Meng, X. &amp; Long, Y. (2022). Projecting 1 km-grid
+population distributions from 2020 to 2100 globally under shared
+socioeconomic pathways. <em>Scientific Data</em>, <em>9</em>, 563.
+</div>
+<div id="ref-wang2022gdp" class="csl-entry">
+Wang, T. &amp; Sun, F. (2022). Global gridded GDP data set consistent
+with the shared socioeconomic pathways. <em>Scientific Data</em>,
+<em>9</em>, 221.
 </div>
 <div id="ref-wilson2016" class="csl-entry">
 Wilson, A.M. &amp; Jetz, W. (2016). Remotely sensed high-resolution
@@ -1195,7 +1600,7 @@ Data</em>, <em>9</em>, 409.
 </div>
 </div>
 </div>
-  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+  </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>
 </div>
 
@@ -1206,15 +1611,15 @@ Data</em>, <em>9</em>, 409.
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.1.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.9.</p>
 </div>
 
     </footer>
 </div>
 
+  
 
-
-
+  
 
   </body>
 </html>
