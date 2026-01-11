@@ -34,9 +34,7 @@ to a global raster file at 1 km resolution representing soil types.
 }
 
 \strong{Citation:}\cr
-FAO & IIASA. (2023). "Harmonized World Soil Database v2.0." 
-Food and Agriculture Organization of the United Nations, Rome and 
-International Institute for Applied Systems Analysis, Laxenburg, Austria.
+FAO, IIASA (2023). "Harmonized World Soil Database v2.0." Food and Agriculture Organization of the United Nations, Rome and International Institute for Applied Systems Analysis, Laxenburg, Austria.
 https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/
 }
 \examples{

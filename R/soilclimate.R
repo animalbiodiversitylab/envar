@@ -41,8 +41,7 @@
 #' }
 #'
 #' \strong{Citation:}\cr
-#' Lembrechts, Jonas J., et al. (2022).
-#' "Global maps of soil temperature." Global Change Biology 28, no. 9: 3110-3144.
+#' Lembrechts JJ et al. (2022)."Global maps of soil temperature." Global Change Biology 28, 3110-3144.
 #' \url{https://doi.org/10.1111/gcb.16060}
 #'
 #' Note: Please cite original sources of primary datasets where appropriate.
@@ -73,7 +72,7 @@ soilclimate <- function(x, vars, depth = "0-5", ...) {
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using Global maps of soil temperature.\n",
-    "Citation: Lembrechts JJ et al. (2022). Global Change Biology 28(9): 3110-3144.\n",
+    "Citation: Lembrechts JJ et al. (2022).Global maps of soil temperature. Global Change Biology 28, 3110-3144.\n",
     "DOI: {.url https://doi.org/10.1111/gcb.16060}\n"
   ))
   

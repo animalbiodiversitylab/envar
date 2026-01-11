@@ -36,161 +36,179 @@ var_get(
 )
 }
 \arguments{
-\item{country}{Character. The English name of a country (e.g., `"Italy"`, `"Viet Nam"`).
-Used to generate the extent if `shape` is NULL.}
+\item{country}{Character. The English name of a country (e.g., \code{"Italy"}, \code{"Viet Nam"}).
+Used to generate the extent if \code{shape} is \code{NULL}.}
 
-\item{continent}{Character. The English name of a continent (e.g., `"Europe"`, `"Africa"`).
-Used to generate the extent if `shape` and `country` are NULL.}
+\item{continent}{Character. The English name of a continent (e.g., \code{"Europe"}, \code{"Africa"}).
+Used to generate the extent if \code{shape} and \code{country} are \code{NULL}.}
 
-\item{shape}{An `sf` object representing the study area. This can be:
-* **Polygons:** defining a region of interest.
-* **Points:** defining specific sampling locations.
-If `shape` is provided, `country` and `continent` are ignored.}
+\item{shape}{An \code{sf} object representing the study area. This can be:
+\itemize{
+  \item \strong{Polygons:} defining a region of interest.
+  \item \strong{Points:} defining specific sampling locations.
+}
+If \code{shape} is provided, \code{country} and \code{continent} are ignored.}
 
 \item{ecoregion}{Character. The name of a terrestrial ecoregion from Dinerstein et al. (2017).
-Uses the ECO_NAME column from the Ecoregions2017 dataset.}
+Uses the \code{ECO_NAME} column from the Ecoregions2017 dataset.}
 
 \item{biome}{Character. The name of a biome from Dinerstein et al. (2017).
-Uses the BIOME_NAME column from the Ecoregions2017 dataset.}
+Uses the \code{BIOME_NAME} column from the Ecoregions2017 dataset.}
 
 \item{realm}{Character. The name of a biogeographic realm from Dinerstein et al. (2017).
-Uses the REALM column from the Ecoregions2017 dataset.}
+Uses the \code{REALM} column from the Ecoregions2017 dataset.}
 
 \item{zooregion}{Character. The name of a zoogeographic region from Holt et al. (2013).
-Uses the Regions column from the CMEC dataset.}
+Uses the \code{Regions} column from the CMEC dataset.}
 
 \item{zoorealm}{Character. The name of a zoogeographic realm from Holt et al. (2013).
-Uses the Realm column from the CMEC newRealms dataset.}
+Uses the \code{Realm} column from the CMEC newRealms dataset.}
 
 \item{mountain_region}{Character. The name of a mountain region from the GMBA Mountain
-Inventory v2.0 (Snethlage et al. 2022). Uses the MapName column.}
+Inventory v2.0 (Snethlage et al. 2022). Uses the \code{MapName} column.}
 
 \item{mountain_region_cmec}{Character. The name of a mountain region from the Center for Macroecology, 
-Evolution, and Climate definition of mountain areas (Rahbek et al. 2019). Uses the Name column.}
+Evolution, and Climate definition of mountain areas (Rahbek et al. 2019). Uses the \code{Name} column.}
 
 \item{glacier_region_19}{Character. The name of a glacier region based on RGI v6.0 (2017)
-first-order regions. Uses the RGI_CODE column.}
+first-order regions. Uses the \code{RGI_CODE} column.}
 
 \item{glacier_region_20}{Character. The name of a glacier region based on GTN-G 2023
-first-order regions. Uses the o1region column.}
+first-order regions. Uses the \code{o1region} column.}
 
-\item{freshwater_ecoregion}{Character or Numeric. The FEOW_ID of a freshwater ecoregion
-from Abell et al. (2008). Uses the FEOW_ID column from the FEOW dataset.}
+\item{freshwater_ecoregion}{Character or Numeric. The \code{FEOW_ID} of a freshwater ecoregion
+from Abell et al. (2008). Uses the \code{FEOW_ID} column from the FEOW dataset.}
 
 \item{marine_ecoregion}{Character. The name of a marine ecoregion from Spalding et al. (2007).
-Uses the ECOREGION column from the MEOW dataset (TYPE == "MEOW").}
+Uses the \code{ECOREGION} column from the MEOW dataset (\code{TYPE == "MEOW"}).}
 
 \item{marine_realm}{Character. The name of a marine realm from Spalding et al. (2007).
-Uses the REALM column from the MEOW dataset (TYPE == "MEOW").}
+Uses the \code{REALM} column from the MEOW dataset (\code{TYPE == "MEOW"}).}
 
 \item{marine_province}{Character. The name of a marine province from Spalding et al. (2007).
-Uses the PROVINC column from the MEOW dataset (TYPE == "MEOW").}
+Uses the \code{PROVINC} column from the MEOW dataset (\code{TYPE == "MEOW"}).}
 
 \item{pelagic_province}{Character. The name of a pelagic province from Spalding et al. (2012).
-Uses the PROVINC column from the PPOW dataset (TYPE == "PPOW").}
+Uses the \code{PROVINC} column from the PPOW dataset (\code{TYPE == "PPOW"}).}
 
 \item{pelagic_biome}{Character. The name of a pelagic biome from Spalding et al. (2012).
-Uses the BIOME column from the PPOW dataset (TYPE == "PPOW").}
+Uses the \code{BIOME} column from the PPOW dataset (\code{TYPE == "PPOW"}).}
 
 \item{pelagic_realm}{Character. The name of a pelagic realm from Spalding et al. (2012).
-Uses the REALM column from the PPOW dataset (TYPE == "PPOW").}
+Uses the \code{REALM} column from the PPOW dataset (\code{TYPE == "PPOW"}).}
 
-\item{pointsdf}{Data.frame with columns X and Y representing point coordinates.}
+\item{pointsdf}{Data.frame with columns \code{X} and \code{Y} representing point coordinates.}
 
-\item{alpha_hull}{Logical. If TRUE, creates an alpha hull polygon around the occurrence
-points using the `getDynamicAlphaHull` function from the rangeBuilder package (Rabosky et al. 
-2016) to model species distribution ranges. The initialAlpha is set to 2 and gradually 
-increased until a polygon captures at least 99% of occurrence records. This method optimizes 
+\item{alpha_hull}{Logical. If \code{TRUE}, creates an alpha hull polygon around the occurrence
+points using the \code{getDynamicAlphaHull} function from the \pkg{rangeBuilder} package (Rabosky et al. 
+2016) to model species distribution ranges. The \code{initialAlpha} is set to 2 and gradually 
+increased until a polygon captures at least 99\% of occurrence records. This method optimizes 
 the balance between identifying distinct clusters as unique polygons and avoiding excessive 
-fragmentation (Roll et al. 2017). Can be used in conjunction with `buffer` (applied after 
-alpha hull creation) and `land` (intersects result with land boundary). Default is FALSE.
+fragmentation (Roll et al. 2017). Can be used in conjunction with \code{buffer} (applied after 
+alpha hull creation) and \code{land} (intersects result with land boundary). Default is \code{FALSE}.
 
 References:
-* Rabosky ARD, et al. (2016). BAMMtools: an R package for the analysis of evolutionary 
+\itemize{
+  \item Rabosky ARD, et al. (2016). BAMMtools: an R package for the analysis of evolutionary 
   dynamics on phylogenetic trees. Methods in Ecology and Evolution 7:701-707.
-* Roll U, et al. (2017). The global distribution of tetrapods reveals a need for targeted 
-  reptile conservation. Nature Ecology & Evolution 1:1677-1682.}
+  \item Roll U, et al. (2017). The global distribution of tetrapods reveals a need for targeted 
+  reptile conservation. Nature Ecology & Evolution 1:1677-1682.
+}}
 
-\item{buffer}{Numeric. A buffer distance in **kilometers** to expand or shrink the extent.
+\item{buffer}{Numeric. A buffer distance in \strong{kilometers} to expand or shrink the extent.
 The buffer is always specified in kilometers regardless of the target CRS - the function
 automatically converts to the appropriate units internally (degrees for geographic CRS
 like EPSG:4326, meters for projected CRS like EPSG:3035 or ESRI:54009).
-* **Positive values**: Expand the area outward by this distance.
-* **Negative values**: Shrink the area inward by this distance (useful for excluding
+\itemize{
+  \item \strong{Positive values}: Expand the area outward by this distance.
+  \item \strong{Negative values}: Shrink the area inward by this distance (useful for excluding
   coastal/border areas where data may have different characteristics).
-* For **points with positive buffer**: A circular buffer of this radius is drawn around 
+  \item For \strong{points with positive buffer}: A circular buffer of this radius is drawn around 
   each point, effectively converting the study area into polygons.
-* Default is `0`.}
+  \item Default is \code{0}.
+}}
 
 \item{res}{Numeric. The target spatial resolution multiplier.
-* This controls the cell size of the output raster stack.
-* Must be a positive integer (e.g., `1`, `5`, `10`).
-* Default is `1` (30 arc-seconds or 0.008333333Â° at the equator).
-* Higher values will multiply the original 30 arcsec resolution by the specified factor.}
+\itemize{
+  \item This controls the cell size of the output raster stack.
+  \item Must be a positive integer (e.g., \code{1}, \code{5}, \code{10}).
+  \item Default is \code{1} (30 arc-seconds or 0.008333333° at the equator).
+  \item Higher values will multiply the original 30 arcsec resolution by the specified factor.
+}}
 
-\item{path}{directory to store the result of the download/processing. Default to NULL (no output is stored locally).
-It works only if no corr_check() is specified. Specify the path including the file name and the extension (e.g. "../Out/rastername.tif" if the final
-export is a SpatRaster; or "../Out/extracteddataframe.csv" if the output is a data.frame).}
+\item{path}{directory to store the result of the download/processing. Default to \code{NULL} (no output is stored locally).
+It works only if no \code{corr_check()} is specified. Specify the path including the file name and the extension (e.g. \code{"../Out/rastername.tif"} if the final
+export is a \code{SpatRaster}; or \code{"../Out/extracteddataframe.csv"} if the output is a \code{data.frame}).}
 
-\item{crs}{Character or Numeric. The Coordinate Reference System for the **final output**.
-* Can be an EPSG code with or without prefix (e.g., `4326`, `3035`, `EPSG:4326`), 
-  an ESRI code (e.g., `54009`, `ESRI:54009`), a PROJ4 string, or WKT.
-* If `NULL`, the pipeline uses the standard default WGS84 (EPSG:4326).
-* If specified, all downstream environmental layers will be projected to this CRS
+\item{crs}{Character or Numeric. The Coordinate Reference System for the \strong{final output}.
+\itemize{
+  \item Can be an EPSG code with or without prefix (e.g., \code{4326}, \code{3035}, \code{"EPSG:4326"}), 
+  an ESRI code (e.g., \code{54009}, \code{"ESRI:54009"}), a PROJ4 string, or WKT.
+  \item If \code{NULL}, the pipeline uses the standard default WGS84 (\code{EPSG:4326}).
+  \item If specified, all downstream environmental layers will be projected to this CRS
   after processing.
-* Note: ESRI codes (53000-54999, 100000+) are automatically recognized and prefixed
-  with "ESRI:" internally.}
+  \item Note: ESRI codes (53000-54999, 100000+) are automatically recognized and prefixed
+  with "ESRI:" internally.
+}}
 
-\item{set_na}{Logical, with default FALSE. If TRUE, any cell that is NA in at least one raster is set to be
-NA in all rasters of the final SpatRaster object. It is useful only when the output is a SpatRaster and not a point extraction.}
+\item{set_na}{Logical, with default \code{FALSE}. If \code{TRUE}, any cell that is \code{NA} in at least one raster is set to be
+\code{NA} in all rasters of the final \code{SpatRaster} object. It is useful only when the output is a \code{SpatRaster} and not a point extraction.}
 
-\item{scale}{Character with value "small", "medium", or "large". It represents the scale at
-which the country/continent shapefile are retrieved using the rnaturalearthdata package. Large implies a better
-definition of the borders of the shapefile (scale 1:10). The default is "medium". It is useful only when setting the argument country or continent.}
+\item{scale}{Character with value \code{"small"}, \code{"medium"}, or \code{"large"}. It represents the scale at
+which the country/continent shapefile are retrieved using the \pkg{rnaturalearthdata} package. Large implies a better
+definition of the borders of the shapefile (scale 1:10). The default is \code{"medium"}. It is useful only when setting the argument \code{country} or \code{continent}.}
 
-\item{land}{Logical, with default FALSE. If TRUE, the extent is intersected with the global land boundary
-from Natural Earth (at the scale defined by the `scale` argument). This is useful for clipping marine/pelagic 
+\item{land}{Logical, with default \code{FALSE}. If \code{TRUE}, the extent is intersected with the global land boundary
+from Natural Earth (at the scale defined by the \code{scale} argument). This is useful for clipping marine/pelagic 
 regions to land only, or for ensuring that buffered areas do not extend into the ocean. 
-Note: This does not apply to point extractions (pointsdf without buffer).}
+Note: This does not apply to point extractions (\code{pointsdf} without buffer).}
 }
 \value{
-A `list` object (class `envar_par`) containing:
-  * `grid`: A template `SpatRaster` defining the resolution and extent (for polygon input).
-  * `mask`: An `sf` object defining the exact study area boundaries (for polygon input).
-  * `res`: The resolution multiplier used.
-  * `bbox`: The bounding box of the study area.
-  * `crs`: The target coordinate reference system.
-  * `type`: The type of input ("polygon", "admin", or "point").
-  * `is_global`: Logical, TRUE if processing global extent.
-  * `set_na`: Logical, TRUE if user wants to apply an NA mask.
-  * `path`: User-specified path to store the result.
+A \code{list} object (class \code{envar_par}) containing:
+  \itemize{
+    \item \code{grid}: A template \code{SpatRaster} defining the resolution and extent (for polygon input).
+    \item \code{mask}: An \code{sf} object defining the exact study area boundaries (for polygon input).
+    \item \code{res}: The resolution multiplier used.
+    \item \code{bbox}: The bounding box of the study area.
+    \item \code{crs}: The target coordinate reference system.
+    \item \code{type}: The type of input (\code{"polygon"}, \code{"admin"}, or \code{"point"}).
+    \item \code{is_global}: Logical, \code{TRUE} if processing global extent.
+    \item \code{set_na}: Logical, \code{TRUE} if user wants to apply an NA mask.
+    \item \code{path}: User-specified path to store the result.
+  }
 }
 \description{
-`var_get()` is the entry point for the **envar** package workflow. It defines the
+\code{var_get()} is the entry point for the \strong{envar} package workflow. It defines the
 spatial extent, resolution, and coordinate reference system (CRS) for the study area.
 }
 \details{
 This function does not download data itself. Instead, it creates a standardized
 spatial template (grid) or processes point locations that are passed to downstream
-functions (like `chelsa()`, `worldclim()`, `topography()`, etc.) to ensure all
+functions (like \code{chelsa()}, \code{worldclim()}, \code{topography()}, etc.) to ensure all
 retrieved variables are perfectly aligned and stacked.
+}
+\section{How it works}{
 
-## How it works
-1. **Extent Definition:** You can define the study area using a shapefile (`sf` object),
-   a `country` name, a `continent` name, or various biogeographic boundary types.
-2. **Resolution:** The `res` argument sets the target resolution as a multiplier of
+\enumerate{
+  \item \strong{Extent Definition:} You can define the study area using a shapefile (\code{sf} object),
+   a \code{country} name, a \code{continent} name, or various biogeographic boundary types.
+  \item \strong{Resolution:} The \code{res} argument sets the target resolution as a multiplier of
    the base 30 arc-seconds (~1 km at equator).
-3. **Buffering:** An optional buffer can be applied to expand the study area or create
-   a sampling radius around points. The buffer is **always specified in kilometers**,
+  \item \strong{Buffering:} An optional buffer can be applied to expand the study area or create
+   a sampling radius around points. The buffer is \strong{always specified in kilometers},
    regardless of the target CRS. The function automatically converts to the appropriate
    units (degrees for geographic CRS, meters for projected CRS).
-4. **Output:**
-   - If the input is a **polygon** (or country/continent), it returns a list containing
-     a target `SpatRaster` grid and a vector mask.
-   - If the input is **points** (without a buffer), it returns the point coordinates for extraction.
-   - If the input is **points with a buffer**, it creates a polygon geometry around the points
+  \item \strong{Output:}
+   \itemize{
+     \item If the input is a \strong{polygon} (or country/continent), it returns a list containing
+     a target \code{SpatRaster} grid and a vector mask.
+     \item If the input is \strong{points} (without a buffer), it returns the point coordinates for extraction.
+     \item If the input is \strong{points with a buffer}, it creates a polygon geometry around the points
      and returns a grid, allowing you to download raster data for the area surrounding your points.
+   }
 }
+}
+
 \examples{
 \dontrun{
 # Basic usage with a country

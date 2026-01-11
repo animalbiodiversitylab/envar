@@ -36,8 +36,7 @@
 #' }
 #'
 #' \strong{Citation:}\cr
-#' Fick, Stephen E., and Robert J. Hijmans (2017).
-#' "WorldClim 2: new 1-km spatial resolution climate surfaces for global land areas." International Journal of Climatology 37, no. 12: 4302-4315.
+#' Fick SE, Hijmans RJ (2017). "WorldClim 2: new 1-km spatial resolution climate surfaces for global land areas." International Journal of Climatology 37: 4302-4315.
 #' https://doi.org/10.1002/joc.5086
 #'
 #' @param x The output from `var_get()` defining the area or locations for extraction, 
@@ -74,7 +73,7 @@ worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NU
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using WorldClim.\n",
-    "Citation: Fick, S. E. and Hijmans, R. J. (2017). WorldClim 2: new 1-km spatial resolution climate surfaces for global land areas. International Journal of Climatology.\n",
+    "Citation: Fick SE, Hijmans RJ (2017). WorldClim 2: new 1-km spatial resolution climate surfaces for global land areas. International Journal of Climatology 37: 4302-4315.\n",
     "DOI: {.url https://doi.org/10.1002/joc.5086}\n"
   ))
   

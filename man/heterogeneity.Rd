@@ -51,9 +51,7 @@ metrics of habitat heterogeneity derived from remote sensing data.
 }
 
 \strong{Citation:}\cr
-Tuanmu, M.-N. & Jetz, W. (2015).
-"A global, remote sensing-based characterization of terrestrial habitat heterogeneity for biodiversity and ecosystem modeling."
-Global Ecology and Biogeography, 24(11), 1329-1339.
+Tuanmu M-N, Jetz W (2015). "A global, remote sensing-based characterization of terrestrial habitat heterogeneity for biodiversity and ecosystem modeling." Global Ecology and Biogeography, 24, 1329-1339.
 https://doi.org/10.1111/geb.12365
 
 Note: Please cite original sources of primary datasets where appropriate.

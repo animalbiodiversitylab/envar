@@ -62,8 +62,7 @@ and monthly soil temperatures from the Global Soil Temperature dataset
 }
 
 \strong{Citation:}\cr
-Lembrechts, Jonas J., et al. (2022).
-"Global maps of soil temperature." Global Change Biology 28, no. 9: 3110-3144.
+Lembrechts JJ et al. (2022)."Global maps of soil temperature." Global Change Biology 28, 3110-3144.
 \url{https://doi.org/10.1111/gcb.16060}
 
 Note: Please cite original sources of primary datasets where appropriate.

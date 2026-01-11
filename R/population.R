@@ -15,9 +15,7 @@
 #' }
 #'
 #' \strong{Citation:}\cr
-#' Wang, X., Meng, X. & Long, Y. (2022). "Projecting 1 km-grid population 
-#' distributions from 2020 to 2100 globally under shared socioeconomic pathways." 
-#' Sci Data 9, 563.
+#' Wang X, Meng X, Long Y (2022). "Projecting 1 km-grid population distributions from 2020 to 2100 globally under shared socioeconomic pathways." Scientific Data 9, 563.
 #' \url{https://doi.org/10.1038/s41597-022-01675-x}
 #'
 #' Note: Please cite original sources of primary datasets where appropriate.
@@ -47,7 +45,7 @@ population <- function(x, vars, year = 2020, ssp = 1, ...) {
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using Global Population Projections (Wang et al., 2022).\n",
-    "Citation: Wang, X., Meng, X. & Long, Y. (2022). Sci Data 9, 563.\n",
+    "Citation: Wang X, Meng X, Long Y (2022). Projecting 1 km-grid population distributions from 2020 to 2100 globally under shared socioeconomic pathways. Scientific Data 9, 563.\n",
     "DOI: {.url https://doi.org/10.1038/s41597-022-01675-x}\n"
   ))
   

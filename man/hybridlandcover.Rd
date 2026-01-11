@@ -34,9 +34,7 @@ The data covers the period from 2000 to 2020.
 }
 
 \strong{Citation:}\cr
-Luo Y, Zhu Z, Zhao W, Li M, Chen J, Zhao P, Sun L, Zhang Y, Duanmu Z, Chen J (2024). 
-"Hybrid Global Annual 1-km IGBP Land Cover Maps for the Period 2000–2020." 
-Journal of Remote Sensing, 4, 0122.
+Luo Y, Zhu Z, Zhao W, Li M, Chen J, Zhao P, Sun L, Zhang Y, Duanmu Z, Chen J (2024). "Hybrid Global Annual 1-km IGBP Land Cover Maps for the Period 2000–2020." Journal of Remote Sensing, 4, 0122.
 https://doi.org/10.34133/remotesensing.0122
 
 Note: You must specify the `year` argument (integer between 2000 and 2020).

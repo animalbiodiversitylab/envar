@@ -25,8 +25,7 @@
 #' }
 #'
 #' \strong{Citation:}\cr
-#' Amatulli, G., Domisch, S., Tuanmu, M.-N., Parmentier, B., Ranipeta, A., Malczyk, J., and Jetz, W. (2018).
-#' "A suite of global, cross-scale topographic variables for environmental and biodiversity modeling." Scientific Data.
+#' Amatulli G, Domisch S, Tuanmu M-N, Parmentier B, Ranipeta A, Malczyk J, Jetz W (2018). "A suite of global, cross-scale topographic variables for environmental and biodiversity modeling." Scientific Data 5, 180040.
 #' https://doi.org/10.1038/sdata.2018.40
 #'
 #' Note: Please cite original sources of primary datasets where appropriate.
@@ -65,7 +64,7 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using EarthEnv Topography layers.\n",
-    "Citation: Amatulli, G., et al. (2018). A suite of global, cross-scale topographic variables for environmental and biodiversity modeling. Scientific Data.\n",
+    "Citation: Amatulli G, Domisch S, Tuanmu M-N, Parmentier B, Ranipeta A, Malczyk J, Jetz W (2018). A suite of global, cross-scale topographic variables for environmental and biodiversity modeling. Scientific Data 5, 180040.\n",
     "DOI: {.url https://doi.org/10.1038/sdata.2018.40}\n"
   ))
   

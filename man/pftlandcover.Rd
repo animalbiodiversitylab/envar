@@ -37,9 +37,8 @@ with a 1-km resolution under socio-climatic scenarios (Chen et al., 2022).
 }
 
 \strong{Citation:}\cr
-Chen, G., Li, X. & Liu, X. (2022). Global land projection based on plant functional types 
-with a 1-km resolution under socio-climatic scenarios. Sci Data 9, 125.
-https://doi.org/10.1038/s41597-022-01209-6
+Chen G, Li X, Liu X (2022). "Global land projection based on plant functional types with a 1-km resolution under socio-climatic scenarios." Scientific Data 9, 125.
+https://doi.org/10.1038/s41597-022-01208-6
 
 Note: If the `vars` argument is left empty, the function will default 
 to downloading the land cover map.

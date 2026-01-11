@@ -21,12 +21,8 @@
 #' }
 #'
 #' \strong{Citation:}\cr
-#' Xia Li, Guangzhao Chen, Xiaoping Liu, Xun Liang, Shaojian Wang, Yimin Chen, 
-#' Fengsong Pei & Xiaocong Xu (2017). A New Global Land-Use and Land-Cover Change 
-#' Product at a 1-km Resolution for 2010 to 2100 Based on Human–Environment 
-#' Interactions. Annals of the American Association of Geographers, 107:5, 
-#' 1040-1059.
-#' DOI: \url{https://doi.org/10.1080/24694452.2017.1303357}
+#' Li X, Chen G, Liu X, Liang X, Wang S, Chen Y, Pei F, Xu X (2017). "A new global land-use and land-cover change product at a 1-km resolution for 2010 to 2100 based on human–environment interactions." Annals of the American Association of Geographers 107(5), 1040–1059.
+#' https://doi.org/10.1080/24694452.2017.1303357
 #'
 #' @param x The output from `var_get()` defining the area or locations for extraction, 
 #' the reference system, and the buffer.
@@ -60,7 +56,7 @@ geososlandcover <- function(x, vars, scenario = "A1B", year = 2010, discover = T
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using Global Simulation Land Use/Cover (GEOSOS) variables.\n",
-    "Citation: Xia Li et al. (2017) A New Global Land-Use and Land-Cover Change Product at a 1-km Resolution for 2010 to 2100. Annals of the American Association of Geographers.\n",
+    "Citation: Li X, Chen G, Liu X, Liang X, Wang S, Chen Y, Pei F, Xu X (2017). A new global land-use and land-cover change product at a 1-km resolution for 2010 to 2100 based on human–environment interactions. Annals of the American Association of Geographers 107(5), 1040–1059.\n",
     "DOI: {.url https://doi.org/10.1080/24694452.2017.1303357}\n"
   ))
   

@@ -42,10 +42,9 @@
 #' }
 #'
 #' \strong{Citation:}\cr
-#' Jung, M., Dahal, P.R., Butchart, S.H.M., Donald, P.F., De Lamo, X., Lesiv, M., Kapos, V., Rondinini, C., Visconti, P. (2020).
-#' "A global map of terrestrial habitat types." Scientific Data 7, 256.
-#' \doi{10.1038/s41597-020-00599-8}
-#'
+#' Jung M, Dahal PR, Butchart SHM, Donald PF, De Lamo X, Lesiv M, Kapos V, Rondinini C, Visconti P (2020). "A global map of terrestrial habitat types." Scientific Data 7, 256.
+#' https://doi.org/10.1038/s41597-020-00599-8
+#' 
 #' Note: Please cite original sources of primary datasets where appropriate.
 #' 
 #' @param x The output from `var_get()` defining the area or locations for extraction, 
@@ -77,7 +76,7 @@ habitat <- function(x, vars, level = 1, ...) {
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using IUCN Global Habitat Classification Fractions (Level {.val {level}}).\n",
-    "Citation: Jung et al. (2020). Sci. Data 7, 256.\n",
+    "Citation: Jung M, Dahal PR, Butchart SHM, Donald PF, De Lamo X, Lesiv M, Kapos V, Rondinini C, Visconti P (2020). A global map of terrestrial habitat types. Scientific Data 7, 256.\n",
     "DOI: {.url https://doi.org/10.1038/s41597-020-00599-8}\n"
   ))
   

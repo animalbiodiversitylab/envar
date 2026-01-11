@@ -72,8 +72,7 @@ It supports both Historical (v2.1, 1970-2000) and Future (CMIP6) data.
 }
 
 \strong{Citation:}\cr
-Fick, Stephen E., and Robert J. Hijmans (2017).
-"WorldClim 2: new 1-km spatial resolution climate surfaces for global land areas." International Journal of Climatology 37, no. 12: 4302-4315.
+Fick SE, Hijmans RJ (2017). "WorldClim 2: new 1-km spatial resolution climate surfaces for global land areas." International Journal of Climatology 37: 4302-4315.
 https://doi.org/10.1002/joc.5086
 }
 \examples{

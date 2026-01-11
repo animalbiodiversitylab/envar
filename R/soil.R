@@ -15,9 +15,7 @@
 #' }
 #'
 #' \strong{Citation:}\cr
-#' FAO & IIASA. (2023). "Harmonized World Soil Database v2.0." 
-#' Food and Agriculture Organization of the United Nations, Rome and 
-#' International Institute for Applied Systems Analysis, Laxenburg, Austria.
+#' FAO, IIASA (2023). "Harmonized World Soil Database v2.0." Food and Agriculture Organization of the United Nations, Rome and International Institute for Applied Systems Analysis, Laxenburg, Austria.
 #' https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/
 #'
 #' @param x The output from `var_get()` defining the area or locations for extraction, 
@@ -44,7 +42,7 @@ soil <- function(x, vars = NULL, ...) {
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using Harmonized World Soil Database v2.0.\n",
-    "Citation: FAO & IIASA. (2023). Harmonized World Soil Database v2.0.\n",
+    "Citation: FAO, IIASA (2023). Harmonized World Soil Database v2.0. Food and Agriculture Organization of the United Nations, Rome and International Institute for Applied Systems Analysis, Laxenburg, Austria.\n",
     "DOI: {.url https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/}\n"
   ))
   
