@@ -488,6 +488,7 @@ process_extent <- function(shape = NULL,
           
           # The Regions shapefile is in World_Plate_Carree projection, need to transform to WGS84 first
           # then to target CRS
+          sf::st_crs(zooregions_sf) <- "+proj=eqc +lat_ts=0 +lat_0=0 +lon_0=12 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"
           zooregions_sf <- sf::st_transform(zooregions_sf, "EPSG:4326")
           
           extent_info$mask <- zooregions_sf[zooregions_sf$Regions == zooregion, ]
