@@ -720,10 +720,10 @@ process_extent <- function(shape = NULL,
         }
         
         glaciers_sf <- sf::read_sf(shp_file)
-        extent_info$mask <- glaciers_sf[glaciers_sf$o1region == glacier_region_20, ]
+        extent_info$mask <- glaciers_sf[glaciers_sf$full_name == glacier_region_20, ]
         
         if (nrow(extent_info$mask) == 0) {
-          available_regions <- unique(glaciers_sf$o1region)
+          available_regions <- unique(glaciers_sf$full_name)
           cli::cli_abort("Glacier region '{glacier_region_20}' not found. Available regions: {paste(available_regions, collapse = ', ')}")
         }
         
@@ -794,11 +794,11 @@ process_extent <- function(shape = NULL,
         }
         
         glaciers_sf <- sf::read_sf(shp_file)
-        extent_info$mask <- glaciers_sf[glaciers_sf$RGI_CODE == glacier_region_19, ]
+        extent_info$mask <- glaciers_sf[glaciers_sf$FULL_NAME == glacier_region_19, ]
         
         if (nrow(extent_info$mask) == 0) {
-          available_regions <- unique(glaciers_sf$RGI_CODE)
-          cli::cli_abort("Glacier region '{glacier_region_19}' not found. Available RGI codes: {paste(available_regions, collapse = ', ')}")
+          available_regions <- unique(glaciers_sf$FULL_NAME)
+          cli::cli_abort("Glacier region '{glacier_region_19}' not found. Available regions: {paste(available_regions, collapse = ', ')}")
         }
         
       } else {

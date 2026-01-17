@@ -107,11 +107,11 @@ define a study area: 1) global data, 2) a country or continent is
 specified, 3) an ecological boundary is specified, 4) a polygon
 shapefile is loaded, 5) a point shapefile is loaded, 6) a point
 data.frame is loaded, 7) a buffer is specified in addition to another
-element, or 8) a species range is create. Then we illustrate how to
+element, or 8) a species range is created. Then, we illustrate how to
 project to a different reference system, aggregate the results to a
-different lower resolution, how to check for correlation and
-extrapolation, how to set NAs consistently across raster layers, and
-optionally save the results locally.</p>
+different resolution, how to check for correlation and extrapolation,
+how to set NAs consistently across raster layers, and how to optionally
+save the results locally.</p>
 </div>
 <div class="section level2">
 <h2 id="load-the-package">2. Load the package<a class="anchor" aria-label="anchor" href="#load-the-package"></a>
@@ -129,9 +129,10 @@ for later use.</p>
 <div class="section level2">
 <h2 id="set-study-area">3. Set study area<a class="anchor" aria-label="anchor" href="#set-study-area"></a>
 </h2>
-<p>Below, we illustrate a set of download examples covering all possible
-customizations of the user query, to make sure that every use is covered
-and illustrated.</p>
+<p>Below, we illustrate a set of R commands that can be used to download
+variables over a specified study area. The customization of the study
+area occurs through the modification of arguments of the
+<code><a href="../reference/var_get.html">var_get()</a></code> function.</p>
 <div class="section level3">
 <h3 id="global-data">3.1. Global data<a class="anchor" aria-label="anchor" href="#global-data"></a>
 </h3>
@@ -243,11 +244,11 @@ Areas <strong><a href="https://gadm.org" class="external-link">GADM</a></strong>
 time the “country” or “continent” argument is used except for Europe),
 an additional argument (“scale”) can be specified. This represents the
 scale at which the shapefiles are retrieved, and can assume three
-values: small (1:100 m), medium (the default; 1:50 m), and large (1:10
-m). The boundaries will appear rough and imprecise with a small scale
-and finer with a large scale. The default is “medium” to download data
-at resolution that is sufficiently detailed but lighter and faster than
-high-resolution.</p>
+values: small (1:100 million), medium (the default; 1:50 m), and large
+(1:10 m). The boundaries will appear rough and imprecise with a small
+scale and finer with a large scale. The default is “medium” to download
+data at a resolution that is sufficiently detailed but lighter and
+faster than high-resolution.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># download variables over a country shape at "small" scale</span></span>
 <span><span class="va">processed_bilayer_country_small</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, scale <span class="op">=</span> <span class="st">"small"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -362,9 +363,73 @@ publication.</p>
 or 20 (new version) glacier regions that are broad areas that encompass
 different mountainous and polar areas of the globe <span class="citation">(Pfeffer <em>et al.</em> 2014)</span>. Here, we make
 available both the 19 regions classification and the 20 regions
-classification. The numeric code of the region must be inserted.</p>
+classification. The full name of the glacier region must be inserted and
+must be one of the following:</p>
+<p>(For the 19 glacier regions)</p>
+<ol style="list-style-type: decimal">
+<li>Alaska<br>
+</li>
+<li>Western Canada and USA</li>
+<li>Arctic Canada, North<br>
+</li>
+<li>Arctic Canada, South</li>
+<li>Greenland Periphery<br>
+</li>
+<li>Iceland<br>
+</li>
+<li>Svalbard and Jan Mayen</li>
+<li>Scandinavia</li>
+<li>Russian Arctic<br>
+</li>
+<li>Asia, North</li>
+<li>Central Europe</li>
+<li>Caucasus and Middle East</li>
+<li>Asia, Central<br>
+</li>
+<li>Asia, South West<br>
+</li>
+<li>Asia, South East<br>
+</li>
+<li>Low Latitudes<br>
+</li>
+<li>Southern Andes</li>
+<li>New Zealand<br>
+</li>
+<li>Antarctic and Subantarctic</li>
+</ol>
+<p>(For the 20 glacier regions)</p>
+<ol style="list-style-type: decimal">
+<li>Alaska</li>
+<li>Western Canada and USA</li>
+<li>Arctic Canada North</li>
+<li>Arctic Canada South<br>
+</li>
+<li>Greenland Periphery<br>
+</li>
+<li>Iceland<br>
+</li>
+<li>Svalbard and Jan Mayen</li>
+<li>Scandinavia</li>
+<li>Russian Arctic</li>
+<li>North Asia<br>
+</li>
+<li>Central Europe<br>
+</li>
+<li>Caucasus and Middle East<br>
+</li>
+<li>Central Asia</li>
+<li>South Asia West<br>
+</li>
+<li>South Asia East</li>
+<li>Low Latitudes<br>
+</li>
+<li>Southern Andes</li>
+<li>New Zealand</li>
+<li>Subantarctic and Antarctic Islands</li>
+<li>Antarctic Mainland</li>
+</ol>
 <div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed_glacier_region</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>glacier_region_19 <span class="op">=</span> <span class="st">"11"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<code class="sourceCode R"><span><span class="va">processed_glacier_region</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>glacier_region_19 <span class="op">=</span> <span class="st">"Central Europe"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_glacier_region</span><span class="op">)</span></span></code></pre></div>
@@ -396,7 +461,7 @@ first one is the Marine Ecoregions Of the World (MEOW) <span class="citation">(S
 a classification of coastal and shelf areas. The second one is the
 Pelagic Provinces Of the World (PPOW) <span class="citation">(Spalding
 <em>et al.</em> 2012)</span>, providing an inventory of surface pelagic
-waters. The available arguments are “marine_ecoregion,”marine_realm”,
+waters. The available arguments are “marine_ecoregion”, “marine_realm”,
 and “marine_province” for MEOW, and “pelagic_province”, “pelagic_biome”,
 and “pelagic_realm” for PPOW. You can explore the MEOW available names
 <strong><a href="https://databasin.org/maps/new/#datasets=3b6b12e7bcca419990c9081c0af254a2" class="external-link">here</a></strong>
@@ -576,14 +641,25 @@ them.</p>
 all sea/ocean cells from the output. This can be done by setting the
 argument “land” to TRUE (default to FALSE, i.e., no land mask is
 applied). Here we use the glacier region centered on the European Alps
-to include a rectangle with both land and sea, and how that sea is
-masked as NA when “land” is set to TRUE.</p>
+to display a region with both land and sea, to show that sea is masked
+as NA when “land” is set to TRUE. As the land outlines are retrieved
+from the Natural Earth database, it is possible to use the argument
+“scale” as for countries/continents, to refine the precision of
+coastline definition (check paragraph 3.2.3. “Set the scale” above).</p>
+<p>Without land mask:</p>
 <div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed_land</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>glacier_region_19 <span class="op">=</span> <span class="fl">11</span>, crs <span class="op">=</span> <span class="fl">3035</span>, land <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">processed_nolandmask</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>glacier_region_19 <span class="op">=</span> <span class="st">"Central Europe"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/earthenvlandcover.html">earthenvlandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
 <div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_land</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_nolandmask</span><span class="op">)</span></span></code></pre></div>
 <p><img src="package_overview_files/figure-html/unnamed-chunk-58-1.png" width="480" style="display: block; margin: auto;"></p>
+<p>With land mask:</p>
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">processed_landmask</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>glacier_region_19 <span class="op">=</span> <span class="st">"Central Europe"</span>, land <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/earthenvlandcover.html">earthenvlandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_landmask</span><span class="op">)</span></span></code></pre></div>
+<p><img src="package_overview_files/figure-html/unnamed-chunk-60-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level4">
 <h4 id="species-range">3.7.2. Species range<a class="anchor" aria-label="anchor" href="#species-range"></a>
@@ -598,21 +674,21 @@ option works only if occurrence points are specified as X and Y
 coordinates in the pointsdf argument. We use the Apollo dataset as an
 example, a dataset of occurrences of the <em>Parnassius apollo</em>
 butterfly; the dataset is already included in the package.</p>
-<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">Apollo</span>, alpha_hull <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_range</span><span class="op">)</span></span></code></pre></div>
-<p><img src="package_overview_files/figure-html/unnamed-chunk-60-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="package_overview_files/figure-html/unnamed-chunk-62-1.png" width="480" style="display: block; margin: auto;"></p>
 <p>It can also be used in conjunction with a buffer. In this case, an
 alpha hulll will be created and then expanded by the specified
 buffer.</p>
-<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_range_buffer</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">Apollo</span>, alpha_hull <span class="op">=</span> <span class="cn">TRUE</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_range_buffer</span><span class="op">)</span></span></code></pre></div>
-<p><img src="package_overview_files/figure-html/unnamed-chunk-62-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="package_overview_files/figure-html/unnamed-chunk-64-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 </div>
 </div>
@@ -646,10 +722,10 @@ character representing the code of the PRS must be provided. If nothing
 is specified, 4326 is assumed. The crs can also be specified with the
 prefix ‘ESRI’ or ‘EPSG’ according to the system, e.g. “EPSG:4326” or
 “ESRI:54009”.</p>
-<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_singlelayer_projected</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs<span class="op">=</span><span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span> <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">processed_singlelayer_projected</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## class       : SpatRaster </span></span>
 <span><span class="co">## dimensions  : 1249, 1194, 1  (nrow, ncol, nlyr)</span></span>
@@ -660,9 +736,9 @@ prefix ‘ESRI’ or ‘EPSG’ according to the system, e.g. “EPSG:4326” o
 <span><span class="co">## name        :      ice </span></span>
 <span><span class="co">## min value   :  0.00000 </span></span>
 <span><span class="co">## max value   : 99.62711</span></span></code></pre>
-<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_singlelayer_projected</span><span class="op">)</span></span></code></pre></div>
-<p><img src="package_overview_files/figure-html/unnamed-chunk-64-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="package_overview_files/figure-html/unnamed-chunk-66-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="aggregate-to-a-different-resolution">5. Aggregate to a different resolution<a class="anchor" aria-label="anchor" href="#aggregate-to-a-different-resolution"></a>
@@ -674,10 +750,10 @@ resolution; any value &gt; 1 aggregates the raster by that factor. For
 instance, <code>res = 10</code> aggregates the native grid to a
 resolution of ~10 km at the equator. Aggregation is done by computing
 the mean value of all cells that are part of the new larger cell.</p>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_singlelayer_aggregated</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>res <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">processed_singlelayer_aggregated</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## class       : SpatRaster </span></span>
 <span><span class="co">## dimensions  : 173, 432, 1  (nrow, ncol, nlyr)</span></span>
@@ -700,7 +776,7 @@ bottom of the code to enable an automatic test of correlation among the
 downloaded variables over the defined spatial area and resolution. Doing
 this will produce a list containing the processed SpatRaster, Pearson
 pairwise correlations, VIF statistics, and a saved correlation plot.</p>
-<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_bilayer_corr_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span>, res <span class="op">=</span> <span class="fl">2</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>             <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1"</span>, <span class="st">"bio4"</span>, <span class="st">"bio10"</span>, <span class="st">"bio12"</span>, <span class="st">"bio19"</span><span class="op">)</span>,</span>
 <span>                    years <span class="op">=</span> <span class="st">"1981-2010"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
@@ -716,7 +792,7 @@ that reports if and which variables have a Pearson’s correlation
 coefficient higher than |0.6| and/or a VIF higher than 3. Lastly, the
 “plot_path” specifies the local directory to which a plot of the
 Pearson’s pairwise correlation was saved.</p>
-<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># View the Pearson's pairwise correlation matrix</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">processed_bilayer_corr_check</span><span class="op">$</span><span class="va">correlation_matrix</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                 bio1_1981-2010 bio4_1981-2010 bio10_1981-2010 bio12_1981-2010</span></span>
@@ -739,7 +815,7 @@ Pearson’s pairwise correlation was saved.</p>
 <span><span class="co">## slope               0.399967493  0.83277881  1.00000000  0.223848319  0.2433729</span></span>
 <span><span class="co">## trees              -0.003624083 -0.12081588  0.22384832  1.000000000 -0.3266344</span></span>
 <span><span class="co">## ice                 0.229900683  0.48571755  0.24337291 -0.326634442  1.0000000</span></span></code></pre>
-<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># View the Variance Inflation Factor values</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">processed_bilayer_corr_check</span><span class="op">$</span><span class="va">vif</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##         Variables         VIF</span></span>
@@ -763,12 +839,12 @@ analyze the correlation plot that was locally stored.</p>
 to a SpatRaster object, but instead of a set of rasters, the first
 element of the resulting list will be a data.frame with the extracted
 values.</p>
-<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_bilayer_points_corr_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">points</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/corr_check.html">corr_check</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">processed_bilayer_points_corr_check</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   ID        X        Y ice pr_2015_12</span></span>
 <span><span class="co">## 1  1  5.53998 45.29161   0       1626</span></span>
@@ -806,29 +882,30 @@ R</em> package <span class="citation">(Zurell <em>et al.</em>
 <p>The output is a list with a SpatRaster with one layer - two if both
 strict and extrapolation are checked - reporting as 1 cells of
 extrapolation and 0 cells of no extrapolation.</p>
-<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_bilayer_extr_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/extr_check.html">extr_check</a></span><span class="op">(</span>calib_points <span class="op">=</span> <span class="va">Apollo</span>, calib_crs <span class="op">=</span> <span class="fl">4326</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"combinatorial"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_bilayer_extr_check</span><span class="op">$</span><span class="va">extrapolation</span><span class="op">$</span><span class="va">strict</span><span class="op">)</span></span></code></pre></div>
-<p><img src="package_overview_files/figure-html/unnamed-chunk-74-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="package_overview_files/figure-html/unnamed-chunk-76-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level3">
 <h3 id="with-points">7.2. With points<a class="anchor" aria-label="anchor" href="#with-points"></a>
 </h3>
-<p>If the output is a data.frame, one column - two if both strict and
-extrapolation are checked - are added to the data.frame with extracted
-variable values, reporting extrapolation as 1 and no extrapolation as
-0.</p>
-<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
+<p>If the output from the download pipeline is a data.frame (see
+e.g. paragraphs 3.4.1 or 3.5), then, when using
+<code><a href="../reference/extr_check.html">extr_check()</a></code>, one column is added to the data.frame - two
+if both strict and extrapolation are checked -. This/these additional
+column(s) will report extrapolation as 1 and no extrapolation as 0.</p>
+<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># for example, we use only the first 10 points of the Apollo dataset as a simulated data set to calibrate a model and then we want to apply it to a whole set of points covering a wider environmental range.</span></span>
 <span><span class="va">processed_points_extr_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">Apollo</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/extr_check.html">extr_check</a></span><span class="op">(</span>calib_points <span class="op">=</span> <span class="va">Apollo</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,<span class="op">]</span>, calib_crs <span class="op">=</span> <span class="fl">4326</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"combinatorial"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">processed_points_extr_check</span><span class="op">$</span><span class="va">extrapolation</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   ID        X        Y  ice pr_2015_12 strict combinatorial</span></span>
 <span><span class="co">## 1  1 13.49513 47.10400 0.00        761      0             0</span></span>
@@ -842,22 +919,30 @@ variable values, reporting extrapolation as 1 and no extrapolation as
 <div class="section level2">
 <h2 id="set-nas">8. Set NAs<a class="anchor" aria-label="anchor" href="#set-nas"></a>
 </h2>
-<p>When the output is a SpatRaster (all sections above and section “15.
-Apply a buffer when using points” in this tutorial), it is possible to
-specify that any cell that is NA in at least one layer is NA in all
-layers. For instance, when downloading data from CHELSA and land cover
-from <span class="citation">(Lo Parrino <em>et al.</em> 2025)</span>,
-the sea is not covered in the second source and it might thus be
-needless to keep information on climate over the sea. We can thus set
-the “set_na” argument to TRUE (default to FALSE, i.e., no NA mask is
-applied).</p>
-<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
+<p>When the output from the download pipeline is a SpatRaster, it is
+possible to specify that any cell that is NA in at least one layer is NA
+in all layers. For instance, when downloading data from CHELSA <span class="citation">(Karger <em>et al.</em> 2017)</span> and land cover
+from ESA <span class="citation">(Lo Parrino <em>et al.</em>
+2025)</span>, the sea is not covered in the second source and it might
+thus be needless to keep information on climate over the sea. We can
+thus set the “set_na” argument to TRUE (default to FALSE, i.e., no NA
+mask is applied).</p>
+<p>Without NA mask:</p>
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">processed_bilayer_global</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_bilayer_global</span><span class="op">)</span></span></code></pre></div>
+<p><img src="package_overview_files/figure-html/unnamed-chunk-80-1.png" width="480" style="display: block; margin: auto;"></p>
+<p>With NA mask:</p>
+<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_bilayer_global_namask</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>set_na<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_bilayer_global_namask</span><span class="op">)</span></span></code></pre></div>
-<p><img src="package_overview_files/figure-html/unnamed-chunk-78-1.png" width="480" style="display: block; margin: auto;"></p>
+<p><img src="package_overview_files/figure-html/unnamed-chunk-82-1.png" width="480" style="display: block; margin: auto;"></p>
 </div>
 <div class="section level2">
 <h2 id="save-results">9. Save results<a class="anchor" aria-label="anchor" href="#save-results"></a>
@@ -865,11 +950,11 @@ applied).</p>
 <div class="section level3">
 <h3 id="save-results-as-raster">9.1. Save results as raster<a class="anchor" aria-label="anchor" href="#save-results-as-raster"></a>
 </h3>
-<p>If the “path” argument is used (default to NULL, i.e. no output
+<p>If the “path” argument is used (default to NULL, i.e., no output
 stored locally), the retrieved and processed variables will be stored
 locally. Remember to specify the full path, including the filename and
 extension.</p>
-<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_stored_raster</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span>, path <span class="op">=</span> <span class="st">"../Out/storedraster.tif"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></span></code></pre></div>
@@ -879,12 +964,13 @@ extension.</p>
 </h3>
 <p>The same can be done if the output is a data.frame. In this case, the
 file written has to be a .csv file; specify the path accordingly.</p>
-<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed_stored_raster</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span>, path <span class="op">=</span> <span class="st">"../Out/storedraster.tif"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
+<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">processed_stored_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/var_get.html">var_get</a></span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">Apollo</span>, path <span class="op">=</span> <span class="st">"../Out/storedtable.csv"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/esalandcover.html">esalandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></span></code></pre></div>
-<p>Results cannot be stored if the correlation check is added, as the
-output will be a list and not a SpatRaster/data.frame.</p>
+<p>Results cannot be stored locally if the correlation or extrapolation
+check is/are added, as the output will be a list and not a
+SpatRaster/data.frame.</p>
 </div>
 </div>
 <div class="section level2">
@@ -928,6 +1014,12 @@ Holt, B.G., Lessard, J.P., Borregaard, M.K., Fritz, S.A., Araújo, M.B.,
 Dimitrov, D., Fabre, P.H., Graham, C.H., Graves, G.R. &amp; Jønsson,
 K.A. (2013). An update of wallace’s zoogeographic regions of the world.
 <em>Science</em>, <em>339</em>, 74–78.
+</div>
+<div id="ref-karger2017" class="csl-entry">
+Karger, D.N., Conrad, O., Böhner, J., Kawohl, T., Kreft, H., Soria-Auza,
+R.W., Zimmermann, N.E., Linder, H.P. &amp; Kessler, M. (2017).
+Climatologies at high resolution for the earth’s land surface areas.
+<em>Scientific Data</em>, <em>4</em>, 170122.
 </div>
 <div id="ref-loparrino2025" class="csl-entry">
 Lo Parrino, E., Simoncini, A., Ficetola, G.F. &amp; Falaschi, M. (2025).

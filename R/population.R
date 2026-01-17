@@ -148,7 +148,7 @@ population <- function(x, vars, year = 2020, ssp = 1, ...) {
     # 1. Download Zip if not exists
     if (!fs::file_exists(zip_dest)) {
       cli::cli_alert_info("Downloading dataset for {.val {user_name}} (this may take time)...")
-      success <- download_file(url, zip_dest)
+      success <- download_file_figshare(url, zip_dest)
       if (!success) {
         cli::cli_alert_warning("Failed to download data from {.url {url}}.")
         return(NULL)

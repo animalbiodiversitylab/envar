@@ -293,7 +293,7 @@ climatezones <- function(x, vars = "zones", years = "1991-2020", ssp = NULL, ...
     cli::cli_alert_info("Downloading global climate zone archive (approx. 3GB)...")
     cli::cli_alert_info("This may take a while, but is only done once.")
     
-    success <- download_file(zip_url, zip_dest)
+    success <- download_file_figshare(zip_url, zip_dest)
     if (!success) {
       cli::cli_abort("Failed to download climate data archive from {.url {zip_url}}.")
     }

@@ -207,7 +207,7 @@ aridity <- function(x, vars, ...) {
       # Check if main zip exists, if not, download it
       if (!fs::file_exists(main_zip_file)) {
         cli::cli_alert_info("Downloading main archive (approx 1.5 GB)... This happens only once.")
-        success <- download_file(url, main_zip_file)
+        success <- download_file_figshare(url, main_zip_file)
         if (!success) {
           cli::cli_alert_warning("Failed to download main archive from {.url {url}}.")
           return(NULL)

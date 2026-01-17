@@ -191,7 +191,7 @@ esalandcover <- function(x, vars, discover=TRUE, ...) {
     
     cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {user_name}}...")
     
-    success <- download_file(url, dest_file)
+    success <- download_file_figshare(url, dest_file)
     
     if (!success) {
       cli::cli_alert_warning("Failed to download {.val {user_name}} from {.url {url}}.")

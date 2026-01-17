@@ -38,7 +38,7 @@ devtools::load_all()
 
 # 1. Introduction 
 
-_envar_ is an _R_ package that enables the download of a wide range of environmental variables and their processing. In this tutorial we explore all the potential uses of the package, to give an idea of the breadth of uses and of the potential challenges and shortcuts. First we illustrate the five ways in which it is possible to define a study area: 1) global data, 2) a country or continent is specified, 3) an ecological boundary is specified, 4) a polygon shapefile is loaded, 5) a point shapefile is loaded, 6) a point data.frame is loaded, 7) a buffer is specified in addition to another element, or 8) a species range is create. Then we illustrate how to project to a different reference system, aggregate the results to a different lower resolution, how to check for correlation and extrapolation, how to set NAs consistently across raster layers, and optionally save the results locally.
+_envar_ is an _R_ package that enables the download of a wide range of environmental variables and their processing. In this tutorial we explore all the potential uses of the package, to give an idea of the breadth of uses and of the potential challenges and shortcuts. First we illustrate the five ways in which it is possible to define a study area: 1) global data, 2) a country or continent is specified, 3) an ecological boundary is specified, 4) a polygon shapefile is loaded, 5) a point shapefile is loaded, 6) a point data.frame is loaded, 7) a buffer is specified in addition to another element, or 8) a species range is created. Then, we illustrate how to project to a different reference system, aggregate the results to a different resolution, how to check for correlation and extrapolation, how to set NAs consistently across raster layers, and how to optionally save the results locally.
 
 # 2. Load the package
 
@@ -52,7 +52,7 @@ require(sf)
 
 # 3. Set study area
 
-Below, we illustrate a set of download examples covering all possible customizations of the user query, to make sure that every use is covered and illustrated.
+Below, we illustrate a set of R commands that can be used to download variables over a specified study area. The customization of the study area occurs through the modification of arguments of the `var_get()` function.
 
 ## 3.1. Global data
 
@@ -148,7 +148,7 @@ plot(processed_singlelayer_europe)
 
 ### 3.2.3. Set the scale 
 
-When retrieving continents or countries from Natural Earth (i.e., any time the "country" or "continent" argument is used except for Europe), an additional argument ("scale") can be specified. This represents the scale at which the shapefiles are retrieved, and can assume three values: small (1:100 m), medium (the default; 1:50 m), and large (1:10 m). The boundaries will appear rough and imprecise with a small scale and finer with a large scale. The default is "medium" to download data at resolution that is sufficiently detailed but lighter and faster than high-resolution.
+When retrieving continents or countries from Natural Earth (i.e., any time the "country" or "continent" argument is used except for Europe), an additional argument ("scale") can be specified. This represents the scale at which the shapefiles are retrieved, and can assume three values: small (1:100 million), medium (the default; 1:50 m), and large (1:10 m). The boundaries will appear rough and imprecise with a small scale and finer with a large scale. The default is "medium" to download data at a resolution that is sufficiently detailed but lighter and faster than high-resolution.
 
 ```{r,results = "hide", message = FALSE, warning =FALSE}
 # download variables over a country shape at "small" scale
@@ -259,10 +259,55 @@ plot(processed_mountain_region_cmec)
 
 ### 3.3.5. Glacier regions
 
-The Randolph Glacier Inventory team defined a set of 19 (old version) or 20 (new version) glacier regions that are broad areas that encompass different mountainous and polar areas of the globe [@pfeffer2014]. Here, we make available both the 19 regions classification and the 20 regions classification. The numeric code of the region must be inserted.
+The Randolph Glacier Inventory team defined a set of 19 (old version) or 20 (new version) glacier regions that are broad areas that encompass different mountainous and polar areas of the globe [@pfeffer2014]. Here, we make available both the 19 regions classification and the 20 regions classification. The full name of the glacier region must be inserted and must be one of the following:
+
+(For the 19 glacier regions)
+
+1. Alaska                 
+2. Western Canada and USA
+3. Arctic Canada, North      
+4. Arctic Canada, South
+5. Greenland Periphery       
+6. Iceland          
+7. Svalbard and Jan Mayen
+8. Scandinavia
+9. Russian Arctic       
+10. Asia, North
+11. Central Europe
+12. Caucasus and Middle East 
+13. Asia, Central             
+14. Asia, South West          
+15. Asia, South East        
+16. Low Latitudes              
+17. Southern Andes
+18. New Zealand              
+19. Antarctic and Subantarctic
+
+(For the 20 glacier regions)
+
+1. Alaska
+2. Western Canada and USA
+3. Arctic Canada North
+4. Arctic Canada South          
+5. Greenland Periphery  
+6. Iceland                    
+7. Svalbard and Jan Mayen
+8. Scandinavia
+9. Russian Arctic
+10. North Asia  
+11. Central Europe              
+12. Caucasus and Middle East    
+13. Central Asia
+14. South Asia West             
+15. South Asia East
+16. Low Latitudes   
+17. Southern Andes
+18. New Zealand
+19. Subantarctic and Antarctic Islands
+20. Antarctic Mainland
 
 ```{r,results = "hide", message = FALSE, warning =FALSE}
-processed_glacier_region <- var_get(glacier_region_19 = "11") %>%
+processed_glacier_region <- var_get(glacier_region_19 = "Central Europe") %>%
   esalandcover(vars = c("ice"))
 ```
 
@@ -287,7 +332,7 @@ plot(processed_freshwater_ecoregion)
 
 ### 3.3.7. Marine regions
 
-Marine regions are available from two different data references; the first one is the Marine Ecoregions Of the World (MEOW) [@spalding2007], which provides a classification of coastal and shelf areas. The second one is the Pelagic Provinces Of the World (PPOW) [@spalding2012], providing an inventory of surface pelagic waters. The available arguments are "marine_ecoregion, "marine_realm", and "marine_province" for MEOW, and "pelagic_province", "pelagic_biome", and "pelagic_realm" for PPOW. You can explore the MEOW available names **[here](https://databasin.org/maps/new/#datasets=3b6b12e7bcca419990c9081c0af254a2)** and the PPOW available names through the relative publication.
+Marine regions are available from two different data references; the first one is the Marine Ecoregions Of the World (MEOW) [@spalding2007], which provides a classification of coastal and shelf areas. The second one is the Pelagic Provinces Of the World (PPOW) [@spalding2012], providing an inventory of surface pelagic waters. The available arguments are "marine_ecoregion", "marine_realm", and "marine_province" for MEOW, and "pelagic_province", "pelagic_biome", and "pelagic_realm" for PPOW. You can explore the MEOW available names **[here](https://databasin.org/maps/new/#datasets=3b6b12e7bcca419990c9081c0af254a2)** and the PPOW available names through the relative publication.
 
 ```{r,results = "hide", message = FALSE, warning =FALSE}
 processed_marine_ecoregion <- var_get(marine_ecoregion = "East African Coral Coast") %>%
@@ -425,15 +470,28 @@ plot(processed_bilayer_points_buffer)
 
 ### 3.7.1. Land mask 
 
-When downloading  data, it is possible to apply a land mask to remove all sea/ocean cells from the output. This can be done by setting the argument "land" to TRUE (default to FALSE, i.e., no land mask is applied). Here we use the glacier region centered on the European Alps to include a rectangle with both land and sea, and how that sea is masked as NA when "land" is set to TRUE.
+When downloading  data, it is possible to apply a land mask to remove all sea/ocean cells from the output. This can be done by setting the argument "land" to TRUE (default to FALSE, i.e., no land mask is applied). Here we use the glacier region centered on the European Alps to display a region with both land and sea, to show that sea is masked as NA when "land" is set to TRUE. As the land outlines are retrieved from the Natural Earth database, it is possible to use the argument "scale" as for countries/continents, to refine the precision of coastline definition (check paragraph 3.2.3. "Set the scale" above).
+
+Without land mask:
 
 ```{r,results = "hide", message = FALSE, warning =FALSE}
-processed_land <- var_get(glacier_region_19 = 11, crs = 3035, land = TRUE) %>%
-  esalandcover(vars = c("ice")) 
+processed_nolandmask <- var_get(glacier_region_19 = "Central Europe") %>%
+  earthenvlandcover(vars = c("ice")) 
 ```  
 
 ```{r}
-plot(processed_land)
+plot(processed_nolandmask)
+```
+
+With land mask:
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+processed_landmask <- var_get(glacier_region_19 = "Central Europe", land = TRUE) %>%
+  earthenvlandcover(vars = c("ice")) 
+```  
+
+```{r}
+plot(processed_landmask)
 ```
 
 ### 3.7.2. Species range
@@ -556,7 +614,7 @@ plot(processed_bilayer_extr_check$extrapolation$strict)
 
 ## 7.2. With points
 
-If the output is a data.frame, one column - two if both strict and extrapolation are checked - are added to the data.frame with extracted variable values, reporting extrapolation as 1 and no extrapolation as 0. 
+If the output from the download pipeline is a data.frame (see e.g. paragraphs 3.4.1 or 3.5), then, when using `extr_check()`, one column is added to the data.frame - two if both strict and extrapolation are checked -. This/these additional column(s) will report extrapolation as 1 and no extrapolation as 0. 
 
 ```{r,results = "hide", message = FALSE, warning =FALSE}
 # for example, we use only the first 10 points of the Apollo dataset as a simulated data set to calibrate a model and then we want to apply it to a whole set of points covering a wider environmental range.
@@ -572,7 +630,21 @@ head(processed_points_extr_check$extrapolation)
 
 # 8. Set NAs
 
-When the output is a SpatRaster (all sections above and section "15. Apply a buffer when using points" in this tutorial), it is possible to specify that any cell that is NA in at least one layer is NA in all layers. For instance, when downloading data from CHELSA and land cover from [@loparrino2025], the sea is not covered in the second source and it might thus be needless to keep information on climate over the sea. We can thus set the "set_na" argument to TRUE (default to FALSE, i.e., no NA mask is applied).
+When the output from the download pipeline is a SpatRaster, it is possible to specify that any cell that is NA in at least one layer is NA in all layers. For instance, when downloading data from CHELSA [@karger2017] and land cover from ESA [@loparrino2025], the sea is not covered in the second source and it might thus be needless to keep information on climate over the sea. We can thus set the "set_na" argument to TRUE (default to FALSE, i.e., no NA mask is applied).
+
+Without NA mask:
+
+```{r,results = "hide", message = FALSE, warning =FALSE}
+processed_bilayer_global <- var_get() %>%
+  chelsa(vars = c("pr"), months = 12, year = 2015) %>%
+  esalandcover(vars = c("ice"))
+```
+
+```{r}
+plot(processed_bilayer_global)
+```
+
+With NA mask:
 
 ```{r,results = "hide", message = FALSE, warning =FALSE}
 processed_bilayer_global_namask <- var_get(set_na=TRUE) %>%
@@ -586,9 +658,10 @@ plot(processed_bilayer_global_namask)
 
 
 # 9. Save results
+
 ## 9.1. Save results as raster
 
-If the "path" argument is used (default to NULL, i.e. no output stored locally), the retrieved and processed variables will be stored locally. Remember to specify the full path, including the filename and extension.
+If the "path" argument is used (default to NULL, i.e., no output stored locally), the retrieved and processed variables will be stored locally. Remember to specify the full path, including the filename and extension.
 
 ```{r,eval=FALSE,results = "hide", message = FALSE, warning =FALSE}
 processed_stored_raster <- var_get(shape = Alps, crs = 3035, path = "../Out/storedraster.tif") %>%
@@ -601,12 +674,12 @@ processed_stored_raster <- var_get(shape = Alps, crs = 3035, path = "../Out/stor
 The same can be done if the output is a data.frame. In this case, the file written has to be a .csv file; specify the path accordingly. 
 
 ```{r,eval=FALSE,results = "hide", message = FALSE, warning =FALSE}
-processed_stored_raster <- var_get(shape = Alps, crs = 3035, path = "../Out/storedraster.tif") %>%
+processed_stored_table <- var_get(pointsdf = Apollo, path = "../Out/storedtable.csv") %>%
   esalandcover(vars = c("ice")) %>%
   chelsa(vars = c("pr"), months = 12, year = 2015)
 ```  
 
-Results cannot be stored if the correlation check is added, as the output will be a list and not a SpatRaster/data.frame.
+Results cannot be stored locally if the correlation or extrapolation check is/are added, as the output will be a list and not a SpatRaster/data.frame.
 
 # 10. Conclusion
 

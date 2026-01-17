@@ -38,7 +38,7 @@ devtools::load_all()
 
 # Introduction
 
-This document provides a comprehensive reference for all the environmental variables available in the _envar R_ package and the sources from which they can be retrieved. Each section describes a data source, lists the available variables with their synonyms, provides usage examples, and includes proper citations. Sources are grouped based on the category to which they belong (e.g. land cover, climate, etc.). For each source, the available variables are listed alongside synonyms that can be used inside the vars argument interchangeably (except for the chelsa and worldclim functions that do not allow the use of synonyms and the exact codes must be used).
+This document provides a comprehensive reference for all the environmental variables available in the _envar R_ package and the sources from which they can be retrieved. Each section describes a data source, lists the available variables with their synonyms, provides usage examples, and includes proper citations. Sources are grouped based on the category to which they belong (e.g., land cover, climate, etc.). For each source, the available variables are listed alongside synonyms that can be used inside the vars argument interchangeably (except for the chelsa and worldclim functions that do not allow the use of synonyms and the exact codes must be used).
 
 # Load package
 

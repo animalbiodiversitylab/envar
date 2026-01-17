@@ -299,7 +299,7 @@ gdpfuture <- function(x, vars, year, ssp, ...) {
   
   if (!file.exists(big_zip_path)) {
     cli::cli_alert_info("Downloading main archive (this may take a moment)...")
-    success <- download_file(url, big_zip_path)
+    success <- download_file_figshare(url, big_zip_path)
     if (!success) {
       cli::cli_abort("Failed to download main archive from {.url {url}}.")
     }

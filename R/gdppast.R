@@ -170,7 +170,7 @@ gdppast <- function(x, vars, year, ...) {
     # Cache the big zip within the session temp to avoid re-downloading 300MB+ for every year loop
     if (!file.exists(big_zip_path)) {
       cli::cli_alert_info("Downloading main archive for {.val {canon}}...")
-      success <- download_file(url, big_zip_path)
+      success <- download_file_figshare(url, big_zip_path)
       if (!success) {
         cli::cli_alert_warning("Failed to download main archive from {.url {url}}.")
         return(NULL)
