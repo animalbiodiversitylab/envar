@@ -115,7 +115,7 @@ process. To cite the package, please use:
 > Simoncini A, Bertoncini M, Cerofolini A, Dalpasso A, Falaschi M, Lo
 > Parrino E (2025) envar: an R package to streamline the retrieval and
 > processing of environmental variables for macroecology and
-> biogeography. Submitted to Ecography.
+> biogeography. Submitted to Ecological Informatics.
 
 ## Usage
 
