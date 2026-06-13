@@ -1,2 +1,5 @@
 *.html
 *.R
+# keep the renv helper scripts (overrides *.R above)
+!sdm-renv-setup.R
+!sdm-renv-restore.R

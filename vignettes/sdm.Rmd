@@ -47,13 +47,29 @@ We use a set of 2648 records of the species in continental Europe obtained with 
 ```{r,results='hide',message =FALSE,warning=FALSE}
 # load required R package
 require(envar) # loads envar and dplyr packages
+
+# the specific R versions used to run this tutorial can be installed with the code
+# hashed (e.g. remotes:: ...)
+
+# remotes::install_version("terra", version = "1.7-83")
 require(terra)
+
+# remotes::install_version("raster", version = "3.6-26")
 require(raster)
+
+# remotes::install_version("sf", version = "1.0-19")
 require(sf)
+
+# remotes::install_version("dismo", version = "1.3-14")
 require(dismo)
+
+# remotes::install_version("spatialEco", version = "2.0-4")
 require(spatialEco)
+
+# remotes::install_version("ENMeval", version = "2.0.5.2")
 require(ENMeval)
-require(ecospat)
+
+# remotes::install_version("PresenceAbsence", version = "1.1.11")
 require(PresenceAbsence)
 
 # load occurrence data 
@@ -149,7 +165,8 @@ Then, we fine-tune the hyperparameters of Maxent models [@phillips2006], using t
 sdms <- ENMeval::ENMevaluate(
   occs = data[data$pa == "1", c(2:(ncol(data)-1))],
   bg = data[data$pa == "0", c(2:(ncol(data)-1))],
-  tune.args = list(fc = c("L", "LQ", "LQH"), rm = 1:8),
+  RMvalues = c(1:8),
+  fc = c("L", "LQ", "LQH"),
   partitions = "user",
   user.grp = block,
   algorithm = "maxent.jar")
@@ -199,35 +216,5 @@ knitr::include_graphics("images/Prediction.png")
 ## Conclusion
 
 By using _envar_ to retrieve data over a greater spatial area than the final prediction one, we were able to reduce the influence of niche truncation on the final output [@guisan2025]. Additionally, we could  discriminate the drivers of species distribution instead of the drivers of sampling bias, by picking bias-corrected background points in a template defined with _envar_.
-
-## Reproducible environment
-
-The exact results of an SDM workflow depend on the versions of the R packages
-involved. In particular, some functions used here (e.g. `ENMeval::ENMevaluate()`)
-have changed their argument names across releases: older versions expected
-`RMvalues` and `fc`, whereas current versions expect a single `tune.args` list (as
-used above). To obtain a fully replicable environment with a fixed set of package
-versions, we recommend the [`renv`](https://rstudio.github.io/renv/) package.
-
-Starting from a clean project, the following snippet creates a project-local library
-and records every package version (including _envar_ and its dependencies) into an
-`renv.lock` file:
-
-```{r, eval = FALSE}
-# install.packages("renv")
-renv::init()        # create a project-local library and an renv.lock file
-# ... install/load the packages used in this vignette ...
-renv::snapshot()    # write the exact versions to renv.lock
-```
-
-Sharing the resulting `renv.lock` lets any user recreate the identical environment with:
-
-```{r, eval = FALSE}
-renv::restore()     # install the exact package versions recorded in renv.lock
-```
-
-This guarantees that the `ENMeval` (and other) function signatures match the ones
-used in this tutorial, avoiding "unused arguments" errors caused by version
-mismatches.
 
 ## References
