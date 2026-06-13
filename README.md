@@ -22,11 +22,9 @@ This graphic illustration depicts an ecological modelling framework and
 the use of the *envar* package to retrieve variables while checking for
 correlation and extrapolation. See below how to install the package and
 for more detailed explanation check **[Get
-started](https://envarpackage.netlify.app/articles/intro)**.
+started](https://animalbiodiversitylab.github.io/envar/articles/intro)**.
 
 <img src="man/figures/Fig1.png" align="center" height="153" alt="" />
-
-</div>
 
 ## Installation
 
@@ -56,21 +54,9 @@ devtools::install_github("animalbiodiversitylab/envar",
                          build_vignettes = FALSE)
 ```
 
-Until the scientific article relative to the package is published, the
-github repository is set as private and to install the package (for
-testing and revision) you can run the code here:  
+Once installed, load the package to run the examples and vignettes:
 
 ``` r
-if (!require(remotes)) install.packages("remotes")
-
-remotes::install_github("animalbiodiversitylab/envar", 
-                        auth_token = "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", 
-                        upgrade = "never", 
-                        dependencies = TRUE,
-                        build_vignettes = FALSE)
-
-# This code will install the package. To run the examples and vignettes, 
-#you will need to load the package as follows:
 library(envar)
 ```
 
@@ -80,18 +66,18 @@ We present the following vignettes to illustrate the use of the *envar
 R* package:
 
 - **[1. Installation of the library and first use
-  example](https://envarpackage.netlify.app/articles/intro)**  
+  example](https://animalbiodiversitylab.github.io/envar/articles/intro)**  
 - **[2. Overview of potential uses of the
-  package](https://envarpackage.netlify.app/articles/package_overview)**
+  package](https://animalbiodiversitylab.github.io/envar/articles/package_overview)**
 - **[3. Presentation of available sources and variables with example
-  code](https://envarpackage.netlify.app/articles/variables)**
+  code](https://animalbiodiversitylab.github.io/envar/articles/variables)**
 - **[4. Example of use for species distribution
-  modelling](https://envarpackage.netlify.app/articles/sdm)**
+  modelling](https://animalbiodiversitylab.github.io/envar/articles/sdm)**
 
 ## Functions
 
 An overview of all functions and data is given
-**[here](https://envarpackage.netlify.app/reference/)**.
+**[here](https://animalbiodiversitylab.github.io/envar/reference/)**.
 
 ## Did you find a bug?
 
@@ -156,4 +142,4 @@ print(processed_vars)
 ```
 
 For a more in-depth explanation and examples refer to the **[Get
-started](https://envarpackage.netlify.app/articles/intro)** page.
+started](https://animalbiodiversitylab.github.io/envar/articles/intro)** page.

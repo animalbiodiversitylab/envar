@@ -32,7 +32,8 @@ var_get(
   crs = "EPSG:4326",
   set_na = FALSE,
   scale = "medium",
-  land = FALSE
+  land = FALSE,
+  cache = TRUE
 )
 }
 \arguments{
@@ -162,6 +163,15 @@ definition of the borders of the shapefile (scale 1:10). The default is \code{"m
 from Natural Earth (at the scale defined by the \code{scale} argument). This is useful for clipping marine/pelagic 
 regions to land only, or for ensuring that buffered areas do not extend into the ocean. 
 Note: This does not apply to point extractions (\code{pointsdf} without buffer).}
+
+\item{cache}{Logical, with default \code{TRUE}. If \code{TRUE}, each source file
+downloaded by the downstream functions (e.g. \code{chelsa()}, \code{worldclim()},
+\code{topography()}) is stored in a persistent per-user cache directory. If the
+download pipeline is interrupted (for example by a lost connection) and then
+re-launched, it resumes from where it stopped, reusing files that were already
+retrieved instead of downloading them again. Set to \code{FALSE} to use a
+temporary directory that is cleared at the end of the R session. The cache can
+be emptied at any time with \code{\link{clear_cache}}.}
 }
 \value{
 A \code{list} object (class \code{envar_par}) containing:
@@ -207,6 +217,17 @@ retrieved variables are perfectly aligned and stacked.
      and returns a grid, allowing you to download raster data for the area surrounding your points.
    }
 }
+}
+
+\section{Resampling and reprojection}{
+
+Downstream functions align every layer to the target grid defined here using
+\code{terra::resample()}/\code{terra::project()}. Continuous layers are resampled
+with bilinear interpolation, while categorical (factor) layers automatically use
+nearest-neighbour to avoid creating invalid class codes. You can force a specific
+method for all layers with, e.g., \code{options(envar.resample_method = "near")}
+(accepted values are any \code{terra} resampling method, or \code{"auto"} for the
+default behaviour described above).
 }
 
 \examples{

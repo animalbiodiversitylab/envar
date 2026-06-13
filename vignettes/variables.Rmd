@@ -1082,6 +1082,6 @@ plot(processed)
 
 # Conclusion
 
-This tutorial provided an overview of all the available sources and functions. Remember to always cite the proper reference for the source used. For further details on the use of specific sources, check the function documentation **[here](https://envarpackage.netlify.app/reference/)** or from R after loading the package with ? (e.g., ?spectre).
+This tutorial provided an overview of all the available sources and functions. Remember to always cite the proper reference for the source used. For further details on the use of specific sources, check the function documentation **[here](https://animalbiodiversitylab.github.io/envar/reference/)** or from R after loading the package with ? (e.g., ?spectre).
 
 # References

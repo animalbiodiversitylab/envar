@@ -4,11 +4,21 @@
 \alias{corr_check}
 \title{Check Variable Correlation and Multi-collinearity}
 \usage{
-corr_check(x)
+corr_check(x, pearson = NULL, vif = NULL)
 }
 \arguments{
 \item{x}{A `SpatRaster`, `data.frame`, or a list containing `data` or `extracted_df`
 (e.g., output from `extr_check()`).}
+
+\item{pearson}{Numeric or `NULL`. Threshold for the absolute Pearson correlation
+coefficient above which variables are flagged with a warning. By default
+(`NULL`) no correlation warning is emitted; supply a value (e.g. `0.6`) to be
+warned about variable pairs whose absolute correlation exceeds it.}
+
+\item{vif}{Numeric or `NULL`. Threshold for the Variance Inflation Factor above
+which variables are flagged with a warning. By default (`NULL`) no VIF warning
+is emitted; supply a value (e.g. `3`) to be warned about variables whose VIF
+exceeds it.}
 }
 \value{
 A `list` object containing:
@@ -16,8 +26,10 @@ A `list` object containing:
   \item `data`: The input environmental data used.
   \item `correlation_matrix`: Pearson correlation matrix.
   \item `vif`: Variance Inflation Factor data frame.
-  \item `summary`: Character vector highlighting high correlation or VIF.
+  \item `summary`: Character vector highlighting high correlation or VIF (only
+    populated for the thresholds that were supplied).
   \item `plot_path`: Path to the saved correlation plot.
+  \item `vif_path`: Path to the saved VIF table.
   \item Any additional elements from input list (e.g., `extrapolation` from `extr_check()`).
 }
 }
@@ -33,6 +45,12 @@ https://github.com/taiyun/corrplot
 
 Naimi B, Hamm NA, Groen TA, Skidmore AK, Toxopeus AG (2014). "Where is positional uncertainty a problem for species distribution modelling?" Ecography 37, 191-203.
 https://doi.org/10.1111/j.1600-0587.2013.00205.x
+
+
+Regardless of whether `pearson`/`vif` thresholds are set, the function always
+writes two files to the current working directory: the correlation plot
+(`Corr_plot.png`) and a table of VIF values (`VIF_table.csv`). Their paths are
+returned as `plot_path` and `vif_path`.
 }
 \examples{
 \dontrun{
@@ -49,9 +67,14 @@ result <- var_get(country = "Italy") \%>\%
   extr_check(calib_points = my_points)
 
 # Example 3: Chain with extr_check() (extr_check before corr_check)
-result <- var_get(country = "Italy") \%>\% 
-  chelsa(vars = c("bio1", "bio12")) \%>\% 
+result <- var_get(country = "Italy") \%>\%
+  chelsa(vars = c("bio1", "bio12")) \%>\%
   extr_check(calib_points = my_points) \%>\%
   corr_check()
+
+# Example 4: Opt-in warnings for high correlation (>0.7) and VIF (>5)
+result <- var_get(country = "Italy") \%>\%
+  chelsa(vars = c("bio1", "bio12")) \%>\%
+  corr_check(pearson = 0.7, vif = 5)
 }
 }

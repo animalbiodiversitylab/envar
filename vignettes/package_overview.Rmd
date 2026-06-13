@@ -683,7 +683,7 @@ Results cannot be stored locally if the correlation or extrapolation check is/ar
 
 # 10. Conclusion
 
-In this tutorial we have gone through all the potential ways in which the user can tailor the download and processing of data. For simplicity we have relied only on a few sources, but many more are available and can be checked at the **[reference](https://envarpackage.netlify.app/reference/)** or at the detailed explanation of all **[sources and variables](https://envarpackage.netlify.app/articles/variables)**.
+In this tutorial we have gone through all the potential ways in which the user can tailor the download and processing of data. For simplicity we have relied only on a few sources, but many more are available and can be checked at the **[reference](https://animalbiodiversitylab.github.io/envar/reference/)** or at the detailed explanation of all **[sources and variables](https://animalbiodiversitylab.github.io/envar/articles/variables)**.
 
 # 11. References
 

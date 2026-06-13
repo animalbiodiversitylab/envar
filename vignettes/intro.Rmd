@@ -60,20 +60,6 @@ devtools::install_github("animalbiodiversitylab/envar",
                         build_vignettes=FALSE)
 ```
 
-Until the scientific article relative to the package is published, the github 
-repository is set as private and to install the package (for testing and revision) 
-you can run the code here:\
-
-```{r, eval = FALSE}
-if (!require(remotes)) install.packages("remotes")
-
-remotes::install_github("animalbiodiversitylab/envar", 
-                        auth_token = "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", 
-                        upgrade="never", 
-                        dependencies=TRUE,
-                        build_vignettes=FALSE)
-```
-
 ## Load the library
 
 When executing this command, another package (`dplyr`) will be automatically loaded to ensure the full functionality of the package. However, other packages are often required for plotting and further analyses and we also load them here for later use.
@@ -88,7 +74,7 @@ require(sf)
 
 Here, we show a full working example of how to use the package to download and process a set of environmental variables for a specific study area. We will download a set of climatic, topographic, and land cover variables for a study area in the European Alps (already included in the package as the object `Alps()`). A call to the `var_get()` function is used to define the study area (argument "shape"), the desired grid output resolution in km (argument "res"), the coordinate reference system (argument "crs"), and an eventual buffer (in km) by which to expand the study area (argument "buffer"). The default resolution is always 30 arcseconds (0.008333333°, or ~ 1 km) at the equator, except for the `biooracle()` function, and "res" specifies a factor by which to aggregate (the default is 1 and doesn't apply any change). 
 
-Then, the "%>%" is used to concatenate different commands. The next step is to set the specific functions that are used to download and process variables from different sources (see the **[reference](https://envarpackage.netlify.app/reference/)** for a full list). The call to a generic source is structured as: sourcename(vars = c()), where sourcename is the name of the function devoted to one source and inside the "vars" argument the specific variables to be downloaded from that source are specified. In this example, we first download a set of 5 bioclimatic variables from the CHELSA source [@karger2017], then we download elevation and slope from the topography source [@amatulli2018], and finally we download the percentage cover of trees and ice from the 1 km resolution global land cover based on the ESA 30 m land cover [@loparrino2025].
+Then, the "%>%" is used to concatenate different commands. The next step is to set the specific functions that are used to download and process variables from different sources (see the **[reference](https://animalbiodiversitylab.github.io/envar/reference/)** for a full list). The call to a generic source is structured as: sourcename(vars = c()), where sourcename is the name of the function devoted to one source and inside the "vars" argument the specific variables to be downloaded from that source are specified. In this example, we first download a set of 5 bioclimatic variables from the CHELSA source [@karger2017], then we download elevation and slope from the topography source [@amatulli2018], and finally we download the percentage cover of trees and ice from the 1 km resolution global land cover based on the ESA 30 m land cover [@loparrino2025].
 
 A correlation analysis can be performed with the to `corr_check()` function to identify and remove highly correlated variables. This function must always be called as the last one in the pipeline.
 
@@ -145,7 +131,7 @@ terra::plot(processed$extrapolation$strict)
 
 ## Conclusion
 
-We have shown a single full example of use of the _envar R_ package. Instead of specifying a shape, we could have chosen a country/continent or defined a data.frame of points. For an overview of all the possible use-cases see the **[package overview vignette](https://envarpackage.netlify.app/articles/package_overview)** and for a full list of all the available sources and variables see the **[reference](https://envarpackage.netlify.app/reference/)**.
+We have shown a single full example of use of the _envar R_ package. Instead of specifying a shape, we could have chosen a country/continent or defined a data.frame of points. For an overview of all the possible use-cases see the **[package overview vignette](https://animalbiodiversitylab.github.io/envar/articles/package_overview)** and for a full list of all the available sources and variables see the **[reference](https://animalbiodiversitylab.github.io/envar/reference/)**.
 
 ## References
 
