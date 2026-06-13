@@ -1,4 +1,4 @@
-url: https://envarpackage.netlify.app
+url: https://animalbiodiversitylab.github.io/envar/
 
 template:
   bootstrap: 5
@@ -93,7 +93,12 @@ reference:
     desc: Function for identifying correlated variables
     contents:
       - corr_check
-      
+
+  - title: Cache
+    desc: Manage the persistent download cache
+    contents:
+      - clear_cache
+
   - title: Extrapolation
     desc: Function for mapping extrapolation to prediction areas
     contents:

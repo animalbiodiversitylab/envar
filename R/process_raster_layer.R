@@ -15,7 +15,45 @@ process_raster_layer <- function(layer, grid, mask, res, crs, is_global = FALSE,
   }, error = function(e) {
     grepl("EPSG:4326|WGS.*84|longlat|latlong", target_crs, ignore.case = TRUE)
   })
-  
+
+  # ------------------------------------------------------------------
+  # Enforce resolution constraint
+  # ------------------------------------------------------------------
+  # The native resolution of the source raster must not be coarser than the
+  # requested target resolution. The base resolution is ~1 km, so the target
+  # resolution in km equals the `res` multiplier. A source coarser than this
+  # would only yield artificially interpolated detail, so we stop early.
+  native_km <- tryCatch({
+    rr <- terra::res(layer)
+    if (isTRUE(terra::is.lonlat(layer))) {
+      # latitudinal degree -> km (~constant globally, ~111.32 km per degree)
+      rr[2] * 111.32
+    } else {
+      # projected CRS assumed to be in metres
+      max(rr) / 1000
+    }
+  }, error = function(e) NA_real_)
+
+  if (!is.na(native_km) && native_km > res * 1.01) {
+    cli::cli_abort(
+      "The resolution of at least one raster to be downloaded is lower than the set resolution of {res} km"
+    )
+  }
+
+  # ------------------------------------------------------------------
+  # Choose the resampling / reprojection method
+  # ------------------------------------------------------------------
+  # Categorical (factor) layers must use nearest-neighbour to avoid inventing
+  # class codes; continuous layers default to bilinear. Users can override the
+  # behaviour with options(envar.resample_method = "near" | "bilinear").
+  user_method <- getOption("envar.resample_method", "auto")
+  is_categorical <- tryCatch(any(terra::is.factor(layer)), error = function(e) FALSE)
+  resample_method <- if (identical(user_method, "auto")) {
+    if (isTRUE(is_categorical)) "near" else "bilinear"
+  } else {
+    user_method
+  }
+
   if (is_global) {
     # Global processing: keep original extent, apply resolution and CRS
     
@@ -28,7 +66,7 @@ process_raster_layer <- function(layer, grid, mask, res, crs, is_global = FALSE,
     # Project to target CRS if different
     if (target_crs != "EPSG:4326" && !grepl("4326", target_crs)) {
       cli::cli_alert_info("Projecting to {target_crs}...")
-      layer <- terra::project(layer, target_crs, method = "bilinear")
+      layer <- terra::project(layer, target_crs, method = resample_method)
     }
     
     # # If crs is not WGS84 and no other crs is specified 
@@ -92,19 +130,19 @@ process_raster_layer <- function(layer, grid, mask, res, crs, is_global = FALSE,
       layer_cropped <- terra::crop(layer, grid_reproj, snap = "out")
       
       # Resample to reprojected grid
-      layer_resampled <- terra::resample(layer_cropped, grid_reproj, method = "bilinear")
-      
+      layer_resampled <- terra::resample(layer_cropped, grid_reproj, method = resample_method)
+
       # Mask with reprojected mask
       mask_vect <- terra::vect(mask_reproj)
       layer_masked <- terra::mask(layer_resampled, mask_vect)
-      
+
       # Project to target CRS
-      layer_final <- terra::project(layer_masked, target_crs_wkt, method = "bilinear")
-      
+      layer_final <- terra::project(layer_masked, target_crs_wkt, method = resample_method)
+
     } else {
       # Same CRS: straightforward crop, resample, mask
       layer_cropped <- terra::crop(layer, grid, snap = "out")
-      layer_resampled <- terra::resample(layer_cropped, grid, method = "bilinear")
+      layer_resampled <- terra::resample(layer_cropped, grid, method = resample_method)
       
       mask_vect <- terra::vect(mask)
       layer_final <- terra::mask(layer_resampled, mask_vect)

@@ -350,7 +350,7 @@ soilclimate <- function(x, vars, depth = "0-5", ...) {
     user_name <- code_to_user_name[[canon]]
     
     # Destination file - use user_name for extr_check compatibility
-    dest <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".tif"))
+    dest <- file.path(envar_grids_dir(), paste0(user_name, ".tif"))
     
     handle_file(url, dest, canon, user_name)
   }

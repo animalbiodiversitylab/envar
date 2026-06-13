@@ -189,7 +189,7 @@ gdpfuture <- function(x, vars, year, ssp, ...) {
     }
     
     # Copy to standardized path for extr_check compatibility
-    grids_dir <- fs::path_temp("envar/grids")
+    grids_dir <- envar_grids_dir()
     fs::dir_create(grids_dir)
     dest_file <- file.path(grids_dir, paste0(final_layer_name, ".tif"))
     fs::file_copy(temp_dest_file, dest_file, overwrite = TRUE)

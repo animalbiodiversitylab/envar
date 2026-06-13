@@ -44,7 +44,8 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-URL: https://envarpackage.netlify.app
+URL: https://animalbiodiversitylab.github.io/envar/, https://github.com/animalbiodiversitylab/envar
+BugReports: https://github.com/animalbiodiversitylab/envar/issues
 Depends: 
     R (>= 2.10),
     dplyr

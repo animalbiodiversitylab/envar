@@ -217,7 +217,7 @@ gdppast <- function(x, vars, year, ...) {
     final_layer_name <- paste0(user_name, "_", yr)
     
     # Copy to standardized path for extr_check compatibility
-    grids_dir <- fs::path_temp("envar/grids")
+    grids_dir <- envar_grids_dir()
     fs::dir_create(grids_dir)
     dest_file <- file.path(grids_dir, paste0(final_layer_name, ".tif"))
     fs::file_copy(final_tif_path, dest_file, overwrite = TRUE)

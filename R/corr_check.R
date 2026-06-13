@@ -13,14 +13,30 @@
 #' 
 #' @param x A `SpatRaster`, `data.frame`, or a list containing `data` or `extracted_df`
 #'   (e.g., output from `extr_check()`).
+#' @param pearson Numeric or `NULL`. Threshold for the absolute Pearson correlation
+#'   coefficient above which variables are flagged with a warning. By default
+#'   (`NULL`) no correlation warning is emitted; supply a value (e.g. `0.6`) to be
+#'   warned about variable pairs whose absolute correlation exceeds it.
+#' @param vif Numeric or `NULL`. Threshold for the Variance Inflation Factor above
+#'   which variables are flagged with a warning. By default (`NULL`) no VIF warning
+#'   is emitted; supply a value (e.g. `3`) to be warned about variables whose VIF
+#'   exceeds it.
+#'
+#' @details
+#' Regardless of whether `pearson`/`vif` thresholds are set, the function always
+#' writes two files to the current working directory: the correlation plot
+#' (`Corr_plot.png`) and a table of VIF values (`VIF_table.csv`). Their paths are
+#' returned as `plot_path` and `vif_path`.
 #'
 #' @return A `list` object containing:
 #' \itemize{
 #'   \item `data`: The input environmental data used.
 #'   \item `correlation_matrix`: Pearson correlation matrix.
 #'   \item `vif`: Variance Inflation Factor data frame.
-#'   \item `summary`: Character vector highlighting high correlation or VIF.
+#'   \item `summary`: Character vector highlighting high correlation or VIF (only
+#'     populated for the thresholds that were supplied).
 #'   \item `plot_path`: Path to the saved correlation plot.
+#'   \item `vif_path`: Path to the saved VIF table.
 #'   \item Any additional elements from input list (e.g., `extrapolation` from `extr_check()`).
 #' }
 #'
@@ -39,14 +55,29 @@
 #'   extr_check(calib_points = my_points)
 #' 
 #' # Example 3: Chain with extr_check() (extr_check before corr_check)
-#' result <- var_get(country = "Italy") %>% 
-#'   chelsa(vars = c("bio1", "bio12")) %>% 
+#' result <- var_get(country = "Italy") %>%
+#'   chelsa(vars = c("bio1", "bio12")) %>%
 #'   extr_check(calib_points = my_points) %>%
 #'   corr_check()
+#'
+#' # Example 4: Opt-in warnings for high correlation (>0.7) and VIF (>5)
+#' result <- var_get(country = "Italy") %>%
+#'   chelsa(vars = c("bio1", "bio12")) %>%
+#'   corr_check(pearson = 0.7, vif = 5)
 #' }
 #' @export
 
-corr_check <- function(x) {
+corr_check <- function(x, pearson = NULL, vif = NULL) {
+
+  # -------------------------------------------------------------------------
+  # Validate threshold arguments
+  # -------------------------------------------------------------------------
+  if (!is.null(pearson) && (!is.numeric(pearson) || length(pearson) != 1)) {
+    cli::cli_abort("{.arg pearson} must be a single numeric value or {.code NULL}.")
+  }
+  if (!is.null(vif) && (!is.numeric(vif) || length(vif) != 1)) {
+    cli::cli_abort("{.arg vif} must be a single numeric value or {.code NULL}.")
+  }
   
   input_data <- NULL
   input_list <- NULL
@@ -127,6 +158,7 @@ corr_check <- function(x) {
     cli::cli_alert_warning("Could not create correlation plot: {e$message}")
   })
   grDevices::dev.off()
+  cli::cli_alert_info("Correlation plot saved to {.file {plot_path}}.")
   
   # VIF calculation
   vif_val <- tryCatch({
@@ -141,34 +173,55 @@ corr_check <- function(x) {
   }
   
   vif_val <- vif_val[order(vif_val$VIF, decreasing = TRUE), ]
-  
-  # Summary statistics
+
+  # Always store the VIF table in the working directory
+  vif_path <- file.path(getwd(), "VIF_table.csv")
+  tryCatch({
+    utils::write.csv(vif_val, vif_path, row.names = FALSE)
+    cli::cli_alert_info("VIF table saved to {.file {vif_path}}.")
+  }, error = function(e) {
+    cli::cli_alert_warning("Could not save VIF table: {e$message}")
+  })
+
+  # -------------------------------------------------------------------------
+  # Summary statistics and opt-in warnings
+  # -------------------------------------------------------------------------
+  # Variables are only flagged when the corresponding threshold is supplied.
   cor_diag0 <- cor_mat
   diag(cor_diag0) <- 0
-  high_cor <- names(which(apply(abs(cor_diag0), 1, max) > 0.6))
-  high_vif <- if (!is.na(vif_val$VIF[1])) {
-    as.character(vif_val$Variables[vif_val$VIF > 3])
+
+  high_cor <- if (!is.null(pearson)) {
+    names(which(apply(abs(cor_diag0), 1, max) > pearson))
   } else {
     character(0)
   }
-  
+  high_vif <- if (!is.null(vif) && !is.na(vif_val$VIF[1])) {
+    as.character(vif_val$Variables[vif_val$VIF > vif])
+  } else {
+    character(0)
+  }
+
   summary_txt <- character(0)
   if (length(high_cor) > 0) {
-    summary_txt <- c(summary_txt, paste("High Cor (>0.6):", paste(high_cor, collapse = ", ")))
+    summary_txt <- c(summary_txt, paste0("High Cor (>", pearson, "): ", paste(high_cor, collapse = ", ")))
   }
   if (length(high_vif) > 0) {
-    summary_txt <- c(summary_txt, paste("High VIF (>3):", paste(high_vif, collapse = ", ")))
+    summary_txt <- c(summary_txt, paste0("High VIF (>", vif, "): ", paste(high_vif, collapse = ", ")))
   }
   if (length(summary_txt) == 0) {
-    summary_txt <- "No issues detected."
+    summary_txt <- if (is.null(pearson) && is.null(vif)) {
+      "No thresholds set (specify 'pearson' and/or 'vif' to enable warnings)."
+    } else {
+      "No issues detected."
+    }
   }
-  
+
   cli::cli_alert_success("Correlation analysis completed.")
   if (length(high_cor) > 0) {
-    cli::cli_alert_warning("Variables with high correlation (>0.6): {.val {high_cor}}")
+    cli::cli_alert_warning("Variables with high correlation (>{pearson}): {.val {high_cor}}")
   }
   if (length(high_vif) > 0) {
-    cli::cli_alert_warning("Variables with high VIF (>3): {.val {high_vif}}")
+    cli::cli_alert_warning("Variables with high VIF (>{vif}): {.val {high_vif}}")
   }
   
   # -------------------------------------------------------------------------
@@ -183,13 +236,15 @@ corr_check <- function(x) {
     output$vif <- vif_val
     output$summary <- summary_txt
     output$plot_path <- plot_path
+    output$vif_path <- vif_path
   } else {
     output <- list(
       data = input_data,
       correlation_matrix = cor_mat,
       vif = vif_val,
       summary = summary_txt,
-      plot_path = plot_path
+      plot_path = plot_path,
+      vif_path = vif_path
     )
   }
   

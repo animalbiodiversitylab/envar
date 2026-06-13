@@ -164,7 +164,7 @@ geososlandcover <- function(x, vars, scenario = "A1B", year = 2010, discover = T
   # Helper: Download and Process
   # --------------------------------------------------------------------
   handle_file <- function(url, dest_file, canon, user_name) {
-    temp_dir <- fs::path_temp("envar/grids")
+    temp_dir <- envar_grids_dir()
     fs::dir_create(temp_dir)
     
     msg_label <- if(year == 2010) "year 2010" else paste(scenario, year)
@@ -266,7 +266,7 @@ geososlandcover <- function(x, vars, scenario = "A1B", year = 2010, discover = T
         cli::cli_alert_info("Reprojecting layer to match points CRS...")
         layer <- terra::project(layer, target_crs, method = "near")
         # Write temporary reprojected file for process_points
-        temp_reproj <- file.path(fs::path_temp("envar/grids"), paste0("reproj_", basename(dest_file)))
+        temp_reproj <- file.path(envar_grids_dir(), paste0("reproj_", basename(dest_file)))
         terra::writeRaster(layer, temp_reproj, overwrite = TRUE)
         dest_file_for_extract <- temp_reproj
       } else {
@@ -310,7 +310,7 @@ geososlandcover <- function(x, vars, scenario = "A1B", year = 2010, discover = T
   for (canon in requested_codes) {
     filename <- paste0("geosos_", label_suffix, ".tif")
     user_name <- code_to_user_name[[canon]]
-    dest <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".tif"))
+    dest <- file.path(envar_grids_dir(), paste0(user_name, ".tif"))
     
     handle_file(url_to_use, dest, canon, user_name)
   }

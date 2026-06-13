@@ -305,7 +305,7 @@ gcamlandcover <- function(x, vars = "landcover", ssp = 126, year = 2020, ...) {
   # Execute Download and Processing
   # --------------------------------------------------------------------
   filename <- paste0(file_label, ".tif")
-  dest <- file.path(fs::path_temp("envar/grids"), paste0(label_name, ".tif"))
+  dest <- file.path(envar_grids_dir(), paste0(label_name, ".tif"))
   
   handle_file(final_url, dest, label_name)
   

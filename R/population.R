@@ -317,7 +317,7 @@ population <- function(x, vars, year = 2020, ssp = 1, ...) {
       user_name_combo <- paste0(base_name, "_ssp", s, "_", y)
       
       # Destination for the extracted TIF - use user_name for extr_check compatibility
-      dest <- file.path(fs::path_temp("envar/grids"), paste0(user_name_combo, ".tif"))
+      dest <- file.path(envar_grids_dir(), paste0(user_name_combo, ".tif"))
       
       handle_file(current_url, dest, canon, user_name_combo, target_filename)
     }

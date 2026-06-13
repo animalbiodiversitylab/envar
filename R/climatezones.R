@@ -326,7 +326,7 @@ climatezones <- function(x, vars = "zones", years = "1991-2020", ssp = NULL, ...
     
     if (file.exists(current_file)) {
       # Move to standardized grids directory for extr_check compatibility
-      grids_dir <- fs::path_temp("envar/grids")
+      grids_dir <- envar_grids_dir()
       fs::dir_create(grids_dir)
       unique_file <- file.path(grids_dir, paste0(layer_id, ".tif"))
       fs::file_move(current_file, unique_file)

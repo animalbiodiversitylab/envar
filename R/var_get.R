@@ -131,6 +131,23 @@
 #' @param path directory to store the result of the download/processing. Default to \code{NULL} (no output is stored locally).
 #'   It works only if no \code{corr_check()} is specified. Specify the path including the file name and the extension (e.g. \code{"../Out/rastername.tif"} if the final
 #'   export is a \code{SpatRaster}; or \code{"../Out/extracteddataframe.csv"} if the output is a \code{data.frame}).
+#' @param cache Logical, with default \code{TRUE}. If \code{TRUE}, each source file
+#'   downloaded by the downstream functions (e.g. \code{chelsa()}, \code{worldclim()},
+#'   \code{topography()}) is stored in a persistent per-user cache directory. If the
+#'   download pipeline is interrupted (for example by a lost connection) and then
+#'   re-launched, it resumes from where it stopped, reusing files that were already
+#'   retrieved instead of downloading them again. Set to \code{FALSE} to use a
+#'   temporary directory that is cleared at the end of the R session. The cache can
+#'   be emptied at any time with \code{\link{clear_cache}}.
+#'
+#' @section Resampling and reprojection:
+#' Downstream functions align every layer to the target grid defined here using
+#' \code{terra::resample()}/\code{terra::project()}. Continuous layers are resampled
+#' with bilinear interpolation, while categorical (factor) layers automatically use
+#' nearest-neighbour to avoid creating invalid class codes. You can force a specific
+#' method for all layers with, e.g., \code{options(envar.resample_method = "near")}
+#' (accepted values are any \code{terra} resampling method, or \code{"auto"} for the
+#' default behaviour described above).
 #' @return A \code{list} object (class \code{envar_par}) containing:
 #'   \itemize{
 #'     \item \code{grid}: A template \code{SpatRaster} defining the resolution and extent (for polygon input).
@@ -224,10 +241,22 @@ var_get <- function(country = NULL,
                     crs = "EPSG:4326",
                     set_na = FALSE,
                     scale = "medium",
-                    land = FALSE) {
-  
+                    land = FALSE,
+                    cache = TRUE) {
+
   if (is.null(res)) {
     res <- 1
+  }
+
+  # Validate and activate the download cache (see envar_grids_dir()).
+  if (!is.logical(cache) || length(cache) != 1 || is.na(cache)) {
+    cli::cli_abort("{.arg cache} must be a single logical value (TRUE or FALSE).")
+  }
+  options(envar.cache = cache)
+  if (isTRUE(cache)) {
+    cli::cli_alert_info(
+      "Download cache is ON: processed source files are stored and reused on re-runs. Set {.code cache = FALSE} to disable, or call {.fn clear_cache} to empty it."
+    )
   }
   
   if (!is.numeric(res) || res < 1 || res != as.integer(res)) {
@@ -320,6 +349,7 @@ var_get <- function(country = NULL,
   extent_info$set_na <- set_na
   extent_info$path <- path
   extent_info$land <- land
+  extent_info$cache <- cache
   
   # If non-point -> return grid + mask + stored CRS
   if (extent_info$type != "point") {
@@ -336,7 +366,8 @@ var_get <- function(country = NULL,
       from_varget = TRUE,
       set_na = set_na,
       path = path,
-      land=land
+      land=land,
+      cache = cache
     )
     class(result) <- c("envar_par", "list")
     return(result)

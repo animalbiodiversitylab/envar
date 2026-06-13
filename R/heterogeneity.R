@@ -185,7 +185,7 @@ heterogeneity <- function(x, vars, ...) {
   # Helper: Download, process, and clean up a single file
   # --------------------------------------------------------------------
   handle_file <- function(url, dest_file, canon, user_name) {
-    temp_dir <- fs::path_temp("envar/grids")
+    temp_dir <- envar_grids_dir()
     fs::dir_create(temp_dir)
     
     cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {user_name}}...")
@@ -305,7 +305,7 @@ heterogeneity <- function(x, vars, ...) {
     
     # Get the user's original name for this canonical code
     user_name <- code_to_user_name[[canon]]
-    dest <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".tif"))
+    dest <- file.path(envar_grids_dir(), paste0(user_name, ".tif"))
     
     handle_file(url, dest, canon, user_name)
   }

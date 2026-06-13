@@ -223,7 +223,7 @@ extr_check <- function(x,
       calib_sf_transformed <- sf::st_transform(calib_sf, study_crs)
       
       # Look for cached raster files in the temp directory
-      temp_raster_dir <- fs::path_temp("envar/grids")
+      temp_raster_dir <- envar_grids_dir()
       
       calib_env <- data.frame(row.names = seq_len(nrow(calib_points)))
       extraction_success <- TRUE

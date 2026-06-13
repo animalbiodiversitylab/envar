@@ -166,7 +166,7 @@ soil <- function(x, vars = NULL, ...) {
     }
     
     # Copy to standardized path for extr_check compatibility
-    grids_dir <- fs::path_temp("envar/grids")
+    grids_dir <- envar_grids_dir()
     fs::dir_create(grids_dir)
     cached_raster <- file.path(grids_dir, paste0(user_name, ".bil"))
     fs::file_copy(raster_file, cached_raster, overwrite = TRUE)

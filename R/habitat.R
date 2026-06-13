@@ -448,7 +448,7 @@ habitat <- function(x, vars, level = 1, ...) {
     user_name <- code_to_user_name[[canon]]
     
     # Destination for extracted file - use user_name for extr_check compatibility
-    grids_dir <- fs::path_temp("envar/grids")
+    grids_dir <- envar_grids_dir()
     fs::dir_create(grids_dir)
     dest <- file.path(grids_dir, paste0(user_name, ".tif"))
     

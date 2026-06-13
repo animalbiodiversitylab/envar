@@ -210,7 +210,7 @@ freshwater <- function(x, vars, year = NULL, month = NULL, algorithm = NULL, ...
   # Helper: Download, process, and clean up a single file
   # --------------------------------------------------------------------
   handle_file <- function(url, dest_file, canon, user_name) {
-    temp_dir <- fs::path_temp("envar/grids")
+    temp_dir <- envar_grids_dir()
     fs::dir_create(temp_dir)
     
     cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {user_name}}...")
@@ -392,7 +392,7 @@ freshwater <- function(x, vars, year = NULL, month = NULL, algorithm = NULL, ...
     filename <- canon
     url <- file.path(base_url, filename)
     user_name <- code_to_user_name[[canon]]
-    dest <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".nc"))
+    dest <- file.path(envar_grids_dir(), paste0(user_name, ".nc"))
     handle_file(url, dest, canon, user_name)
   }
   

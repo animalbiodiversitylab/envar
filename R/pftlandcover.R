@@ -346,7 +346,7 @@ pftlandcover <- function(x, vars = NULL, year = 2025, ssp = 585, ...) {
     user_name <- code_to_user_name[[canon]]
     
     # Destination for the extracted TIF - use user_name for extr_check compatibility
-    grids_dir <- fs::path_temp("envar/grids")
+    grids_dir <- envar_grids_dir()
     fs::dir_create(grids_dir)
     dest <- file.path(grids_dir, paste0(user_name, ".tif"))
     

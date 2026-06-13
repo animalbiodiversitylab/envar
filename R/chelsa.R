@@ -212,7 +212,7 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
   # Helper: Download, process, and clean up a single file
   # --------------------------------------------------------------------
   handle_file <- function(url, dest_file, canon, user_name) {
-    temp_dir <- fs::path_temp("envar/grids")
+    temp_dir <- envar_grids_dir()
     fs::dir_create(temp_dir)
     
     cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {user_name}}...")
@@ -352,7 +352,7 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
           url <- sprintf("%s/%s/%s", base_url_cruts, var_cruts, filename)
           canon <- var
           user_name <- paste0(var, "_", year, "_", month)
-          dest_file <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".tif"))
+          dest_file <- file.path(envar_grids_dir(), paste0(user_name, ".tif"))
           handle_file(url, dest_file, canon, user_name)
         }
       }
@@ -397,7 +397,7 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
               url <- sprintf("%s/%s/%s/%s", base_url, year_str, var1, filename)
               canon <- var
               user_name <- paste0(var, "_", year_str, "_", g, "_rcp", r)
-              dest_file <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".tif"))
+              dest_file <- file.path(envar_grids_dir(), paste0(user_name, ".tif"))
               handle_file(url, dest_file, canon, user_name)
             }
           }
@@ -441,7 +441,7 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
                 url <- sprintf("%s/%s/%s/%s", base_url, year_str, var1, filename)
                 canon <- var
                 user_name <- paste0(var, "_", year_str)
-                dest_file <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".tif"))
+                dest_file <- file.path(envar_grids_dir(), paste0(user_name, ".tif"))
                 handle_file(url, dest_file, canon, user_name)
               } else {
                 filename <- sprintf("CHELSA_%s_%s_V.2.1.tif",
@@ -449,7 +449,7 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
                 url <- sprintf("%s/%s/%s/%s", base_url, year_str, var1, filename)
                 canon <- var
                 user_name <- paste0(var, "_", year_str)
-                dest_file <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".tif"))
+                dest_file <- file.path(envar_grids_dir(), paste0(user_name, ".tif"))
                 handle_file(url, dest_file, canon, user_name)
               }
               
@@ -468,7 +468,7 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
                 url <- sprintf("%s/%s/%s/%s", base_url, year_str, var1, filename)
                 canon <- var
                 user_name <- paste0(var, "_", year_str, "_", m)
-                dest_file <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".tif"))
+                dest_file <- file.path(envar_grids_dir(), paste0(user_name, ".tif"))
                 handle_file(url, dest_file, canon, user_name)
               }
             }
@@ -506,7 +506,7 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
                                  base_url, year_str, toupper(g), paste0("ssp", s), var1, filename)
                   canon <- var
                   user_name <- paste0(var, "_", year_str, "_", g, "_ssp", s)
-                  dest_file <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".tif"))
+                  dest_file <- file.path(envar_grids_dir(), paste0(user_name, ".tif"))
                   handle_file(url, dest_file, canon, user_name)
                   
                 } else {
@@ -526,7 +526,7 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
                                    base_url, year_str, toupper(g), paste0("ssp", s), var1, filename)
                     canon <- var
                     user_name <- paste0(var, "_", year_str, "_", m, "_", g, "_ssp", s)
-                    dest_file <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".tif"))
+                    dest_file <- file.path(envar_grids_dir(), paste0(user_name, ".tif"))
                     handle_file(url, dest_file, canon, user_name)
                   }
                 }
@@ -561,7 +561,7 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
             url <- sprintf("%s/%s/%s", base_url, var1, filename)
             canon <- var
             user_name <- paste0(var, "_", year_str, "_", m)
-            dest_file <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".tif"))
+            dest_file <- file.path(envar_grids_dir(), paste0(user_name, ".tif"))
             handle_file(url, dest_file, canon, user_name)
           }
         }
@@ -574,7 +574,7 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
           url <- sprintf("%s/%s", base_url, filename)
           canon <- var
           user_name <- paste0(var, "_", year_str)
-          dest_file <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".tif"))
+          dest_file <- file.path(envar_grids_dir(), paste0(user_name, ".tif"))
           handle_file(url, dest_file, canon, user_name)
         }
       }

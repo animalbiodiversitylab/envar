@@ -198,7 +198,7 @@ worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NU
   # Helper: Download and Process (Direct TIF)
   # --------------------------------------------------------------------
   handle_file <- function(url, dest_file, layer_name) {
-    temp_dir <- fs::path_temp("envar/grids")
+    temp_dir <- envar_grids_dir()
     fs::dir_create(temp_dir)
     
     success <- download_file(url, dest_file)
@@ -253,7 +253,7 @@ worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NU
       # Construct ZIP URL
       zip_name <- sprintf("wc2.1_30s_%s.zip", cat)
       url <- sprintf("%s/%s", base_url_hist, zip_name)
-      dest_zip <- file.path(fs::path_temp("envar/grids"), zip_name)
+      dest_zip <- file.path(envar_grids_dir(), zip_name)
       
       # Download ZIP
       success <- download_file(url, dest_zip)
@@ -297,11 +297,11 @@ worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NU
       
       # Unzip specific files
       if (length(files_to_extract) > 0) {
-        unzip(dest_zip, files = files_to_extract, exdir = fs::path_temp("envar/grids"))
+        unzip(dest_zip, files = files_to_extract, exdir = envar_grids_dir())
         
         # Process extracted files
         for (f in files_to_extract) {
-          full_path <- file.path(fs::path_temp("envar/grids"), f)
+          full_path <- file.path(envar_grids_dir(), f)
           # Use original file name as layer name
           layer_name <- tools::file_path_sans_ext(basename(f))
           process_layer(full_path, layer_name)
@@ -359,7 +359,7 @@ worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NU
             
             # Use descriptive layer name
             layer_name <- tools::file_path_sans_ext(filename)
-            dest_file <- file.path(fs::path_temp("envar/grids"), paste0(layer_name, ".tif"))
+            dest_file <- file.path(envar_grids_dir(), paste0(layer_name, ".tif"))
             
             handle_file(url, dest_file, layer_name)
           }

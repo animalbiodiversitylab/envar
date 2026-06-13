@@ -161,7 +161,7 @@ biooracle <- function(x, vars, realm = "surface", years = "2000-2010",
   # Helper: Handle file (Standard Structure)
   # --------------------------------------------------------------------
   handle_file <- function(url, dest_file, canon, user_name) {
-    temp_dir <- fs::path_temp("envar/grids")
+    temp_dir <- envar_grids_dir()
     fs::dir_create(temp_dir)
     
     cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {user_name}}...")
@@ -246,7 +246,7 @@ biooracle <- function(x, vars, realm = "surface", years = "2000-2010",
     
     url <- sprintf("https://erddap.bio-oracle.org/erddap/griddap/%s.nc?%s[%s][(-90.0):1:(90.0)][(-180.0):1:(180.0)]", dataset_id, var_call, time_query)
     user_name <- code_to_user_name[[canon]]
-    dest_file <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".nc"))
+    dest_file <- file.path(envar_grids_dir(), paste0(user_name, ".nc"))
     
     handle_file(url, dest_file, canon, user_name)
   }

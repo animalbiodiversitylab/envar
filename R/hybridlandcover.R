@@ -269,7 +269,7 @@ hybridlandcover <- function(x, vars = NULL, year = 2000, ...) {
     
     # Get the user's original name for this canonical code
     user_name <- code_to_user_name[[canon]]
-    dest <- file.path(fs::path_temp("envar/grids"), paste0(user_name, ".tif"))
+    dest <- file.path(envar_grids_dir(), paste0(user_name, ".tif"))
     
     handle_file(url, dest, canon, user_name)
   }
