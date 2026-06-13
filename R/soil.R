@@ -137,43 +137,52 @@ soil <- function(x, vars = NULL, ...) {
   # Helper: Download, process, and clean up a single file
   # --------------------------------------------------------------------
   handle_file <- function(url, dest_file, canon, user_name) {
-    temp_dir <- fs::path_temp("envar/soil")
-    fs::dir_create(temp_dir)
-    
-    cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {user_name}}...")
-    
-    success <- download_file(url, dest_file)
-    
-    if (!success) {
-      cli::cli_alert_warning("Failed to download {.val {user_name}} from {.url {url}}.")
-      return(NULL)
-    }
-    
-    # HWSD comes in a zip, so we must unzip it first
-    cli::cli_alert_info("Unzipping {.val {basename(dest_file)}}...")
-    unzip_dir <- file.path(temp_dir, "unzipped")
-    fs::dir_create(unzip_dir)
-    utils::unzip(dest_file, exdir = unzip_dir)
-    
-    # Target the .bil file specifically
-    raster_file <- file.path(unzip_dir, "HWSD2.bil")
-    
-    if (!fs::file_exists(raster_file)) {
-      cli::cli_alert_warning("Expected raster file {.val HWSD2.bil} not found in archive.")
-      #fs::file_delete(dest_file)
-      #fs::dir_delete(unzip_dir)
-      return(NULL)
-    }
-    
-    # Copy to standardized path for extr_check compatibility
+    # Standardized cache paths for the processed source raster (.bil + .hdr).
     grids_dir <- envar_grids_dir()
     fs::dir_create(grids_dir)
     cached_raster <- file.path(grids_dir, paste0(user_name, ".bil"))
-    fs::file_copy(raster_file, cached_raster, overwrite = TRUE)
-    # Also copy the .hdr file if it exists (needed for .bil format)
-    hdr_file <- file.path(unzip_dir, "HWSD2.hdr")
-    if (fs::file_exists(hdr_file)) {
-      fs::file_copy(hdr_file, file.path(grids_dir, paste0(user_name, ".hdr")), overwrite = TRUE)
+    cached_hdr    <- file.path(grids_dir, paste0(user_name, ".hdr"))
+    
+    # Resume support: reuse the cached raster if it (and its header) are already
+    # present and caching is enabled; otherwise download and unzip.
+    if (isTRUE(getOption("envar.cache", TRUE)) &&
+        fs::file_exists(cached_raster) && fs::file_exists(cached_hdr)) {
+      cli::cli_alert_success(
+        "Using cached copy of {.file {basename(cached_raster)}} (skipping download)."
+      )
+    } else {
+      temp_dir <- fs::path_temp("envar/soil")
+      fs::dir_create(temp_dir)
+      
+      cli::cli_alert_info("Downloading {.val {basename(dest_file)}} for {.val {user_name}}...")
+      
+      success <- download_file(url, dest_file)
+      
+      if (!success) {
+        cli::cli_alert_warning("Failed to download {.val {user_name}} from {.url {url}}.")
+        return(NULL)
+      }
+      
+      # HWSD comes in a zip, so we must unzip it first
+      cli::cli_alert_info("Unzipping {.val {basename(dest_file)}}...")
+      unzip_dir <- file.path(temp_dir, "unzipped")
+      fs::dir_create(unzip_dir)
+      utils::unzip(dest_file, exdir = unzip_dir)
+      
+      # Target the .bil file specifically
+      raster_file <- file.path(unzip_dir, "HWSD2.bil")
+      
+      if (!fs::file_exists(raster_file)) {
+        cli::cli_alert_warning("Expected raster file {.val HWSD2.bil} not found in archive.")
+        return(NULL)
+      }
+      
+      # Copy to standardized cache path (.bil + .hdr) for reuse and extr_check.
+      fs::file_copy(raster_file, cached_raster, overwrite = TRUE)
+      hdr_file <- file.path(unzip_dir, "HWSD2.hdr")
+      if (fs::file_exists(hdr_file)) {
+        fs::file_copy(hdr_file, cached_hdr, overwrite = TRUE)
+      }
     }
     
     if (is_raster_input) {
@@ -228,7 +237,7 @@ soil <- function(x, vars = NULL, ...) {
       
       rm(layer, layer1)
       gc()
-     # fs::file_delete(dest_file)
+      # fs::file_delete(dest_file)
       #fs::dir_delete(unzip_dir)
       
     } else {
@@ -239,8 +248,8 @@ soil <- function(x, vars = NULL, ...) {
       
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
-      #  fs::file_delete(dest_file)
-       # fs::dir_delete(unzip_dir)
+        #  fs::file_delete(dest_file)
+        # fs::dir_delete(unzip_dir)
         return(NULL)
       }
       

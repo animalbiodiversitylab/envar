@@ -220,6 +220,14 @@ pftlandcover <- function(x, vars = NULL, year = 2025, ssp = 585, ...) {
         cli::cli_alert_warning("Extraction failed for {.val {internal_file}}.")
         return(NULL)
       }
+      
+      # junkpaths = TRUE extracts the file under its own basename; rename it to
+      # dest_file (e.g. global_SSP5_RCP85_2050.tif -> landcover.tif) so the
+      # reader below can find it.
+      extracted_path <- file.path(temp_dir, basename(full_internal_path))
+      if (file.exists(extracted_path) && extracted_path != dest_file) {
+        file.rename(extracted_path, dest_file)
+      }
     }
     
     # After extraction with junkpaths=TRUE, the file should be at dest_file (if dest_file is just filename in temp)
@@ -230,7 +238,7 @@ pftlandcover <- function(x, vars = NULL, year = 2025, ssp = 585, ...) {
       if (inherits(layer, "try-error")) {
         cli::cli_alert_warning("Could not read raster {.val {dest_file}}.")
         if (!is_global) {
-         # fs::file_delete(dest_file)
+          # fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -281,7 +289,7 @@ pftlandcover <- function(x, vars = NULL, year = 2025, ssp = 585, ...) {
       gc()
       
       if (!is_global) {
-       # fs::file_delete(dest_file)
+        # fs::file_delete(dest_file)
       }
       
     } else {
@@ -293,7 +301,7 @@ pftlandcover <- function(x, vars = NULL, year = 2025, ssp = 585, ...) {
       if (inherits(extracted, "try-error")) {
         cli::cli_alert_warning("Extraction failed for {.val {user_name}}.")
         if (!is_global) {
-        #  fs::file_delete(dest_file)
+          #  fs::file_delete(dest_file)
         }
         return(NULL)
       }
@@ -316,7 +324,7 @@ pftlandcover <- function(x, vars = NULL, year = 2025, ssp = 585, ...) {
       rm(extracted)
       gc()
       if (!is_global) {
-       # fs::file_delete(dest_file)
+        # fs::file_delete(dest_file)
       }
     }
   }
