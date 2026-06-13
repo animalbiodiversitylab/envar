@@ -1,0 +1,109 @@
+# Download and process EarthEnv Global Cloud Cover layers
+
+This function downloads, processes, and extracts variables from the
+EarthEnv Global Cloud Cover dataset. Each variable corresponds to a
+global Cloud-Optimized GeoTIFF (COG) representing cloud cover dynamics.
+
+## Usage
+
+``` r
+cloudcover(x, vars, ...)
+```
+
+## Arguments
+
+- x:
+
+  The output from \`var_get()\` defining the area or locations for
+  extraction, the reference system, and the buffer. Leave this empty and
+  use \`var_get()\` to define parameters for download.
+
+- vars:
+
+  Character vector of one or more variables to download and process.
+
+- ...:
+
+  Additional arguments (currently unused).
+
+## Value
+
+If \`var_get()\` contained a raster/polygon/points with buffer: a
+\`SpatRaster\` stack of processed variables. If \`var_get()\` contained
+spatial points or data.frame of points without buffer: a \`data.frame\`
+of x, y, and extracted values.
+
+## Details
+
+**Available variables** (working synonyms in parentheses):
+
+**Metrics**
+
+- 1 - "MODCF_CloudForestPrediction" ("cloud forest prediction", "cloud
+  forest", "cfp")
+
+- 2 - "MODCF_interannualSD" ("inter-annual variability", "interannual
+  sd", "interannual variability")
+
+- 3 - "MODCF_intraannualSD" ("intra-annual variability", "intraannual
+  sd", "intraannual variability")
+
+- 4 - "MODCF_meanannual" ("mean annual", "annual mean", "annual")
+
+- 5 - "MODCF_spatialSD_1deg" ("spatial variability", "spatial sd",
+  "spatial sd 1deg")
+
+**Seasonality**
+
+- 6 - "MODCF_seasonality_concentration" ("seasonality concentration",
+  "concentration")
+
+- 7 - "MODCF_seasonality_rgb" ("seasonality rgb", "rgb")
+
+- 8 - "MODCF_seasonality_theta" ("seasonality theta", "theta")
+
+- 9 - "MODCF_seasonality_visct" ("seasonality single band", "seasonality
+  visct", "seasonality color")
+
+**Monthly Means**
+
+- 10 - "MODCF_monthlymean_01" ("january mean", "january", "jan")
+
+- 11 - "MODCF_monthlymean_02" ("february mean", "february", "feb")
+
+- 12 - "MODCF_monthlymean_03" ("march mean", "march", "mar")
+
+- 13 - "MODCF_monthlymean_04" ("april mean", "april", "apr")
+
+- 14 - "MODCF_monthlymean_05" ("may mean", "may")
+
+- 15 - "MODCF_monthlymean_06" ("june mean", "june", "jun")
+
+- 16 - "MODCF_monthlymean_07" ("july mean", "july", "jul")
+
+- 17 - "MODCF_monthlymean_08" ("august mean", "august", "aug")
+
+- 18 - "MODCF_monthlymean_09" ("september mean", "september", "sep")
+
+- 19 - "MODCF_monthlymean_10" ("october mean", "october", "oct")
+
+- 20 - "MODCF_monthlymean_11" ("november mean", "november", "nov")
+
+- 21 - "MODCF_monthlymean_12" ("december mean", "december", "dec")
+
+**Citation:**  
+Wilson AM, Jetz W (2016). "Remotely sensed high-resolution global cloud
+dynamics for predicting ecosystem and biodiversity distributions." PLoS
+Biol 14(3): e1002415. https://doi.org/10.1371/journal.pbio.1002415
+
+Note: Please cite original sources of primary datasets where
+appropriate.
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+processed <- var_get(country= "Italy", crs=3035) %>% 
+cloudcover(vars=c("mean annual", "january"))
+  } # }
+```

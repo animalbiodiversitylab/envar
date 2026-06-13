@@ -1,0 +1,63 @@
+# Download and process Hybrid Global Annual 1-km IGBP Land Cover Maps
+
+This function downloads, processes, and extracts land cover variables
+from the Hybrid Global Annual 1-km IGBP Land Cover Maps dataset (Luo et
+al., 2024). The data covers the period from 2000 to 2020.
+
+## Usage
+
+``` r
+hybridlandcover(x, vars = NULL, year = 2000, ...)
+```
+
+## Arguments
+
+- x:
+
+  The output from \`var_get()\` defining the area or locations for
+  extraction, the reference system, and the buffer. Leave this empty and
+  use \`var_get()\` to define parameters for download.
+
+- vars:
+
+  Character vector of one or more variables to download and process.
+
+- year:
+
+  Integer. The year for which to download the land cover map
+  (2000-2020). Defaults to 2000.
+
+- ...:
+
+  Additional arguments (currently unused).
+
+## Value
+
+If \`var_get()\` contained a raster/polygon/points with buffer: a
+\`SpatRaster\` stack of processed variables. If \`var_get()\` contained
+spatial points or data.frame of points without buffer: a \`data.frame\`
+of x, y, and extracted values.
+
+## Details
+
+**Available variables** (working synonyms in parentheses):
+
+- 1 - "landcover" ("cover", "land", "lc", "igbp", "hybrid")
+
+**Citation:**  
+Luo Y, Zhu Z, Zhao W, Li M, Chen J, Zhao P, Sun L, Zhang Y, Duanmu Z,
+Chen J (2024). "Hybrid Global Annual 1-km IGBP Land Cover Maps for the
+Period 2000–2020." Journal of Remote Sensing, 4, 0122.
+https://doi.org/10.34133/remotesensing.0122
+
+Note: You must specify the \`year\` argument (integer between 2000 and
+2020).
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+processed <- var_get(country= "Italy", crs=3035) %>% 
+  hybridlandcover(vars="landcover", year=2015)
+  } # }
+```

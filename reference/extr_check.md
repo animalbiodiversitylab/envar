@@ -1,0 +1,114 @@
+# Check for Environmental Extrapolation
+
+This function evaluates whether environmental conditions in the study
+area fall outside the range of conditions observed at calibration
+points. This helps identify areas where Species Distribution Model (SDM)
+predictions may be unreliable due to extrapolation.
+
+## Usage
+
+``` r
+extr_check(
+  x,
+  calib_points,
+  calib_crs = "EPSG:4326",
+  type = c("strict", "combinatorial")
+)
+```
+
+## Arguments
+
+- x:
+
+  A \`SpatRaster\`, \`data.frame\`, or a list containing the output from
+  previous pipeline steps (e.g., from \`corr_check()\`).
+
+- calib_points:
+
+  A \`data.frame\` with columns \`X\` and \`Y\` containing the
+  coordinates of the calibration points. These are the locations where
+  presence/absence or occurrence data were collected for model training.
+
+- calib_crs:
+
+  Character or numeric. The Coordinate Reference System of the
+  calibration points. Can be an EPSG code (e.g., \`"EPSG:4326"\`,
+  \`4326\`), an ESRI code, a PROJ4 string, or WKT. Default is
+  \`"EPSG:4326"\` (WGS84).
+
+- type:
+
+  Character vector specifying the type(s) of extrapolation to check.
+  Options are \`"strict"\`, \`"combinatorial"\`, or \`c("strict",
+  "combinatorial")\` (default).
+
+  - \`"strict"\`: Uses 1 bin per variable (detects univariate
+    extrapolation).
+
+  - \`"combinatorial"\`: Uses 5 bins per variable (detects multivariate
+    novelty).
+
+## Value
+
+A \`list\` containing:
+
+- All elements from the input if it was already a list (e.g., from
+  \`corr_check()\`).
+
+- \`extrapolation\`: Either a \`SpatRaster\` with layer(s) named
+  "strict" and/or "combinatorial" (if input was raster-based), or a
+  \`data.frame\` with additional column(s) named "strict" and/or
+  "combinatorial" (if input was point-based). Values of 1 indicate
+  extrapolation (novel environments), values of 0 indicate analog
+  environments.
+
+## Details
+
+**Extrapolation types**
+
+Extrapolation can occur in two ways:
+
+- **Strict extrapolation**: At least one variable is outside the range
+  found in the calibration data.
+
+- **Combinatorial extrapolation**: Each variable is within the
+  calibration range, but the combination of predictors is new.
+
+This function uses the environmental overlap mask approach from Zurell
+et al. (2012), implemented in the \`mecofun\` package. It uses 1 bin per
+variable for strict extrapolation detection and 5 bins per variable for
+combinatorial extrapolation detection.
+
+**Citations:**  
+Elith J, Kearney M, Phillips S (2010). "The art of modelling
+range-shifting species." Methods in Ecology and Evolution 1, 330-342.
+https://doi.org/10.1111/j.2041-210X.2010.00036.x
+
+Zurell D, Elith J, Schroeder B (2012). "Predicting to new environments:
+tools for visualizing model behaviour and impacts on mapped
+distributions." Diversity and Distributions 18, 628-634.
+https://doi.org/10.1111/j.1472-4642.2012.00887.x
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+# Example 1: Check extrapolation after getting environmental variables
+result <- var_get(country = "Italy") %>%
+  esalandcover(vars = c("tree", "water")) %>%
+  chelsa(vars = "bio1", years = "1981-2010", month = 1) %>%
+  extr_check(calib_points = my_occurrence_data)
+
+# Example 2: Chain with corr_check()
+result <- var_get(pointsdf = Apollo[1:10,]) %>%
+  esalandcover(vars = c("ice")) %>%
+  chelsa(vars = "bio1", years = "1981-2010", month = 1) %>%
+  corr_check() %>%
+  extr_check(calib_points = calibration_data, type = "strict")
+
+# Example 3: Check only combinatorial extrapolation
+result <- var_get(country = "Germany") %>%
+  worldclim(vars = c("bio1", "bio12")) %>%
+  extr_check(calib_points = occ_points, type = "combinatorial")
+} # }
+```
