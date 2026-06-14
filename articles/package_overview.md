@@ -35,7 +35,7 @@ require(sf)
 Below, we illustrate a set of R commands that can be used to download
 variables over a specified study area. The customization of the study
 area occurs through the modification of arguments of the
-[`var_get()`](https://animalbiodiversitylab.github.io/envar/reference/var_get.md)
+[`par_set()`](https://animalbiodiversitylab.github.io/envar/reference/par_set.md)
 function.
 
 ### 3.1. Global data
@@ -50,8 +50,8 @@ always 30 arcseconds (0.00833°, or ~ 1 km) at the equator.
 
 ``` r
 
-processed_singlelayer_lc <- var_get() %>% 
-  esalandcover(vars=c("ice")) 
+processed_singlelayer_lc <- par_set() %>% 
+  melc(vars=c("ice")) 
 ```
 
 The print in the console is omitted in this tutorial to avoid output
@@ -78,9 +78,9 @@ shared extent across all layers.
 
 ``` r
 
-processed_bilayer_global <- var_get() %>%
+processed_bilayer_global <- par_set() %>%
   chelsa(vars = c("pr"), months = 12, year = 2015) %>%
-  esalandcover(vars = c("ice"))
+  melc(vars = c("ice"))
 ```
 
 ``` r
@@ -92,8 +92,8 @@ The same occurs if the order of downloaded variables is inverted:
 
 ``` r
 
-processed_bilayer_global_1 <- var_get() %>%
-  esalandcover(vars = c("ice")) %>%
+processed_bilayer_global_1 <- par_set() %>%
+  melc(vars = c("ice")) %>%
   chelsa(vars = c("pr"), months = 12, year = 2015)
 ```
 
@@ -123,8 +123,8 @@ cropped/masked to that country.
 
 ``` r
 
-processed_bilayer_country <- var_get(country = "Italy") %>%
-  esalandcover(vars = c("ice")) %>%
+processed_bilayer_country <- par_set(country = "Italy") %>%
+  melc(vars = c("ice")) %>%
   chelsa(vars = c("pr"), months = 12, years = 2015)
 ```
 
@@ -137,8 +137,8 @@ plot(processed_bilayer_country)
 
 ``` r
 
-processed_singlelayer_africa <- var_get(continent = "Africa", buffer = 10) %>%
-  esalandcover(vars = c("forest"))
+processed_singlelayer_africa <- par_set(continent = "Africa", buffer = 10) %>%
+  melc(vars = c("forest"))
 ```
 
 ``` r
@@ -158,8 +158,8 @@ territories), based on data from the Global Administrative Areas
 
 ``` r
 
-processed_singlelayer_europe <- var_get(continent = "Europe") %>%
-  esalandcover(vars = c("forest"))
+processed_singlelayer_europe <- par_set(continent = "Europe") %>%
+  melc(vars = c("forest"))
 ```
 
 ``` r
@@ -182,8 +182,8 @@ faster than high-resolution.
 ``` r
 
 # download variables over a country shape at "small" scale
-processed_bilayer_country_small <- var_get(country = "Italy", scale = "small") %>%
-  esalandcover(vars = c("ice")) %>%
+processed_bilayer_country_small <- par_set(country = "Italy", scale = "small") %>%
+  melc(vars = c("ice")) %>%
   chelsa(vars = c("pr"), months = 12, years = 2015)
 ```
 
@@ -195,8 +195,8 @@ plot(processed_bilayer_country_small)
 ``` r
 
 # download variables over a country shape at "large" scale
-processed_bilayer_country_large <- var_get(country = "Italy", scale = "large") %>%
-  esalandcover(vars = c("ice")) %>%
+processed_bilayer_country_large <- par_set(country = "Italy", scale = "large") %>%
+  melc(vars = c("ice")) %>%
   chelsa(vars = c("pr"), months = 12, years = 2015)
 ```
 
@@ -217,8 +217,8 @@ names visit the interactive
 
 ``` r
 
-processed_ecoregion <- var_get(ecoregion = "Lower Gangetic Plains moist deciduous forests") %>%
-  esalandcover(vars = c("tree"))
+processed_ecoregion <- par_set(ecoregion = "Lower Gangetic Plains moist deciduous forests") %>%
+  melc(vars = c("tree"))
 ```
 
 ``` r
@@ -228,8 +228,8 @@ plot(processed_ecoregion)
 
 ``` r
 
-processed_biome <- var_get(biome = "Tundra") %>%
-  esalandcover(vars = c("ice"))
+processed_biome <- par_set(biome = "Tundra") %>%
+  melc(vars = c("ice"))
 ```
 
 ``` r
@@ -239,8 +239,8 @@ plot(processed_biome)
 
 ``` r
 
-processed_realm <- var_get(realm = "Neotropic") %>%
-  esalandcover(vars = c("tree"))
+processed_realm <- par_set(realm = "Neotropic") %>%
+  melc(vars = c("tree"))
 ```
 
 ``` r
@@ -262,8 +262,8 @@ The following zooregions are available: “South American”, “Australian”,
 
 ``` r
 
-processed_zooregion <- var_get(zooregion = "Madagascan") %>%
-  esalandcover(vars = c("tree"))
+processed_zooregion <- par_set(zooregion = "Madagascan") %>%
+  melc(vars = c("tree"))
 ```
 
 ``` r
@@ -277,8 +277,8 @@ And the following zoorealms are available: “Neotropical”, “Australian”,
 
 ``` r
 
-processed_zoorealm <- var_get(zoorealm = "Neotropical") %>%
-  esalandcover(vars = c("tree"))
+processed_zoorealm <- par_set(zoorealm = "Neotropical") %>%
+  melc(vars = c("tree"))
 ```
 
 ``` r
@@ -297,8 +297,8 @@ regions and their names check the
 
 ``` r
 
-processed_mountain_region <- var_get(mountain_region = "European Alps") %>%
-  esalandcover(vars = c("tree"))
+processed_mountain_region <- par_set(mountain_region = "European Alps") %>%
+  melc(vars = c("tree"))
 ```
 
 ``` r
@@ -316,8 +316,8 @@ and their names check the original publication.
 
 ``` r
 
-processed_mountain_region_cmec <- var_get(mountain_region_cmec = "Alps and central European outliers") %>%
-  esalandcover(vars = c("tree"))
+processed_mountain_region_cmec <- par_set(mountain_region_cmec = "Alps and central European outliers") %>%
+  melc(vars = c("tree"))
 ```
 
 ``` r
@@ -381,8 +381,8 @@ be inserted and must be one of the following:
 
 ``` r
 
-processed_glacier_region <- var_get(glacier_region_19 = "Central Europe") %>%
-  esalandcover(vars = c("ice"))
+processed_glacier_region <- par_set(glacier_region_19 = "Central Europe") %>%
+  melc(vars = c("ice"))
 ```
 
 ``` r
@@ -403,8 +403,8 @@ Florida Peninsula (ID = 156) as an example here.
 
 ``` r
 
-processed_freshwater_ecoregion <- var_get(freshwater_ecoregion = 156) %>%
-  esalandcover(vars = c("tree"))
+processed_freshwater_ecoregion <- par_set(freshwater_ecoregion = 156) %>%
+  melc(vars = c("tree"))
 ```
 
 ``` r
@@ -427,7 +427,7 @@ and the PPOW available names through the relative publication.
 
 ``` r
 
-processed_marine_ecoregion <- var_get(marine_ecoregion = "East African Coral Coast") %>%
+processed_marine_ecoregion <- par_set(marine_ecoregion = "East African Coral Coast") %>%
   biooracle(vars = c("o2"))
 ```
 
@@ -449,11 +449,11 @@ values over the specified points.
 
 points <- sf::st_sample(Alps, size = 100, type = "random")
 
-processed_singlelayer_points <- var_get(shape = points, crs=3035) %>%
-  esalandcover(vars = c("ice"))
+processed_singlelayer_points <- par_set(shape = points, crs=3035) %>%
+  melc(vars = c("ice"))
 
-processed_bilayer_points <- var_get(shape = points, crs=3035) %>%
-  esalandcover(vars = c("ice")) %>%
+processed_bilayer_points <- par_set(shape = points, crs=3035) %>%
+  melc(vars = c("ice")) %>%
   chelsa(vars = c("pr"), months = 12, year = 2015)
 ```
 
@@ -485,8 +485,8 @@ shapefile
 
 ``` r
 
-processed_bilayer_shapefile <- var_get(shape = Alps) %>%
-  esalandcover(vars = c("ice")) %>%
+processed_bilayer_shapefile <- par_set(shape = Alps) %>%
+  melc(vars = c("ice")) %>%
   chelsa(vars = c("pr"), months = 12, year = 2015)
 ```
 
@@ -507,11 +507,11 @@ assigned based on user input (default: 4326).
 points3035 <- st_transform(points, 3035)
 points3035df <- as.data.frame(st_coordinates(points3035))
 
-processed_singlelayer_pointsdf <- var_get(pointsdf = points3035df, crs = 3035) %>%
-  esalandcover(vars = c("ice"))
+processed_singlelayer_pointsdf <- par_set(pointsdf = points3035df, crs = 3035) %>%
+  melc(vars = c("ice"))
 
-processed_bilayer_pointsdf <- var_get(pointsdf = points3035df, crs = 3035) %>%
-  esalandcover(vars = c("ice")) %>%
+processed_bilayer_pointsdf <- par_set(pointsdf = points3035df, crs = 3035) %>%
+  melc(vars = c("ice")) %>%
   chelsa(vars = c("pr"), months = 12, year = 2015)
 ```
 
@@ -542,8 +542,8 @@ avoid potential distortions.
 
 ``` r
 
-processed_singlelayer_buffer <- var_get(country = "Italy", crs = 3035, buffer = 10) %>%
-  esalandcover(vars = c("ice"))
+processed_singlelayer_buffer <- par_set(country = "Italy", crs = 3035, buffer = 10) %>%
+  melc(vars = c("ice"))
 ```
 
 ``` r
@@ -555,8 +555,8 @@ Negative buffer example:
 
 ``` r
 
-processed_singlelayer_negative_buffer <- var_get(country = "Italy", crs = 3035, buffer = -10) %>%
-  esalandcover(vars = c("ice"))
+processed_singlelayer_negative_buffer <- par_set(country = "Italy", crs = 3035, buffer = -10) %>%
+  melc(vars = c("ice"))
 ```
 
 ``` r
@@ -569,8 +569,8 @@ triggers an error (not shown here):
 
 ``` r
 
-processed_singlelayer_global_buffer <- var_get(buffer = 10) %>%
-  esalandcover(vars = c("ice"))
+processed_singlelayer_global_buffer <- par_set(buffer = 10) %>%
+  melc(vars = c("ice"))
 ```
 
 #### 3.6.2. Apply a buffer when using points
@@ -590,8 +590,8 @@ spatial sampling effort patterns and replicate them.
 
 ``` r
 
-processed_bilayer_points_buffer <- var_get(pointsdf = points3035df, crs = 3035, buffer = 50) %>%
-  esalandcover(vars = c("ice")) %>%
+processed_bilayer_points_buffer <- par_set(pointsdf = points3035df, crs = 3035, buffer = 50) %>%
+  melc(vars = c("ice")) %>%
   chelsa(vars = c("pr"), months = 12, year = 2015)
 ```
 
@@ -618,7 +618,7 @@ Without land mask:
 
 ``` r
 
-processed_nolandmask <- var_get(glacier_region_19 = "Central Europe") %>%
+processed_nolandmask <- par_set(glacier_region_19 = "Central Europe") %>%
   earthenvlandcover(vars = c("ice")) 
 ```
 
@@ -631,7 +631,7 @@ With land mask:
 
 ``` r
 
-processed_landmask <- var_get(glacier_region_19 = "Central Europe", land = TRUE) %>%
+processed_landmask <- par_set(glacier_region_19 = "Central Europe", land = TRUE) %>%
   earthenvlandcover(vars = c("ice")) 
 ```
 
@@ -655,8 +655,8 @@ package.
 
 ``` r
 
-processed_range <- var_get(pointsdf = Apollo, alpha_hull = TRUE) %>% 
-  esalandcover(vars=c("ice"))
+processed_range <- par_set(pointsdf = Apollo, alpha_hull = TRUE) %>% 
+  melc(vars=c("ice"))
 ```
 
 ``` r
@@ -669,8 +669,8 @@ hulll will be created and then expanded by the specified buffer.
 
 ``` r
 
-processed_range_buffer <- var_get(pointsdf = Apollo, alpha_hull = TRUE, buffer = 10) %>% 
-  esalandcover(vars=c("ice"))
+processed_range_buffer <- par_set(pointsdf = Apollo, alpha_hull = TRUE, buffer = 10) %>% 
+  melc(vars=c("ice"))
 ```
 
 ``` r
@@ -698,7 +698,7 @@ conversion from a GRS to a PRS always implies a certain amount of
 distortion, and thus different PRS are optimized for different areas of
 the globe to locally reduce distortion when moving from a 3D to a 2D
 representation. Thus, users can use the argument “crs” in the
-[`var_get()`](https://animalbiodiversitylab.github.io/envar/reference/var_get.md)
+[`par_set()`](https://animalbiodiversitylab.github.io/envar/reference/par_set.md)
 function to specify the desired CRS. Here we show an example of download
 of a single variable from a single source, in this case the 1 km land
 cover based on ESA (Lo Parrino *et al.* 2025), and its projection to the
@@ -710,8 +710,8 @@ e.g. “EPSG:4326” or “ESRI:54009”.
 
 ``` r
 
-processed_singlelayer_projected <- var_get(country = "Italy", crs=3035) %>% 
- esalandcover(vars=c("ice"))
+processed_singlelayer_projected <- par_set(country = "Italy", crs=3035) %>% 
+ melc(vars=c("ice"))
 ```
 
 ``` r
@@ -732,8 +732,8 @@ part of the new larger cell.
 
 ``` r
 
-processed_singlelayer_aggregated <- var_get(res = 100) %>%
-  esalandcover(vars = c("ice"))
+processed_singlelayer_aggregated <- par_set(res = 100) %>%
+  melc(vars = c("ice"))
 ```
 
 ``` r
@@ -755,11 +755,11 @@ correlation plot.
 
 ``` r
 
-processed_bilayer_corr_check <- var_get(shape = Alps, crs = 3035, res = 2, buffer = 10) %>% 
+processed_bilayer_corr_check <- par_set(shape = Alps, crs = 3035, res = 2, buffer = 10) %>% 
              chelsa(vars = c("bio1", "bio4", "bio10", "bio12", "bio19"),
                     years = "1981-2010") %>%
              topography(vars = c("elevation", "slope")) %>%
-             esalandcover(vars = c("trees", "ice")) %>%
+             melc(vars = c("trees", "ice")) %>%
              corr_check()
 ```
 
@@ -796,8 +796,8 @@ of the resulting list will be a data.frame with the extracted values.
 
 ``` r
 
-processed_bilayer_points_corr_check <- var_get(shape = points) %>%
-  esalandcover(vars = c("ice")) %>%
+processed_bilayer_points_corr_check <- par_set(shape = points) %>%
+  melc(vars = c("ice")) %>%
   chelsa(vars = c("pr"), months = 12, year = 2015) %>%
   corr_check()
 ```
@@ -837,8 +837,8 @@ extrapolation and 0 cells of no extrapolation.
 
 ``` r
 
-processed_bilayer_extr_check <- var_get(shape = Alps, crs = 3035) %>%
-  esalandcover(vars = c("ice")) %>%
+processed_bilayer_extr_check <- par_set(shape = Alps, crs = 3035) %>%
+  melc(vars = c("ice")) %>%
   chelsa(vars = c("pr"), months = 12, year = 2015) %>%
   extr_check(calib_points = Apollo, calib_crs = 4326, type = c("strict", "combinatorial"))
 ```
@@ -860,8 +860,8 @@ extrapolation as 1 and no extrapolation as 0.
 ``` r
 
 # for example, we use only the first 10 points of the Apollo dataset as a simulated data set to calibrate a model and then we want to apply it to a whole set of points covering a wider environmental range.
-processed_points_extr_check <- var_get(pointsdf = Apollo) %>% 
-  esalandcover(vars = c("ice")) %>%
+processed_points_extr_check <- par_set(pointsdf = Apollo) %>% 
+  melc(vars = c("ice")) %>%
   chelsa(vars = c("pr"), months = 12, year = 2015) %>%
   extr_check(calib_points = Apollo[1:10,], calib_crs = 4326, type = c("strict", "combinatorial"))
 ```
@@ -885,9 +885,9 @@ Without NA mask:
 
 ``` r
 
-processed_bilayer_global <- var_get() %>%
+processed_bilayer_global <- par_set() %>%
   chelsa(vars = c("pr"), months = 12, year = 2015) %>%
-  esalandcover(vars = c("ice"))
+  melc(vars = c("ice"))
 ```
 
 ``` r
@@ -899,9 +899,9 @@ With NA mask:
 
 ``` r
 
-processed_bilayer_global_namask <- var_get(set_na=TRUE) %>%
+processed_bilayer_global_namask <- par_set(set_na=TRUE) %>%
   chelsa(vars = c("pr"), months = 12, year = 2015) %>%
-  esalandcover(vars = c("ice"))
+  melc(vars = c("ice"))
 ```
 
 ``` r
@@ -919,8 +919,8 @@ Remember to specify the full path, including the filename and extension.
 
 ``` r
 
-processed_stored_raster <- var_get(shape = Alps, crs = 3035, path = "../Out/storedraster.tif") %>%
-  esalandcover(vars = c("ice")) %>%
+processed_stored_raster <- par_set(shape = Alps, crs = 3035, path = "../Out/storedraster.tif") %>%
+  melc(vars = c("ice")) %>%
   chelsa(vars = c("pr"), months = 12, year = 2015)
 ```
 
@@ -931,8 +931,8 @@ file written has to be a .csv file; specify the path accordingly.
 
 ``` r
 
-processed_stored_table <- var_get(pointsdf = Apollo, path = "../Out/storedtable.csv") %>%
-  esalandcover(vars = c("ice")) %>%
+processed_stored_table <- par_set(pointsdf = Apollo, path = "../Out/storedtable.csv") %>%
+  melc(vars = c("ice")) %>%
   chelsa(vars = c("pr"), months = 12, year = 2015)
 ```
 

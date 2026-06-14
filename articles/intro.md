@@ -63,7 +63,7 @@ cover variables for a study area in the European Alps (already included
 in the package as the object
 [`Alps()`](https://animalbiodiversitylab.github.io/envar/reference/Alps.md)).
 A call to the
-[`var_get()`](https://animalbiodiversitylab.github.io/envar/reference/var_get.md)
+[`par_set()`](https://animalbiodiversitylab.github.io/envar/reference/par_set.md)
 function is used to define the study area (argument “shape”), the
 desired grid output resolution in km (argument “res”), the coordinate
 reference system (argument “crs”), and an eventual buffer (in km) by
@@ -120,11 +120,11 @@ want to apply the model to the European Alps later on.
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035, res = 2, buffer = 10) %>% 
+processed <- par_set(shape = Alps, crs = 3035, res = 2, buffer = 10) %>% 
              chelsa(vars = c("bio1", "bio4", "bio10", "bio12", "bio19"),
                     years = "1981-2010") %>%
              topography(vars = c("elevation", "slope")) %>%
-             esalandcover(vars = c("trees", "ice")) %>%
+             melc(vars = c("trees", "ice")) %>%
              corr_check() %>% 
              extr_check(calib_points = Apollo, type = "strict")
 ```

@@ -20,7 +20,7 @@ var_explore(source = NULL, what = "sources", error_context = NULL)
 
 - error_context:
 
-  Error context from var_get (if called from error handler)
+  Error context from par_set (if called from error handler)
 
 ## Value
 

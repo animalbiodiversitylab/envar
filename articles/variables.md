@@ -188,7 +188,7 @@ download will not work.
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>%
+processed <- par_set(shape = Alps, crs = 3035) %>%
   chelsa(vars = c("pr"), years = 2018, months = 1)
 ```
 
@@ -242,7 +242,7 @@ Future:
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>% 
              worldclim(vars = c("bio1"), years = "1970-2000")
 ```
 
@@ -285,7 +285,7 @@ SSP Scenarios (“ssp” argument, required for future periods):
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>% 
   climatezones()
 ```
 
@@ -341,7 +341,7 @@ Monthly means:
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>% 
   cloudcover(vars = c("mean annual"))
 ```
 
@@ -385,7 +385,7 @@ Monthly ET0 (et0_v3_01.tif to et0_v3_12.tif):
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>% 
   aridity(vars = c("aridity index annual", "et0 january"))
 ```
 
@@ -430,7 +430,7 @@ cover class at 1 km resolution.
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>% 
   earthenvlandcover(vars = c("snow ice"))
 ```
 
@@ -469,8 +469,8 @@ or diversity index derived from very high-resolution imagery.
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
-  esalandcover(vars = c("tree", "water"))
+processed <- par_set(shape = Alps, crs = 3035) %>% 
+  melc(vars = c("tree", "water"))
 ```
 
 ``` r
@@ -494,7 +494,7 @@ downloading the land cover map. You must specify the `year` argument
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>% 
   hybridlandcover(vars = "landcover", year = 2015)
 ```
 
@@ -539,7 +539,7 @@ Available years:
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>% 
   geososlandcover(vars = "landcover", scenario = "A1B", year = 2050)
 ```
 
@@ -581,7 +581,7 @@ values:
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>% 
   pftlandcover(vars = "landcover", year = 2050, ssp = 585)
 ```
 
@@ -629,12 +629,12 @@ Available SSPs (Shared Socioeconomic Pathways):
 
 Note: The original data is in World Mercator projection and will be
 automatically reprojected to the CRS defined in
-[`var_get()`](https://animalbiodiversitylab.github.io/envar/reference/var_get.md)
+[`par_set()`](https://animalbiodiversitylab.github.io/envar/reference/par_set.md)
 (default: EPSG 4326).
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>% 
   gcamlandcover(ssp = 585, year = 2050)
 ```
 
@@ -675,7 +675,7 @@ Second-order statistics (Texture metrics):
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>% 
   heterogeneity(vars = c("shannon", "cv"))
 ```
 
@@ -781,7 +781,7 @@ Artificial:
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>% 
   habitat(vars = c("Forest", "Artificial"), level = 1)
 ```
 
@@ -805,7 +805,7 @@ representing soil types.
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>% 
   soil()
 ```
 
@@ -856,7 +856,7 @@ The `depth` argument defines the soil depth range in cm. Options are
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>% 
   soilclimate(vars = c("SBIO1", "SBIO10"), depth = "5-15")
 ```
 
@@ -894,7 +894,7 @@ Additional parameters:
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>% 
   topography(vars = c("elevation", "slope"))
 ```
 
@@ -1006,7 +1006,7 @@ multiple calls may be required if different algorithms are needed.
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>% 
 freshwater(vars = c("elevation", "slope", "tmin"), algorithm = "mn", month=12)
 ```
 
@@ -1067,7 +1067,7 @@ Additional parameters:
 
 ``` r
 
-processed <- var_get(marine_ecoregion = "East African Coral Coast") %>% 
+processed <- par_set(marine_ecoregion = "East African Coral Coast") %>% 
   biooracle(vars = "o2", realm = "surface", years = "2000-2010")
 ```
 
@@ -1124,7 +1124,7 @@ Climate change:
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>% 
   spectre(vars = c("forest loss", "light at night"))
 ```
 
@@ -1175,7 +1175,7 @@ Ports:
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>% 
   accessibility(vars = c("large cities", "ports1"))
 ```
 
@@ -1206,7 +1206,7 @@ Years available: 1992 to 2019.
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>% 
   gdppast(vars = "gdp", year = c(2000, 2010))
 ```
 
@@ -1244,7 +1244,7 @@ Years available: Decadal intervals from 1850 to 2100 (e.g., 2020, 2030,
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>% 
   gdpfuture(vars = "gdp", year = 2050, ssp = c(1, 5))
 ```
 
@@ -1282,7 +1282,7 @@ SSP Scenarios:
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>% 
   population(vars = "population", year = 2050, ssp = 2)
 ```
 
@@ -1320,7 +1320,7 @@ Categories of protected areas.
 
 ``` r
 
-processed <- var_get(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>% 
   protection(vars = c("national park", "WDPA_ALL"))
 ```
 

@@ -11,7 +11,7 @@ Function for exploring the variables available for download
 
 Function for creating new download task and process it
 
-- [`var_get()`](https://animalbiodiversitylab.github.io/envar/reference/var_get.md)
+- [`par_set()`](https://animalbiodiversitylab.github.io/envar/reference/par_set.md)
   : Initialize the Environmental Variable Retrieval Pipeline
 
 ## Download variables from different sources
@@ -32,7 +32,7 @@ Functions for downloading variables from multiple sources
   : Download and process EarthEnv Freshwater Environmental Variables
 - [`protection()`](https://animalbiodiversitylab.github.io/envar/reference/protection.md)
   : Download and process WDPA Protected Area layers
-- [`esalandcover()`](https://animalbiodiversitylab.github.io/envar/reference/esalandcover.md)
+- [`melc()`](https://animalbiodiversitylab.github.io/envar/reference/melc.md)
   : Download and process Global 1 km Land Cover variables
 - [`earthenvlandcover()`](https://animalbiodiversitylab.github.io/envar/reference/earthenvlandcover.md)
   : Download and process EarthEnv land cover variables

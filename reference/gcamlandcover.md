@@ -13,7 +13,7 @@ gcamlandcover(x, vars = "landcover", ssp = 126, year = 2020, ...)
 
 - x:
 
-  The output from \`var_get()\` defining the area or locations for
+  The output from \`par_set()\` defining the area or locations for
   extraction, the reference system, and the buffer.
 
 - vars:
@@ -37,15 +37,15 @@ gcamlandcover(x, vars = "landcover", ssp = 126, year = 2020, ...)
 
 ## Value
 
-If \`var_get()\` contained a raster/polygon/points with buffer: a
-\`SpatRaster\` stack. If \`var_get()\` contained spatial points without
+If \`par_set()\` contained a raster/polygon/points with buffer: a
+\`SpatRaster\` stack. If \`par_set()\` contained spatial points without
 buffer: a \`data.frame\`.
 
 ## Details
 
 The data represents 1 km resolution LULC maps. The original data is in
 World Mercator projection and will be automatically reprojected to the
-CRS defined in \`var_get()\`.
+CRS defined in \`par_set()\`.
 
 **Land cover codes**
 
@@ -87,11 +87,11 @@ Scientific Data 10, 748. https://doi.org/10.1038/s41597-023-02637-7
 ``` r
 if (FALSE) { # \dontrun{
 # Get Baseline (2020)
-processed <- var_get(country= "Italy", crs=4326) %>% 
+processed <- par_set(country= "Italy", crs=4326) %>% 
   gcamlandcover(year = 2020)
 
 # Get Future (SSP5-8.5 in 2050)
-processed <- var_get(country= "Italy", crs=4326) %>% 
+processed <- par_set(country= "Italy", crs=4326) %>% 
   gcamlandcover(ssp = 585, year = 2050)
 } # }
 ```

@@ -15,9 +15,9 @@ habitat(x, vars, level = 1, ...)
 
 - x:
 
-  The output from \`var_get()\` defining the area or locations for
+  The output from \`par_set()\` defining the area or locations for
   extraction, the reference system, and the buffer. Leave this empty and
-  use \`var_get()\` to define parameters for download.
+  use \`par_set()\` to define parameters for download.
 
 - vars:
 
@@ -34,8 +34,8 @@ habitat(x, vars, level = 1, ...)
 
 ## Value
 
-If \`var_get()\` contained a raster/polygon/points with buffer: a
-\`SpatRaster\` stack of processed variables. If \`var_get()\` contained
+If \`par_set()\` contained a raster/polygon/points with buffer: a
+\`SpatRaster\` stack of processed variables. If \`par_set()\` contained
 spatial points or data.frame of points without buffer: a \`data.frame\`
 of x, y, and extracted values.
 
@@ -122,11 +122,11 @@ appropriate.
 ``` r
 if (FALSE) { # \dontrun{
 # Example 1: Level 1 extraction (Forest and Artificial)
-processed <- var_get(country = "Italy", crs = 3035) %>% 
+processed <- par_set(country = "Italy", crs = 3035) %>% 
   habitat(vars = c("Forest", "Artificial"), level = 1)
 
 # Example 2: Level 2 extraction (Specific biomes)
-processed_l2 <- var_get(country = "Brazil", crs = 3035) %>% 
+processed_l2 <- par_set(country = "Brazil", crs = 3035) %>% 
   habitat(vars = c("Mangrove", "Tropical moist lowland forest"), level = 2)
   } # }
 ```

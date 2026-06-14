@@ -24,9 +24,9 @@ worldclim(
 
 - x:
 
-  The output from \`var_get()\` defining the area or locations for
+  The output from \`par_set()\` defining the area or locations for
   extraction, the reference system, and the buffer. Leave this empty and
-  use \`var_get()\` to define parameters for download.
+  use \`par_set()\` to define parameters for download.
 
 - vars:
 
@@ -55,8 +55,8 @@ worldclim(
 
 ## Value
 
-If \`var_get()\` contained a raster/polygon/points with buffer: a
-\`SpatRaster\` stack of processed variables. If \`var_get()\` contained
+If \`par_set()\` contained a raster/polygon/points with buffer: a
+\`SpatRaster\` stack of processed variables. If \`par_set()\` contained
 spatial points or data.frame of points without buffer: a \`data.frame\`
 of x, y, and extracted values.
 
@@ -100,7 +100,7 @@ Climatology 37: 4302-4315. https://doi.org/10.1002/joc.5086
 
 ``` r
 if (FALSE) { # \dontrun{
-processed <- var_get(country = "Italy", crs = 3035) %>% 
+processed <- par_set(country = "Italy", crs = 3035) %>% 
   worldclim(vars = c("tmin", "bio1"), years = "1970-2000")
   } # }
 ```

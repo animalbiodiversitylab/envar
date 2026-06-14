@@ -15,9 +15,9 @@ protection(x, vars, ...)
 
 - x:
 
-  The output from \`var_get()\` defining the area or locations for
+  The output from \`par_set()\` defining the area or locations for
   extraction, the reference system, and the buffer. Leave this empty and
-  use \`var_get()\` to define parameters for download.
+  use \`par_set()\` to define parameters for download.
 
 - vars:
 
@@ -29,8 +29,8 @@ protection(x, vars, ...)
 
 ## Value
 
-If \`var_get()\` contained a raster/polygon/points with buffer: a
-\`SpatRaster\` stack of processed variables. If \`var_get()\` contained
+If \`par_set()\` contained a raster/polygon/points with buffer: a
+\`SpatRaster\` stack of processed variables. If \`par_set()\` contained
 spatial points or data.frame of points without buffer: a \`data.frame\`
 of x, y, and extracted values.
 
@@ -71,7 +71,7 @@ when using these data for commercial or research purposes.
 ``` r
 if (FALSE) { # \dontrun{
 # Example 1: Download National Parks and All Protected Areas for Italy
-processed <- var_get(country= "Italy", crs=3035) %>% 
+processed <- par_set(country= "Italy", crs=3035) %>% 
 protection(vars=c("national park", "WDPA_ALL"))
   } # }
 ```
