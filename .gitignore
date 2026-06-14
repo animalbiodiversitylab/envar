@@ -15,3 +15,7 @@ temp/
 .RData
 .Rhistory
 .Rproj.user
+
+# pkgdown site — built automatically by the GitHub Action and published
+# to the gh-pages branch. Do not commit the rendered site to main.
+docs/
