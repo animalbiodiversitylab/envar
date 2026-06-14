@@ -1,5 +1,21 @@
 # R/process_raster_layer.R
 
+#' Choose a resampling / reprojection method for a layer or stack
+#'
+#' Honours `options(envar.resample_method)`. When set to "auto" (the default),
+#' categorical (factor) layers use nearest-neighbour to avoid inventing class
+#' codes, while continuous layers use bilinear. If a stack mixes categorical and
+#' continuous layers, nearest-neighbour is chosen to protect the class codes.
+#' @noRd
+choose_resample_method <- function(x) {
+  user_method <- getOption("envar.resample_method", "auto")
+  if (!identical(user_method, "auto")) {
+    return(user_method)
+  }
+  is_categorical <- tryCatch(any(terra::is.factor(x)), error = function(e) FALSE)
+  if (isTRUE(is_categorical)) "near" else "bilinear"
+}
+
 #' Process a raster layer according to global or regional settings
 #' @noRd
 #' 
@@ -46,21 +62,19 @@ process_raster_layer <- function(layer, grid, mask, res, crs, is_global = FALSE,
   # Categorical (factor) layers must use nearest-neighbour to avoid inventing
   # class codes; continuous layers default to bilinear. Users can override the
   # behaviour with options(envar.resample_method = "near" | "bilinear").
-  user_method <- getOption("envar.resample_method", "auto")
   is_categorical <- tryCatch(any(terra::is.factor(layer)), error = function(e) FALSE)
-  resample_method <- if (identical(user_method, "auto")) {
-    if (isTRUE(is_categorical)) "near" else "bilinear"
-  } else {
-    user_method
-  }
+  resample_method <- choose_resample_method(layer)
 
   if (is_global) {
     # Global processing: keep original extent, apply resolution and CRS
     
     # First, aggregate if needed
     if (res > 1) {
-      cli::cli_alert_info("Aggregating by factor {res}...")
-      layer <- terra::aggregate(layer, fact = res, fun = "mean", na.rm = TRUE)
+      # Categorical layers must be aggregated by majority vote (modal); averaging
+      # would invent meaningless intermediate class codes.
+      agg_fun <- if (isTRUE(is_categorical)) "modal" else "mean"
+      cli::cli_alert_info("Aggregating by factor {res} (fun: {agg_fun})...")
+      layer <- terra::aggregate(layer, fact = res, fun = agg_fun, na.rm = TRUE)
     }
     
     # Project to target CRS if different
@@ -243,7 +257,7 @@ combine_global_rasters <- function(existing_stack, new_stack,
     # Resample new stack to match existing if geometries still don't match
     if (!terra::compareGeom(existing_stack, new_stack, stopOnError = FALSE)) {
       cli::cli_alert_info("Resampling new layers to match existing stack...")
-      new_stack <- terra::resample(new_stack, existing_stack, method = "bilinear")
+      new_stack <- terra::resample(new_stack, existing_stack, method = choose_resample_method(new_stack))
     }
     
     combined <- c(existing_stack, new_stack)

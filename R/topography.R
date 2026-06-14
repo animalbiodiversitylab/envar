@@ -331,7 +331,7 @@ topography <- function(x, vars, algorithm = "md", topo_source = "GMTED", ...) {
         # This ensures perfect alignment for stacking
         if (!terra::compareGeom(x, processed_stack, stopOnError = FALSE)) {
           cli::cli_alert_info("Aligning new layers to match input raster geometry...")
-          processed_stack <- terra::resample(processed_stack, x, method = "bilinear")
+          processed_stack <- terra::resample(processed_stack, x, method = choose_resample_method(processed_stack))
           
         }
         processed_stack <- c(x, processed_stack)
