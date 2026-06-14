@@ -327,17 +327,20 @@ worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NU
   # --- Future CMIP6 Processing ---
   # --------------------------------------------------------------------
   if (!is.null(years) && length(years) > 0) {
-    
+
+    # Future projections need both a GCM and an SSP — fail loudly if missing
+    if (is.null(gcm) || is.null(ssp)) {
+      cli::cli_abort("Future projections require both {.arg gcm} and {.arg ssp}.")
+    }
+
     # Clean vars for Future (only supports tmin, tmax, prec, bio)
     future_vars <- intersect(names(clean_vars), c("tmin", "tmax", "prec", "bio"))
     # Map back to clean names
     future_cats <- unique(unlist(clean_vars[future_vars]))
-    
+
     # Normalize SSP
-    if (!is.null(ssp)) {
-      ssp_clean <- as.character(ssp)
-      ssp_clean <- ifelse(grepl("^ssp", ssp_clean), ssp_clean, paste0("ssp", ssp_clean))
-    }
+    ssp_clean <- as.character(ssp)
+    ssp_clean <- ifelse(grepl("^ssp", ssp_clean), ssp_clean, paste0("ssp", ssp_clean))
     
     base_url_future <- "https://geodata.ucdavis.edu/cmip6/30s"
     

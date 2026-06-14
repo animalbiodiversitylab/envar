@@ -1,7 +1,7 @@
 Package: envar
 Type: Package
 Title: Download environmental variables in R
-Version: 0.0.1
+Version: 0.1.0
 Authors@R: 
     c(person(given = "Andrea", family = "Simoncini", role = c("aut", "cre"), email = "simonciniandre@gmail.com",comment = c(ORCID = "0000-0002-9856-6111")),
       person(given = "Michele", family = "Bertoncini", role = "aut", comment = c(ORCID = "0000-0002-1866-0045")),

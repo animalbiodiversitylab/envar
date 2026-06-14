@@ -28,16 +28,18 @@ process_points <- function(file, points) {
   # Get coordinates in original CRS
   coords <- sf::st_coordinates(points)
   
-  # Combine results
+  # Combine results — keep all value columns (multi-band rasters have many)
+  val_cols <- extracted[, -1, drop = FALSE]  # drop the ID column (column 1)
   result <- data.frame(
     ID = seq_len(nrow(coords)),
     X = coords[, "X"],
     Y = coords[, "Y"],
-    value = extracted[, 2]  # Column 2 is the extracted value (column 1 is ID)
+    val_cols,
+    check.names = FALSE
   )
-  
-  # Name the value column with the raster layer name
-  names(result)[4] <- names(r)
+
+  # Name the value columns with the raster layer names
+  names(result)[-(1:3)] <- names(r)
   
   return(result)
 }

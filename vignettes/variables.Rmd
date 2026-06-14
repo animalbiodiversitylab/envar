@@ -871,7 +871,7 @@ Additional parameters:
 * **algorithm** - Statistic to apply (max, mean, min, ltmax, ltmin, range). Default "mean"
 
 ```{r,results = "hide", message = FALSE, warning = FALSE}
-processed <- par_set(marine_ecoregion = "East African Coral Coast") %>% 
+processed <- par_set(marine_ecoregion = "East African Coral Coast", res = 10) %>% 
   biooracle(vars = "o2", realm = "surface", years = "2000-2010")
 ```
 
