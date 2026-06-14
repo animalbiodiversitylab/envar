@@ -3,7 +3,7 @@
 #'
 #' @param source Data source to explore
 #' @param what What to explore ("sources", "variables", "resolutions")
-#' @param error_context Error context from var_get (if called from error handler)
+#' @param error_context Error context from par_set (if called from error handler)
 #'
 #' @return Prints helpful information
 #' @export
@@ -18,7 +18,7 @@
 var_explore <- function(source = NULL, what = "sources", error_context = NULL) {
   
   if (!is.null(error_context)) {
-    cli::cli_h1("Error in var_get()")
+    cli::cli_h1("Error in par_set()")
     cli::cli_alert_danger(error_context$message)
     cli::cli_text("")
     
@@ -312,6 +312,6 @@ var_explore <- function(source = NULL, what = "sources", error_context = NULL) {
   if (!is.null(error_context)) {
     cli::cli_text("")
     cli::cli_h2("Example usage:")
-    cli::cli_code('bio_italy <- var_get("Italy", source = "worldclim", variables = "bioclim")')
+    cli::cli_code('bio_italy <- par_set("Italy", source = "worldclim", variables = "bioclim")')
   }
 }

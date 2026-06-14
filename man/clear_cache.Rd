@@ -11,6 +11,6 @@ Invisibly, the path of the cache directory that was cleared.
 }
 \description{
 Removes all files stored in the persistent download cache used when
-`cache = TRUE` in [var_get()]. This is useful to free disk space or to force
+`cache = TRUE` in [par_set()]. This is useful to free disk space or to force
 a fresh download of every variable.
 }

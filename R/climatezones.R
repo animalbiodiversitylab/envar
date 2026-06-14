@@ -45,9 +45,9 @@
 #' Beck HE, McVicar TR, Vergopolan N, Berg A, Lutsko NJ, Dufour A, Zeng Z, Jiang X, van Dijk AIJM, Miralles DG (2023). "High-resolution (1 km) Köppen-Geiger maps for 1901-2099 based on constrained CMIP6 projections." Scientific Data 10, 724.
 #' https://doi.org/10.1038/s41597-023-02549-6
 #' 
-#' @param x The output from `var_get()` defining the area or locations for extraction, 
+#' @param x The output from `par_set()` defining the area or locations for extraction, 
 #' the reference system, and the buffer. 
-#' Leave this empty and use `var_get()` to define parameters for download.
+#' Leave this empty and use `par_set()` to define parameters for download.
 #' @param vars Character vector. Defaults to "zones". Accepted aliases include:
 #'        "koppengeiger", "climate", "climatezones", "koppen".
 #' @param years Character vector of time periods. Defaults to "1991-2020".
@@ -57,11 +57,11 @@
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+#' If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `par_set()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
 #' @examples
 #' \dontrun{
-#' processed <- var_get(country= "Italy", crs=3035) %>% 
+#' processed <- par_set(country= "Italy", crs=3035) %>% 
 #' climatezones(vars="zones", years="1991-2020")
 #'   }
 #' @export

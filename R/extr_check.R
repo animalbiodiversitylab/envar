@@ -56,20 +56,20 @@
 #' @examples
 #' \dontrun{
 #' # Example 1: Check extrapolation after getting environmental variables
-#' result <- var_get(country = "Italy") %>%
-#'   esalandcover(vars = c("tree", "water")) %>%
+#' result <- par_set(country = "Italy") %>%
+#'   melc(vars = c("tree", "water")) %>%
 #'   chelsa(vars = "bio1", years = "1981-2010", month = 1) %>%
 #'   extr_check(calib_points = my_occurrence_data)
 #'
 #' # Example 2: Chain with corr_check()
-#' result <- var_get(pointsdf = Apollo[1:10,]) %>%
-#'   esalandcover(vars = c("ice")) %>%
+#' result <- par_set(pointsdf = Apollo[1:10,]) %>%
+#'   melc(vars = c("ice")) %>%
 #'   chelsa(vars = "bio1", years = "1981-2010", month = 1) %>%
 #'   corr_check() %>%
 #'   extr_check(calib_points = calibration_data, type = "strict")
 #'
 #' # Example 3: Check only combinatorial extrapolation
-#' result <- var_get(country = "Germany") %>%
+#' result <- par_set(country = "Germany") %>%
 #'   worldclim(vars = c("bio1", "bio12")) %>%
 #'   extr_check(calib_points = occ_points, type = "combinatorial")
 #' }
@@ -281,7 +281,7 @@ extr_check <- function(x,
           "i" = "Solutions:",
           "*" = "Pre-extract environmental values for calibration points using the same pipeline,",
           "*" = "and pass the resulting data.frame to extr_check().",
-          "*" = "Example: calib_env <- var_get(pointsdf = Apollo) %>% esalandcover(vars = c('ice', 'tree'))",
+          "*" = "Example: calib_env <- par_set(pointsdf = Apollo) %>% melc(vars = c('ice', 'tree'))",
           "*" = "Then: extr_check(calib_points = calib_env)"
         ))
       }

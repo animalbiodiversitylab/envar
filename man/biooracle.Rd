@@ -15,7 +15,7 @@ biooracle(
 )
 }
 \arguments{
-\item{x}{The output from `var_get()` defining the area or locations.}
+\item{x}{The output from `par_set()` defining the area or locations.}
 
 \item{vars}{Character vector of one or more variables or synonyms to download.}
 
@@ -32,7 +32,7 @@ For future projections, specify the decade (e.g., "2040-2050", "2090-2100") and 
 \item{...}{Additional arguments.}
 }
 \value{
-If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `par_set()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
 This function downloads, processes, and extracts variables from the
@@ -75,12 +75,12 @@ https://doi.org/10.1111/geb.13813
 \examples{
 \dontrun{
 # Example 1: Current conditions (Baseline)
-current_env <- var_get(country = "Italy", crs = 3035) \%>\% 
+current_env <- par_set(country = "Italy", crs = 3035) \%>\% 
   biooracle(vars = c("temperature", "salinity"), 
             years = "2000-2010")
             
 # Example 2: Future projections (2050, SSP 585)
-future_env <- var_get(country = "Italy", crs = 3035) \%>\% 
+future_env <- par_set(country = "Italy", crs = 3035) \%>\% 
   biooracle(vars = c("temperature", "salinity"), 
             years = "2040-2050", 
             ssp = 585)

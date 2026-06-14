@@ -46,21 +46,21 @@
 #'
 #' Note: Please cite original sources of primary datasets where appropriate.
 #' 
-#' @param x The output from `var_get()` defining the area or locations for extraction, 
+#' @param x The output from `par_set()` defining the area or locations for extraction, 
 #' the reference system, and the buffer.
-#' Leave this empty and use `var_get()` to define parameters for download.
+#' Leave this empty and use `par_set()` to define parameters for download.
 #' @param vars Character vector of one or more variables to download and process.
 #' @param depth Character string defining the soil depth range. 
 #' Options are "0-5" (default) or "5-15".
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
-#' If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+#' If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+#' If `par_set()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
 #' @examples
 #' \dontrun{
-#' processed <- var_get(country= "Italy", crs=3035) %>% 
+#' processed <- par_set(country= "Italy", crs=3035) %>% 
 #' soilclimate(vars=c("SBIO1", "SBIO10"), depth="5-15")
 #'    }
 #' @export

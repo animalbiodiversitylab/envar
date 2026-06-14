@@ -2,7 +2,7 @@
 #' Download file with progress
 #'
 #' Downloads a file to `dest_file`. When caching is enabled
-#' (`options(envar.cache = TRUE)`, set by [var_get()]), a complete copy that is
+#' (`options(envar.cache = TRUE)`, set by [par_set()]), a complete copy that is
 #' already present at `dest_file` is reused instead of being downloaded again,
 #' allowing an interrupted pipeline to resume. Downloads are written to a
 #' temporary `.part` file and moved into place only on success, so any file left

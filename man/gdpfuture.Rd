@@ -7,9 +7,9 @@
 gdpfuture(x, vars, year, ssp, ...)
 }
 \arguments{
-\item{x}{The output from `var_get()` defining the area or locations for extraction, 
+\item{x}{The output from `par_set()` defining the area or locations for extraction, 
 the reference system, and the buffer. 
-Leave this empty and use `var_get()` to define parameters for download.}
+Leave this empty and use `par_set()` to define parameters for download.}
 
 \item{vars}{Character vector of variables to download (synonyms for "gdp").}
 
@@ -20,7 +20,7 @@ Leave this empty and use `var_get()` to define parameters for download.}
 \item{...}{Additional arguments (currently unused).}
 }
 \value{
-If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `par_set()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
 This function downloads, processes, and extracts variables from the
@@ -57,11 +57,11 @@ Note: Please cite original sources of primary datasets where appropriate.
 \examples{
 \dontrun{
 # Get GDP for SSP1 and SSP5 in 2050
-processed <- var_get(country= "France", crs=3035) \%>\% 
+processed <- par_set(country= "France", crs=3035) \%>\% 
   gdpfuture(vars="gdp", year=2050, ssp=c(1, 5))
 
 # Get time series for SSP2
-processed <- var_get(country= "India") \%>\% 
+processed <- par_set(country= "India") \%>\% 
   gdpfuture(vars="gdp", year=c(2020, 2030, 2040), ssp=2)
 }
 }

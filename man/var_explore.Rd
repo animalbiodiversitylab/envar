@@ -11,7 +11,7 @@ var_explore(source = NULL, what = "sources", error_context = NULL)
 
 \item{what}{What to explore ("sources", "variables", "resolutions")}
 
-\item{error_context}{Error context from var_get (if called from error handler)}
+\item{error_context}{Error context from par_set (if called from error handler)}
 }
 \value{
 Prints helpful information

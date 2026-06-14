@@ -3,7 +3,7 @@
 #' Directory used to store downloaded grid files
 #'
 #' When caching is enabled (the default, controlled by
-#' `options(envar.cache = TRUE)` which is set by [var_get()] via its `cache`
+#' `options(envar.cache = TRUE)` which is set by [par_set()] via its `cache`
 #' argument), downloaded source rasters are kept in a persistent per-user cache
 #' directory. This way an interrupted download pipeline can be re-launched and
 #' will resume from where it stopped, reusing files that were already retrieved
@@ -38,7 +38,7 @@ envar_grids_dir <- function() {
 #' Clear the envar download cache
 #'
 #' Removes all files stored in the persistent download cache used when
-#' `cache = TRUE` in [var_get()]. This is useful to free disk space or to force
+#' `cache = TRUE` in [par_set()]. This is useful to free disk space or to force
 #' a fresh download of every variable.
 #'
 #' @return Invisibly, the path of the cache directory that was cleared.

@@ -3,8 +3,8 @@
 #' @noRd
 get_par <- function(x) {
   
-  # If it inherits from var_get (has class envar_par) and is a list
-  if (inherits(x, "envar_par") || (inherits(x, "list") && isTRUE(x$from_varget))) {
+  # If it inherits from par_set (has class envar_par) and is a list
+  if (inherits(x, "envar_par") || (inherits(x, "list") && isTRUE(x$from_parset))) {
     
     # Check if it's raster-based (has grid) or point-based
     if (!is.null(x$grid) && inherits(x$grid, "SpatRaster")) {
@@ -16,7 +16,7 @@ get_par <- function(x) {
         type = x$type,
         is_global = isTRUE(x$is_global),
         global_extent = x$global_extent,  # Track cumulative global extent
-        from_varget = TRUE,
+        from_parset = TRUE,
         set_na= x$set_na,
         path = x$path,
         land = x$land
@@ -32,7 +32,7 @@ get_par <- function(x) {
         crs = x$crs,
         res = x$res,
         is_global = FALSE,
-        from_varget = TRUE,
+        from_parset = TRUE,
         set_na=x$set_na,
         path = x$path
       ))
@@ -54,7 +54,7 @@ get_par <- function(x) {
       type = "polygon",
       is_global = isTRUE(x$is_global),
       global_extent = x$global_extent,  # Track cumulative global extent
-      from_varget = TRUE,
+      from_parset = TRUE,
       set_na = x$set_na,
       path = x$path,
       land = x$land
@@ -116,7 +116,7 @@ get_par <- function(x) {
         type = "polygon",
         is_global = is_global,
         global_extent = global_extent,
-        from_varget = FALSE,
+        from_parset = FALSE,
         set_na=set_na,
         path = path,
         land = land
@@ -164,7 +164,7 @@ get_par <- function(x) {
       type = "polygon",
       is_global = is_global,
       global_extent = global_extent,
-      from_varget = FALSE,
+      from_parset = FALSE,
       set_na=set_na,
       path=path,
       land=land
@@ -218,7 +218,7 @@ get_par <- function(x) {
     # Process extent with the correct CRS
     extent_info <- process_extent(shapefile, crs = point_crs)
     extent_info$crs <- point_crs
-    extent_info$from_varget <- FALSE
+    extent_info$from_parset <- FALSE
     extent_info$path <- path
       
     return(extent_info)

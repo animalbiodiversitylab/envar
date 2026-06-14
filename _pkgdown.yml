@@ -59,7 +59,7 @@ reference:
   - title: Set overall parameters
     desc: Function for creating new download task and process it
     contents:
-      - var_get
+      - par_set
 
   - title: Download variables from different sources
     desc: Functions for downloading variables from multiple sources
@@ -71,7 +71,7 @@ reference:
       - spectre
       - freshwater
       - protection
-      - esalandcover
+      - melc
       - earthenvlandcover
       - geososlandcover
       - gcamlandcover

@@ -67,9 +67,9 @@ under five Shared Socioeconomic Pathways (SSPs).</p>
 
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
-<dd><p>The output from `var_get()` defining the area or locations for extraction,
+<dd><p>The output from `par_set()` defining the area or locations for extraction,
 the reference system, and the buffer.
-Leave this empty and use `var_get()` to define parameters for download.</p></dd>
+Leave this empty and use `par_set()` to define parameters for download.</p></dd>
 
 
 <dt id="arg-vars">vars<a class="anchor" aria-label="anchor" href="#arg-vars"></a></dt>
@@ -90,8 +90,8 @@ Leave this empty and use `var_get()` to define parameters for download.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
-If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.</p>
+    <p>If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+If `par_set()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
@@ -108,7 +108,7 @@ Sci Data 9, 563.
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="var_get.html">var_get</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op">%&gt;%</span> </span></span>
+<span class="r-in"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op">%&gt;%</span> </span></span>
 <span class="r-in"><span>  <span class="fu">population</span><span class="op">(</span>vars <span class="op">=</span> <span class="st">"population"</span>, year <span class="op">=</span> <span class="fl">2050</span>, ssp <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span> <span class="co"># }</span></span></span>
 </code></pre></div>

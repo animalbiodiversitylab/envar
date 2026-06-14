@@ -39,9 +39,9 @@
 #' Fick SE, Hijmans RJ (2017). "WorldClim 2: new 1-km spatial resolution climate surfaces for global land areas." International Journal of Climatology 37: 4302-4315.
 #' https://doi.org/10.1002/joc.5086
 #'
-#' @param x The output from `var_get()` defining the area or locations for extraction, 
+#' @param x The output from `par_set()` defining the area or locations for extraction, 
 #' the reference system, and the buffer.
-#' Leave this empty and use `var_get()` to define parameters for download.
+#' Leave this empty and use `par_set()` to define parameters for download.
 #' @param vars Character vector of one or more variables to download and process.
 #' @param years Character vector of years or periods. For Historical: use "1970-2000" 
 #'        or "historical". For Future: use "2021-2040", "2041-2060", "2061-2080", "2081-2100".
@@ -52,12 +52,12 @@
 #' @param ssp Character or numeric vector of Shared Socioeconomic Pathways (e.g., "126", "585").
 #'
 #' @return
-#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
-#' If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+#' If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+#' If `par_set()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
 #' @examples
 #' \dontrun{
-#' processed <- var_get(country = "Italy", crs = 3035) %>% 
+#' processed <- par_set(country = "Italy", crs = 3035) %>% 
 #'   worldclim(vars = c("tmin", "bio1"), years = "1970-2000")
 #'   }
 #' @export

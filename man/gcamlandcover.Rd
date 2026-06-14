@@ -7,7 +7,7 @@
 gcamlandcover(x, vars = "landcover", ssp = 126, year = 2020, ...)
 }
 \arguments{
-\item{x}{The output from `var_get()` defining the area or locations for extraction, 
+\item{x}{The output from `par_set()` defining the area or locations for extraction, 
 the reference system, and the buffer.}
 
 \item{vars}{Character. Currently unused/ignored as this function returns the 
@@ -22,8 +22,8 @@ Ignored if `year` is 2020.}
 \item{...}{Additional arguments (currently unused).}
 }
 \value{
-If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack.
-If `var_get()` contained spatial points without buffer: a `data.frame`.
+If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack.
+If `par_set()` contained spatial points without buffer: a `data.frame`.
 }
 \description{
 This function downloads, processes, and extracts simulated global land use 
@@ -32,7 +32,7 @@ and land cover (LULC) data for the period 2020-2100.
 \details{
 The data represents 1 km resolution LULC maps. The original data is in 
 World Mercator projection and will be automatically reprojected to the 
-CRS defined in `var_get()`.
+CRS defined in `par_set()`.
 
 \strong{Land cover codes}
 \itemize{
@@ -65,11 +65,11 @@ https://doi.org/10.1038/s41597-023-02637-7
 \examples{
 \dontrun{
 # Get Baseline (2020)
-processed <- var_get(country= "Italy", crs=4326) \%>\% 
+processed <- par_set(country= "Italy", crs=4326) \%>\% 
   gcamlandcover(year = 2020)
 
 # Get Future (SSP5-8.5 in 2050)
-processed <- var_get(country= "Italy", crs=4326) \%>\% 
+processed <- par_set(country= "Italy", crs=4326) \%>\% 
   gcamlandcover(ssp = 585, year = 2050)
 }
 }

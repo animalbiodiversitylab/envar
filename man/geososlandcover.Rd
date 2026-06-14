@@ -7,9 +7,9 @@
 geososlandcover(x, vars, scenario = "A1B", year = 2010, discover = TRUE, ...)
 }
 \arguments{
-\item{x}{The output from `var_get()` defining the area or locations for extraction, 
+\item{x}{The output from `par_set()` defining the area or locations for extraction, 
 the reference system, and the buffer.
-Leave this empty and use `var_get()` to define parameters for download.}
+Leave this empty and use `par_set()` to define parameters for download.}
 
 \item{vars}{Character vector of one or more variables to download and process.}
 
@@ -20,8 +20,8 @@ Leave this empty and use `var_get()` to define parameters for download.}
 \item{...}{Additional arguments (currently unused).}
 }
 \value{
-If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
-If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+If `par_set()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
 This function downloads, processes, and extracts variables from the
@@ -49,12 +49,12 @@ https://doi.org/10.1080/24694452.2017.1303357
 \examples{
 \dontrun{
 # Example 1: Download land cover for Italy in 2050 under scenario A1B
-processed <- var_get(country = "Italy", crs = 3035) \%>\% 
+processed <- par_set(country = "Italy", crs = 3035) \%>\% 
   geososlandcover(vars = c("land cover"), year = 2050, scenario = "A1B")
   
 # Example 2: Extract baseline (2010) values for specific points
 points_df <- data.frame(ID = 1:2, x = c(12, 13), y = c(42, 43))
-extracted <- var_get(data = points_df, crs = 4326) \%>\%
+extracted <- par_set(data = points_df, crs = 4326) \%>\%
   geososlandcover(vars = "lc", year = 2010)
 }
 }

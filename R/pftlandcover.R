@@ -21,22 +21,22 @@
 #' Note: If the `vars` argument is left empty, the function will default 
 #' to downloading the land cover map.
 #'
-#' @param x The output from `var_get()` defining the area or locations for extraction, 
+#' @param x The output from `par_set()` defining the area or locations for extraction, 
 #' the reference system, and the buffer. 
-#' Leave this empty and use `var_get()` to define parameters for download.
+#' Leave this empty and use `par_set()` to define parameters for download.
 #' @param vars Character vector of one or more variables to download and process.
 #' @param year Integer. The year of the projection (2020-2100, step 5). Defaults to 2025.
 #' @param ssp Integer or Character. The SSP-RCP scenario code (119, 126, 245, 370, 434, 460, 534, 585). Defaults to 585.
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
-#' If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+#' If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+#' If `par_set()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
 #' @examples
 #' \dontrun{
 #' # Download SSP5-RCP8.5 projection for 2050
-#' processed <- var_get(country= "Italy", crs=3035) %>% 
+#' processed <- par_set(country= "Italy", crs=3035) %>% 
 #'   pftlandcover(vars="landcover", year=2050, ssp=585)
 #'   }
 #' @export

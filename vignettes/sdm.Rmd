@@ -90,8 +90,8 @@ occ_sf <- st_as_sf(Apollo, coords = c("X", "Y"), crs=4326)
 occ_sf <- st_transform(occ_sf, 3035)
 
 # use 'envar' to create a template raster with a 100 km buffer
-template <- var_get(shape = occ_sf, buffer = 100, crs = 3035) %>% 
-            esalandcover(vars = "ice")
+template <- par_set(shape = occ_sf, buffer = 100, crs = 3035) %>% 
+            melc(vars = "ice")
 
 # create sampling bias raster
 dens_ras <- spatialEco::sp.kde(x = occ_sf, 
@@ -127,9 +127,9 @@ block <- ENMeval::get.block(occ_points, bg_points, orientation = "lat_lon")
 occ_points$pa <- rep(1, nrow(occ_points));bg_points$pa <- rep(0, nrow(bg_points));data<-rbind(occ_points,bg_points)
 
 # extract predictor values and check for correlation with 'envar'
-predictors <- var_get(pointsdf = data[,c("X", "Y")], crs=3035) %>% 
+predictors <- par_set(pointsdf = data[,c("X", "Y")], crs=3035) %>% 
               chelsa(vars = c("bio1", "bio4", "bio12", "bio15"), years =         "1981-2010") %>% 
-              esalandcover(vars = c("meadow", "tree", "water", "shannon")) %>% 
+              melc(vars = c("meadow", "tree", "water", "shannon")) %>% 
               topography(vars = c("slope", "northness")) %>% 
               corr_check()
 ```
@@ -190,9 +190,9 @@ The tuned model has a good predictive performance and a limited overfitting. Thi
 
 ```{r,results='hide',message =FALSE,warning=FALSE}
 # use 'envar' to define predictors over the prediction area (European Alps)
-predictorsAlps <- var_get(shape = Alps, crs = 3035) %>% 
+predictorsAlps <- par_set(shape = Alps, crs = 3035) %>% 
                   chelsa(vars = c("bio1", "bio4", "bio12", "bio15"), years = "1981-2010") %>% 
-                  esalandcover(vars = c("tree", "meadow", "water", "shannon")) %>% 
+                  melc(vars = c("tree", "meadow", "water", "shannon")) %>% 
                   topography(vars = c("northness")) %>% 
                   extr_check(calib_points = data[,c("X", "Y")], calib_crs = 3035, type = "strict") 
 

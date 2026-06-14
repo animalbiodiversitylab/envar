@@ -30,24 +30,24 @@
 #'
 #' Note: Please cite original sources of primary datasets where appropriate.
 #'
-#' @param x The output from `var_get()` defining the area or locations for extraction, 
+#' @param x The output from `par_set()` defining the area or locations for extraction, 
 #' the reference system, and the buffer. 
-#' Leave this empty and use `var_get()` to define parameters for download.
+#' Leave this empty and use `par_set()` to define parameters for download.
 #' @param vars Character vector of variables to download ("gdp" or "electricity").
 #' @param year Numeric vector of years to download. Available range: 1992-2019.
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+#' If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `par_set()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
 #' @examples
 #' \dontrun{
 #' # Get GDP for 2000 and 2010
-#' processed <- var_get(country= "Italy", crs=3035) %>% 
+#' processed <- par_set(country= "Italy", crs=3035) %>% 
 #'   gdppast(vars="gdp", year=c(2000, 2010))
 #'
 #' # Get Electricity and GDP for 2019
-#' processed <- var_get(country= "Vietnam") %>% 
+#' processed <- par_set(country= "Vietnam") %>% 
 #'   gdppast(vars=c("electricity", "gdp"), year=2019)
 #' }
 #' @export

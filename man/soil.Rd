@@ -7,9 +7,9 @@
 soil(x, vars = NULL, ...)
 }
 \arguments{
-\item{x}{The output from `var_get()` defining the area or locations for extraction, 
+\item{x}{The output from `par_set()` defining the area or locations for extraction, 
 the reference system, and the buffer. 
-Leave this empty and use `var_get()` to define parameters for download.}
+Leave this empty and use `par_set()` to define parameters for download.}
 
 \item{vars}{Character vector of one or more variables to download and process.
 Defaults to "hwsd" if left empty.}
@@ -17,8 +17,8 @@ Defaults to "hwsd" if left empty.}
 \item{...}{Additional arguments (currently unused).}
 }
 \value{
-If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
-If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+If `par_set()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
 This function downloads, processes, and extracts variables from the
@@ -39,7 +39,7 @@ https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-wor
 }
 \examples{
 \dontrun{
-processed <- var_get(country= "Italy", crs=3035) \%>\% 
+processed <- par_set(country= "Italy", crs=3035) \%>\% 
 soil(vars=c("soil"))
   }
 }

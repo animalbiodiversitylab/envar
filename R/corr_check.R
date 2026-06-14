@@ -43,25 +43,25 @@
 #' @examples
 #' \dontrun{
 #' # Example 1: Basic usage after environmental variable extraction
-#' processed_bilayer_corr_check <- var_get(country = "Italy", crs=3035, buffer = 10) %>% 
-#'   esalandcover(vars=c("ice")) %>% 
+#' processed_bilayer_corr_check <- par_set(country = "Italy", crs=3035, buffer = 10) %>% 
+#'   melc(vars=c("ice")) %>% 
 #'   chelsa(vars=c("pr"), months= 12, year=2015) %>% 
 #'   corr_check()
 #' 
 #' # Example 2: Chain with extr_check() (corr_check before extr_check)
-#' result <- var_get(country = "Italy") %>% 
+#' result <- par_set(country = "Italy") %>% 
 #'   chelsa(vars = c("bio1", "bio12")) %>% 
 #'   corr_check() %>%
 #'   extr_check(calib_points = my_points)
 #' 
 #' # Example 3: Chain with extr_check() (extr_check before corr_check)
-#' result <- var_get(country = "Italy") %>%
+#' result <- par_set(country = "Italy") %>%
 #'   chelsa(vars = c("bio1", "bio12")) %>%
 #'   extr_check(calib_points = my_points) %>%
 #'   corr_check()
 #'
 #' # Example 4: Opt-in warnings for high correlation (>0.7) and VIF (>5)
-#' result <- var_get(country = "Italy") %>%
+#' result <- par_set(country = "Italy") %>%
 #'   chelsa(vars = c("bio1", "bio12")) %>%
 #'   corr_check(pearson = 0.7, vif = 5)
 #' }

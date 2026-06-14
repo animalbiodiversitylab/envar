@@ -20,21 +20,21 @@
 #'
 #' Note: Please cite original sources of primary datasets where appropriate.
 #'
-#' @param x The output from `var_get()` defining the area or locations for extraction, 
+#' @param x The output from `par_set()` defining the area or locations for extraction, 
 #' the reference system, and the buffer.
-#' Leave this empty and use `var_get()` to define parameters for download.
+#' Leave this empty and use `par_set()` to define parameters for download.
 #' @param vars Character vector of one or more variables to download and process.
 #' @param year Numeric vector. Years to download. Available from 2020 to 2100 in 5-year intervals (e.g., c(2020, 2050)).
 #' @param ssp Numeric vector. Shared Socioeconomic Pathways to download (1, 2, 3, 4, or 5).
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
-#' If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+#' If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+#' If `par_set()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
 #' @examples
 #' \dontrun{
-#' processed <- var_get(country = "Italy", crs = 3035) %>% 
+#' processed <- par_set(country = "Italy", crs = 3035) %>% 
 #'   population(vars = "population", year = 2050, ssp = 2)
 #'   }
 #' @export

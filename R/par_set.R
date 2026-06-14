@@ -1,8 +1,8 @@
-# R/var_get.R
+# R/par_set.R
 
 #' Initialize the Environmental Variable Retrieval Pipeline
 #'
-#' \code{var_get()} is the entry point for the \strong{envar} package workflow. It defines the
+#' \code{par_set()} is the entry point for the \strong{envar} package workflow. It defines the
 #' spatial extent, resolution, and coordinate reference system (CRS) for the study area.
 #'
 #' This function does not download data itself. Instead, it creates a standardized
@@ -163,58 +163,58 @@
 #' @examples
 #' \dontrun{
 #' # Basic usage with a country
-#' italy_grid <- var_get(country = "Italy")
+#' italy_grid <- par_set(country = "Italy")
 #' 
 #' # Download with a shapefile
-#' processed_alps <- var_get(shape = "Alps") %>% 
-#' esalandcover(vars=c("ice"))
+#' processed_alps <- par_set(shape = "Alps") %>% 
+#' melc(vars=c("ice"))
 #' 
 #' # With a projected CRS and positive buffer (expand by 10 km)
-#' italy_buffered <- var_get(country = "Italy", crs = 3035, buffer = 10)
+#' italy_buffered <- par_set(country = "Italy", crs = 3035, buffer = 10)
 #' 
 #' # With a negative buffer (shrink by 10 km to exclude coastal areas)
-#' italy_inland <- var_get(country = "Italy", crs = 3035, buffer = -10)
+#' italy_inland <- par_set(country = "Italy", crs = 3035, buffer = -10)
 #' 
 #' # Points with buffer to create extraction area
-#' points_area <- var_get(pointsdf = Apollo, buffer = 10, crs = 4326)
+#' points_area <- par_set(pointsdf = Apollo, buffer = 10, crs = 4326)
 #' 
 #' # Using alpha hull to define species range from occurrence points
-#' species_range <- var_get(pointsdf = species_occurrences, alpha_hull = TRUE)
+#' species_range <- par_set(pointsdf = species_occurrences, alpha_hull = TRUE)
 #' 
 #' # Alpha hull with buffer (buffer applied after alpha hull creation)
-#' species_range_buffered <- var_get(pointsdf = species_occurrences, alpha_hull = TRUE, buffer = 50)
+#' species_range_buffered <- par_set(pointsdf = species_occurrences, alpha_hull = TRUE, buffer = 50)
 #' 
 #' # Alpha hull clipped to land boundary
-#' species_range_land <- var_get(pointsdf = species_occurrences, alpha_hull = TRUE, land = TRUE)
+#' species_range_land <- par_set(pointsdf = species_occurrences, alpha_hull = TRUE, land = TRUE)
 #' 
 #' # Alpha hull with buffer and land intersection
-#' species_range_full <- var_get(pointsdf = species_occurrences, alpha_hull = TRUE, buffer = 25, land = TRUE)
+#' species_range_full <- par_set(pointsdf = species_occurrences, alpha_hull = TRUE, buffer = 25, land = TRUE)
 #' 
 #' # Using zoogeographic regions
-#' palearctic <- var_get(zoorealm = "Palearctic")
+#' palearctic <- par_set(zoorealm = "Palearctic")
 #' 
 #' # Using mountain regions
-#' alps_gmba <- var_get(mountain_region = "European Alps")
+#' alps_gmba <- par_set(mountain_region = "European Alps")
 #' 
 #' # Using glacier regions
-#' arctic_glaciers <- var_get(glacier_region_20 = "Arctic Canada North")
+#' arctic_glaciers <- par_set(glacier_region_20 = "Arctic Canada North")
 #' 
 #' # Using freshwater ecoregions
-#' danube <- var_get(freshwater_ecoregion = 404)
+#' danube <- par_set(freshwater_ecoregion = 404)
 #' 
 #' # Using marine ecoregions
-#' mediterranean <- var_get(marine_realm = "Temperate Northern Atlantic")
+#' mediterranean <- par_set(marine_realm = "Temperate Northern Atlantic")
 #' 
 #' # Using pelagic provinces
-#' atlantic_pelagic <- var_get(pelagic_realm = "Atlantic")
+#' atlantic_pelagic <- par_set(pelagic_realm = "Atlantic")
 #' 
 #' # Clip marine realm to land only
-#' land_only <- var_get(marine_realm = "Temperate Northern Atlantic", land = TRUE)
+#' land_only <- par_set(marine_realm = "Temperate Northern Atlantic", land = TRUE)
 #' }
 #'
 #' @export
 
-var_get <- function(country = NULL,
+par_set <- function(country = NULL,
                     continent = NULL,
                     shape = NULL,
                     ecoregion = NULL,
@@ -363,7 +363,7 @@ var_get <- function(country = NULL,
       crs = crs,
       type = extent_info$type,
       is_global = is_global,
-      from_varget = TRUE,
+      from_parset = TRUE,
       set_na = set_na,
       path = path,
       land=land,
@@ -377,7 +377,7 @@ var_get <- function(country = NULL,
   if (extent_info$type == "point") {
     extent_info$res <- res
     extent_info$is_global <- FALSE
-    extent_info$from_varget <- TRUE
+    extent_info$from_parset <- TRUE
     class(extent_info) <- c("envar_par", "list")
     return(extent_info)
   }

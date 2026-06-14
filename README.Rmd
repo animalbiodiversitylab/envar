@@ -116,8 +116,8 @@ require(sf)
 # download variables (e.g., the percentage cover of trees, ice and the slope) over a 
 # study area (in this case, the "Alps" shapefile already included in 
 # the package)
-processed_vars = var_get(shape = Alps, res = 1, crs = 3035) %>% 
-  esalandcover(vars = c("trees", "ice")) %>% 
+processed_vars = par_set(shape = Alps, res = 1, crs = 3035) %>% 
+  melc(vars = c("trees", "ice")) %>% 
   topography(vars = c("slope"))
 ```
 

@@ -39,7 +39,7 @@
 #' Assis J, Fernández Bejarano SJ, Salazar VW, Schepers L, Gouvêa L, Fragkopoulou E, Leclercq F, Vanhoorne B, Tyberghein L, Serrão EA, Verbruggen H, De Clerck O (2024). "Bio-ORACLE v3.0. Pushing marine data layers to the CMIP6 Earth system models of climate change research." Global Ecology and Biogeography, 33, e13813.
 #' https://doi.org/10.1111/geb.13813
 #'
-#' @param x The output from `var_get()` defining the area or locations.
+#' @param x The output from `par_set()` defining the area or locations.
 #' @param vars Character vector of one or more variables or synonyms to download.
 #' @param realm Character. One of "surface" (default), "benthic_minimum", "benthic_average", or "benthic_maximum".
 #' @param years Character. The time period for the data in "YYYY-YYYY" format. 
@@ -50,17 +50,17 @@
 #' @param ... Additional arguments.
 #'
 #' @return
-#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+#' If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `par_set()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
 #' @examples
 #' \dontrun{
 #' # Example 1: Current conditions (Baseline)
-#' current_env <- var_get(country = "Italy", crs = 3035) %>% 
+#' current_env <- par_set(country = "Italy", crs = 3035) %>% 
 #'   biooracle(vars = c("temperature", "salinity"), 
 #'             years = "2000-2010")
 #'             
 #' # Example 2: Future projections (2050, SSP 585)
-#' future_env <- var_get(country = "Italy", crs = 3035) %>% 
+#' future_env <- par_set(country = "Italy", crs = 3035) %>% 
 #'   biooracle(vars = c("temperature", "salinity"), 
 #'             years = "2040-2050", 
 #'             ssp = 585)

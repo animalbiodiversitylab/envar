@@ -31,9 +31,9 @@
 #' Note: Users should verify the terms of use for EarthEnv data provided 
 #' at https://www.earthenv.org/
 #' 
-#' @param x The output from `var_get()` defining the area or locations for extraction, 
+#' @param x The output from `par_set()` defining the area or locations for extraction, 
 #' the reference system, and the buffer. 
-#' Leave this empty and use `var_get()` to define parameters for download.
+#' Leave this empty and use `par_set()` to define parameters for download.
 #' @param vars Character vector of one or more variables to download and process.
 #' @param discover Logical. If `TRUE` (default), downloads the version integrated 
 #'        with the DISCover dataset. If `FALSE`, downloads the version without 
@@ -41,11 +41,11 @@
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+#' If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `par_set()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
 #' @examples
 #' \dontrun{
-#' processed <- var_get(country= "Italy", crs=3035) %>% 
+#' processed <- par_set(country= "Italy", crs=3035) %>% 
 #' earthenvlandcover(vars=c("snow ice"))
 #'   }
 #' @export

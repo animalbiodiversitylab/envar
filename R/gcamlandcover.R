@@ -8,7 +8,7 @@
 #' @details
 #' The data represents 1 km resolution LULC maps. The original data is in 
 #' World Mercator projection and will be automatically reprojected to the 
-#' CRS defined in `var_get()`.
+#' CRS defined in `par_set()`.
 #'
 #' \strong{Land cover codes}
 #' \itemize{
@@ -38,7 +38,7 @@
 #' Zhang T, Cheng C, Wu X (2023). "Mapping the spatial heterogeneity of global land use and land cover from 2020 to 2100 at a 1 km resolution." Scientific Data 10, 748.
 #' https://doi.org/10.1038/s41597-023-02637-7
 #'
-#' @param x The output from `var_get()` defining the area or locations for extraction, 
+#' @param x The output from `par_set()` defining the area or locations for extraction, 
 #' the reference system, and the buffer.
 #' @param vars Character. Currently unused/ignored as this function returns the 
 #' landcover map defined by `year` and `ssp`, but kept for consistency. 
@@ -49,17 +49,17 @@
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack.
-#' If `var_get()` contained spatial points without buffer: a `data.frame`.
+#' If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack.
+#' If `par_set()` contained spatial points without buffer: a `data.frame`.
 #'
 #' @examples
 #' \dontrun{
 #' # Get Baseline (2020)
-#' processed <- var_get(country= "Italy", crs=4326) %>% 
+#' processed <- par_set(country= "Italy", crs=4326) %>% 
 #'   gcamlandcover(year = 2020)
 #'
 #' # Get Future (SSP5-8.5 in 2050)
-#' processed <- var_get(country= "Italy", crs=4326) %>% 
+#' processed <- par_set(country= "Italy", crs=4326) %>% 
 #'   gcamlandcover(ssp = 585, year = 2050)
 #' }
 #' @export

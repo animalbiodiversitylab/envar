@@ -16,9 +16,9 @@ worldclim(
 )
 }
 \arguments{
-\item{x}{The output from `var_get()` defining the area or locations for extraction, 
+\item{x}{The output from `par_set()` defining the area or locations for extraction, 
 the reference system, and the buffer.
-Leave this empty and use `var_get()` to define parameters for download.}
+Leave this empty and use `par_set()` to define parameters for download.}
 
 \item{vars}{Character vector of one or more variables to download and process.}
 
@@ -34,8 +34,8 @@ or future data.}
 \item{ssp}{Character or numeric vector of Shared Socioeconomic Pathways (e.g., "126", "585").}
 }
 \value{
-If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
-If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
+If `par_set()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 }
 \description{
 This function downloads, processes, and extracts variables from the
@@ -77,7 +77,7 @@ https://doi.org/10.1002/joc.5086
 }
 \examples{
 \dontrun{
-processed <- var_get(country = "Italy", crs = 3035) \%>\% 
+processed <- par_set(country = "Italy", crs = 3035) \%>\% 
   worldclim(vars = c("tmin", "bio1"), years = "1970-2000")
   }
 }

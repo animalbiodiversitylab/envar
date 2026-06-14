@@ -1,4 +1,4 @@
-# R/esalandcover.R
+# R/melc.R
 
 #' Download and process Global 1 km Land Cover variables
 #'
@@ -39,24 +39,24 @@
 #'
 #' Note: Users should verify the terms of use provided at https://figshare.com/s/4e7dee46628b530aee03
 #' 
-#' @param x The output from `var_get()` defining the area or locations for extraction, 
+#' @param x The output from `par_set()` defining the area or locations for extraction, 
 #' the reference system, and the buffer. 
-#' Leave this empty and use `var_get()` to define parameters for download.
+#' Leave this empty and use `par_set()` to define parameters for download.
 #' @param vars Character vector of one or more variables to download and process.
 #' @param discover Logical. If TRUE, creates a discovery map (unused in current implementation but kept for compatibility).
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
-#' If `var_get()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `var_get()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
+#' If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `par_set()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
 #' @examples
 #' \dontrun{
-#' processed <- var_get(country= "Italy", crs=3035) %>% 
-#'   esalandcover(vars=c("tree", "water"))
+#' processed <- par_set(country= "Italy", crs=3035) %>% 
+#'   melc(vars=c("tree", "water"))
 #' }
 #' @export
 
-esalandcover <- function(x, vars, discover=TRUE, ...) {
+melc <- function(x, vars, discover=TRUE, ...) {
   
   # --------------------------------------------------------------------
   # Citation displayed on execution
