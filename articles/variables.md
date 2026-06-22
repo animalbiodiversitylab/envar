@@ -197,6 +197,10 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
+![plot of chunk unnamed-chunk-5](figure/variables-unnamed-chunk-5-1.png)
+
+plot of chunk unnamed-chunk-5
+
 ### WorldClim
 
 This function downloads, processes, and extracts variables from the
@@ -289,10 +293,18 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
   climatezones()
 ```
 
+    ## Error in `process_raster_layer()` at envar/R/climatezones.R:207:7:
+    ## ! The resolution of at least one raster to be downloaded is lower than
+    ##   the set resolution of 1 km
+
 ``` r
 
 plot(processed[[1]])
 ```
+
+![plot of chunk unnamed-chunk-8](figure/variables-unnamed-chunk-8-1.png)
+
+plot of chunk unnamed-chunk-8
 
 ### Cloud cover
 
@@ -350,6 +362,11 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
+![plot of chunk
+unnamed-chunk-10](figure/variables-unnamed-chunk-10-1.png)
+
+plot of chunk unnamed-chunk-10
+
 ### Aridity
 
 This function downloads, processes, and extracts variables from the
@@ -393,6 +410,11 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 
 plot(processed[[1]])
 ```
+
+![plot of chunk
+unnamed-chunk-12](figure/variables-unnamed-chunk-12-1.png)
+
+plot of chunk unnamed-chunk-12
 
 ## Land cover
 
@@ -439,6 +461,11 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
+![plot of chunk
+unnamed-chunk-14](figure/variables-unnamed-chunk-14-1.png)
+
+plot of chunk unnamed-chunk-14
+
 ### ESA land cover
 
 This function downloads, processes, and extracts variables from the
@@ -478,6 +505,11 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
+![plot of chunk
+unnamed-chunk-16](figure/variables-unnamed-chunk-16-1.png)
+
+plot of chunk unnamed-chunk-16
+
 ### Hybrid land cover
 
 This function downloads, processes, and extracts land cover variables
@@ -502,6 +534,11 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 
 plot(processed[[1]])
 ```
+
+![plot of chunk
+unnamed-chunk-18](figure/variables-unnamed-chunk-18-1.png)
+
+plot of chunk unnamed-chunk-18
 
 ### GeoSOS land cover
 
@@ -548,6 +585,11 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
+![plot of chunk
+unnamed-chunk-20](figure/variables-unnamed-chunk-20-1.png)
+
+plot of chunk unnamed-chunk-20
+
 ### PFT land cover
 
 This function downloads, processes, and extracts land cover variables
@@ -589,6 +631,11 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 
 plot(processed[[1]])
 ```
+
+![plot of chunk
+unnamed-chunk-22](figure/variables-unnamed-chunk-22-1.png)
+
+plot of chunk unnamed-chunk-22
 
 ### GCAM land cover
 
@@ -643,6 +690,11 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
+![plot of chunk
+unnamed-chunk-24](figure/variables-unnamed-chunk-24-1.png)
+
+plot of chunk unnamed-chunk-24
+
 ## Landscape heterogeneity
 
 This function downloads, processes, and extracts variables from the
@@ -683,6 +735,11 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 
 plot(processed[[1]])
 ```
+
+![plot of chunk
+unnamed-chunk-26](figure/variables-unnamed-chunk-26-1.png)
+
+plot of chunk unnamed-chunk-26
 
 ## Habitats
 
@@ -785,10 +842,19 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
   habitat(vars = c("Forest", "Artificial"), level = 1)
 ```
 
+    ## Error in `process_raster_layer()` at envar/R/habitat.R:343:7:
+    ## ! The resolution of at least one raster to be downloaded is lower than
+    ##   the set resolution of 1 km
+
 ``` r
 
 plot(processed[[1]])
 ```
+
+![plot of chunk
+unnamed-chunk-28](figure/variables-unnamed-chunk-28-1.png)
+
+plot of chunk unnamed-chunk-28
 
 ## Soil characteristics
 
@@ -813,6 +879,11 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 
 plot(processed[[1]])
 ```
+
+![plot of chunk
+unnamed-chunk-30](figure/variables-unnamed-chunk-30-1.png)
+
+plot of chunk unnamed-chunk-30
 
 ### Soil climate
 
@@ -865,6 +936,11 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
+![plot of chunk
+unnamed-chunk-32](figure/variables-unnamed-chunk-32-1.png)
+
+plot of chunk unnamed-chunk-32
+
 ## Topography
 
 This function downloads, processes, and extracts variables from the
@@ -902,6 +978,11 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 
 plot(processed[[1]])
 ```
+
+![plot of chunk
+unnamed-chunk-34](figure/variables-unnamed-chunk-34-1.png)
+
+plot of chunk unnamed-chunk-34
 
 ## Freshwater environments
 
@@ -1015,6 +1096,11 @@ freshwater(vars = c("elevation", "slope", "tmin"), algorithm = "mn", month=12)
 plot(processed[[3]])
 ```
 
+![plot of chunk
+unnamed-chunk-36](figure/variables-unnamed-chunk-36-1.png)
+
+plot of chunk unnamed-chunk-36
+
 ## Marine environments
 
 This function downloads, processes, and extracts variables from the
@@ -1067,7 +1153,7 @@ Additional parameters:
 
 ``` r
 
-processed <- par_set(marine_ecoregion = "East African Coral Coast", res = 5.5) %>%
+processed <- par_set(marine_ecoregion = "East African Coral Coast", res = 6) %>%
   biooracle(vars = "o2", realm = "surface", years = "2000-2010")
 ```
 
@@ -1075,6 +1161,11 @@ processed <- par_set(marine_ecoregion = "East African Coral Coast", res = 5.5) %
 
 plot(processed[[1]])
 ```
+
+![plot of chunk
+unnamed-chunk-38](figure/variables-unnamed-chunk-38-1.png)
+
+plot of chunk unnamed-chunk-38
 
 ## Human impact
 
@@ -1133,6 +1224,11 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
+![plot of chunk
+unnamed-chunk-40](figure/variables-unnamed-chunk-40-1.png)
+
+plot of chunk unnamed-chunk-40
+
 ### Accessibility
 
 This function downloads, processes, and extracts variables from the
@@ -1184,6 +1280,11 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
+![plot of chunk
+unnamed-chunk-42](figure/variables-unnamed-chunk-42-1.png)
+
+plot of chunk unnamed-chunk-42
+
 ### GDP past
 
 This function downloads, processes, and extracts variables from the
@@ -1214,6 +1315,11 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 
 plot(processed)
 ```
+
+![plot of chunk
+unnamed-chunk-44](figure/variables-unnamed-chunk-44-1.png)
+
+plot of chunk unnamed-chunk-44
 
 ### GDP future
 
@@ -1248,10 +1354,19 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
   gdpfuture(vars = "gdp", year = 2050, ssp = c(1, 5))
 ```
 
+    ## Error in `process_raster_layer()` at envar/R/gdpfuture.R:211:7:
+    ## ! The resolution of at least one raster to be downloaded is lower than
+    ##   the set resolution of 1 km
+
 ``` r
 
 plot(processed)
 ```
+
+![plot of chunk
+unnamed-chunk-46](figure/variables-unnamed-chunk-46-1.png)
+
+plot of chunk unnamed-chunk-46
 
 ### Population
 
@@ -1291,6 +1406,11 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed)
 ```
 
+![plot of chunk
+unnamed-chunk-48](figure/variables-unnamed-chunk-48-1.png)
+
+plot of chunk unnamed-chunk-48
+
 ## Protected areas
 
 ### IUCN protected areas
@@ -1328,6 +1448,11 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 
 plot(processed)
 ```
+
+![plot of chunk
+unnamed-chunk-50](figure/variables-unnamed-chunk-50-1.png)
+
+plot of chunk unnamed-chunk-50
 
 ## Conclusion
 

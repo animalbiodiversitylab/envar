@@ -22,7 +22,8 @@ biooracle(
 - x:
 
   The output from \`par_set()\` defining the area or locations. It must
-  have been created with \`res = 5.5\` (Bio-ORACLE's native resolution).
+  have been created with \`res = 6\` (Bio-ORACLE's native 0.05-degree
+  grid).
 
 - vars:
 
@@ -133,23 +134,24 @@ https://doi.org/10.1111/geb.13813
 
 ## Resolution
 
-Bio-ORACLE layers are distributed at a native resolution of ~0.05
-degrees (~5.5 km at the equator). You must therefore call
+Bio-ORACLE layers are distributed on a 0.05-degree grid (~5.5 km at the
+equator). Because `res` is a multiplier of the 30 arc-second base grid,
+the value that reproduces this grid exactly is `res = 6` (\\6 \times
+30''= 0.05^{\circ}\\). You must therefore call
 [`par_set()`](https://animalbiodiversitylab.github.io/envar/reference/par_set.md)
-with `res = 5.5`; any other value (including the default) raises an
-error.
+with `res = 6`; any other value (including the default) raises an error.
 
 ## Examples
 
 ``` r
 if (FALSE) { # \dontrun{
 # Example 1: Current conditions (Baseline)
-current_env <- par_set(country = "Italy", crs = 3035, res = 5.5) %>%
+current_env <- par_set(country = "Italy", crs = 3035, res = 6) %>%
   biooracle(vars = c("temperature", "salinity"),
             years = "2000-2010")
 
 # Example 2: Future projections (2050, SSP 585)
-future_env <- par_set(country = "Italy", crs = 3035, res = 5.5) %>%
+future_env <- par_set(country = "Italy", crs = 3035, res = 6) %>%
   biooracle(vars = c("temperature", "salinity"),
             years = "2040-2050",
             ssp = 585)

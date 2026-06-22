@@ -51,7 +51,7 @@
 <li>
 <code><a href="../reference/chelsa.html">chelsa()</a></code> monthly time-series downloads now use CHELSA’s current host and per-year folder layout, fixing downloads for months after June 2019 (which the old URL structure no longer served) and extending the available range beyond 2019.</li>
 <li>
-<code><a href="../reference/biooracle.html">biooracle()</a></code> now requires <code>par_set(res = 5.5)</code> (Bio-ORACLE’s native ~0.05° / ~5.5 km resolution) and aborts with a clear message for any other value, including the default. <code><a href="../reference/par_set.html">par_set()</a></code> now accepts fractional <code>res</code> multipliers to support this.</li>
+<code><a href="../reference/biooracle.html">biooracle()</a></code> now requires <code>par_set(res = 6)</code>, which reproduces Bio-ORACLE’s native 0.05° (~5.5 km) grid exactly (6 × 30″ = 0.05°), and aborts with a clear message for any other value, including the default. <code><a href="../reference/par_set.html">par_set()</a></code> now also accepts fractional <code>res</code> multipliers.</li>
 <li>Website favicons regenerated from the current package logo.</li>
 <li>Vignettes can now be pre-computed locally via <code>vignettes/precompute.R</code> (the <code>*.Rmd.orig</code> pattern), so figures and printed output produced by the long-running tutorials are baked into the rendered articles on the website.</li>
 </ul></div>

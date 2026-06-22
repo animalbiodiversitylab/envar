@@ -16,11 +16,11 @@
   (which the old URL structure no longer served) and extending the
   available range beyond 2019.
 - [`biooracle()`](https://animalbiodiversitylab.github.io/envar/reference/biooracle.md)
-  now requires `par_set(res = 5.5)` (Bio-ORACLE’s native ~0.05° / ~5.5
-  km resolution) and aborts with a clear message for any other value,
-  including the default.
+  now requires `par_set(res = 6)`, which reproduces Bio-ORACLE’s native
+  0.05° (~5.5 km) grid exactly (6 × 30″ = 0.05°), and aborts with a
+  clear message for any other value, including the default.
   [`par_set()`](https://animalbiodiversitylab.github.io/envar/reference/par_set.md)
-  now accepts fractional `res` multipliers to support this.
+  now also accepts fractional `res` multipliers.
 - Website favicons regenerated from the current package logo.
 - Vignettes can now be pre-computed locally via `vignettes/precompute.R`
   (the `*.Rmd.orig` pattern), so figures and printed output produced by

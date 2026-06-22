@@ -199,9 +199,10 @@ par_set(
 
   - Must be a positive number `>= 1` (e.g., `1`, `5`, `10`). It is
     usually an integer, but fractional multipliers are allowed to match
-    a dataset's native grid (for instance
+    a dataset's native grid. For instance
     [`biooracle()`](https://animalbiodiversitylab.github.io/envar/reference/biooracle.md)
-    requires `res = 5.5`, matching Bio-ORACLE's ~0.05° / ~5.5 km cells).
+    requires `res = 6`, which reproduces Bio-ORACLE's native 0.05° (~5.5
+    km) grid exactly.
 
   - Default is `1` (30 arc-seconds or 0.008333333° at the equator).
 

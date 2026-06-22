@@ -71,7 +71,7 @@ Bio-ORACLE v3.0 dataset.</p>
 
 <dl><dt id="arg-x">x<a class="anchor" aria-label="anchor" href="#arg-x"></a></dt>
 <dd><p>The output from `par_set()` defining the area or locations. It must
-have been created with `res = 5.5` (Bio-ORACLE's native resolution).</p></dd>
+have been created with `res = 6` (Bio-ORACLE's native 0.05-degree grid).</p></dd>
 
 
 <dt id="arg-vars">vars<a class="anchor" aria-label="anchor" href="#arg-vars"></a></dt>
@@ -139,21 +139,23 @@ https://doi.org/10.1111/geb.13813</p>
     <h2 id="resolution">Resolution<a class="anchor" aria-label="anchor" href="#resolution"></a></h2>
 
 
-<p>Bio-ORACLE layers are distributed at a native resolution of ~0.05 degrees
-(~5.5 km at the equator). You must therefore call <code><a href="par_set.html">par_set()</a></code> with
-<code>res = 5.5</code>; any other value (including the default) raises an error.</p>
+<p>Bio-ORACLE layers are distributed on a 0.05-degree grid (~5.5 km at the
+equator). Because <code>res</code> is a multiplier of the 30 arc-second base grid,
+the value that reproduces this grid exactly is <code>res = 6</code>
+(\(6 \times 30''= 0.05^{\circ}\)). You must therefore call <code><a href="par_set.html">par_set()</a></code>
+with <code>res = 6</code>; any other value (including the default) raises an error.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
 <span class="r-in"><span><span class="co"># Example 1: Current conditions (Baseline)</span></span></span>
-<span class="r-in"><span><span class="va">current_env</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs <span class="op">=</span> <span class="fl">3035</span>, res <span class="op">=</span> <span class="fl">5.5</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="va">current_env</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs <span class="op">=</span> <span class="fl">3035</span>, res <span class="op">=</span> <span class="fl">6</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu">biooracle</span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"temperature"</span>, <span class="st">"salinity"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>            years <span class="op">=</span> <span class="st">"2000-2010"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Example 2: Future projections (2050, SSP 585)</span></span></span>
-<span class="r-in"><span><span class="va">future_env</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs <span class="op">=</span> <span class="fl">3035</span>, res <span class="op">=</span> <span class="fl">5.5</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
+<span class="r-in"><span><span class="va">future_env</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs <span class="op">=</span> <span class="fl">3035</span>, res <span class="op">=</span> <span class="fl">6</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span></span>
 <span class="r-in"><span>  <span class="fu">biooracle</span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"temperature"</span>, <span class="st">"salinity"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>            years <span class="op">=</span> <span class="st">"2040-2050"</span>,</span></span>
 <span class="r-in"><span>            ssp <span class="op">=</span> <span class="fl">585</span><span class="op">)</span></span></span>
