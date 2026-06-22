@@ -95,11 +95,19 @@ If NULL and `years` are single years, all 12 months are downloaded.</p></dd>
 
 
 <dt id="arg-rcp">rcp<a class="anchor" aria-label="anchor" href="#arg-rcp"></a></dt>
-<dd><p>Representative Concentration Pathway for CMIP5 data.</p></dd>
+<dd><p>Representative Concentration Pathway, given as the radiative-forcing
+level (e.g., <code>2.6</code>, <code>4.5</code>, <code>6.0</code>, <code>8.5</code>). For CMIP5
+projections (year ranges <code>"2041-2060"</code>, <code>"2061-2080"</code>) it selects
+the RCP directly. For CMIP6/BIOCLIM+ projections it is combined with
+<code>ssp</code> to build the scenario code (e.g., <code>ssp = 5</code> and
+<code>rcp = 8.5</code> request the <code>ssp585</code> scenario).</p></dd>
 
 
 <dt id="arg-ssp">ssp<a class="anchor" aria-label="anchor" href="#arg-ssp"></a></dt>
-<dd><p>Shared Socioeconomic Pathway for CMIP6 data.</p></dd>
+<dd><p>Shared Socioeconomic Pathway family for CMIP6/BIOCLIM+ data
+(e.g., <code>1</code>, <code>2</code>, <code>3</code>, <code>5</code>). Combined with <code>rcp</code>
+as described above. A complete code such as <code>"585"</code> may also be
+supplied directly (with <code>rcp = NULL</code>).</p></dd>
 
 
 <dt id="arg-cruts-years">cruts_years<a class="anchor" aria-label="anchor" href="#arg-cruts-years"></a></dt>
@@ -120,7 +128,7 @@ If NULL and `years` are single years, all 12 months are downloaded.</p></dd>
 <p>Please note the distinction between "Monthly" time-series data and "Climatologies".
 Unlike other functions in this package, there is only one code-name for each variable
 and no working synonyms. The meaning of each variable code-name is provided in parentheses.</p>
-<p><strong>Monthly Time-Series (Available years: 1980 - 2018)</strong></p><ul><li><p>1 - "pr" (Precipitation amount; mass per unit area)</p></li>
+<p><strong>Monthly Time-Series (Available from 1979 onwards)</strong></p><ul><li><p>1 - "pr" (Precipitation amount; mass per unit area)</p></li>
 <li><p>2 - "tas" (Mean daily air temperature at 2 meters)</p></li>
 <li><p>3 - "tasmax" (Mean daily maximum air temperature at 2 meters)</p></li>
 <li><p>4 - "tasmin" (Mean daily minimum air temperature at 2 meters)</p></li>

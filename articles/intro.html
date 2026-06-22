@@ -217,14 +217,54 @@ extrapolation.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot the first two variables</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">$</span><span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figure/intro-unnamed-chunk-6-1.png" alt="plot of chunk unnamed-chunk-6"><p class="caption">
+plot of chunk unnamed-chunk-6
+</p>
+</div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># View the Pearson's pairwise correlation matrix</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">processed</span><span class="op">$</span><span class="va">correlation_matrix</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">##                 bio1_1981-2010 bio4_1981-2010 bio10_1981-2010 bio12_1981-2010</span></span>
+<span><span class="co">## bio1_1981-2010       1.0000000    -0.17098433      0.99411075     -0.58856258</span></span>
+<span><span class="co">## bio4_1981-2010      -0.1709843     1.00000000     -0.06629979     -0.13822734</span></span>
+<span><span class="co">## bio10_1981-2010      0.9941107    -0.06629979      1.00000000     -0.61255277</span></span>
+<span><span class="co">## bio12_1981-2010     -0.5885626    -0.13822734     -0.61255277      1.00000000</span></span>
+<span><span class="co">## bio19_1981-2010     -0.4182732    -0.33185424     -0.45693075      0.84502782</span></span>
+<span><span class="co">## elevation           -0.9682340     0.06664318     -0.96993166      0.58178549</span></span>
+<span><span class="co">## slope               -0.7884759     0.01527641     -0.79705030      0.57544349</span></span>
+<span><span class="co">## trees                0.1420440    -0.28430061      0.10591260      0.02372563</span></span>
+<span><span class="co">## ice                 -0.4765922     0.13185174     -0.46273645      0.27137511</span></span>
+<span><span class="co">##                 bio19_1981-2010   elevation       slope        trees        ice</span></span>
+<span><span class="co">## bio1_1981-2010     -0.418273159 -0.96823403 -0.78847587  0.142043991 -0.4765922</span></span>
+<span><span class="co">## bio4_1981-2010     -0.331854239  0.06664318  0.01527641 -0.284300607  0.1318517</span></span>
+<span><span class="co">## bio10_1981-2010    -0.456930752 -0.96993166 -0.79705030  0.105912597 -0.4627365</span></span>
+<span><span class="co">## bio12_1981-2010     0.845027822  0.58178549  0.57544349  0.023725631  0.2713751</span></span>
+<span><span class="co">## bio19_1981-2010     1.000000000  0.44083530  0.39996749 -0.003624083  0.2299007</span></span>
+<span><span class="co">## elevation           0.440835298  1.00000000  0.83277881 -0.120815882  0.4857175</span></span>
+<span><span class="co">## slope               0.399967493  0.83277881  1.00000000  0.223848319  0.2433729</span></span>
+<span><span class="co">## trees              -0.003624083 -0.12081588  0.22384832  1.000000000 -0.3266344</span></span>
+<span><span class="co">## ice                 0.229900683  0.48571755  0.24337291 -0.326634442  1.0000000</span></span></code></pre>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># View the Variance Inflation Factor values</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">processed</span><span class="op">$</span><span class="va">vif</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##         Variables         VIF</span></span>
+<span><span class="co">## 1  bio1_1981-2010 3073.957200</span></span>
+<span><span class="co">## 3 bio10_1981-2010 2670.551839</span></span>
+<span><span class="co">## 6       elevation   40.083967</span></span>
+<span><span class="co">## 2  bio4_1981-2010   35.854595</span></span>
+<span><span class="co">## 7           slope    5.865724</span></span>
+<span><span class="co">## 4 bio12_1981-2010    5.292550</span></span>
+<span><span class="co">## 5 bio19_1981-2010    4.770264</span></span>
+<span><span class="co">## 8           trees    1.875957</span></span>
+<span><span class="co">## 9             ice    1.566896</span></span></code></pre>
 <p>To better understand the structure of correlation, we can also
 analyze the correlation plot that was locally stored.</p>
+<div class="figure" style="text-align: center">
+<img src="images/Corr_plot_example.png" alt="plot of chunk unnamed-chunk-9" width="100%"><p class="caption">
+plot of chunk unnamed-chunk-9
+</p>
+</div>
 <p>This plot was created with the aid of the <em>corrplot R</em> package
 and it helps to pinpoint correlation problems. In this example, we can
 see that elevation is highly correlated with multiple variables and as
@@ -232,16 +272,21 @@ this is not a proximal variable (i.e., the effect of elevation on
 species distributions is mediated by other co-varying factors such as
 climate) we can remove it. To obtain a set of uncorrelated variables we
 might thus want to sub-set our variables as follows.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># define a set of uncorrelated variables</span></span>
 <span><span class="va">uncorrelated_vars</span> <span class="op">&lt;-</span> <span class="va">processed</span><span class="op">$</span><span class="va">data</span><span class="op">[[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1_1981-2010"</span>, <span class="st">"bio12_1981-2010"</span>, <span class="st">"trees"</span>, <span class="st">"ice"</span><span class="op">)</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <p>We can also see where extrapolation occurs in our study area. This
 map can be used alongside any ecological prediction (e.g., species
 distribution models applied over the European Alps), to interpret more
 carefully predictions in areas where extrapolation is found.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># visualize the raster map of where extrapolation occurs (1 = extrapolation, 0 = no extrapolation)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">$</span><span class="va">extrapolation</span><span class="op">$</span><span class="va">strict</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figure/intro-unnamed-chunk-11-1.png" alt="plot of chunk unnamed-chunk-11"><p class="caption">
+plot of chunk unnamed-chunk-11
+</p>
+</div>
 </div>
 <div class="section level2">
 <h2 id="conclusion">Conclusion<a class="anchor" aria-label="anchor" href="#conclusion"></a>

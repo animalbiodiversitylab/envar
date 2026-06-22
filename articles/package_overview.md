@@ -427,7 +427,7 @@ and the PPOW available names through the relative publication.
 
 ``` r
 
-processed_marine_ecoregion <- par_set(marine_ecoregion = "East African Coral Coast") %>%
+processed_marine_ecoregion <- par_set(marine_ecoregion = "East African Coral Coast", res = 5.5) %>%
   biooracle(vars = c("o2"))
 ```
 

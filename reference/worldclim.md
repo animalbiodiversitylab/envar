@@ -48,10 +48,20 @@ worldclim(
 
   Character vector of General Circulation Models (for Future data).
 
+- rcp:
+
+  Numeric or character vector of Representative Concentration Pathways,
+  given as the radiative-forcing level (e.g., `2.6`, `4.5`, `7.0`,
+  `8.5`). Combined with `ssp` to build the CMIP6 scenario code (e.g.,
+  `ssp = 5` and `rcp = 8.5` download the `ssp585` scenario). If `NULL`,
+  `ssp` is assumed to already encode the full scenario (e.g., `"585"`).
+
 - ssp:
 
-  Character or numeric vector of Shared Socioeconomic Pathways (e.g.,
-  "126", "585").
+  Numeric or character vector of Shared Socioeconomic Pathway families
+  (e.g., `1`, `2`, `5`). Combined with `rcp` as described above. A
+  complete code such as `"585"` may also be supplied directly (with
+  `rcp = NULL`).
 
 ## Value
 

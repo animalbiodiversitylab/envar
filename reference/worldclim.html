@@ -101,8 +101,18 @@ or future data.</p></dd>
 <dd><p>Character vector of General Circulation Models (for Future data).</p></dd>
 
 
+<dt id="arg-rcp">rcp<a class="anchor" aria-label="anchor" href="#arg-rcp"></a></dt>
+<dd><p>Numeric or character vector of Representative Concentration Pathways,
+given as the radiative-forcing level (e.g., <code>2.6</code>, <code>4.5</code>, <code>7.0</code>, <code>8.5</code>).
+Combined with <code>ssp</code> to build the CMIP6 scenario code (e.g., <code>ssp = 5</code> and
+<code>rcp = 8.5</code> download the <code>ssp585</code> scenario). If <code>NULL</code>, <code>ssp</code> is
+assumed to already encode the full scenario (e.g., <code>"585"</code>).</p></dd>
+
+
 <dt id="arg-ssp">ssp<a class="anchor" aria-label="anchor" href="#arg-ssp"></a></dt>
-<dd><p>Character or numeric vector of Shared Socioeconomic Pathways (e.g., "126", "585").</p></dd>
+<dd><p>Numeric or character vector of Shared Socioeconomic Pathway families
+(e.g., <code>1</code>, <code>2</code>, <code>5</code>). Combined with <code>rcp</code> as described above.
+A complete code such as <code>"585"</code> may also be supplied directly (with <code>rcp = NULL</code>).</p></dd>
 
 </dl></div>
     <div class="section level2">

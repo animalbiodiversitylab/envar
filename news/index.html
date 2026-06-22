@@ -45,10 +45,22 @@
     </div>
 
     <div class="section level2">
+<h2 class="pkg-version" data-toc-text="development version" id="envar-development-version">envar (development version)<a class="anchor" aria-label="anchor" href="#envar-development-version"></a></h2>
+<ul><li>
+<code><a href="../reference/chelsa.html">chelsa()</a></code> and <code><a href="../reference/worldclim.html">worldclim()</a></code> now take the SSP and the RCP as two separate arguments. For CMIP6 projections they are combined into the scenario code internally, so e.g. <code>ssp = 5</code> together with <code>rcp = 8.5</code> downloads the <code>ssp585</code> scenario. A full code (e.g. <code>ssp = "585"</code>) is still accepted when <code>rcp</code> is left <code>NULL</code>.</li>
+<li>
+<code><a href="../reference/chelsa.html">chelsa()</a></code> monthly time-series downloads now use CHELSA’s current host and per-year folder layout, fixing downloads for months after June 2019 (which the old URL structure no longer served) and extending the available range beyond 2019.</li>
+<li>
+<code><a href="../reference/biooracle.html">biooracle()</a></code> now requires <code>par_set(res = 5.5)</code> (Bio-ORACLE’s native ~0.05° / ~5.5 km resolution) and aborts with a clear message for any other value, including the default. <code><a href="../reference/par_set.html">par_set()</a></code> now accepts fractional <code>res</code> multipliers to support this.</li>
+<li>Website favicons regenerated from the current package logo.</li>
+<li>Vignettes can now be pre-computed locally via <code>vignettes/precompute.R</code> (the <code>*.Rmd.orig</code> pattern), so figures and printed output produced by the long-running tutorials are baked into the rendered articles on the website.</li>
+</ul></div>
+    <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.0" id="envar-010">envar 0.1.0<a class="anchor" aria-label="anchor" href="#envar-010"></a></h2>
 <ul><li>Initial creation of the package.</li>
 </ul></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

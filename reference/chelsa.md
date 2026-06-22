@@ -48,11 +48,19 @@ chelsa(
 
 - rcp:
 
-  Representative Concentration Pathway for CMIP5 data.
+  Representative Concentration Pathway, given as the radiative-forcing
+  level (e.g., `2.6`, `4.5`, `6.0`, `8.5`). For CMIP5 projections (year
+  ranges `"2041-2060"`, `"2061-2080"`) it selects the RCP directly. For
+  CMIP6/BIOCLIM+ projections it is combined with `ssp` to build the
+  scenario code (e.g., `ssp = 5` and `rcp = 8.5` request the `ssp585`
+  scenario).
 
 - ssp:
 
-  Shared Socioeconomic Pathway for CMIP6 data.
+  Shared Socioeconomic Pathway family for CMIP6/BIOCLIM+ data (e.g.,
+  `1`, `2`, `3`, `5`). Combined with `rcp` as described above. A
+  complete code such as `"585"` may also be supplied directly (with
+  `rcp = NULL`).
 
 - cruts_years:
 
@@ -79,7 +87,7 @@ Please note the distinction between "Monthly" time-series data and
 one code-name for each variable and no working synonyms. The meaning of
 each variable code-name is provided in parentheses.
 
-**Monthly Time-Series (Available years: 1980 - 2018)**
+**Monthly Time-Series (Available from 1979 onwards)**
 
 - 1 - "pr" (Precipitation amount; mass per unit area)
 

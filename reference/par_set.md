@@ -197,7 +197,11 @@ par_set(
 
   - This controls the cell size of the output raster stack.
 
-  - Must be a positive integer (e.g., `1`, `5`, `10`).
+  - Must be a positive number `>= 1` (e.g., `1`, `5`, `10`). It is
+    usually an integer, but fractional multipliers are allowed to match
+    a dataset's native grid (for instance
+    [`biooracle()`](https://animalbiodiversitylab.github.io/envar/reference/biooracle.md)
+    requires `res = 5.5`, matching Bio-ORACLE's ~0.05° / ~5.5 km cells).
 
   - Default is `1` (30 arc-seconds or 0.008333333° at the equator).
 

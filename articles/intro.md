@@ -153,11 +153,36 @@ extrapolation.
 terra::plot(processed$data[[1:2]])
 ```
 
+![plot of chunk unnamed-chunk-6](figure/intro-unnamed-chunk-6-1.png)
+
+plot of chunk unnamed-chunk-6
+
 ``` r
 
 # View the Pearson's pairwise correlation matrix
 print(processed$correlation_matrix)
 ```
+
+    ##                 bio1_1981-2010 bio4_1981-2010 bio10_1981-2010 bio12_1981-2010
+    ## bio1_1981-2010       1.0000000    -0.17098433      0.99411075     -0.58856258
+    ## bio4_1981-2010      -0.1709843     1.00000000     -0.06629979     -0.13822734
+    ## bio10_1981-2010      0.9941107    -0.06629979      1.00000000     -0.61255277
+    ## bio12_1981-2010     -0.5885626    -0.13822734     -0.61255277      1.00000000
+    ## bio19_1981-2010     -0.4182732    -0.33185424     -0.45693075      0.84502782
+    ## elevation           -0.9682340     0.06664318     -0.96993166      0.58178549
+    ## slope               -0.7884759     0.01527641     -0.79705030      0.57544349
+    ## trees                0.1420440    -0.28430061      0.10591260      0.02372563
+    ## ice                 -0.4765922     0.13185174     -0.46273645      0.27137511
+    ##                 bio19_1981-2010   elevation       slope        trees        ice
+    ## bio1_1981-2010     -0.418273159 -0.96823403 -0.78847587  0.142043991 -0.4765922
+    ## bio4_1981-2010     -0.331854239  0.06664318  0.01527641 -0.284300607  0.1318517
+    ## bio10_1981-2010    -0.456930752 -0.96993166 -0.79705030  0.105912597 -0.4627365
+    ## bio12_1981-2010     0.845027822  0.58178549  0.57544349  0.023725631  0.2713751
+    ## bio19_1981-2010     1.000000000  0.44083530  0.39996749 -0.003624083  0.2299007
+    ## elevation           0.440835298  1.00000000  0.83277881 -0.120815882  0.4857175
+    ## slope               0.399967493  0.83277881  1.00000000  0.223848319  0.2433729
+    ## trees              -0.003624083 -0.12081588  0.22384832  1.000000000 -0.3266344
+    ## ice                 0.229900683  0.48571755  0.24337291 -0.326634442  1.0000000
 
 ``` r
 
@@ -165,8 +190,23 @@ print(processed$correlation_matrix)
 print(processed$vif)
 ```
 
+    ##         Variables         VIF
+    ## 1  bio1_1981-2010 3073.957200
+    ## 3 bio10_1981-2010 2670.551839
+    ## 6       elevation   40.083967
+    ## 2  bio4_1981-2010   35.854595
+    ## 7           slope    5.865724
+    ## 4 bio12_1981-2010    5.292550
+    ## 5 bio19_1981-2010    4.770264
+    ## 8           trees    1.875957
+    ## 9             ice    1.566896
+
 To better understand the structure of correlation, we can also analyze
 the correlation plot that was locally stored.
+
+![plot of chunk unnamed-chunk-9](images/Corr_plot_example.png)
+
+plot of chunk unnamed-chunk-9
 
 This plot was created with the aid of the *corrplot R* package and it
 helps to pinpoint correlation problems. In this example, we can see that
@@ -192,6 +232,10 @@ carefully predictions in areas where extrapolation is found.
 # visualize the raster map of where extrapolation occurs (1 = extrapolation, 0 = no extrapolation)
 terra::plot(processed$extrapolation$strict)
 ```
+
+![plot of chunk unnamed-chunk-11](figure/intro-unnamed-chunk-11-1.png)
+
+plot of chunk unnamed-chunk-11
 
 ## Conclusion
 

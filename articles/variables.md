@@ -1067,7 +1067,7 @@ Additional parameters:
 
 ``` r
 
-processed <- par_set(marine_ecoregion = "East African Coral Coast", res = 10) %>% 
+processed <- par_set(marine_ecoregion = "East African Coral Coast", res = 5.5) %>%
   biooracle(vars = "o2", realm = "surface", years = "2000-2010")
 ```
 
