@@ -69,6 +69,11 @@ processed.
 plot(processed_singlelayer_lc)
 ```
 
+![plot of chunk
+unnamed-chunk-5](figure/package_overview-unnamed-chunk-5-1.png)
+
+plot of chunk unnamed-chunk-5
+
 #### 3.1.2. Multiple layers with different extents
 
 When multiple layers from different sources are downloaded together, the
@@ -88,6 +93,11 @@ processed_bilayer_global <- par_set() %>%
 plot(processed_bilayer_global)
 ```
 
+![plot of chunk
+unnamed-chunk-7](figure/package_overview-unnamed-chunk-7-1.png)
+
+plot of chunk unnamed-chunk-7
+
 The same occurs if the order of downloaded variables is inverted:
 
 ``` r
@@ -102,6 +112,11 @@ processed_bilayer_global_1 <- par_set() %>%
 plot(processed_bilayer_global_1)
 ```
 
+![plot of chunk
+unnamed-chunk-9](figure/package_overview-unnamed-chunk-9-1.png)
+
+plot of chunk unnamed-chunk-9
+
 ``` r
 
 # define the extents of the first SpatRaster object and of the second to check if they are the same
@@ -111,8 +126,16 @@ ext2 <-round(ext(processed_bilayer_global_1), 1)
 
 # print the resulting extents 
 print(ext1)
+```
+
+    ## SpatExtent : -180, 180, -60, 84 (xmin, xmax, ymin, ymax)
+
+``` r
+
 print(ext2)
 ```
+
+    ## SpatExtent : -180, 180, -60, 84 (xmin, xmax, ymin, ymax)
 
 ### 3.2. Country/continent
 
@@ -133,6 +156,11 @@ processed_bilayer_country <- par_set(country = "Italy") %>%
 plot(processed_bilayer_country)
 ```
 
+![plot of chunk
+unnamed-chunk-12](figure/package_overview-unnamed-chunk-12-1.png)
+
+plot of chunk unnamed-chunk-12
+
 #### 3.2.2. Continent
 
 ``` r
@@ -145,6 +173,11 @@ processed_singlelayer_africa <- par_set(continent = "Africa", buffer = 10) %>%
 
 plot(processed_singlelayer_africa)
 ```
+
+![plot of chunk
+unnamed-chunk-14](figure/package_overview-unnamed-chunk-14-1.png)
+
+plot of chunk unnamed-chunk-14
 
 All countries and continents are retrieved with internal calls to the
 *rnaturalearth R* package, which allows the download of shapefiles from
@@ -166,6 +199,11 @@ processed_singlelayer_europe <- par_set(continent = "Europe") %>%
 
 plot(processed_singlelayer_europe)
 ```
+
+![plot of chunk
+unnamed-chunk-16](figure/package_overview-unnamed-chunk-16-1.png)
+
+plot of chunk unnamed-chunk-16
 
 #### 3.2.3. Set the scale
 
@@ -192,6 +230,11 @@ processed_bilayer_country_small <- par_set(country = "Italy", scale = "small") %
 plot(processed_bilayer_country_small)
 ```
 
+![plot of chunk
+unnamed-chunk-18](figure/package_overview-unnamed-chunk-18-1.png)
+
+plot of chunk unnamed-chunk-18
+
 ``` r
 
 # download variables over a country shape at "large" scale
@@ -204,6 +247,11 @@ processed_bilayer_country_large <- par_set(country = "Italy", scale = "large") %
 
 plot(processed_bilayer_country_large)
 ```
+
+![plot of chunk
+unnamed-chunk-20](figure/package_overview-unnamed-chunk-20-1.png)
+
+plot of chunk unnamed-chunk-20
 
 ### 3.3. Ecological boundary
 
@@ -226,6 +274,11 @@ processed_ecoregion <- par_set(ecoregion = "Lower Gangetic Plains moist deciduou
 plot(processed_ecoregion)
 ```
 
+![plot of chunk
+unnamed-chunk-22](figure/package_overview-unnamed-chunk-22-1.png)
+
+plot of chunk unnamed-chunk-22
+
 ``` r
 
 processed_biome <- par_set(biome = "Tundra") %>%
@@ -237,6 +290,11 @@ processed_biome <- par_set(biome = "Tundra") %>%
 plot(processed_biome)
 ```
 
+![plot of chunk
+unnamed-chunk-24](figure/package_overview-unnamed-chunk-24-1.png)
+
+plot of chunk unnamed-chunk-24
+
 ``` r
 
 processed_realm <- par_set(realm = "Neotropic") %>%
@@ -247,6 +305,11 @@ processed_realm <- par_set(realm = "Neotropic") %>%
 
 plot(processed_realm)
 ```
+
+![plot of chunk
+unnamed-chunk-26](figure/package_overview-unnamed-chunk-26-1.png)
+
+plot of chunk unnamed-chunk-26
 
 #### 3.3.2. Zoogeographic regions
 
@@ -271,6 +334,11 @@ processed_zooregion <- par_set(zooregion = "Madagascan") %>%
 plot(processed_zooregion)
 ```
 
+![plot of chunk
+unnamed-chunk-28](figure/package_overview-unnamed-chunk-28-1.png)
+
+plot of chunk unnamed-chunk-28
+
 And the following zoorealms are available: “Neotropical”, “Australian”,
 “Afrotropical”, “Madagascan”, “Oceanina”, “Oriental”, “Panamanian”,
 “Saharo-Arabian”, “Nearctic”, “Sino-Japanese”, and “Palearctic”.
@@ -285,6 +353,11 @@ processed_zoorealm <- par_set(zoorealm = "Neotropical") %>%
 
 plot(processed_zoorealm)
 ```
+
+![plot of chunk
+unnamed-chunk-30](figure/package_overview-unnamed-chunk-30-1.png)
+
+plot of chunk unnamed-chunk-30
 
 #### 3.3.3. Mountain regions
 
@@ -306,6 +379,11 @@ processed_mountain_region <- par_set(mountain_region = "European Alps") %>%
 plot(processed_mountain_region)
 ```
 
+![plot of chunk
+unnamed-chunk-32](figure/package_overview-unnamed-chunk-32-1.png)
+
+plot of chunk unnamed-chunk-32
+
 #### 3.3.4. CMEC mountain regions
 
 The Center for Macroecology, Evolution and Climate at the University of
@@ -324,6 +402,11 @@ processed_mountain_region_cmec <- par_set(mountain_region_cmec = "Alps and centr
 
 plot(processed_mountain_region_cmec)
 ```
+
+![plot of chunk
+unnamed-chunk-34](figure/package_overview-unnamed-chunk-34-1.png)
+
+plot of chunk unnamed-chunk-34
 
 #### 3.3.5. Glacier regions
 
@@ -390,6 +473,11 @@ processed_glacier_region <- par_set(glacier_region_19 = "Central Europe") %>%
 plot(processed_glacier_region)
 ```
 
+![plot of chunk
+unnamed-chunk-36](figure/package_overview-unnamed-chunk-36-1.png)
+
+plot of chunk unnamed-chunk-36
+
 #### 3.3.6. Freshwater ecoregions
 
 Freshwater ecoregions have been widely used in ecological studies
@@ -412,6 +500,11 @@ processed_freshwater_ecoregion <- par_set(freshwater_ecoregion = 156) %>%
 plot(processed_freshwater_ecoregion)
 ```
 
+![plot of chunk
+unnamed-chunk-38](figure/package_overview-unnamed-chunk-38-1.png)
+
+plot of chunk unnamed-chunk-38
+
 #### 3.3.7. Marine regions
 
 Marine regions are available from two different data references; the
@@ -431,10 +524,17 @@ processed_marine_ecoregion <- par_set(marine_ecoregion = "East African Coral Coa
   biooracle(vars = c("o2"))
 ```
 
+    ## Error in `process_raster_layer()` at envar/R/biooracle.R:206:7:
+    ## ! The resolution of at least one raster to be downloaded is lower than
+    ##   the set resolution of 5.5 km
+
 ``` r
 
 plot(processed_marine_ecoregion)
 ```
+
+    ## Error in `h()`:
+    ## ! error in evaluating the argument 'x' in selecting a method for function 'plot': object 'processed_marine_ecoregion' not found
 
 ### 3.4. Custom shapefile
 
@@ -464,17 +564,38 @@ plot(Alps$geometry)
 plot(points, add =T)
 ```
 
+![plot of chunk
+unnamed-chunk-42](figure/package_overview-unnamed-chunk-42-1.png)
+
+plot of chunk unnamed-chunk-42
+
 ``` r
 
 # visualize the resulting data.frame with the extracted values when only one source was used
 head(processed_singlelayer_points)
 ```
 
+    ##   ID       X       Y   ice
+    ## 1  1 4437916 2605008  0.00
+    ## 2  2 4531516 2769646  0.00
+    ## 3  3 4514090 2670359 43.72
+    ## 4  4 4517883 2620988  0.00
+    ## 5  5 4120150 2378147  0.00
+    ## 6  6 3953777 2400989  0.00
+
 ``` r
 
 # visualize the resulting data.frame with the extracted values when two or more sources were used
 head(processed_bilayer_points)
 ```
+
+    ##   ID       X       Y   ice pr_2015_12
+    ## 1  1 4437916 2605008  0.00          6
+    ## 2  2 4531516 2769646  0.00         22
+    ## 3  3 4514090 2670359 43.72          9
+    ## 4  4 4517883 2620988  0.00          9
+    ## 5  5 4120150 2378147  0.00          7
+    ## 6  6 3953777 2400989  0.00          5
 
 #### 3.4.2. Polygon
 
@@ -494,6 +615,11 @@ processed_bilayer_shapefile <- par_set(shape = Alps) %>%
 
 plot(processed_bilayer_shapefile[[2]])
 ```
+
+![plot of chunk
+unnamed-chunk-46](figure/package_overview-unnamed-chunk-46-1.png)
+
+plot of chunk unnamed-chunk-46
 
 ### 3.5. Data frame of points
 
@@ -521,11 +647,27 @@ processed_bilayer_pointsdf <- par_set(pointsdf = points3035df, crs = 3035) %>%
 head(processed_singlelayer_pointsdf)
 ```
 
+    ##   ID       X       Y   ice
+    ## 1  1 4437916 2605008  0.00
+    ## 2  2 4531516 2769646  0.00
+    ## 3  3 4514090 2670359 43.72
+    ## 4  4 4517883 2620988  0.00
+    ## 5  5 4120150 2378147  0.00
+    ## 6  6 3953777 2400989  0.00
+
 ``` r
 
 # visualize the resulting data.frame when using multiple sources
 head(processed_bilayer_pointsdf)
 ```
+
+    ##   ID       X       Y   ice pr_2015_12
+    ## 1  1 4437916 2605008  0.00          6
+    ## 2  2 4531516 2769646  0.00         22
+    ## 3  3 4514090 2670359 43.72          9
+    ## 4  4 4517883 2620988  0.00          9
+    ## 5  5 4120150 2378147  0.00          7
+    ## 6  6 3953777 2400989  0.00          5
 
 ### 3.6. Buffer
 
@@ -551,6 +693,11 @@ processed_singlelayer_buffer <- par_set(country = "Italy", crs = 3035, buffer = 
 plot(processed_singlelayer_buffer)
 ```
 
+![plot of chunk
+unnamed-chunk-51](figure/package_overview-unnamed-chunk-51-1.png)
+
+plot of chunk unnamed-chunk-51
+
 Negative buffer example:
 
 ``` r
@@ -563,6 +710,11 @@ processed_singlelayer_negative_buffer <- par_set(country = "Italy", crs = 3035, 
 
 plot(processed_singlelayer_negative_buffer)
 ```
+
+![plot of chunk
+unnamed-chunk-53](figure/package_overview-unnamed-chunk-53-1.png)
+
+plot of chunk unnamed-chunk-53
 
 A buffer at global scale (no shape or data.frame or country defined)
 triggers an error (not shown here):
@@ -600,6 +752,11 @@ processed_bilayer_points_buffer <- par_set(pointsdf = points3035df, crs = 3035, 
 plot(processed_bilayer_points_buffer)
 ```
 
+![plot of chunk
+unnamed-chunk-56](figure/package_overview-unnamed-chunk-56-1.png)
+
+plot of chunk unnamed-chunk-56
+
 ### 3.7. Further options
 
 #### 3.7.1. Land mask
@@ -627,6 +784,11 @@ processed_nolandmask <- par_set(glacier_region_19 = "Central Europe") %>%
 plot(processed_nolandmask)
 ```
 
+![plot of chunk
+unnamed-chunk-58](figure/package_overview-unnamed-chunk-58-1.png)
+
+plot of chunk unnamed-chunk-58
+
 With land mask:
 
 ``` r
@@ -639,6 +801,11 @@ processed_landmask <- par_set(glacier_region_19 = "Central Europe", land = TRUE)
 
 plot(processed_landmask)
 ```
+
+![plot of chunk
+unnamed-chunk-60](figure/package_overview-unnamed-chunk-60-1.png)
+
+plot of chunk unnamed-chunk-60
 
 #### 3.7.2. Species range
 
@@ -664,6 +831,11 @@ processed_range <- par_set(pointsdf = Apollo, alpha_hull = TRUE) %>%
 plot(processed_range)
 ```
 
+![plot of chunk
+unnamed-chunk-62](figure/package_overview-unnamed-chunk-62-1.png)
+
+plot of chunk unnamed-chunk-62
+
 It can also be used in conjunction with a buffer. In this case, an alpha
 hulll will be created and then expanded by the specified buffer.
 
@@ -677,6 +849,11 @@ processed_range_buffer <- par_set(pointsdf = Apollo, alpha_hull = TRUE, buffer =
 
 plot(processed_range_buffer)
 ```
+
+![plot of chunk
+unnamed-chunk-64](figure/package_overview-unnamed-chunk-64-1.png)
+
+plot of chunk unnamed-chunk-64
 
 ## 4. Project to another reference system
 
@@ -717,8 +894,27 @@ processed_singlelayer_projected <- par_set(country = "Italy", crs=3035) %>%
 ``` r
 
 print(processed_singlelayer_projected)
+```
+
+    ## class       : SpatRaster 
+    ## dimensions  : 1249, 1194, 1  (nrow, ncol, nlyr)
+    ## resolution  : 982.9062, 982.9062  (x, y)
+    ## extent      : 4004865, 5178455, 1484656, 2712306  (xmin, xmax, ymin, ymax)
+    ## coord. ref. : ETRS89-extended / LAEA Europe (EPSG:3035) 
+    ## source(s)   : memory
+    ## name        :      ice 
+    ## min value   :  0.00000 
+    ## max value   : 99.62711
+
+``` r
+
 plot(processed_singlelayer_projected)
 ```
+
+![plot of chunk
+unnamed-chunk-66](figure/package_overview-unnamed-chunk-66-1.png)
+
+plot of chunk unnamed-chunk-66
 
 ## 5. Aggregate to a different resolution
 
@@ -740,6 +936,16 @@ processed_singlelayer_aggregated <- par_set(res = 100) %>%
 
 print(processed_singlelayer_aggregated)
 ```
+
+    ## class       : SpatRaster 
+    ## dimensions  : 173, 432, 1  (nrow, ncol, nlyr)
+    ## resolution  : 0.8333333, 0.8333333  (x, y)
+    ## extent      : -180, 180, -60.16667, 84  (xmin, xmax, ymin, ymax)
+    ## coord. ref. : lon/lat WGS 84 (EPSG:4326) 
+    ## source(s)   : memory
+    ## name        : ice 
+    ## min value   :   0 
+    ## max value   : 100
 
 ## 6. Correlation check
 
@@ -779,14 +985,50 @@ Pearson’s pairwise correlation was saved.
 print(processed_bilayer_corr_check$correlation_matrix)
 ```
 
+    ##                 bio1_1981-2010 bio4_1981-2010 bio10_1981-2010 bio12_1981-2010
+    ## bio1_1981-2010       1.0000000    -0.17098433      0.99411075     -0.58856258
+    ## bio4_1981-2010      -0.1709843     1.00000000     -0.06629979     -0.13822734
+    ## bio10_1981-2010      0.9941107    -0.06629979      1.00000000     -0.61255277
+    ## bio12_1981-2010     -0.5885626    -0.13822734     -0.61255277      1.00000000
+    ## bio19_1981-2010     -0.4182732    -0.33185424     -0.45693075      0.84502782
+    ## elevation           -0.9682340     0.06664318     -0.96993166      0.58178549
+    ## slope               -0.7884759     0.01527641     -0.79705030      0.57544349
+    ## trees                0.1420440    -0.28430061      0.10591260      0.02372563
+    ## ice                 -0.4765922     0.13185174     -0.46273645      0.27137511
+    ##                 bio19_1981-2010   elevation       slope        trees        ice
+    ## bio1_1981-2010     -0.418273159 -0.96823403 -0.78847587  0.142043991 -0.4765922
+    ## bio4_1981-2010     -0.331854239  0.06664318  0.01527641 -0.284300607  0.1318517
+    ## bio10_1981-2010    -0.456930752 -0.96993166 -0.79705030  0.105912597 -0.4627365
+    ## bio12_1981-2010     0.845027822  0.58178549  0.57544349  0.023725631  0.2713751
+    ## bio19_1981-2010     1.000000000  0.44083530  0.39996749 -0.003624083  0.2299007
+    ## elevation           0.440835298  1.00000000  0.83277881 -0.120815882  0.4857175
+    ## slope               0.399967493  0.83277881  1.00000000  0.223848319  0.2433729
+    ## trees              -0.003624083 -0.12081588  0.22384832  1.000000000 -0.3266344
+    ## ice                 0.229900683  0.48571755  0.24337291 -0.326634442  1.0000000
+
 ``` r
 
 # View the Variance Inflation Factor values
 print(processed_bilayer_corr_check$vif)
 ```
 
+    ##         Variables         VIF
+    ## 1  bio1_1981-2010 3017.910636
+    ## 3 bio10_1981-2010 2609.912609
+    ## 6       elevation   39.493463
+    ## 2  bio4_1981-2010   37.205430
+    ## 7           slope    5.943787
+    ## 4 bio12_1981-2010    5.341264
+    ## 5 bio19_1981-2010    4.695427
+    ## 8           trees    1.824771
+    ## 9             ice    1.554464
+
 To better understand the structure of correlation, we can also analyze
 the correlation plot that was locally stored.
+
+![plot of chunk unnamed-chunk-72](images/Corr_plot_example.png)
+
+plot of chunk unnamed-chunk-72
 
 ### 6.2. Add a correlation check when using points
 
@@ -806,6 +1048,14 @@ processed_bilayer_points_corr_check <- par_set(shape = points) %>%
 
 head(processed_bilayer_points_corr_check[[1]])
 ```
+
+    ##   ID         X        Y   ice pr_2015_12
+    ## 1  1 11.522969 46.54760  0.00          6
+    ## 2  2 12.820483 48.00423  0.00         22
+    ## 3  3 12.542842 47.11698 43.72          9
+    ## 4  4 12.571004 46.67159  0.00          9
+    ## 5  5  7.479750 44.48369  0.00          7
+    ## 6  6  5.378832 44.61780  0.00          5
 
 ## 7. Extrapolation check
 
@@ -848,6 +1098,11 @@ processed_bilayer_extr_check <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed_bilayer_extr_check$extrapolation$strict)
 ```
 
+![plot of chunk
+unnamed-chunk-76](figure/package_overview-unnamed-chunk-76-1.png)
+
+plot of chunk unnamed-chunk-76
+
 ### 7.2. With points
 
 If the output from the download pipeline is a data.frame (see
@@ -870,6 +1125,14 @@ processed_points_extr_check <- par_set(pointsdf = Apollo) %>%
 
 head(processed_points_extr_check$extrapolation)
 ```
+
+    ##   ID        X        Y  ice pr_2015_12 strict combinatorial
+    ## 1  1 13.49513 47.10400 0.00          8      0             0
+    ## 2  2 12.62265 47.03912 0.01         17      0             0
+    ## 3  3  6.65878 44.16551 0.00         10      0             0
+    ## 4  4  5.40699 44.15510 0.00          5      0             0
+    ## 5  5  6.05580 44.58935 0.00          4      0             0
+    ## 6  6  6.86447 44.42881 0.00          5      0             0
 
 ## 8. Set NAs
 
@@ -895,6 +1158,11 @@ processed_bilayer_global <- par_set() %>%
 plot(processed_bilayer_global)
 ```
 
+![plot of chunk
+unnamed-chunk-80](figure/package_overview-unnamed-chunk-80-1.png)
+
+plot of chunk unnamed-chunk-80
+
 With NA mask:
 
 ``` r
@@ -908,6 +1176,11 @@ processed_bilayer_global_namask <- par_set(set_na=TRUE) %>%
 
 plot(processed_bilayer_global_namask)
 ```
+
+![plot of chunk
+unnamed-chunk-82](figure/package_overview-unnamed-chunk-82-1.png)
+
+plot of chunk unnamed-chunk-82
 
 ## 9. Save results
 
