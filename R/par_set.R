@@ -103,7 +103,10 @@
 #' @param res Numeric. The target spatial resolution multiplier.
 #'   \itemize{
 #'     \item This controls the cell size of the output raster stack.
-#'     \item Must be a positive integer (e.g., \code{1}, \code{5}, \code{10}).
+#'     \item Must be a positive number \code{>= 1} (e.g., \code{1}, \code{5}, \code{10}).
+#'       It is usually an integer, but fractional multipliers are allowed to match a
+#'       dataset's native grid (for instance \code{biooracle()} requires \code{res = 5.5},
+#'       matching Bio-ORACLE's ~0.05° / ~5.5 km cells).
 #'     \item Default is \code{1} (30 arc-seconds or 0.008333333° at the equator).
 #'     \item Higher values will multiply the original 30 arcsec resolution by the specified factor.
 #'   }
@@ -259,8 +262,8 @@ par_set <- function(country = NULL,
     )
   }
   
-  if (!is.numeric(res) || res < 1 || res != as.integer(res)) {
-    stop("Resolution not valid. Select a positive integer >= 1")
+  if (!is.numeric(res) || length(res) != 1 || is.na(res) || res < 1) {
+    stop("Resolution not valid. Select a positive number >= 1")
   }
   
   # Validate buffer

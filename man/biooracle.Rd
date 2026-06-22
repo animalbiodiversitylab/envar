@@ -15,7 +15,8 @@ biooracle(
 )
 }
 \arguments{
-\item{x}{The output from `par_set()` defining the area or locations.}
+\item{x}{The output from `par_set()` defining the area or locations. It must
+have been created with `res = 5.5` (Bio-ORACLE's native resolution).}
 
 \item{vars}{Character vector of one or more variables or synonyms to download.}
 
@@ -72,17 +73,24 @@ Bio-ORACLE v3.0 dataset.
 Assis J, Fernández Bejarano SJ, Salazar VW, Schepers L, Gouvêa L, Fragkopoulou E, Leclercq F, Vanhoorne B, Tyberghein L, Serrão EA, Verbruggen H, De Clerck O (2024). "Bio-ORACLE v3.0. Pushing marine data layers to the CMIP6 Earth system models of climate change research." Global Ecology and Biogeography, 33, e13813.
 https://doi.org/10.1111/geb.13813
 }
+\section{Resolution}{
+
+Bio-ORACLE layers are distributed at a native resolution of ~0.05 degrees
+(~5.5 km at the equator). You must therefore call \code{par_set()} with
+\code{res = 5.5}; any other value (including the default) raises an error.
+}
+
 \examples{
 \dontrun{
 # Example 1: Current conditions (Baseline)
-current_env <- par_set(country = "Italy", crs = 3035) \%>\% 
-  biooracle(vars = c("temperature", "salinity"), 
+current_env <- par_set(country = "Italy", crs = 3035, res = 5.5) \%>\%
+  biooracle(vars = c("temperature", "salinity"),
             years = "2000-2010")
-            
+
 # Example 2: Future projections (2050, SSP 585)
-future_env <- par_set(country = "Italy", crs = 3035) \%>\% 
-  biooracle(vars = c("temperature", "salinity"), 
-            years = "2040-2050", 
+future_env <- par_set(country = "Italy", crs = 3035, res = 5.5) \%>\%
+  biooracle(vars = c("temperature", "salinity"),
+            years = "2040-2050",
             ssp = 585)
   }
 }

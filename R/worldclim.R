@@ -49,7 +49,14 @@
 #'        to monthly historical variables. Ignored for bioclimatic variables, elevation, 
 #'        or future data.
 #' @param gcm Character vector of General Circulation Models (for Future data).
-#' @param ssp Character or numeric vector of Shared Socioeconomic Pathways (e.g., "126", "585").
+#' @param rcp Numeric or character vector of Representative Concentration Pathways,
+#'        given as the radiative-forcing level (e.g., \code{2.6}, \code{4.5}, \code{7.0}, \code{8.5}).
+#'        Combined with \code{ssp} to build the CMIP6 scenario code (e.g., \code{ssp = 5} and
+#'        \code{rcp = 8.5} download the \code{ssp585} scenario). If \code{NULL}, \code{ssp} is
+#'        assumed to already encode the full scenario (e.g., \code{"585"}).
+#' @param ssp Numeric or character vector of Shared Socioeconomic Pathway families
+#'        (e.g., \code{1}, \code{2}, \code{5}). Combined with \code{rcp} as described above.
+#'        A complete code such as \code{"585"} may also be supplied directly (with \code{rcp = NULL}).
 #'
 #' @return
 #' If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.
@@ -338,10 +345,11 @@ worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NU
     # Map back to clean names
     future_cats <- unique(unlist(clean_vars[future_vars]))
 
-    # Normalize SSP
-    ssp_clean <- as.character(ssp)
-    ssp_clean <- ifelse(grepl("^ssp", ssp_clean), ssp_clean, paste0("ssp", ssp_clean))
-    
+    # Build the combined SSP-RCP scenario codes (e.g. ssp = 5, rcp = 8.5 -> "585").
+    # When rcp is NULL, ssp is assumed to already hold the full code (e.g. "585").
+    ssp_codes <- combine_ssp_rcp(ssp, rcp)
+    ssp_clean <- paste0("ssp", ssp_codes)
+
     base_url_future <- "https://geodata.ucdavis.edu/cmip6/30s"
     
     for (g in gcm) {

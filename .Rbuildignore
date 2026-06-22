@@ -2,6 +2,8 @@
 ^renv\.lock$
 ^vignettes/renv\.lock$
 ^vignettes/sdm-renv-.*\.R$
+^vignettes/.*\.Rmd\.orig$
+^vignettes/precompute\.R$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^_pkgdown\.yml$

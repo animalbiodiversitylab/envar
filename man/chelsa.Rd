@@ -30,9 +30,17 @@ If NULL and `years` are single years, all 12 months are downloaded.}
 
 \item{gcm}{General Circulation Model(s) for future projections.}
 
-\item{rcp}{Representative Concentration Pathway for CMIP5 data.}
+\item{rcp}{Representative Concentration Pathway, given as the radiative-forcing
+level (e.g., \code{2.6}, \code{4.5}, \code{6.0}, \code{8.5}). For CMIP5
+projections (year ranges \code{"2041-2060"}, \code{"2061-2080"}) it selects
+the RCP directly. For CMIP6/BIOCLIM+ projections it is combined with
+\code{ssp} to build the scenario code (e.g., \code{ssp = 5} and
+\code{rcp = 8.5} request the \code{ssp585} scenario).}
 
-\item{ssp}{Shared Socioeconomic Pathway for CMIP6 data.}
+\item{ssp}{Shared Socioeconomic Pathway family for CMIP6/BIOCLIM+ data
+(e.g., \code{1}, \code{2}, \code{3}, \code{5}). Combined with \code{rcp}
+as described above. A complete code such as \code{"585"} may also be
+supplied directly (with \code{rcp = NULL}).}
 
 \item{cruts_years}{Numeric vector. Years to download from CHELSAcruts (must be 1901–2016).}
 
@@ -52,7 +60,7 @@ Please note the distinction between "Monthly" time-series data and "Climatologie
 Unlike other functions in this package, there is only one code-name for each variable 
 and no working synonyms. The meaning of each variable code-name is provided in parentheses.
 
-\strong{Monthly Time-Series (Available years: 1980 - 2018)}
+\strong{Monthly Time-Series (Available from 1979 onwards)}
 \itemize{
   \item 1 - "pr" (Precipitation amount; mass per unit area)
   \item 2 - "tas" (Mean daily air temperature at 2 meters)

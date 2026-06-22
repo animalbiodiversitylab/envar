@@ -31,7 +31,15 @@ or future data.}
 
 \item{gcm}{Character vector of General Circulation Models (for Future data).}
 
-\item{ssp}{Character or numeric vector of Shared Socioeconomic Pathways (e.g., "126", "585").}
+\item{rcp}{Numeric or character vector of Representative Concentration Pathways,
+given as the radiative-forcing level (e.g., \code{2.6}, \code{4.5}, \code{7.0}, \code{8.5}).
+Combined with \code{ssp} to build the CMIP6 scenario code (e.g., \code{ssp = 5} and
+\code{rcp = 8.5} download the \code{ssp585} scenario). If \code{NULL}, \code{ssp} is
+assumed to already encode the full scenario (e.g., \code{"585"}).}
+
+\item{ssp}{Numeric or character vector of Shared Socioeconomic Pathway families
+(e.g., \code{1}, \code{2}, \code{5}). Combined with \code{rcp} as described above.
+A complete code such as \code{"585"} may also be supplied directly (with \code{rcp = NULL}).}
 }
 \value{
 If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.

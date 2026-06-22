@@ -12,7 +12,7 @@
 #' Unlike other functions in this package, there is only one code-name for each variable 
 #' and no working synonyms. The meaning of each variable code-name is provided in parentheses.
 #'
-#' \strong{Monthly Time-Series (Available years: 1980 - 2018)}
+#' \strong{Monthly Time-Series (Available from 1979 onwards)}
 #' \itemize{
 #'   \item 1 - "pr" (Precipitation amount; mass per unit area)
 #'   \item 2 - "tas" (Mean daily air temperature at 2 meters)
@@ -149,8 +149,16 @@
 #' @param months A numeric vector (1–12) specifying which months to download.
 #'        If NULL and `years` are single years, all 12 months are downloaded.
 #' @param gcm General Circulation Model(s) for future projections.
-#' @param rcp Representative Concentration Pathway for CMIP5 data.
-#' @param ssp Shared Socioeconomic Pathway for CMIP6 data.
+#' @param rcp Representative Concentration Pathway, given as the radiative-forcing
+#'        level (e.g., \code{2.6}, \code{4.5}, \code{6.0}, \code{8.5}). For CMIP5
+#'        projections (year ranges \code{"2041-2060"}, \code{"2061-2080"}) it selects
+#'        the RCP directly. For CMIP6/BIOCLIM+ projections it is combined with
+#'        \code{ssp} to build the scenario code (e.g., \code{ssp = 5} and
+#'        \code{rcp = 8.5} request the \code{ssp585} scenario).
+#' @param ssp Shared Socioeconomic Pathway family for CMIP6/BIOCLIM+ data
+#'        (e.g., \code{1}, \code{2}, \code{3}, \code{5}). Combined with \code{rcp}
+#'        as described above. A complete code such as \code{"585"} may also be
+#'        supplied directly (with \code{rcp = NULL}).
 #' @param cruts_years Numeric vector. Years to download from CHELSAcruts (must be 1901–2016).
 #' @param ... Additional arguments (currently unused).
 #'
@@ -369,8 +377,13 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
         
         # Historical CMIP5 (chelsav1)
         if (year_str %in% c("2041-2060", "2061-2080")) {
+          if (is.null(gcm) || is.null(rcp)) {
+            cli::cli_abort("CHELSA CMIP5 projections require both {.arg gcm} and {.arg rcp}.")
+          }
           for (g in gcm) {
             for (r in rcp) {
+              # Accept rcp as a forcing level (e.g. 8.5) or scaled code (e.g. 85)
+              r_code <- rcp_code(r)
               base_url <- "https://os.zhdk.cloud.switch.ch/chelsav1/cmip5"
               
               # Map var to folder name
@@ -391,12 +404,12 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
               # Decide whether to add _V1.2 in the filename
               version_suffix <- if (var == "pr") "" else "_V1.2"
               
-              filename <- sprintf("CHELSA_%s_mon_%s_rcp%d_r1i1p1_g025.nc_%s%s.tif",
-                                  var, g, r, year_str, version_suffix)
-              
+              filename <- sprintf("CHELSA_%s_mon_%s_rcp%s_r1i1p1_g025.nc_%s%s.tif",
+                                  var, g, r_code, year_str, version_suffix)
+
               url <- sprintf("%s/%s/%s/%s", base_url, year_str, var1, filename)
               canon <- var
-              user_name <- paste0(var, "_", year_str, "_", g, "_rcp", r)
+              user_name <- paste0(var, "_", year_str, "_", g, "_rcp", r_code)
               dest_file <- file.path(envar_grids_dir(), paste0(user_name, ".tif"))
               handle_file(url, dest_file, canon, user_name)
             }
@@ -475,8 +488,14 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
             
           } else {
             # Future CHELSAv2
+            if (is.null(gcm) || is.null(ssp)) {
+              cli::cli_abort("CHELSA future projections require both {.arg gcm} and {.arg ssp}.")
+            }
+            # Combine ssp + rcp into the CMIP6 scenario code (e.g. ssp = 5, rcp = 8.5 -> "585").
+            # When rcp is NULL, ssp is assumed to already encode the full scenario (e.g. "585").
+            ssp_codes <- combine_ssp_rcp(ssp, rcp)
             for (g in gcm) {
-              for (s in ssp) {
+              for (s in ssp_codes) {
                 base_url <- "https://os.zhdk.cloud.switch.ch/chelsav2/GLOBAL/climatologies"
                 
                 var1 <- var
@@ -535,30 +554,30 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
           }
         }
         
-        # Monthly (1979-2019)
-        if (year_str %in% as.character(1979:2019)) {
-          base_url <- "https://os.zhdk.cloud.switch.ch/chelsav2/GLOBAL/monthly"
-          
+        # Monthly time-series (1979 onwards)
+        # NOTE: CHELSA moved its monthly archive to a new host with a per-year
+        # folder structure. The old host only served files up to June 2019; the
+        # new host (os.unil.cloud.switch.ch/chelsa02) serves the full record,
+        # including every month after June 2019, and uses a consistent
+        # CHELSA_<var>_<month>_<year>_V.2.1.tif naming (also for rsds).
+        year_num <- suppressWarnings(as.numeric(year_str))
+        if (!is.na(year_num) && !is_range && year_num >= 1979) {
+          base_url <- "https://os.unil.cloud.switch.ch/chelsa02/chelsa/global/monthly"
+
           # Map var to folder name
           var1 <- var
           if (var == "pet") var1 <- "pet_penman"
-          
+
           # Determine months to download
           if (!is.null(months)) {
             months_to_download <- sprintf("%02d", months)
           } else {
             months_to_download <- sprintf("%02d", 1:12)
           }
-          
+
           for (m in months_to_download) {
-            if (var == "rsds") {
-              filename <- sprintf("CHELSA_%s_%s_%s_V.2.1.tif",
-                                  var, year_str, m)
-            } else {
-              filename <- sprintf("CHELSA_%s_%s_%s_V.2.1.tif",
-                                  var, m, year_str)
-            }
-            url <- sprintf("%s/%s/%s", base_url, var1, filename)
+            filename <- sprintf("CHELSA_%s_%s_%s_V.2.1.tif", var, m, year_str)
+            url <- sprintf("%s/%s/%s/%s", base_url, var1, year_str, filename)
             canon <- var
             user_name <- paste0(var, "_", year_str, "_", m)
             dest_file <- file.path(envar_grids_dir(), paste0(user_name, ".tif"))

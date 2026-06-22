@@ -39,7 +39,13 @@
 #' Assis J, Fernández Bejarano SJ, Salazar VW, Schepers L, Gouvêa L, Fragkopoulou E, Leclercq F, Vanhoorne B, Tyberghein L, Serrão EA, Verbruggen H, De Clerck O (2024). "Bio-ORACLE v3.0. Pushing marine data layers to the CMIP6 Earth system models of climate change research." Global Ecology and Biogeography, 33, e13813.
 #' https://doi.org/10.1111/geb.13813
 #'
-#' @param x The output from `par_set()` defining the area or locations.
+#' @section Resolution:
+#' Bio-ORACLE layers are distributed at a native resolution of ~0.05 degrees
+#' (~5.5 km at the equator). You must therefore call \code{par_set()} with
+#' \code{res = 5.5}; any other value (including the default) raises an error.
+#'
+#' @param x The output from `par_set()` defining the area or locations. It must
+#'   have been created with `res = 5.5` (Bio-ORACLE's native resolution).
 #' @param vars Character vector of one or more variables or synonyms to download.
 #' @param realm Character. One of "surface" (default), "benthic_minimum", "benthic_average", or "benthic_maximum".
 #' @param years Character. The time period for the data in "YYYY-YYYY" format. 
@@ -55,14 +61,14 @@
 #' @examples
 #' \dontrun{
 #' # Example 1: Current conditions (Baseline)
-#' current_env <- par_set(country = "Italy", crs = 3035) %>% 
-#'   biooracle(vars = c("temperature", "salinity"), 
+#' current_env <- par_set(country = "Italy", crs = 3035, res = 5.5) %>%
+#'   biooracle(vars = c("temperature", "salinity"),
 #'             years = "2000-2010")
-#'             
+#'
 #' # Example 2: Future projections (2050, SSP 585)
-#' future_env <- par_set(country = "Italy", crs = 3035) %>% 
-#'   biooracle(vars = c("temperature", "salinity"), 
-#'             years = "2040-2050", 
+#' future_env <- par_set(country = "Italy", crs = 3035, res = 5.5) %>%
+#'   biooracle(vars = c("temperature", "salinity"),
+#'             years = "2040-2050",
 #'             ssp = 585)
 #'   }
 #' @export
@@ -80,7 +86,23 @@ biooracle <- function(x, vars, realm = "surface", years = "2000-2010",
   ))
   
   par_list <- get_par(x)
-  
+
+  # --------------------------------------------------------------------
+  # Enforce Bio-ORACLE native resolution
+  # --------------------------------------------------------------------
+  # Bio-ORACLE layers are distributed at ~0.05 degrees (~5.5 km at the equator),
+  # which corresponds to res = 5.5 in par_set(). Any other value (including the
+  # default of 1) would silently resample to a non-native grid, so we require the
+  # correct resolution and abort otherwise.
+  if (is.null(par_list$res) || !isTRUE(all.equal(as.numeric(par_list$res), 5.5))) {
+    supplied <- if (is.null(par_list$res)) "NULL" else as.character(par_list$res)
+    cli::cli_abort(c(
+      "Bio-ORACLE requires {.code res = 5.5} in {.fn par_set}.",
+      "x" = "You supplied {.code res = {supplied}}.",
+      "i" = "Bio-ORACLE layers are distributed at ~0.05 degrees (~5.5 km at the equator). Set {.code res = 5.5} in {.fn par_set}."
+    ))
+  }
+
   # Determine input type
   if (!is.null(par_list$grid) && inherits(par_list$grid, "SpatRaster")) {
     grid <- par_list$grid; mask <- par_list$mask; res <- par_list$res; crs <- par_list$crs

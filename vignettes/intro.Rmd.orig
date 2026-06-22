@@ -14,9 +14,28 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown_notangle}
 ---
 
+```{r, include = FALSE}
+h = 3.2
+w = 5.0
+is_check <-
+  ("CheckExEnv" %in% search()) ||
+  any(c("_R_CHECK_TIMINGS_", "_R_CHECK_LICENSE_") %in% names(Sys.getenv())) ||
+  !identical(Sys.getenv("MY_UNIVERSE"), "") ||
+  any(c("CI", "GITHUB_ACTIONS", "GITHUB_SHA") %in% names(Sys.getenv()))
+knitr::opts_chunk$set(
+  fig.height = h,
+  fig.width = w,
+  fig.align = "center",
+  eval = TRUE,
+  fig.path = "figure/intro-",
+  root.dir = normalizePath("../..")
+)
+```
 
-
-
+```{r, include = FALSE}
+# load developmental version of package
+devtools::load_all()
+```
 
 ## Package aims
 
@@ -26,8 +45,7 @@ When conducting an ecological analysis, the response of one or more variable(s) 
 
 First, we install the package with the following code.
 
-
-``` r
+```{r, eval = FALSE}
 # install using the "remotes" package
 if (!require(remotes)) install.packages("remotes")
 remotes::install_github("animalbiodiversitylab/envar", 
@@ -47,8 +65,7 @@ devtools::install_github("animalbiodiversitylab/envar",
 
 When executing this command, another package (`dplyr`) will be automatically loaded to ensure the full functionality of the package. However, other packages are often required for plotting and further analyses and we also load them here for later use.
 
-
-``` r
+```{r, results='hide',message =FALSE,warning=FALSE}
 require(envar)
 require(terra)
 require(sf)
@@ -64,8 +81,7 @@ A correlation analysis can be performed with the to `corr_check()` function to i
 
 It is also possible to call the `extr_check()` function at the bottom of the code to enable an automatic test of extrapolation, regardless of whether you requested already a `corr_check()`. Ecological models often produce spurious predictions when predicting in environmental conditions not present in the calibration range [@elith2010]. This problem can arise under two conditions: 1) at least a variable has values outside the calibration range - strict extrapolation -, or 2) all variables fall in the calibration range, but novel combinations of predictor values are met - combinatorial extrapolation - [@zurell2012]. Inside the function it is possible to specify if strict and/or combinatorial extrapolation has to be checked (argument “type” - default to strict only), and it is necessary to specify the calibration points as data.frame with X and Y columns (argument “calib_points”) and the CRS of those coordinates (argument “calib_crs”) if different from the default (EPSG:4326). Extrapolation is checked creating an environmental overlap mask, through the _mecofun R_ package [@zurell2012]. To check extrapolation we assume that a dataset of 2648 occurrences of the _Parnassius apollo_ butterfly (dataset `Apollo()` already included in the package) was used to train any model and that we want to apply the model to the European Alps later on.
 
-
-``` r
+```{r, results="hide", message = FALSE, warning = FALSE}
 processed <- par_set(shape = Alps, crs = 3035, res = 2, buffer = 10) %>% 
              chelsa(vars = c("bio1", "bio4", "bio10", "bio12", "bio19"),
                     years = "1981-2010") %>%
@@ -79,92 +95,40 @@ processed <- par_set(shape = Alps, crs = 3035, res = 2, buffer = 10) %>%
 
 If the correlation and/or extrapolation analysis/es is/are performed, the output is a list. Otherwise, it is a SpatRaster (object to be used within the _terra R_ package), either with a single layer or with multiple layers if multiple variables were specified. If the output is a list, it contains the following elements: "data" (the SpatRaster or data.frame with your data), "correlation_matrix" containing a matrix of Pairwise Pearson's correlation coefficients between all variables, "vif" a data.frame containing the Variance Inflation Factors for each variable, a "summary" that reports if and which variables have a Pearson's correlation coefficient higher than |0.6| and/or a VIF higher than 3. The "plot_path" specifies the local directory to which a plot of the Pearson's pairwise correlation was saved. An "extrapolation" object will then be one layer - two if both strict and extrapolation are checked - reporting as 1 cells of extrapolation and 0 cells of no extrapolation. 
 
-
-``` r
+```{r}
 # Plot the first two variables
 terra::plot(processed$data[[1:2]])
 ```
 
-<div class="figure" style="text-align: center">
-<img src="figure/intro-unnamed-chunk-6-1.png" alt="plot of chunk unnamed-chunk-6"  />
-<p class="caption">plot of chunk unnamed-chunk-6</p>
-</div>
-
-
-``` r
+```{r}
 # View the Pearson's pairwise correlation matrix
 print(processed$correlation_matrix)
 ```
 
-```
-##                 bio1_1981-2010 bio4_1981-2010 bio10_1981-2010 bio12_1981-2010
-## bio1_1981-2010       1.0000000    -0.17098433      0.99411075     -0.58856258
-## bio4_1981-2010      -0.1709843     1.00000000     -0.06629979     -0.13822734
-## bio10_1981-2010      0.9941107    -0.06629979      1.00000000     -0.61255277
-## bio12_1981-2010     -0.5885626    -0.13822734     -0.61255277      1.00000000
-## bio19_1981-2010     -0.4182732    -0.33185424     -0.45693075      0.84502782
-## elevation           -0.9682340     0.06664318     -0.96993166      0.58178549
-## slope               -0.7884759     0.01527641     -0.79705030      0.57544349
-## trees                0.1420440    -0.28430061      0.10591260      0.02372563
-## ice                 -0.4765922     0.13185174     -0.46273645      0.27137511
-##                 bio19_1981-2010   elevation       slope        trees        ice
-## bio1_1981-2010     -0.418273159 -0.96823403 -0.78847587  0.142043991 -0.4765922
-## bio4_1981-2010     -0.331854239  0.06664318  0.01527641 -0.284300607  0.1318517
-## bio10_1981-2010    -0.456930752 -0.96993166 -0.79705030  0.105912597 -0.4627365
-## bio12_1981-2010     0.845027822  0.58178549  0.57544349  0.023725631  0.2713751
-## bio19_1981-2010     1.000000000  0.44083530  0.39996749 -0.003624083  0.2299007
-## elevation           0.440835298  1.00000000  0.83277881 -0.120815882  0.4857175
-## slope               0.399967493  0.83277881  1.00000000  0.223848319  0.2433729
-## trees              -0.003624083 -0.12081588  0.22384832  1.000000000 -0.3266344
-## ice                 0.229900683  0.48571755  0.24337291 -0.326634442  1.0000000
-```
-
-
-``` r
+```{r}
 # View the Variance Inflation Factor values
 print(processed$vif)
 ```
 
-```
-##         Variables         VIF
-## 1  bio1_1981-2010 3073.957200
-## 3 bio10_1981-2010 2670.551839
-## 6       elevation   40.083967
-## 2  bio4_1981-2010   35.854595
-## 7           slope    5.865724
-## 4 bio12_1981-2010    5.292550
-## 5 bio19_1981-2010    4.770264
-## 8           trees    1.875957
-## 9             ice    1.566896
-```
-
 To better understand the structure of correlation, we can also analyze the correlation plot that was locally stored. 
 
-<div class="figure" style="text-align: center">
-<img src="images/Corr_plot_example.png" alt="plot of chunk unnamed-chunk-9" width="100%" />
-<p class="caption">plot of chunk unnamed-chunk-9</p>
-</div>
+```{r, echo=FALSE, out.width="100%", fig.align='center', , alt = "Example correlation plot"}
+knitr::include_graphics("images/Corr_plot_example.png")
+```
 
 This plot was created with the aid of the _corrplot R_ package and it helps to pinpoint correlation problems. In this example, we can see that elevation is highly correlated with multiple variables and as this is not a proximal variable (i.e., the effect of elevation on species distributions is mediated by other co-varying factors such as climate) we can remove it. To obtain a set of uncorrelated variables we might thus want to sub-set our variables as follows.
 
-
-``` r
+```{r}
 # define a set of uncorrelated variables
 uncorrelated_vars <- processed$data[[c("bio1_1981-2010", "bio12_1981-2010", "trees", "ice")]]
 ```
 
 We can also see where extrapolation occurs in our study area. This map can be used alongside any ecological prediction (e.g., species distribution models applied over the European Alps), to interpret more carefully predictions in areas where extrapolation is found.
 
-
-``` r
+```{r}
 # visualize the raster map of where extrapolation occurs (1 = extrapolation, 0 = no extrapolation)
 terra::plot(processed$extrapolation$strict)
 ```
-
-<div class="figure" style="text-align: center">
-<img src="figure/intro-unnamed-chunk-11-1.png" alt="plot of chunk unnamed-chunk-11"  />
-<p class="caption">plot of chunk unnamed-chunk-11</p>
-</div>
 
 ## Conclusion
 
