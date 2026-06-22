@@ -57,6 +57,14 @@ data(Apollo)
 head(Apollo)
 ```
 
+    ##          X        Y
+    ## 1 13.49513 47.10400
+    ## 2 12.62265 47.03912
+    ## 3  6.65878 44.16551
+    ## 4  5.40699 44.15510
+    ## 5  6.05580 44.58935
+    ## 6  6.86447 44.42881
+
 ## Background points
 
 First, through *envar* we define a template raster at ~ 1 km resolution
@@ -98,10 +106,22 @@ colnames(bg_points) <- c('X', 'Y')
 plot(dens_ras)
 ```
 
+![plot of chunk unnamed-chunk-6](figure/sdm-unnamed-chunk-6-1.png)
+
+plot of chunk unnamed-chunk-6
+
 ``` r
 
 head(bg_points)
 ```
+
+    ##         X       Y
+    ## 1 3562297 2252180
+    ## 2 3327508 2022830
+    ## 3 3749040 2548611
+    ## 4 4111647 2622039
+    ## 5 3520597 2178751
+    ## 6 6376132 3915642
 
 ## Predictors
 
@@ -142,7 +162,23 @@ We can then check the Variance Inflation Factor (VIF):
 print(predictors$vif)
 ```
 
+    ##          Variables      VIF
+    ## 1   bio1_1981-2010 2.904302
+    ## 9            slope 2.328816
+    ## 3  bio12_1981-2010 1.903312
+    ## 6             tree 1.889323
+    ## 5           meadow 1.835929
+    ## 2   bio4_1981-2010 1.781033
+    ## 4  bio15_1981-2010 1.209355
+    ## 8          shannon 1.088311
+    ## 7            water 1.028720
+    ## 10       northness 1.001287
+
 And the Pearson pairwise correlation coefficients:
+
+![plot of chunk unnamed-chunk-10](images/Corr_plot_apollo.png)
+
+plot of chunk unnamed-chunk-10
 
 Slope and annual mean temperature (bio1) are negatively correlated with
 Pearson’s correlations ≥ \|0.6\|. No variables have a VIF higher than 3.
@@ -185,20 +221,45 @@ sdms <- ENMeval::ENMevaluate(
   partitions = "user",
   user.grp = block,
   algorithm = "maxent.jar")
+```
+
+    ## Error in `ENMeval::ENMevaluate()`:
+    ## ! unused arguments (RMvalues = c(1:8), fc = c("L", "LQ", "LQH"))
+
+``` r
 
 # row number of the best model (best test Boyce index)
 index <- which.max(sdms@results$cbi.val.avg)
+```
+
+    ## Error in `h()`:
+    ## ! error in evaluating the argument 'x' in selecting a method for function 'which.max': object 'sdms' not found
+
+``` r
+
 sdm_best <- sdms@models[[index]]
 ```
+
+    ## Error:
+    ## ! object 'sdms' not found
 
 ``` r
 
 # show tuning table
 ordered <- sdms@results[order(sdms@results$cbi.val.avg), ]
+```
+
+    ## Error:
+    ## ! object 'sdms' not found
+
+``` r
 
 # best model metrics
 print(ordered[1, c("rm", "fc", "cbi.val.avg", "cbi.val.sd", "auc.val.avg", "auc.val.sd", "auc.diff.avg", "auc.diff.sd")])
 ```
+
+    ## Error:
+    ## ! error in evaluating the argument 'x' in selecting a method for function 'print': object of type 'closure' is not subsettable
 
 ## Prediction in the Alps
 
@@ -221,6 +282,9 @@ predictorsAlps <- par_set(shape = Alps, crs = 3035) %>%
 predictionAlps <- dismo::predict(sdm_best, predictorsAlps$data)
 ```
 
+    ## Error in `h()`:
+    ## ! error in evaluating the argument 'object' in selecting a method for function 'predict': object 'sdm_best' not found
+
 As we added the optional function “extr_check”, we checked if the
 environmental conditions found in the prediction area are consistent
 with those that were provided to the models in the training phase. Here
@@ -234,8 +298,16 @@ extr = predictorsAlps$extrapolation$strict
 plot(extr)
 ```
 
+![plot of chunk unnamed-chunk-15](figure/sdm-unnamed-chunk-15-1.png)
+
+plot of chunk unnamed-chunk-15
+
 We can then plot the prediction of habitat suitability for *Parnassius
 apollo* over the European Alps:
+
+![plot of chunk unnamed-chunk-16](images/Prediction.png)
+
+plot of chunk unnamed-chunk-16
 
 ## Conclusion
 
