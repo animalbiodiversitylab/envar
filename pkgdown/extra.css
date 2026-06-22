@@ -22,6 +22,31 @@
 }
 
 .page-header img {
-  height: 153px !important; 
-  width: auto !important;  
+  height: 153px !important;
+  width: auto !important;
+}
+
+/* Article figures/plots --------------------------------------------------- */
+/* Bootstrap 5 styles `.figure` as display:inline-block, so natural-size plots
+   shrink to fit and end up flush-left. Force the figure block to span the full
+   width and centre its image instead. */
+.figure {
+  display: block !important;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.figure img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Hide the auto-generated "plot of chunk ..." captions knitr adds when no
+   explicit caption is given. */
+.figure .caption,
+p.caption,
+figcaption {
+  display: none !important;
 }
