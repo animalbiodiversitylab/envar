@@ -40,12 +40,14 @@
 #' https://doi.org/10.1111/geb.13813
 #'
 #' @section Resolution:
-#' Bio-ORACLE layers are distributed at a native resolution of ~0.05 degrees
-#' (~5.5 km at the equator). You must therefore call \code{par_set()} with
-#' \code{res = 5.5}; any other value (including the default) raises an error.
+#' Bio-ORACLE layers are distributed on a 0.05-degree grid (~5.5 km at the
+#' equator). Because \code{res} is a multiplier of the 30 arc-second base grid,
+#' the value that reproduces this grid exactly is \code{res = 6}
+#' (\eqn{6 \times 30''= 0.05^{\circ}}). You must therefore call \code{par_set()}
+#' with \code{res = 6}; any other value (including the default) raises an error.
 #'
 #' @param x The output from `par_set()` defining the area or locations. It must
-#'   have been created with `res = 5.5` (Bio-ORACLE's native resolution).
+#'   have been created with `res = 6` (Bio-ORACLE's native 0.05-degree grid).
 #' @param vars Character vector of one or more variables or synonyms to download.
 #' @param realm Character. One of "surface" (default), "benthic_minimum", "benthic_average", or "benthic_maximum".
 #' @param years Character. The time period for the data in "YYYY-YYYY" format. 
@@ -61,12 +63,12 @@
 #' @examples
 #' \dontrun{
 #' # Example 1: Current conditions (Baseline)
-#' current_env <- par_set(country = "Italy", crs = 3035, res = 5.5) %>%
+#' current_env <- par_set(country = "Italy", crs = 3035, res = 6) %>%
 #'   biooracle(vars = c("temperature", "salinity"),
 #'             years = "2000-2010")
 #'
 #' # Example 2: Future projections (2050, SSP 585)
-#' future_env <- par_set(country = "Italy", crs = 3035, res = 5.5) %>%
+#' future_env <- par_set(country = "Italy", crs = 3035, res = 6) %>%
 #'   biooracle(vars = c("temperature", "salinity"),
 #'             years = "2040-2050",
 #'             ssp = 585)
@@ -90,16 +92,18 @@ biooracle <- function(x, vars, realm = "surface", years = "2000-2010",
   # --------------------------------------------------------------------
   # Enforce Bio-ORACLE native resolution
   # --------------------------------------------------------------------
-  # Bio-ORACLE layers are distributed at ~0.05 degrees (~5.5 km at the equator),
-  # which corresponds to res = 5.5 in par_set(). Any other value (including the
-  # default of 1) would silently resample to a non-native grid, so we require the
-  # correct resolution and abort otherwise.
-  if (is.null(par_list$res) || !isTRUE(all.equal(as.numeric(par_list$res), 5.5))) {
+  # Bio-ORACLE layers are distributed on a 0.05-degree grid (~5.5 km at the
+  # equator). Since `res` is a multiplier of the 30 arc-second base grid, the
+  # value that reproduces 0.05 degrees exactly is 6 (6 * 30" = 0.05 degrees).
+  # Any other value would resample to a non-native grid (and anything finer
+  # would only invent detail the data does not contain), so we require res = 6
+  # and abort otherwise.
+  if (is.null(par_list$res) || !isTRUE(all.equal(as.numeric(par_list$res), 6))) {
     supplied <- if (is.null(par_list$res)) "NULL" else as.character(par_list$res)
     cli::cli_abort(c(
-      "Bio-ORACLE requires {.code res = 5.5} in {.fn par_set}.",
+      "Bio-ORACLE requires {.code res = 6} in {.fn par_set}.",
       "x" = "You supplied {.code res = {supplied}}.",
-      "i" = "Bio-ORACLE layers are distributed at ~0.05 degrees (~5.5 km at the equator). Set {.code res = 5.5} in {.fn par_set}."
+      "i" = "Bio-ORACLE layers use a 0.05-degree grid (~5.5 km at the equator), which is exactly 6 times the 30 arc-second base grid. Set {.code res = 6} in {.fn par_set}."
     ))
   }
 

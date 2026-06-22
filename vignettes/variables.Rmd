@@ -14,27 +14,9 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown_notangle}
 ---
 
-```{r, include = FALSE}
-h = 3.2
-w = 5.0
-is_check <-
-  ("CheckExEnv" %in% search()) ||
-  any(c("_R_CHECK_TIMINGS_", "_R_CHECK_LICENSE_") %in% names(Sys.getenv())) ||
-  !identical(Sys.getenv("MY_UNIVERSE"), "") ||
-  any(c("CI", "GITHUB_ACTIONS", "GITHUB_SHA") %in% names(Sys.getenv()))
-knitr::opts_chunk$set(
-  fig.height = h,
-  fig.width = w,
-  fig.align = "center",
-  eval = !is_check,
-  root.dir = normalizePath("../..")
-)
-```
 
-```{r,include = FALSE}
-# load developmental version of package
-devtools::load_all()
-```
+
+
 
 # Introduction
 
@@ -44,7 +26,8 @@ This document provides a comprehensive reference for all the environmental varia
 
 When executing this command, another package (`dplyr`) will be automatically loaded to ensure the full functionality of the package. However, other packages are often required for plotting and further analyses and we also load them here for later use.
 
-```{r, results='hide',message =FALSE,warning=FALSE}
+
+``` r
 require(envar)
 require(terra)
 require(sf)
@@ -169,14 +152,21 @@ Climate classifications (Köppen-Geiger & others):
 
 It is necessary to specify also the years as a distinct argument. If specified as a range (e.g. "1981-2010") the average of those years is downloaded, otherwise if a single year is specified, the variables will refer to that year. With the argument "months" (numeric vector from 1 to 12) it is also possible to download data only for one or multiple specified months. If this is parameter is not specified, 12 months will be downloaded as 12 distinct layers. When downloading future variables across all possible CHELSA downloads, it is also necessary to specify the general circulation model(s) within the "gcm" argument, the representation concentration pathway(s) with "rcp", and the shared socioeconomic pathway with the "ssp" argument. If the year(s) and gcm(s) and ssp(s) are not specified properly or not specified at all, the download will not work.
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>%
   chelsa(vars = c("pr"), years = 2018, months = 1)
 ```
 
-```{r}
+
+``` r
 plot(processed[[1]])
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-5-1.png" alt="plot of chunk unnamed-chunk-5"  />
+<p class="caption">plot of chunk unnamed-chunk-5</p>
+</div>
 
 ## WorldClim
 
@@ -217,7 +207,8 @@ Future:
 * 2061-2080
 * 2081-2100
 
-```{r,eval=FALSE,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
              worldclim(vars = c("bio1"), years = "1970-2000")
 ```
@@ -254,14 +245,27 @@ SSP Scenarios ("ssp" argument, required for future periods):
 * 460 (SSP4-6.0)
 * 585 (SSP5-8.5)
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
   climatezones()
 ```
 
-```{r}
+```
+## Error in `process_raster_layer()` at envar/R/climatezones.R:207:7:
+## ! The resolution of at least one raster to be downloaded is lower than
+##   the set resolution of 1 km
+```
+
+
+``` r
 plot(processed[[1]])
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-8-1.png" alt="plot of chunk unnamed-chunk-8"  />
+<p class="caption">plot of chunk unnamed-chunk-8</p>
+</div>
 
 ## Cloud cover
 
@@ -299,14 +303,21 @@ Monthly means:
 * 20 - **MODCF_monthlymean_11** - november mean, november, nov
 * 21 - **MODCF_monthlymean_12** - december mean, december, dec
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
   cloudcover(vars = c("mean annual"))
 ```
 
-```{r}
+
+``` r
 plot(processed[[1]])
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-10-1.png" alt="plot of chunk unnamed-chunk-10"  />
+<p class="caption">plot of chunk unnamed-chunk-10</p>
+</div>
 
 
 ## Aridity
@@ -333,14 +344,21 @@ Monthly ET0 (et0_v3_01.tif to et0_v3_12.tif):
 * 17 - **et0_v3_02.tif** - et0 february, potential evapotranspiration february, et0 feb, et0 2
 * 18-27 - ... (continues for all 12 months)
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
   aridity(vars = c("aridity index annual", "et0 january"))
 ```
 
-```{r}
+
+``` r
 plot(processed[[1]])
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-12-1.png" alt="plot of chunk unnamed-chunk-12"  />
+<p class="caption">plot of chunk unnamed-chunk-12</p>
+</div>
 
 # Land cover
 
@@ -363,14 +381,21 @@ This function downloads, processes, and extracts variables from the EarthEnv Con
 * 11 - **consensus_full_class_11** - barren, barren land, bare ground, bare
 * 12 - **consensus_full_class_12** - open water, water, water bodies
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
   earthenvlandcover(vars = c("snow ice"))
 ```
 
-```{r}
+
+``` r
 plot(processed[[1]])
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-14-1.png" alt="plot of chunk unnamed-chunk-14"  />
+<p class="caption">plot of chunk unnamed-chunk-14</p>
+</div>
 
 ## ESA land cover
 
@@ -394,14 +419,21 @@ This function downloads, processes, and extracts variables from the Global 1 km 
 * 14 - **shannon** - shannon index, entropy, shannon entropy, shannon diversity
 * 15 - **evenness** - evenness index, pielou, pielou evenness, species evenness
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
   melc(vars = c("tree", "water"))
 ```
 
-```{r}
+
+``` r
 plot(processed[[1]])
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-16-1.png" alt="plot of chunk unnamed-chunk-16"  />
+<p class="caption">plot of chunk unnamed-chunk-16</p>
+</div>
 
 ## Hybrid land cover
 
@@ -413,14 +445,21 @@ This function downloads, processes, and extracts land cover variables from the H
 
 Note: If the `vars` argument is left empty, the function will default to downloading the land cover map. You must specify the `year` argument (integer between 2000 and 2020).
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
   hybridlandcover(vars = "landcover", year = 2015)
 ```
 
-```{r}
+
+``` r
 plot(processed[[1]])
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-18-1.png" alt="plot of chunk unnamed-chunk-18"  />
+<p class="caption">plot of chunk unnamed-chunk-18</p>
+</div>
 
 ## GeoSOS land cover
 
@@ -452,14 +491,21 @@ Available years:
 * 2050
 * 2100
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
   geososlandcover(vars = "landcover", scenario = "A1B", year = 2050)
 ```
 
-```{r}
+
+``` r
 plot(processed[[1]])
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-20-1.png" alt="plot of chunk unnamed-chunk-20"  />
+<p class="caption">plot of chunk unnamed-chunk-20</p>
+</div>
 
 ## PFT land cover
 
@@ -486,14 +532,21 @@ Required arguments:
 * 534 (SSP5-RCP3.4)
 * 585 (SSP5-RCP8.5)
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
   pftlandcover(vars = "landcover", year = 2050, ssp = 585)
 ```
 
-```{r}
+
+``` r
 plot(processed[[1]])
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-22-1.png" alt="plot of chunk unnamed-chunk-22"  />
+<p class="caption">plot of chunk unnamed-chunk-22</p>
+</div>
 
 ## GCAM land cover
 
@@ -530,14 +583,21 @@ Available SSPs (Shared Socioeconomic Pathways):
 
 Note: The original data is in World Mercator projection and will be automatically reprojected to the CRS defined in `par_set()` (default: EPSG 4326).
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
   gcamlandcover(ssp = 585, year = 2050)
 ```
 
-```{r}
+
+``` r
 plot(processed[[1]])
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-24-1.png" alt="plot of chunk unnamed-chunk-24"  />
+<p class="caption">plot of chunk unnamed-chunk-24</p>
+</div>
 
 # Landscape heterogeneity
 
@@ -565,14 +625,21 @@ Second-order statistics (Texture metrics):
 * 13 - **Uniformity** - uniformity, uniform
 * 14 - **Variance** - variance, var
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
   heterogeneity(vars = c("shannon", "cv"))
 ```
 
-```{r}
+
+``` r
 plot(processed[[1]])
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-26-1.png" alt="plot of chunk unnamed-chunk-26"  />
+<p class="caption">plot of chunk unnamed-chunk-26</p>
+</div>
 
 # Habitats
 
@@ -643,14 +710,27 @@ Artificial:
 * 26 - **1403_Plantations** - plantations, plantation, 1403
 * 27 - **1405_Urban Areas** - urban areas, urban, 1405
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
   habitat(vars = c("Forest", "Artificial"), level = 1)
 ```
 
-```{r}
+```
+## Error in `process_raster_layer()` at envar/R/habitat.R:343:7:
+## ! The resolution of at least one raster to be downloaded is lower than
+##   the set resolution of 1 km
+```
+
+
+``` r
 plot(processed[[1]])
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-28-1.png" alt="plot of chunk unnamed-chunk-28"  />
+<p class="caption">plot of chunk unnamed-chunk-28</p>
+</div>
 
 # Soil characteristics
 
@@ -662,14 +742,21 @@ This function downloads, processes, and extracts variables from the Harmonized W
 
 * 1 - **hwsd** - soil, type, soiltype, soil type
 
-```{r, results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
   soil()
 ```
 
-```{r}
+
+``` r
 plot(processed[[1]])
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-30-1.png" alt="plot of chunk unnamed-chunk-30"  />
+<p class="caption">plot of chunk unnamed-chunk-30</p>
+</div>
 
 ## Soil climate 
 
@@ -708,14 +795,21 @@ Monthly mean soil temperatures:
 
 The `depth` argument defines the soil depth range in cm. Options are "0-5" (default) or "5-15".
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
   soilclimate(vars = c("SBIO1", "SBIO10"), depth = "5-15")
 ```
 
-```{r}
+
+``` r
 plot(processed[[1]])
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-32-1.png" alt="plot of chunk unnamed-chunk-32"  />
+<p class="caption">plot of chunk unnamed-chunk-32</p>
+</div>
 
 # Topography
 
@@ -740,14 +834,21 @@ Additional parameters:
 * **algorithm** - Aggregation method/algorithm to use. Options: "md" (median, default), "mn" (mean), "min", "max", "sd".
 * **topo_source** - Data source. Options: "GMTED" (default) or "SRTM".
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
   topography(vars = c("elevation", "slope"))
 ```
 
-```{r}
+
+``` r
 plot(processed[[1]])
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-34-1.png" alt="plot of chunk unnamed-chunk-34"  />
+<p class="caption">plot of chunk unnamed-chunk-34</p>
+</div>
 
 # Freshwater environments
 
@@ -823,14 +924,21 @@ Flow accumulation:
 
 For land cover and soil variables, the algorithm matches text patterns in filenames (e.g., "maximum", "weighted", "average"). When multiple variables are requested, the algorithm applies to the entire request, so multiple calls may be required if different algorithms are needed.
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
 freshwater(vars = c("elevation", "slope", "tmin"), algorithm = "mn", month=12)
 ```
 
-```{r}
+
+``` r
 plot(processed[[3]])
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-36-1.png" alt="plot of chunk unnamed-chunk-36"  />
+<p class="caption">plot of chunk unnamed-chunk-36</p>
+</div>
 
 # Marine environments
 
@@ -870,14 +978,21 @@ Additional parameters:
 * **ssp** - Shared Socioeconomic Pathway for future projections (119, 126, 245, 370, 460, 585)
 * **algorithm** - Statistic to apply (max, mean, min, ltmax, ltmin, range). Default "mean"
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
-processed <- par_set(marine_ecoregion = "East African Coral Coast", res = 5.5) %>%
+
+``` r
+processed <- par_set(marine_ecoregion = "East African Coral Coast", res = 6) %>%
   biooracle(vars = "o2", realm = "surface", years = "2000-2010")
 ```
 
-```{r}
+
+``` r
 plot(processed[[1]])
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-38-1.png" alt="plot of chunk unnamed-chunk-38"  />
+<p class="caption">plot of chunk unnamed-chunk-38</p>
+</div>
 
 # Human impact
 
@@ -920,14 +1035,21 @@ Climate change:
 * 20 - **5_4_CLIM_VELOCITY_cog** - climate velocity, velocity
 * 21 - **5_5_ARIDITY_TREND_cog** - aridity trend, aridity
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
   spectre(vars = c("forest loss", "light at night"))
 ```
 
-```{r}
+
+``` r
 plot(processed[[1]])
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-40-1.png" alt="plot of chunk unnamed-chunk-40"  />
+<p class="caption">plot of chunk unnamed-chunk-40</p>
+</div>
 
 ## Accessibility
 
@@ -958,14 +1080,21 @@ Ports:
 * 16 - **ports4** - ports 4, port 4, very small ports, travel time ports 4
 * 17 - **ports5** - ports 5, port 5, any port, all ports, travel time ports 5
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
   accessibility(vars = c("large cities", "ports1"))
 ```
 
-```{r}
+
+``` r
 plot(processed[[1]])
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-42-1.png" alt="plot of chunk unnamed-chunk-42"  />
+<p class="caption">plot of chunk unnamed-chunk-42</p>
+</div>
 
 ## GDP past
 
@@ -983,14 +1112,21 @@ Energy metrics:
 
 Years available: 1992 to 2019.
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
   gdppast(vars = "gdp", year = c(2000, 2010))
 ```
 
-```{r}
+
+``` r
 plot(processed)
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-44-1.png" alt="plot of chunk unnamed-chunk-44"  />
+<p class="caption">plot of chunk unnamed-chunk-44</p>
+</div>
 
 ## GDP future
 
@@ -1014,14 +1150,27 @@ The `ssp` argument accepts integers 1 through 5, corresponding to:
 
 Years available: Decadal intervals from 1850 to 2100 (e.g., 2020, 2030, 2040...).
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
   gdpfuture(vars = "gdp", year = 2050, ssp = c(1, 5))
 ```
 
-```{r}
+```
+## Error in `process_raster_layer()` at envar/R/gdpfuture.R:211:7:
+## ! The resolution of at least one raster to be downloaded is lower than
+##   the set resolution of 1 km
+```
+
+
+``` r
 plot(processed)
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-46-1.png" alt="plot of chunk unnamed-chunk-46"  />
+<p class="caption">plot of chunk unnamed-chunk-46</p>
+</div>
 
 ## Population
 
@@ -1045,14 +1194,21 @@ SSP Scenarios:
 * SSP4
 * SSP5
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
   population(vars = "population", year = 2050, ssp = 2)
 ```
 
-```{r}
+
+``` r
 plot(processed)
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-48-1.png" alt="plot of chunk unnamed-chunk-48"  />
+<p class="caption">plot of chunk unnamed-chunk-48</p>
+</div>
 
 # Protected areas
 
@@ -1071,14 +1227,21 @@ This function downloads, processes, and extracts variables from the World Databa
 * 7 - **WDPA_VI** - sustainable use, natural resources, 6, vi, VI (IUCN Category VI)
 * 8 - **WDPA_ALL** - all, combined, full, total, all protected areas (Combined/Full WDPA)
 
-```{r,results = "hide", message = FALSE, warning = FALSE}
+
+``` r
 processed <- par_set(shape = Alps, crs = 3035) %>% 
   protection(vars = c("national park", "WDPA_ALL"))
 ```
 
-```{r}
+
+``` r
 plot(processed)
 ```
+
+<div class="figure" style="text-align: center">
+<img src="figure/variables-unnamed-chunk-50-1.png" alt="plot of chunk unnamed-chunk-50"  />
+<p class="caption">plot of chunk unnamed-chunk-50</p>
+</div>
 
 # Conclusion
 

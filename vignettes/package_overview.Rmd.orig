@@ -336,7 +336,7 @@ plot(processed_freshwater_ecoregion)
 Marine regions are available from two different data references; the first one is the Marine Ecoregions Of the World (MEOW) [@spalding2007], which provides a classification of coastal and shelf areas. The second one is the Pelagic Provinces Of the World (PPOW) [@spalding2012], providing an inventory of surface pelagic waters. The available arguments are "marine_ecoregion", "marine_realm", and "marine_province" for MEOW, and "pelagic_province", "pelagic_biome", and "pelagic_realm" for PPOW. You can explore the MEOW available names **[here](https://databasin.org/maps/new/#datasets=3b6b12e7bcca419990c9081c0af254a2)** and the PPOW available names through the relative publication.
 
 ```{r,results = "hide", message = FALSE, warning =FALSE}
-processed_marine_ecoregion <- par_set(marine_ecoregion = "East African Coral Coast", res = 5.5) %>%
+processed_marine_ecoregion <- par_set(marine_ecoregion = "East African Coral Coast", res = 6) %>%
   biooracle(vars = c("o2"))
 ```
 

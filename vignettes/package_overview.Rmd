@@ -450,14 +450,8 @@ Marine regions are available from two different data references; the first one i
 
 
 ``` r
-processed_marine_ecoregion <- par_set(marine_ecoregion = "East African Coral Coast", res = 5.5) %>%
+processed_marine_ecoregion <- par_set(marine_ecoregion = "East African Coral Coast", res = 6) %>%
   biooracle(vars = c("o2"))
-```
-
-```
-## Error in `process_raster_layer()` at envar/R/biooracle.R:206:7:
-## ! The resolution of at least one raster to be downloaded is lower than
-##   the set resolution of 5.5 km
 ```
 
 
@@ -465,10 +459,10 @@ processed_marine_ecoregion <- par_set(marine_ecoregion = "East African Coral Coa
 plot(processed_marine_ecoregion)
 ```
 
-```
-## Error in `h()`:
-## ! error in evaluating the argument 'x' in selecting a method for function 'plot': object 'processed_marine_ecoregion' not found
-```
+<div class="figure" style="text-align: center">
+<img src="figure/package_overview-unnamed-chunk-40-1.png" alt="plot of chunk unnamed-chunk-40"  />
+<p class="caption">plot of chunk unnamed-chunk-40</p>
+</div>
 
 ## 3.4. Custom shapefile
 
@@ -507,13 +501,13 @@ head(processed_singlelayer_points)
 ```
 
 ```
-##   ID       X       Y   ice
-## 1  1 4437916 2605008  0.00
-## 2  2 4531516 2769646  0.00
-## 3  3 4514090 2670359 43.72
-## 4  4 4517883 2620988  0.00
-## 5  5 4120150 2378147  0.00
-## 6  6 3953777 2400989  0.00
+##   ID       X       Y ice
+## 1  1 4087407 2393913   0
+## 2  2 4673719 2517564   0
+## 3  3 4702000 2673471   0
+## 4  4 4074334 2309450   0
+## 5  5 4255502 2642772   0
+## 6  6 3962724 2486021   0
 ```
 
 
@@ -523,13 +517,13 @@ head(processed_bilayer_points)
 ```
 
 ```
-##   ID       X       Y   ice pr_2015_12
-## 1  1 4437916 2605008  0.00          6
-## 2  2 4531516 2769646  0.00         22
-## 3  3 4514090 2670359 43.72          9
-## 4  4 4517883 2620988  0.00          9
-## 5  5 4120150 2378147  0.00          7
-## 6  6 3953777 2400989  0.00          5
+##   ID       X       Y ice pr_2015_12
+## 1  1 4087407 2393913   0          2
+## 2  2 4673719 2517564   0          1
+## 3  3 4702000 2673471   0          2
+## 4  4 4074334 2309450   0         13
+## 5  5 4255502 2642772   0         21
+## 6  6 3962724 2486021   0         18
 ```
 
 ### 3.4.2. Polygon
@@ -577,13 +571,13 @@ head(processed_singlelayer_pointsdf)
 ```
 
 ```
-##   ID       X       Y   ice
-## 1  1 4437916 2605008  0.00
-## 2  2 4531516 2769646  0.00
-## 3  3 4514090 2670359 43.72
-## 4  4 4517883 2620988  0.00
-## 5  5 4120150 2378147  0.00
-## 6  6 3953777 2400989  0.00
+##   ID       X       Y ice
+## 1  1 4087407 2393913   0
+## 2  2 4673719 2517564   0
+## 3  3 4702000 2673471   0
+## 4  4 4074334 2309450   0
+## 5  5 4255502 2642772   0
+## 6  6 3962724 2486021   0
 ```
 
 
@@ -593,13 +587,13 @@ head(processed_bilayer_pointsdf)
 ```
 
 ```
-##   ID       X       Y   ice pr_2015_12
-## 1  1 4437916 2605008  0.00          6
-## 2  2 4531516 2769646  0.00         22
-## 3  3 4514090 2670359 43.72          9
-## 4  4 4517883 2620988  0.00          9
-## 5  5 4120150 2378147  0.00          7
-## 6  6 3953777 2400989  0.00          5
+##   ID       X       Y ice pr_2015_12
+## 1  1 4087407 2393913   0          2
+## 2  2 4673719 2517564   0          1
+## 3  3 4702000 2673471   0          2
+## 4  4 4074334 2309450   0         13
+## 5  5 4255502 2642772   0         21
+## 6  6 3962724 2486021   0         18
 ```
 
 ## 3.6. Buffer
@@ -872,15 +866,15 @@ print(processed_bilayer_corr_check$vif)
 
 ```
 ##         Variables         VIF
-## 1  bio1_1981-2010 3017.910636
-## 3 bio10_1981-2010 2609.912609
-## 6       elevation   39.493463
-## 2  bio4_1981-2010   37.205430
-## 7           slope    5.943787
-## 4 bio12_1981-2010    5.341264
-## 5 bio19_1981-2010    4.695427
-## 8           trees    1.824771
-## 9             ice    1.554464
+## 1  bio1_1981-2010 2933.270334
+## 3 bio10_1981-2010 2549.226924
+## 6       elevation   37.362654
+## 2  bio4_1981-2010   34.871455
+## 7           slope    5.654897
+## 4 bio12_1981-2010    5.320165
+## 5 bio19_1981-2010    4.673379
+## 8           trees    1.805555
+## 9             ice    1.533835
 ```
 
 To better understand the structure of correlation, we can also analyze the correlation plot that was locally stored. 
@@ -908,13 +902,13 @@ head(processed_bilayer_points_corr_check[[1]])
 ```
 
 ```
-##   ID         X        Y   ice pr_2015_12
-## 1  1 11.522969 46.54760  0.00          6
-## 2  2 12.820483 48.00423  0.00         22
-## 3  3 12.542842 47.11698 43.72          9
-## 4  4 12.571004 46.67159  0.00          9
-## 5  5  7.479750 44.48369  0.00          7
-## 6  6  5.378832 44.61780  0.00          5
+##   ID         X        Y ice pr_2015_12
+## 1  1  7.061866 44.61497   0          2
+## 2  2 14.523698 45.67426   0          1
+## 3  3 15.015153 47.05874   0          2
+## 4  4  6.938675 43.84918   0         13
+## 5  5  9.141245 46.89501   0         21
+## 6  6  5.428874 45.38758   0         18
 ```
 
 # 7. Extrapolation check

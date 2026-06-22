@@ -134,8 +134,8 @@ like EPSG:4326, meters for projected CRS like EPSG:3035 or ESRI:54009).
   \item This controls the cell size of the output raster stack.
   \item Must be a positive number \code{>= 1} (e.g., \code{1}, \code{5}, \code{10}).
     It is usually an integer, but fractional multipliers are allowed to match a
-    dataset's native grid (for instance \code{biooracle()} requires \code{res = 5.5},
-    matching Bio-ORACLE's ~0.05° / ~5.5 km cells).
+    dataset's native grid. For instance \code{biooracle()} requires \code{res = 6},
+    which reproduces Bio-ORACLE's native 0.05° (~5.5 km) grid exactly.
   \item Default is \code{1} (30 arc-seconds or 0.008333333° at the equator).
   \item Higher values will multiply the original 30 arcsec resolution by the specified factor.
 }}
