@@ -35,10 +35,9 @@ process_raster_layer <- function(layer, grid, mask, res, crs, is_global = FALSE,
   # ------------------------------------------------------------------
   # Enforce resolution constraint
   # ------------------------------------------------------------------
-  # The native resolution of the source raster must not be coarser than the
-  # requested target resolution. The base resolution is ~1 km, so the target
-  # resolution in km equals the `res` multiplier. A source coarser than this
-  # would only yield artificially interpolated detail, so we stop early.
+  # The native resolution of the source raster must not be (meaningfully)
+  # coarser than the requested target resolution, since downloading a coarse
+  # source onto a finer grid only yields artificially interpolated detail.
   native_km <- tryCatch({
     rr <- terra::res(layer)
     if (isTRUE(terra::is.lonlat(layer))) {
@@ -50,10 +49,21 @@ process_raster_layer <- function(layer, grid, mask, res, crs, is_global = FALSE,
     }
   }, error = function(e) NA_real_)
 
-  if (!is.na(native_km) && native_km > res * 1.01) {
-    cli::cli_abort(
-      "The resolution of at least one raster to be downloaded is lower than the set resolution of {res} km"
-    )
+  # Tolerance for the rule above. `res` is treated as a value in kilometres,
+  # but the 30 arc-second base grid is only ~0.927 km, and several datasets that
+  # are nominally "1 km" are in fact distributed on a 0.01-degree grid
+  # (~1.11 km, e.g. the Koppen-Geiger climate zones and the IUCN habitat
+  # fractions). A strict tolerance wrongly rejects those near-1-km layers, so we
+  # allow the source to be up to 20% coarser than the requested resolution
+  # before refusing. This still catches genuinely coarse sources (e.g. a 5 km
+  # layer requested at res = 1).
+  res_tolerance <- 1.2
+
+  if (!is.na(native_km) && native_km > res * res_tolerance) {
+    cli::cli_abort(c(
+      "A source raster (~{round(native_km, 2)} km) is coarser than the requested resolution ({.code res = {res}}, ~{res} km).",
+      "i" = "Resampling it onto a finer grid would only invent detail. Increase {.arg res} in {.fn par_set} to at least {ceiling(native_km)} to match (or exceed) the native resolution."
+    ))
   }
 
   # ------------------------------------------------------------------

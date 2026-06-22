@@ -263,12 +263,24 @@ par_set <- function(country = NULL,
   }
   
   if (!is.numeric(res) || length(res) != 1 || is.na(res) || res < 1) {
-    stop("Resolution not valid. Select a positive number >= 1")
+    cli::cli_abort(c(
+      "{.arg res} must be a single number greater than or equal to 1.",
+      "x" = "You supplied {.val {res}}.",
+      "i" = "{.arg res} multiplies the ~1 km (30 arc-second) base grid: 1 keeps the native resolution, higher values aggregate to coarser cells."
+    ))
   }
-  
+
+  # Validate scale (used when retrieving country/continent boundaries)
+  if (!is.character(scale) || length(scale) != 1 || !scale %in% c("small", "medium", "large")) {
+    cli::cli_abort(c(
+      "{.arg scale} must be one of {.val small}, {.val medium}, or {.val large}.",
+      "x" = "You supplied {.val {scale}}."
+    ))
+  }
+
   # Validate buffer
-  if (!is.numeric(buffer) || length(buffer) != 1) {
-    cli::cli_abort("Buffer must be a single numeric value in kilometers.")
+  if (!is.numeric(buffer) || length(buffer) != 1 || is.na(buffer)) {
+    cli::cli_abort("{.arg buffer} must be a single numeric value, in kilometres.")
   }
   
   # Validate alpha_hull
@@ -283,7 +295,16 @@ par_set <- function(country = NULL,
   
   # Normalize CRS to standard format (handles numeric codes for EPSG vs ESRI)
   crs <- normalize_crs(crs)
-  
+
+  # Validate that the (normalized) CRS can actually be understood by sf/PROJ
+  crs_obj <- tryCatch(suppressWarnings(sf::st_crs(crs)), error = function(e) NULL)
+  if (is.null(crs_obj) || isTRUE(is.na(crs_obj))) {
+    cli::cli_abort(c(
+      "{.arg crs} {.val {crs}} is not a valid coordinate reference system.",
+      "i" = "Use an EPSG or ESRI code (e.g. {.val 4326}, {.val 3035}, {.val 54009}), or a PROJ4/WKT string."
+    ))
+  }
+
   # Check for global extent with buffer
   is_global <- is.null(country) && is.null(continent) && is.null(shape) && 
     is.null(pointsdf) && is.null(realm) && is.null(ecoregion) && is.null(biome) &&
@@ -300,16 +321,31 @@ par_set <- function(country = NULL,
   # Handle pointsdf conversion to sf
   if (!is.null(pointsdf)) {
     if (!is.data.frame(pointsdf) && !inherits(pointsdf, "sf")) {
-      cli::cli_abort("pointsdf must be a data.frame with columns 'X' and 'Y', or an sf object.")
+      cli::cli_abort(c(
+        "{.arg pointsdf} must be a {.cls data.frame} with columns {.field X} and {.field Y}, or an {.cls sf} points object.",
+        "i" = "To use a polygon study area, pass it to {.arg shape} instead of {.arg pointsdf}."
+      ))
     }
-    
+
     if (inherits(pointsdf, "sf")) {
+      # pointsdf is for points only; a polygon/line sf belongs in `shape`
+      geom_types <- unique(as.character(sf::st_geometry_type(pointsdf)))
+      if (!all(geom_types %in% c("POINT", "MULTIPOINT"))) {
+        cli::cli_abort(c(
+          "{.arg pointsdf} must contain point geometries.",
+          "x" = "The {.cls sf} object you supplied contains {.val {geom_types}} geometr{?y/ies}.",
+          "i" = "For polygons or lines, pass the object to {.arg shape} instead of {.arg pointsdf}."
+        ))
+      }
       # If it's already sf, just use it as shape
       shape <- pointsdf
       cli::cli_alert_info("Using sf object from pointsdf with CRS: {sf::st_crs(shape)$input}")
     } else if (is.data.frame(pointsdf)) {
       if (!all(c("X", "Y") %in% names(pointsdf))) {
-        cli::cli_abort("pointsdf must be a data.frame with columns 'X' and 'Y'.")
+        cli::cli_abort(c(
+          "{.arg pointsdf} must be a {.cls data.frame} with columns {.field X} and {.field Y}.",
+          "x" = "Found columns: {.field {names(pointsdf)}}."
+        ))
       }
       # Note: We assume pointsdf input is usually WGS84 or matches the desired CRS if not specified
       shape <- sf::st_as_sf(pointsdf, coords = c("X", "Y"), crs = crs)

@@ -378,7 +378,12 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
         # Historical CMIP5 (chelsav1)
         if (year_str %in% c("2041-2060", "2061-2080")) {
           if (is.null(gcm) || is.null(rcp)) {
-            cli::cli_abort("CHELSA CMIP5 projections require both {.arg gcm} and {.arg rcp}.")
+            missing <- c("gcm", "rcp")[c(is.null(gcm), is.null(rcp))]
+            cli::cli_abort(c(
+              "CHELSA CMIP5 projections (years {.val {year_str}}) require both {.arg gcm} and {.arg rcp}.",
+              "x" = "Missing: {.arg {missing}}.",
+              "i" = "e.g. {.code chelsa(vars = \"bio1\", years = \"2041-2060\", gcm = \"ACCESS1-3\", rcp = 8.5)}."
+            ))
           }
           for (g in gcm) {
             for (r in rcp) {
@@ -489,7 +494,13 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
           } else {
             # Future CHELSAv2
             if (is.null(gcm) || is.null(ssp)) {
-              cli::cli_abort("CHELSA future projections require both {.arg gcm} and {.arg ssp}.")
+              missing <- c("gcm", "ssp")[c(is.null(gcm), is.null(ssp))]
+              cli::cli_abort(c(
+                "CHELSA future projections (years {.val {year_str}}) require both {.arg gcm} and {.arg ssp}.",
+                "x" = "Missing: {.arg {missing}}.",
+                "i" = "e.g. {.code chelsa(vars = \"bio1\", years = \"2041-2070\", gcm = \"GFDL-ESM4\", ssp = 5, rcp = 8.5)}.",
+                "i" = "{.arg ssp} and {.arg rcp} combine into the scenario (ssp = 5, rcp = 8.5 -> ssp585); or pass a full code like {.val 585} to {.arg ssp} alone."
+              ))
             }
             # Combine ssp + rcp into the CMIP6 scenario code (e.g. ssp = 5, rcp = 8.5 -> "585").
             # When rcp is NULL, ssp is assumed to already encode the full scenario (e.g. "585").

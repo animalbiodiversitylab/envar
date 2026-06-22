@@ -225,7 +225,8 @@ worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NU
   # --------------------------------------------------------------------
   req_vars <- unique(tolower(vars))
   clean_vars <- list()
-  
+  unmapped <- character(0)
+
   # Logic to handle specific bio requests (e.g. bio1) vs category (bio)
   for (v in req_vars) {
     if (v %in% c("tmin", "min temp")) clean_vars[["tmin"]] <- "tmin"
@@ -236,10 +237,22 @@ worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NU
     else if (v %in% c("wind", "wind speed")) clean_vars[["wind"]] <- "wind"
     else if (v %in% c("vapr", "water vapor")) clean_vars[["vapr"]] <- "vapr"
     else if (v %in% c("elev", "elevation")) clean_vars[["elev"]] <- "elev"
-    else if (grepl("^bio", v)) {
+    else if (grepl("^bio[0-9]*$", v)) {
       # If just "bio", keep "bio" (implies all). If "bio1", keep "bio1".
-      clean_vars[[v]] <- "bio" 
+      clean_vars[[v]] <- "bio"
     }
+    else unmapped <- c(unmapped, v)
+  }
+
+  # Stop early on unrecognised variable names, with suggestions
+  if (length(unmapped) > 0) {
+    valid_wc <- c("tmin", "tmax", "tavg", "prec", "srad", "wind", "vapr", "elev",
+                  "bio", paste0("bio", 1:19))
+    sugg <- unique(unlist(lapply(unmapped, suggest_matches, choices = valid_wc)))
+    bullets <- c("x" = "{cli::qty(unmapped)}Unknown WorldClim variable{?s}: {.val {unmapped}}.")
+    if (length(sugg) > 0) bullets <- c(bullets, "i" = "Did you mean {.val {sugg}}?")
+    bullets <- c(bullets, "i" = "Valid variables: {.val {c('tmin', 'tmax', 'tavg', 'prec', 'srad', 'wind', 'vapr', 'elev', 'bio')}} (or a specific band like {.val bio1}).")
+    cli::cli_abort(c("{cli::qty(unmapped)}Invalid WorldClim variable{?s}.", bullets))
   }
   
   # Unique categories to download (e.g. if bio1 and bio2 asked, we download bio zip once)
@@ -337,7 +350,13 @@ worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NU
 
     # Future projections need both a GCM and an SSP — fail loudly if missing
     if (is.null(gcm) || is.null(ssp)) {
-      cli::cli_abort("Future projections require both {.arg gcm} and {.arg ssp}.")
+      missing <- c("gcm", "ssp")[c(is.null(gcm), is.null(ssp))]
+      cli::cli_abort(c(
+        "Future WorldClim projections require both {.arg gcm} and {.arg ssp}.",
+        "x" = "Missing: {.arg {missing}}.",
+        "i" = "e.g. {.code worldclim(vars = \"bio1\", years = \"2041-2060\", gcm = \"GFDL-ESM4\", ssp = 5, rcp = 8.5)}.",
+        "i" = "{.arg ssp} and {.arg rcp} combine into the scenario (ssp = 5, rcp = 8.5 -> ssp585); or pass a full code like {.val 585} to {.arg ssp} alone."
+      ))
     }
 
     # Clean vars for Future (only supports tmin, tmax, prec, bio)

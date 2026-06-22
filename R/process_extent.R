@@ -387,19 +387,26 @@ process_extent <- function(shape = NULL,
       }
       
       if (!is.null(realm)) {
-        extent_info$mask <- ecoregions[ecoregions$REALM == realm, ]
+        extent_info$mask <- ecoregions[!is.na(ecoregions$REALM) & ecoregions$REALM == realm, ]
+        if (nrow(extent_info$mask) == 0) cli_abort_choice("realm", realm, ecoregions$REALM)
       }
-      
+
       if (!is.null(biome)) {
-        extent_info$mask <- ecoregions[ecoregions$BIOME_NAME == biome, ]
+        extent_info$mask <- ecoregions[!is.na(ecoregions$BIOME_NAME) & ecoregions$BIOME_NAME == biome, ]
+        if (nrow(extent_info$mask) == 0) cli_abort_choice("biome", biome, ecoregions$BIOME_NAME)
       }
-      
+
       if (!is.null(ecoregion)) {
-        extent_info$mask <- ecoregions[ecoregions$ECO_NAME == ecoregion, ]
+        extent_info$mask <- ecoregions[!is.na(ecoregions$ECO_NAME) & ecoregions$ECO_NAME == ecoregion, ]
+        if (nrow(extent_info$mask) == 0) {
+          cli_abort_choice("ecoregion", ecoregion, ecoregions$ECO_NAME,
+                           reference = "{.url https://ecoregions.appspot.com/}")
+        }
       }
-      
+
     }, error = function(e) {
-      cli::cli_abort("Ecoregion/biome/realm not found: {e$message}")
+      if (inherits(e, "rlang_error")) stop(e)
+      cli::cli_abort("Could not load the ecoregion/biome/realm data: {conditionMessage(e)}")
     })
     
     # Transform to target CRS
@@ -465,10 +472,9 @@ process_extent <- function(shape = NULL,
           
           zoorealms_sf <- sf::read_sf(realms_shp)
           extent_info$mask <- zoorealms_sf[zoorealms_sf$Realm == zoorealm, ]
-          
+
           if (nrow(extent_info$mask) == 0) {
-            available_realms <- unique(zoorealms_sf$Realm)
-            cli::cli_abort("Zoorealm '{zoorealm}' not found. Available realms: {paste(available_realms, collapse = ', ')}")
+            cli_abort_choice("zoorealm", zoorealm, zoorealms_sf$Realm)
           }
         }
         
@@ -492,19 +498,19 @@ process_extent <- function(shape = NULL,
           zooregions_sf <- sf::st_transform(zooregions_sf, "EPSG:4326")
           
           extent_info$mask <- zooregions_sf[zooregions_sf$Regions == zooregion, ]
-          
+
           if (nrow(extent_info$mask) == 0) {
-            available_regions <- unique(zooregions_sf$Regions)
-            cli::cli_abort("Zooregion '{zooregion}' not found. Available regions: {paste(available_regions, collapse = ', ')}")
+            cli_abort_choice("zooregion", zooregion, zooregions_sf$Regions)
           }
         }
-        
+
       } else {
         cli::cli_abort("Process stopped due to download failure.")
       }
-      
+
     }, error = function(e) {
-      cli::cli_abort("Zoogeographic region/realm not found: {e$message}")
+      if (inherits(e, "rlang_error")) stop(e)
+      cli::cli_abort("Could not load the zoogeographic data: {conditionMessage(e)}")
     })
     
     # Transform to target CRS
@@ -565,28 +571,23 @@ process_extent <- function(shape = NULL,
         
         mountains_sf <- sf::read_sf(shp_file)
         extent_info$mask <- mountains_sf[mountains_sf$MapName == mountain_region, ]
-        
+
         if (nrow(extent_info$mask) == 0) {
-          # Try partial matching
-          matches <- grep(mountain_region, mountains_sf$MapName, ignore.case = TRUE, value = TRUE)
-          if (length(matches) > 0) {
-            cli::cli_abort("Mountain region '{mountain_region}' not found. Did you mean one of: {paste(head(matches, 10), collapse = ', ')}?")
-          } else {
-            cli::cli_abort("Mountain region '{mountain_region}' not found.")
-          }
+          cli_abort_choice("mountain_region", mountain_region, mountains_sf$MapName)
         }
-        
+
       } else {
         cli::cli_abort("Process stopped due to download failure.")
       }
-      
+
     }, error = function(e) {
-      cli::cli_abort("Mountain region not found: {e$message}")
+      if (inherits(e, "rlang_error")) stop(e)
+      cli::cli_abort("Could not load the GMBA mountain data: {conditionMessage(e)}")
     })
-    
+
     # Transform to target CRS
     extent_info$mask <- sf::st_transform(extent_info$mask, crs)
-    
+
     if (buffer != 0) {
       buffer_dist <- convert_buffer_to_units(buffer, crs)
       extent_buffered <- sf::st_buffer(extent_info$mask, dist = buffer_dist)
@@ -595,17 +596,17 @@ process_extent <- function(shape = NULL,
     } else {
       extent_info$bbox <- sf::st_bbox(extent_info$mask)
     }
-    
+
     # Apply land intersection if requested
     if (land) {
       land_sf <- get_land_boundary(scale)
       extent_info$mask <- apply_land_intersection(extent_info$mask, land_sf, crs)
       extent_info$bbox <- sf::st_bbox(extent_info$mask)
     }
-    
+
     return(extent_info)
   }
-  
+
   # ----- 4.1 MOUNTAIN REGIONS (CMEC) ------
   if (!is.null(mountain_region_cmec)) {
     extent_info$type <- "polygon"
@@ -642,23 +643,18 @@ process_extent <- function(shape = NULL,
         
         mountains_sf <- sf::read_sf(shp_file)
         extent_info$mask <- mountains_sf[mountains_sf$Name == mountain_region_cmec, ]
-        
+
         if (nrow(extent_info$mask) == 0) {
-          # Try partial matching
-          matches <- grep(mountain_region, mountains_sf$MapName, ignore.case = TRUE, value = TRUE)
-          if (length(matches) > 0) {
-            cli::cli_abort("Mountain region '{mountain_region}' not found. Did you mean one of: {paste(head(matches, 10), collapse = ', ')}?")
-          } else {
-            cli::cli_abort("Mountain region '{mountain_region}' not found.")
-          }
+          cli_abort_choice("mountain_region_cmec", mountain_region_cmec, mountains_sf$Name)
         }
-        
+
       } else {
         cli::cli_abort("Process stopped due to download failure.")
       }
-      
+
     }, error = function(e) {
-      cli::cli_abort("Mountain region not found: {e$message}")
+      if (inherits(e, "rlang_error")) stop(e)
+      cli::cli_abort("Could not load the CMEC mountain data: {conditionMessage(e)}")
     })
     
     # Transform to target CRS
@@ -721,18 +717,18 @@ process_extent <- function(shape = NULL,
         
         glaciers_sf <- sf::read_sf(shp_file)
         extent_info$mask <- glaciers_sf[glaciers_sf$full_name == glacier_region_20, ]
-        
+
         if (nrow(extent_info$mask) == 0) {
-          available_regions <- unique(glaciers_sf$full_name)
-          cli::cli_abort("Glacier region '{glacier_region_20}' not found. Available regions: {paste(available_regions, collapse = ', ')}")
+          cli_abort_choice("glacier_region_20", glacier_region_20, glaciers_sf$full_name)
         }
-        
+
       } else {
         cli::cli_abort("Process stopped due to download failure.")
       }
-      
+
     }, error = function(e) {
-      cli::cli_abort("Glacier region not found: {e$message}")
+      if (inherits(e, "rlang_error")) stop(e)
+      cli::cli_abort("Could not load the GTN-G glacier data (2023): {conditionMessage(e)}")
     })
     
     # Transform to target CRS
@@ -795,18 +791,18 @@ process_extent <- function(shape = NULL,
         
         glaciers_sf <- sf::read_sf(shp_file)
         extent_info$mask <- glaciers_sf[glaciers_sf$FULL_NAME == glacier_region_19, ]
-        
+
         if (nrow(extent_info$mask) == 0) {
-          available_regions <- unique(glaciers_sf$FULL_NAME)
-          cli::cli_abort("Glacier region '{glacier_region_19}' not found. Available regions: {paste(available_regions, collapse = ', ')}")
+          cli_abort_choice("glacier_region_19", glacier_region_19, glaciers_sf$FULL_NAME)
         }
-        
+
       } else {
         cli::cli_abort("Process stopped due to download failure.")
       }
-      
+
     }, error = function(e) {
-      cli::cli_abort("Glacier region not found: {e$message}")
+      if (inherits(e, "rlang_error")) stop(e)
+      cli::cli_abort("Could not load the GTN-G glacier data (2017): {conditionMessage(e)}")
     })
     
     # Transform to target CRS
@@ -872,20 +868,31 @@ process_extent <- function(shape = NULL,
         sf::st_crs(freshwater_sf) <- "EPSG:4326"
         
         # Convert freshwater_ecoregion to numeric if it's a character
-        feow_id <- as.numeric(freshwater_ecoregion)
-        
-        extent_info$mask <- freshwater_sf[freshwater_sf$FEOW_ID == feow_id, ]
-        
-        if (nrow(extent_info$mask) == 0) {
-          cli::cli_abort("Freshwater ecoregion with FEOW_ID '{freshwater_ecoregion}' not found. Please check the FEOW_ID at {.url https://www.feow.org/}")
+        feow_id <- suppressWarnings(as.numeric(freshwater_ecoregion))
+        if (is.na(feow_id)) {
+          cli::cli_abort(c(
+            "{.arg freshwater_ecoregion} must be a numeric FEOW_ID.",
+            "x" = "You supplied {.val {freshwater_ecoregion}}.",
+            "i" = "Look up FEOW_IDs at {.url https://www.feow.org/}."
+          ))
         }
-        
+
+        extent_info$mask <- freshwater_sf[!is.na(freshwater_sf$FEOW_ID) & freshwater_sf$FEOW_ID == feow_id, ]
+
+        if (nrow(extent_info$mask) == 0) {
+          cli::cli_abort(c(
+            "{.val {freshwater_ecoregion}} is not a valid FEOW_ID.",
+            "i" = "Valid IDs range from {min(freshwater_sf$FEOW_ID, na.rm = TRUE)} to {max(freshwater_sf$FEOW_ID, na.rm = TRUE)}; look them up at {.url https://www.feow.org/}."
+          ))
+        }
+
       } else {
         cli::cli_abort("Process stopped due to download failure.")
       }
-      
+
     }, error = function(e) {
-      cli::cli_abort("Freshwater ecoregion not found: {e$message}")
+      if (inherits(e, "rlang_error")) stop(e)
+      cli::cli_abort("Could not load the freshwater ecoregion data: {conditionMessage(e)}")
     })
     
     # Transform to target CRS
@@ -961,75 +968,65 @@ process_extent <- function(shape = NULL,
         if (!is.null(marine_realm)) {
           meow_sf <- marine_sf[marine_sf$TYPE == "MEOW", ]
           extent_info$mask <- meow_sf[meow_sf$REALM == marine_realm, ]
-          
+
           if (nrow(extent_info$mask) == 0) {
-            available_realms <- unique(meow_sf$REALM)
-            cli::cli_abort("Marine realm '{marine_realm}' not found. Available realms: {paste(available_realms, collapse = ', ')}")
+            cli_abort_choice("marine_realm", marine_realm, meow_sf$REALM)
           }
         }
-        
+
         if (!is.null(marine_province)) {
           meow_sf <- marine_sf[marine_sf$TYPE == "MEOW", ]
           extent_info$mask <- meow_sf[meow_sf$PROVINC == marine_province, ]
-          
+
           if (nrow(extent_info$mask) == 0) {
-            available_provinces <- unique(meow_sf$PROVINC)
-            cli::cli_abort("Marine province '{marine_province}' not found. Available provinces: {paste(head(available_provinces, 20), collapse = ', ')}...")
+            cli_abort_choice("marine_province", marine_province, meow_sf$PROVINC)
           }
         }
-        
+
         if (!is.null(marine_ecoregion)) {
           meow_sf <- marine_sf[marine_sf$TYPE == "MEOW", ]
           extent_info$mask <- meow_sf[meow_sf$ECOREGION == marine_ecoregion, ]
-          
+
           if (nrow(extent_info$mask) == 0) {
-            # Try partial matching
-            matches <- grep(marine_ecoregion, meow_sf$ECOREGION, ignore.case = TRUE, value = TRUE)
-            if (length(matches) > 0) {
-              cli::cli_abort("Marine ecoregion '{marine_ecoregion}' not found. Did you mean one of: {paste(head(matches, 10), collapse = ', ')}?")
-            } else {
-              cli::cli_abort("Marine ecoregion '{marine_ecoregion}' not found.")
-            }
+            cli_abort_choice("marine_ecoregion", marine_ecoregion, meow_sf$ECOREGION)
           }
         }
-        
+
         # ----- PPOW (Pelagic Provinces) - TYPE == "PPOW" -----
         if (!is.null(pelagic_realm)) {
           ppow_sf <- marine_sf[marine_sf$TYPE == "PPOW", ]
           extent_info$mask <- ppow_sf[ppow_sf$REALM == pelagic_realm, ]
-          
+
           if (nrow(extent_info$mask) == 0) {
-            available_realms <- unique(ppow_sf$REALM)
-            cli::cli_abort("Pelagic realm '{pelagic_realm}' not found. Available realms: {paste(available_realms, collapse = ', ')}")
+            cli_abort_choice("pelagic_realm", pelagic_realm, ppow_sf$REALM)
           }
         }
-        
+
         if (!is.null(pelagic_biome)) {
           ppow_sf <- marine_sf[marine_sf$TYPE == "PPOW", ]
           extent_info$mask <- ppow_sf[ppow_sf$BIOME == pelagic_biome, ]
-          
+
           if (nrow(extent_info$mask) == 0) {
-            available_biomes <- unique(ppow_sf$BIOME)
-            cli::cli_abort("Pelagic biome '{pelagic_biome}' not found. Available biomes: {paste(available_biomes, collapse = ', ')}")
+            cli_abort_choice("pelagic_biome", pelagic_biome, ppow_sf$BIOME)
           }
         }
-        
+
         if (!is.null(pelagic_province)) {
           ppow_sf <- marine_sf[marine_sf$TYPE == "PPOW", ]
           extent_info$mask <- ppow_sf[ppow_sf$PROVINC == pelagic_province, ]
-          
+
           if (nrow(extent_info$mask) == 0) {
-            available_provinces <- unique(ppow_sf$PROVINC)
-            cli::cli_abort("Pelagic province '{pelagic_province}' not found. Available provinces: {paste(head(available_provinces, 20), collapse = ', ')}...")
+            cli_abort_choice("pelagic_province", pelagic_province, ppow_sf$PROVINC)
           }
         }
-        
+
       } else {
         cli::cli_abort("Process stopped due to download failure.")
       }
-      
+
     }, error = function(e) {
-      cli::cli_abort("Marine/pelagic ecoregion/realm/province/biome not found: {e$message}")
+      if (inherits(e, "rlang_error")) stop(e)
+      cli::cli_abort("Could not load the marine/pelagic data: {conditionMessage(e)}")
     })
     
     # Transform to target CRS
@@ -1069,9 +1066,20 @@ process_extent <- function(shape = NULL,
         scale = scale
       )
     }, error = function(e) {
-      cli::cli_abort("Country not found: {.val {country}}.")
+      if (inherits(e, "rlang_error")) stop(e)
+      cli::cli_abort("Could not load country boundaries: {conditionMessage(e)}")
     })
-    
+
+    # rnaturalearth returns 0 rows (not an error) for an unknown country name
+    if (is.null(extent_info$mask) || nrow(extent_info$mask) == 0) {
+      all_countries <- tryCatch({
+        ref <- rnaturalearth::ne_countries(returnclass = "sf", scale = scale)
+        unique(c(ref$name, ref$name_long, ref$admin, ref$sovereignt))
+      }, error = function(e) character(0))
+      cli_abort_choice("country", country, all_countries,
+                       reference = "{.fn rnaturalearth::ne_countries}")
+    }
+
     # Transform to target CRS
     extent_info$mask <- sf::st_transform(extent_info$mask, crs)
     
@@ -1119,9 +1127,19 @@ process_extent <- function(shape = NULL,
         )
       }
     }, error = function(e) {
-      cli::cli_abort("Continent not found: {.val {continent}}.")
+      if (inherits(e, "rlang_error")) stop(e)
+      cli::cli_abort("Could not load continent boundaries: {conditionMessage(e)}")
     })
-    
+
+    # rnaturalearth returns 0 rows (not an error) for an unknown continent name
+    if (is.null(extent_info$mask) || nrow(extent_info$mask) == 0) {
+      all_continents <- tryCatch(
+        sort(unique(rnaturalearth::ne_countries(returnclass = "sf")$continent)),
+        error = function(e) character(0)
+      )
+      cli_abort_choice("continent", continent, c(all_continents, "Europe"))
+    }
+
     # Transform to target CRS
     extent_info$mask <- sf::st_transform(extent_info$mask, crs)
     

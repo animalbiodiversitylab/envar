@@ -1,5 +1,30 @@
 # envar (development version)
 
+* Much friendlier, more precise error messages for common mistakes:
+  - `par_set()` now validates `res` (must be a number >= 1), `scale`
+    (small/medium/large), `crs` (must be a CRS PROJ/sf understands), and
+    `pointsdf` (must be points - polygons are pointed to `shape` instead),
+    each reporting exactly what was supplied.
+  - Mistyped ecological-boundary names (`ecoregion`, `biome`, `realm`,
+    `country`, `continent`, marine/pelagic/mountain/glacier/zoogeographic
+    regions, ...) now abort with a "Did you mean ...?" suggestion and either the
+    full list of valid values or a pointer to it. Previously several of these
+    (notably `ecoregion`/`biome`/`realm` and unknown countries/continents)
+    failed silently or with a cryptic downstream error. Also fixed a bug where
+    `mountain_region_cmec` looked up the wrong column.
+  - `chelsa()` and `worldclim()` report exactly which of `gcm`/`ssp`/`rcp` is
+    missing when a future period is requested, with a worked example.
+  - `worldclim()` now rejects unknown variable names (with suggestions) instead
+    of silently dropping them.
+
+* The resolution guard in `process_raster_layer()` is no longer over-strict.
+  Several datasets that are nominally "1 km" are distributed on a 0.01° grid
+  (~1.11 km) — e.g. the Köppen-Geiger climate zones (`climatezones()`) and the
+  IUCN habitat fractions (`habitat()`) — and were being rejected at `res = 1`.
+  The tolerance now allows a source up to 20% coarser than the requested
+  resolution (still catching genuinely coarse sources), and the error message
+  reports the source resolution and suggests a suitable `res`.
+
 * `chelsa()` and `worldclim()` now take the SSP and the RCP as two separate
   arguments. For CMIP6 projections they are combined into the scenario code
   internally, so e.g. `ssp = 5` together with `rcp = 8.5` downloads the

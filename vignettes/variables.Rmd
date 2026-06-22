@@ -251,12 +251,6 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
   climatezones()
 ```
 
-```
-## Error in `process_raster_layer()` at envar/R/climatezones.R:207:7:
-## ! The resolution of at least one raster to be downloaded is lower than
-##   the set resolution of 1 km
-```
-
 
 ``` r
 plot(processed[[1]])
@@ -716,12 +710,6 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
   habitat(vars = c("Forest", "Artificial"), level = 1)
 ```
 
-```
-## Error in `process_raster_layer()` at envar/R/habitat.R:343:7:
-## ! The resolution of at least one raster to be downloaded is lower than
-##   the set resolution of 1 km
-```
-
 
 ``` r
 plot(processed[[1]])
@@ -1158,8 +1146,10 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 
 ```
 ## Error in `process_raster_layer()` at envar/R/gdpfuture.R:211:7:
-## ! The resolution of at least one raster to be downloaded is lower than
-##   the set resolution of 1 km
+## ! A source raster (~9.28 km) is coarser than the requested resolution
+##   (`res = 1`, ~1 km).
+## ℹ Resampling it onto a finer grid would only invent detail. Increase `res` in
+##   `par_set()` to at least 10 to match (or exceed) the native resolution.
 ```
 
 

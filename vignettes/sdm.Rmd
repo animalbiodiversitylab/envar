@@ -14,27 +14,9 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown_notangle}
 ---
 
-```{r, include = FALSE}
-h = 3.2
-w = 5.0
-is_check <-
-  ("CheckExEnv" %in% search()) ||
-  any(c("_R_CHECK_TIMINGS_", "_R_CHECK_LICENSE_") %in% names(Sys.getenv())) ||
-  !identical(Sys.getenv("MY_UNIVERSE"), "") ||
-  any(c("CI", "GITHUB_ACTIONS", "GITHUB_SHA") %in% names(Sys.getenv()))
-knitr::opts_chunk$set(
-  fig.height = h,
-  fig.width = w,
-  fig.align = "center",
-  eval = !is_check,
-  root.dir = normalizePath("../..")
-)
-```
 
-```{r,include = FALSE}
-# load developmental version of package
-devtools::load_all()
-```
+
+
 
 ## Introduction
 
@@ -44,7 +26,8 @@ In this tutorial we show how _envar_ can be used to streamline a species distrib
 
 We use a set of 2648 records of the species in continental Europe obtained with a search on the **[Global Biodiversity Information Facility](https://www.gbif.org)**, filtering records with a positional uncertainty lower than 1 km. Additionally, we keep only one record among those in the same or adjacent cells, using the _GeoThinneR_ package [@mestretomas2025], to reduce the negative influence of spatial autocorrelation [@boria2014]. The resulting dataset is included in the package assets (`Alps()`) and can be accessed after loading the package in the R session. 
 
-```{r,results='hide',message =FALSE,warning=FALSE}
+
+``` r
 # load required R package
 require(envar) # loads envar and dplyr packages
 
@@ -76,15 +59,27 @@ require(PresenceAbsence)
 data(Apollo)
 ```
 
-```{r}
+
+``` r
 head(Apollo)
+```
+
+```
+##          X        Y
+## 1 13.49513 47.10400
+## 2 12.62265 47.03912
+## 3  6.65878 44.16551
+## 4  5.40699 44.15510
+## 5  6.05580 44.58935
+## 6  6.86447 44.42881
 ```
 
 ## Background points
 
 First, through _envar_ we define a template raster at ~ 1 km resolution and covering a buffer of 10 km around all occurrence points. This buffer covers areas that reasonably fall within the geographical range of the species, as defined by studies that developed distribution models for butterflies across the globe [@gross2025]. This layer can thus be used as a template for the creation of a kernel density representing the intensity of sampling effort, via the _spatialEco_ package [@evans2021]. Random background points (10,000) are defined in the same area, with a probability proportional to the sampling effort defined in the previous step, using the _dismo_ package [@hijmans2017]. 
 
-```{r,results='hide',message =FALSE,warning=FALSE}
+
+``` r
 # create a layer of sampling effort, as we need a template raster
 occ_sf <- st_as_sf(Apollo, coords = c("X", "Y"), crs=4326)
 occ_sf <- st_transform(occ_sf, 3035)
@@ -106,19 +101,37 @@ bg_points <- as.data.frame(dismo::randomPoints(raster::raster(dens_ras), 10000, 
 colnames(bg_points) <- c('X', 'Y')
 ```
 
-```{r}
+
+``` r
 plot(dens_ras)
 ```
 
-```{r}
+<div class="figure" style="text-align: center">
+<img src="figure/sdm-unnamed-chunk-6-1.png" alt="plot of chunk unnamed-chunk-6"  />
+<p class="caption">plot of chunk unnamed-chunk-6</p>
+</div>
+
+
+``` r
 head(bg_points)
+```
+
+```
+##         X       Y
+## 1 3562297 2252180
+## 2 3327508 2022830
+## 3 3749040 2548611
+## 4 4111647 2622039
+## 5 3520597 2178751
+## 6 6376132 3915642
 ```
 
 ## Predictors
 
 Then, we extract predictor values over presence and background points, for a set of variables that might have an ecologically-plausible effect on the species [@nakonieczny2007], using the _envar_ package and including the automatic check for correlation among variables. We included four climatic dimensions (annual mean temperature, temperature seasonality, annual total precipitation, precipitation seasonality) for the 1981-2010 period from CHELSA [@karger2017]; three land cover variables (percentage cover of meadows, trees, and water) and a measure of landscape diversity (Shannon’s index) from [@loparrino2025]; two topographical variables (slope, northness) from [@amatulli2018]. 
 
-```{r,results='hide',message =FALSE,warning=FALSE}
+
+``` r
 # divide data in spatial blocks for model calibration
 occ_points <- cbind(st_drop_geometry(occ_sf), st_coordinates(occ_sf))
 block <- ENMeval::get.block(occ_points, bg_points, orientation = "lat_lon")
@@ -136,20 +149,37 @@ predictors <- par_set(pointsdf = data[,c("X", "Y")], crs=3035) %>%
 
 We can then check the Variance Inflation Factor (VIF):
 
-```{r}
+
+``` r
 # View the Variance Inflation Factor values
 print(predictors$vif)
 ```
 
+```
+##          Variables      VIF
+## 1   bio1_1981-2010 2.904302
+## 9            slope 2.328816
+## 3  bio12_1981-2010 1.903312
+## 6             tree 1.889323
+## 5           meadow 1.835929
+## 2   bio4_1981-2010 1.781033
+## 4  bio15_1981-2010 1.209355
+## 8          shannon 1.088311
+## 7            water 1.028720
+## 10       northness 1.001287
+```
+
 And the Pearson pairwise correlation coefficients:
 
-```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("images/Corr_plot_apollo.png")
-```
+<div class="figure" style="text-align: center">
+<img src="images/Corr_plot_apollo.png" alt="plot of chunk unnamed-chunk-10" width="100%" />
+<p class="caption">plot of chunk unnamed-chunk-10</p>
+</div>
 
 Slope and annual mean temperature (bio1) are negatively correlated with Pearson’s correlations ≥ |0.6|. No variables have a VIF higher than 3. Thus, we remove one of these variables; the one with a lower direct impact on the species physiology and distribution (slope).
 
-```{r,results='hide',message =FALSE,warning=FALSE}
+
+``` r
 # remove slope to avoid correlation issues
 predictors$data <- predictors$data[, !names(predictors$data) %in% c("slope")]
 
@@ -160,7 +190,8 @@ data <- cbind(predictors$data, data$pa); colnames(data)[colnames(data)=="data$pa
 
 Then, we fine-tune the hyperparameters of Maxent models [@phillips2006], using the _ENMeval R_ package and a four-fold spatial block cross-validation [@muscarella2014]. We use Maxent as it is the most widely used algorithm for SDMs and its hyperparameters can be easily fine-tuned [@radosavljevic2014]. In particular, we tune the regularization multiplier (a parameter that controls overfitting), and the combination of features (i.e., transformations of predictors). We select the combination of hyperparameters that minimizes the difference between the AUC (Area Under the receiver-operating characteristic Curve, a threshold-independent metric of predictive performance [@fielding1997]) in the test and training calibration sets. A higher value would imply a greater overfitting, as predictive ability would be higher on the train compared to the test set [@radosavljevic2014]. 
 
-```{r,results='hide',message =FALSE,warning=FALSE}
+
+``` r
 # Tune maxent models
 sdms <- ENMeval::ENMevaluate(
   occs = data[data$pa == "1", c(2:(ncol(data)-1))],
@@ -170,25 +201,59 @@ sdms <- ENMeval::ENMevaluate(
   partitions = "user",
   user.grp = block,
   algorithm = "maxent.jar")
+```
 
+```
+## Error in `ENMeval::ENMevaluate()`:
+## ! unused arguments (RMvalues = c(1:8), fc = c("L", "LQ", "LQH"))
+```
+
+``` r
 # row number of the best model (best test Boyce index)
 index <- which.max(sdms@results$cbi.val.avg)
+```
+
+```
+## Error in `h()`:
+## ! error in evaluating the argument 'x' in selecting a method for function 'which.max': object 'sdms' not found
+```
+
+``` r
 sdm_best <- sdms@models[[index]]
 ```
 
-```{r}
+```
+## Error:
+## ! object 'sdms' not found
+```
+
+
+``` r
 # show tuning table
 ordered <- sdms@results[order(sdms@results$cbi.val.avg), ]
+```
 
+```
+## Error:
+## ! object 'sdms' not found
+```
+
+``` r
 # best model metrics
 print(ordered[1, c("rm", "fc", "cbi.val.avg", "cbi.val.sd", "auc.val.avg", "auc.val.sd", "auc.diff.avg", "auc.diff.sd")])
+```
+
+```
+## Error:
+## ! error in evaluating the argument 'x' in selecting a method for function 'print': object of type 'closure' is not subsettable
 ```
 
 ## Prediction in the Alps
 
 The tuned model has a good predictive performance and a limited overfitting. This model can thus be applied to obtain a map of current habitat suitability for _Parnassius apollo_ over the European Alps, after retrieving predictors for this area using the _envar R_ package again.
 
-```{r,results='hide',message =FALSE,warning=FALSE}
+
+``` r
 # use 'envar' to define predictors over the prediction area (European Alps)
 predictorsAlps <- par_set(shape = Alps, crs = 3035) %>% 
                   chelsa(vars = c("bio1", "bio4", "bio12", "bio15"), years = "1981-2010") %>% 
@@ -200,18 +265,30 @@ predictorsAlps <- par_set(shape = Alps, crs = 3035) %>%
 predictionAlps <- dismo::predict(sdm_best, predictorsAlps$data)
 ```
 
+```
+## Error in `h()`:
+## ! error in evaluating the argument 'object' in selecting a method for function 'predict': object 'sdm_best' not found
+```
+
 As we added the optional function "extr_check", we checked if the environmental conditions found in the prediction area are consistent with those that were provided to the models in the training phase. Here we only checked for "strict" extrapolation only (i.e. at least one predictor outside the range found during calibration) [@zurell2012]. 
 
-```{r}
+
+``` r
 extr = predictorsAlps$extrapolation$strict
 plot(extr)
 ```
 
+<div class="figure" style="text-align: center">
+<img src="figure/sdm-unnamed-chunk-15-1.png" alt="plot of chunk unnamed-chunk-15"  />
+<p class="caption">plot of chunk unnamed-chunk-15</p>
+</div>
+
 We can then plot the prediction of habitat suitability for _Parnassius apollo_ over the European Alps:
 
-```{r, echo=FALSE, out.width="100%", fig.align='center'}
-knitr::include_graphics("images/Prediction.png")
-```
+<div class="figure" style="text-align: center">
+<img src="images/Prediction.png" alt="plot of chunk unnamed-chunk-16" width="100%" />
+<p class="caption">plot of chunk unnamed-chunk-16</p>
+</div>
 
 ## Conclusion
 
