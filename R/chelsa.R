@@ -180,7 +180,7 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using CHELSA data.\n",
-    "Citation if using standard climatology: Karger D, Conrad O, Böhner J et al (2017). Climatologies at high resolution for the earth’s land surface areas. Scientific Data 4, 170122.\n",
+    "Citation if using standard climatology: Karger D, Conrad O, B\u00f6hner J et al (2017). Climatologies at high resolution for the earth\u2019s land surface areas. Scientific Data 4, 170122.\n",
     "DOI: {.url https://doi.org/10.1038/sdata.2017.122}\n",
     "Citation if using the BIOCLIM+ dataset: Brun P, Zimmermann NE, Hari C, Pellissier L, Karger DN (2022). Global climate-related predictors at kilometer resolution for the past and future. Earth System Science Data 14, 5573-5603.\n",
     "DOI: {.url https://doi.org/10.5194/essd-14-5573-2022}" 
@@ -339,7 +339,7 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
   # Handle CHELSAcruts (1901–2016)
   if (!is.null(cruts_years)) {
     if (any(cruts_years < 1901) || any(cruts_years > 2016)) {
-      cli::cli_abort("CHELSAcruts data is only available for years 1901–2016.")
+      cli::cli_abort("CHELSAcruts data is only available for years 1901\u20132016.")
     }
     
     cli::cli_alert_info("Downloading CHELSAcruts data...")

@@ -121,7 +121,7 @@ plot(dens_ras)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/sdm-unnamed-chunk-7-1.png" alt="plot of chunk unnamed-chunk-7"  />
+<img src="figs/sdm-unnamed-chunk-7-1.png" alt="plot of chunk unnamed-chunk-7"  />
 <p class="caption">plot of chunk unnamed-chunk-7</p>
 </div>
 
@@ -262,7 +262,7 @@ plot(extr)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/sdm-unnamed-chunk-16-1.png" alt="plot of chunk unnamed-chunk-16"  />
+<img src="figs/sdm-unnamed-chunk-16-1.png" alt="plot of chunk unnamed-chunk-16"  />
 <p class="caption">plot of chunk unnamed-chunk-16</p>
 </div>
 

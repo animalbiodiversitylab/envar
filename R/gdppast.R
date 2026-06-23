@@ -59,7 +59,7 @@ gdppast <- function(x, vars, year, ...) {
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using Historical GDP and Electricity Consumption layers.\n",
-    "Citation: Chen J, Gao M, Cheng S et al (2022). Global 1 km x 1 km gridded revised real gross domestic product and electricity consumption during 1992–2019 based on calibrated nighttime light data. Scientific Data 9, 202.\n",
+    "Citation: Chen J, Gao M, Cheng S et al (2022). Global 1 km x 1 km gridded revised real gross domestic product and electricity consumption during 1992\u20132019 based on calibrated nighttime light data. Scientific Data 9, 202.\n",
     "DOI: {.url https://doi.org/10.1038/s41597-022-01322-5}\n"
   ))
   

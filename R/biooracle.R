@@ -83,7 +83,7 @@ biooracle <- function(x, vars, realm = "surface", years = "2000-2010",
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using Bio-ORACLE data.\n",
-    "Citation: Assis J, Fernández Bejarano SJ, Salazar VW, Schepers L, Gouvêa L, Fragkopoulou E, Leclercq F, Vanhoorne B, Tyberghein L, Serrão EA, Verbruggen H, De Clerck O (2024). Bio-ORACLE v3.0. Pushing marine data layers to the CMIP6 Earth system models of climate change research. Global Ecology and Biogeography, 33, e13813.\n",
+    "Citation: Assis J, Fern\u00e1ndez Bejarano SJ, Salazar VW, Schepers L, Gouv\u00eaa L, Fragkopoulou E, Leclercq F, Vanhoorne B, Tyberghein L, Serr\u00e3o EA, Verbruggen H, De Clerck O (2024). Bio-ORACLE v3.0. Pushing marine data layers to the CMIP6 Earth system models of climate change research. Global Ecology and Biogeography, 33, e13813.\n",
     "DOI: {.url https://doi.org/10.1111/geb.13813}"
   ))
   

@@ -30,6 +30,7 @@
 #' @param vars Character vector of one or more variables to download and process.
 #' @param scenario Character. The IPCC scenario: "A1B", "A2", "B1", or "B2". Ignored if year is 2010.
 #' @param year Numeric or character. The year of the product: 2010, 2050, or 2100.
+#' @param discover Logical. Kept for compatibility (currently unused).
 #' @param ... Additional arguments (currently unused).
 #'
 #' @return
@@ -56,7 +57,7 @@ geososlandcover <- function(x, vars, scenario = "A1B", year = 2010, discover = T
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using Global Simulation Land Use/Cover (GEOSOS) variables.\n",
-    "Citation: Li X, Chen G, Liu X, Liang X, Wang S, Chen Y, Pei F, Xu X (2017). A new global land-use and land-cover change product at a 1-km resolution for 2010 to 2100 based on human–environment interactions. Annals of the American Association of Geographers 107(5), 1040–1059.\n",
+    "Citation: Li X, Chen G, Liu X, Liang X, Wang S, Chen Y, Pei F, Xu X (2017). A new global land-use and land-cover change product at a 1-km resolution for 2010 to 2100 based on human\u2013environment interactions. Annals of the American Association of Geographers 107(5), 1040\u20131059.\n",
     "DOI: {.url https://doi.org/10.1080/24694452.2017.1303357}\n"
   ))
   

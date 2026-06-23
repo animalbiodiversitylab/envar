@@ -72,8 +72,8 @@ climatezones <- function(x, vars = "zones", years = "1991-2020", ssp = NULL, ...
   # Citation displayed on execution
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
-    "Using Köppen-Geiger climate classification maps.\n",
-    "Citation: Beck HE, McVicar TR, Vergopolan N, Berg A, Lutsko NJ, Dufour A, Zeng Z, Jiang X, van Dijk AIJM, Miralles DG (2023). High-resolution (1 km) Köppen-Geiger maps for 1901-2099 based on constrained CMIP6 projections. Scientific Data 10, 724.\n",
+    "Using K\u00f6ppen-Geiger climate classification maps.\n",
+    "Citation: Beck HE, McVicar TR, Vergopolan N, Berg A, Lutsko NJ, Dufour A, Zeng Z, Jiang X, van Dijk AIJM, Miralles DG (2023). High-resolution (1 km) K\u00f6ppen-Geiger maps for 1901-2099 based on constrained CMIP6 projections. Scientific Data 10, 724.\n",
     "DOI: {.url https://doi.org/10.1038/s41597-023-02549-6}\n"
   ))
   

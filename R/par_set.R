@@ -191,7 +191,8 @@
 #' species_range_land <- par_set(pointsdf = species_occurrences, alpha_hull = TRUE, land = TRUE)
 #' 
 #' # Alpha hull with buffer and land intersection
-#' species_range_full <- par_set(pointsdf = species_occurrences, alpha_hull = TRUE, buffer = 25, land = TRUE)
+#' species_range_full <- par_set(pointsdf = species_occurrences, alpha_hull = TRUE,
+#'                                buffer = 25, land = TRUE)
 #' 
 #' # Using zoogeographic regions
 #' palearctic <- par_set(zoorealm = "Palearctic")

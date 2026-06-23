@@ -123,9 +123,9 @@ var_explore <- function(source = NULL, what = "sources", error_context = NULL) {
                   "chelsa_bioclimplus" = {
                     cli::cli_ul(c(
                       "{.strong bioclimplus}: Extended bioclimatic variables (bio20-bio42)",
-                      "{.strong gdd0}: Growing degree days (base 0°C)",
-                      "{.strong gdd5}: Growing degree days (base 5°C)",
-                      "{.strong gdd10}: Growing degree days (base 10°C)",
+                      "{.strong gdd0}: Growing degree days (base 0\u00b0C)",
+                      "{.strong gdd5}: Growing degree days (base 5\u00b0C)",
+                      "{.strong gdd10}: Growing degree days (base 10\u00b0C)",
                       "{.strong nfd}: Number of frost days",
                       "{.strong scd}: Snow cover days",
                       "{.strong lgd}: Length of growing season"
@@ -245,7 +245,7 @@ var_explore <- function(source = NULL, what = "sources", error_context = NULL) {
                       "{.strong silt}: Silt content (%)",
                       "{.strong clay}: Clay content (%)",
                       "{.strong gravel}: Gravel content (%)",
-                      "{.strong bulk_density}: Bulk density (kg/m³)",
+                      "{.strong bulk_density}: Bulk density (kg/m\u00b3)",
                       "{.strong organic_carbon}: Organic carbon (% weight)",
                       "{.strong ph}: Soil pH",
                       "{.strong cec}: Cation exchange capacity (cmol/kg)",
@@ -269,7 +269,7 @@ var_explore <- function(source = NULL, what = "sources", error_context = NULL) {
                   "wind" = {
                     cli::cli_ul(c(
                       "{.strong wind_speed}: Mean wind speed (m/s)",
-                      "{.strong power_density}: Wind power density (W/m²)",
+                      "{.strong power_density}: Wind power density (W/m\u00b2)",
                       "{.strong capacity_factor}: Capacity factor"
                     ))
                     cli::cli_alert_info("Additional parameter: height (e.g., '50', '100', '150')")

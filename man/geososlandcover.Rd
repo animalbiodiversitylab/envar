@@ -17,6 +17,8 @@ Leave this empty and use `par_set()` to define parameters for download.}
 
 \item{year}{Numeric or character. The year of the product: 2010, 2050, or 2100.}
 
+\item{discover}{Logical. Kept for compatibility (currently unused).}
+
 \item{...}{Additional arguments (currently unused).}
 }
 \value{

@@ -42,7 +42,7 @@
 #'
 #' \strong{Citation:}\cr
 #' Lembrechts JJ et al. (2022)."Global maps of soil temperature." Global Change Biology 28, 3110-3144.
-#' \url{https://doi.org/10.1111/gcb.16060}
+#' \doi{10.1111/gcb.16060}
 #'
 #' Note: Please cite original sources of primary datasets where appropriate.
 #' 

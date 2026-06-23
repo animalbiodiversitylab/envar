@@ -1,6 +1,6 @@
 Package: envar
 Type: Package
-Title: Download environmental variables in R
+Title: Download and Process Environmental Variables
 Version: 0.1.0
 Authors@R: 
     c(person(given = "Andrea", family = "Simoncini", role = c("aut", "cre"), email = "simonciniandre@gmail.com",comment = c(ORCID = "0000-0002-9856-6111")),
@@ -10,11 +10,20 @@ Authors@R:
       person(given = "Mattia", family = "Falaschi", role="aut", comment = c(ORCID = "0000-0002-4511-4816")),
       person(given = "Gentile Francesco", family = "Ficetola", role = "aut", comment = c(ORCID = "0000-0003-3414-5155")),
       person(given = "Elia", family = "Lo Parrino", role ="aut", comment = c(ORCID = "0000-0001-9619-9568")))
-Description: Download environmental variables in R.
+Description: Provides a unified interface to download, harmonise and extract a
+    wide range of environmental and socio-economic variables from established
+    open data sources (such as 'WorldClim', 'CHELSA' and 'Bio-ORACLE', among
+    others) for use in macroecology and biogeography. The package handles
+    spatial subsetting to a study area, reprojection to a common coordinate
+    reference system, and extraction of values at sampling points, so that
+    predictors from heterogeneous sources can be assembled within a single
+    reproducible workflow. Helper functions for collinearity checking and
+    variable exploration are also included.
 License: GPL-3
 Language: en-US
 Encoding: UTF-8
 LazyData: true
+LazyDataCompression: xz
 Imports:
     terra,
     dplyr,
@@ -22,15 +31,14 @@ Imports:
     sf,
     rnaturalearth,
     rnaturalearthdata,
-    exactextractr,
     usdm,
     corrplot,
     cli,
     fs,
     utils,
-    archive,
+    digest,
     rangeBuilder
-RoxygenNote: 7.3.3
+RoxygenNote: 7.3.2
 Config/Needs/website:
     terra,
     dplyr,
@@ -38,7 +46,6 @@ Config/Needs/website:
     pkgdown,
     usdm,
     corrplot,
-    archive,
     rangeBuilder
 Suggests: 
     knitr,
@@ -46,6 +53,5 @@ Suggests:
 VignetteBuilder: knitr
 URL: https://animalbiodiversitylab.github.io/envar/, https://github.com/animalbiodiversitylab/envar
 BugReports: https://github.com/animalbiodiversitylab/envar/issues
-Depends: 
-    R (>= 2.10),
-    dplyr
+Depends:
+    R (>= 3.5.0)

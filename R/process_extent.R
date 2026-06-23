@@ -614,7 +614,7 @@ process_extent <- function(shape = NULL,
     
     cli::cli_alert_info(paste0(
       "Study area is defined based on the work: \n",
-      "Rahbek, C., Borregaard, M. K., Colwell, R. K., et al. (2019). Humboldt’s enigma: What causes global patterns of mountain biodiversity?. Science 365, 1108-1113.\n",
+      "Rahbek, C., Borregaard, M. K., Colwell, R. K., et al. (2019). Humboldt\u2019s enigma: What causes global patterns of mountain biodiversity?. Science 365, 1108-1113.\n",
       "DOI: {.url https://doi.org/10.1126/science.aax0149}\n"
     ))
     
@@ -1054,6 +1054,12 @@ process_extent <- function(shape = NULL,
   # ---- 9. COUNTRY ----
   if (!is.null(country)) {
     extent_info$type <- "admin"
+    if (!requireNamespace("rnaturalearthdata", quietly = TRUE)) {
+      cli::cli_abort(paste0(
+        "The {.pkg rnaturalearthdata} package is required to resolve ",
+        "country and continent boundaries. Please install it."
+      ))
+    }
     cli::cli_alert_info(paste0(
       "Using the Natural Earth database for study area definition.\n",
       "Website: {.url https://www.naturalearthdata.com/}\n"

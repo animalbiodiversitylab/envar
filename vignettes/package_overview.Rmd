@@ -57,7 +57,7 @@ plot(processed_singlelayer_lc)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-5-1.png" alt="plot of chunk unnamed-chunk-5"  />
+<img src="figs/package_overview-unnamed-chunk-5-1.png" alt="plot of chunk unnamed-chunk-5"  />
 <p class="caption">plot of chunk unnamed-chunk-5</p>
 </div>
 
@@ -78,7 +78,7 @@ plot(processed_bilayer_global)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-7-1.png" alt="plot of chunk unnamed-chunk-7"  />
+<img src="figs/package_overview-unnamed-chunk-7-1.png" alt="plot of chunk unnamed-chunk-7"  />
 <p class="caption">plot of chunk unnamed-chunk-7</p>
 </div>
 
@@ -97,7 +97,7 @@ plot(processed_bilayer_global_1)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-9-1.png" alt="plot of chunk unnamed-chunk-9"  />
+<img src="figs/package_overview-unnamed-chunk-9-1.png" alt="plot of chunk unnamed-chunk-9"  />
 <p class="caption">plot of chunk unnamed-chunk-9</p>
 </div>
 
@@ -143,7 +143,7 @@ plot(processed_bilayer_country)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-12-1.png" alt="plot of chunk unnamed-chunk-12"  />
+<img src="figs/package_overview-unnamed-chunk-12-1.png" alt="plot of chunk unnamed-chunk-12"  />
 <p class="caption">plot of chunk unnamed-chunk-12</p>
 </div>
 
@@ -161,7 +161,7 @@ plot(processed_singlelayer_africa)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-14-1.png" alt="plot of chunk unnamed-chunk-14"  />
+<img src="figs/package_overview-unnamed-chunk-14-1.png" alt="plot of chunk unnamed-chunk-14"  />
 <p class="caption">plot of chunk unnamed-chunk-14</p>
 </div>
 
@@ -179,7 +179,7 @@ plot(processed_singlelayer_europe)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-16-1.png" alt="plot of chunk unnamed-chunk-16"  />
+<img src="figs/package_overview-unnamed-chunk-16-1.png" alt="plot of chunk unnamed-chunk-16"  />
 <p class="caption">plot of chunk unnamed-chunk-16</p>
 </div>
 
@@ -201,7 +201,7 @@ plot(processed_bilayer_country_small)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-18-1.png" alt="plot of chunk unnamed-chunk-18"  />
+<img src="figs/package_overview-unnamed-chunk-18-1.png" alt="plot of chunk unnamed-chunk-18"  />
 <p class="caption">plot of chunk unnamed-chunk-18</p>
 </div>
 
@@ -219,7 +219,7 @@ plot(processed_bilayer_country_large)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-20-1.png" alt="plot of chunk unnamed-chunk-20"  />
+<img src="figs/package_overview-unnamed-chunk-20-1.png" alt="plot of chunk unnamed-chunk-20"  />
 <p class="caption">plot of chunk unnamed-chunk-20</p>
 </div>
 
@@ -241,7 +241,7 @@ plot(processed_ecoregion)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-22-1.png" alt="plot of chunk unnamed-chunk-22"  />
+<img src="figs/package_overview-unnamed-chunk-22-1.png" alt="plot of chunk unnamed-chunk-22"  />
 <p class="caption">plot of chunk unnamed-chunk-22</p>
 </div>
 
@@ -257,7 +257,7 @@ plot(processed_biome)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-24-1.png" alt="plot of chunk unnamed-chunk-24"  />
+<img src="figs/package_overview-unnamed-chunk-24-1.png" alt="plot of chunk unnamed-chunk-24"  />
 <p class="caption">plot of chunk unnamed-chunk-24</p>
 </div>
 
@@ -273,7 +273,7 @@ plot(processed_realm)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-26-1.png" alt="plot of chunk unnamed-chunk-26"  />
+<img src="figs/package_overview-unnamed-chunk-26-1.png" alt="plot of chunk unnamed-chunk-26"  />
 <p class="caption">plot of chunk unnamed-chunk-26</p>
 </div>
 
@@ -295,7 +295,7 @@ plot(processed_zooregion)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-28-1.png" alt="plot of chunk unnamed-chunk-28"  />
+<img src="figs/package_overview-unnamed-chunk-28-1.png" alt="plot of chunk unnamed-chunk-28"  />
 <p class="caption">plot of chunk unnamed-chunk-28</p>
 </div>
 
@@ -313,7 +313,7 @@ plot(processed_zoorealm)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-30-1.png" alt="plot of chunk unnamed-chunk-30"  />
+<img src="figs/package_overview-unnamed-chunk-30-1.png" alt="plot of chunk unnamed-chunk-30"  />
 <p class="caption">plot of chunk unnamed-chunk-30</p>
 </div>
 
@@ -333,7 +333,7 @@ plot(processed_mountain_region)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-32-1.png" alt="plot of chunk unnamed-chunk-32"  />
+<img src="figs/package_overview-unnamed-chunk-32-1.png" alt="plot of chunk unnamed-chunk-32"  />
 <p class="caption">plot of chunk unnamed-chunk-32</p>
 </div>
 
@@ -353,7 +353,7 @@ plot(processed_mountain_region_cmec)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-34-1.png" alt="plot of chunk unnamed-chunk-34"  />
+<img src="figs/package_overview-unnamed-chunk-34-1.png" alt="plot of chunk unnamed-chunk-34"  />
 <p class="caption">plot of chunk unnamed-chunk-34</p>
 </div>
 
@@ -418,7 +418,7 @@ plot(processed_glacier_region)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-36-1.png" alt="plot of chunk unnamed-chunk-36"  />
+<img src="figs/package_overview-unnamed-chunk-36-1.png" alt="plot of chunk unnamed-chunk-36"  />
 <p class="caption">plot of chunk unnamed-chunk-36</p>
 </div>
 
@@ -440,7 +440,7 @@ plot(processed_freshwater_ecoregion)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-38-1.png" alt="plot of chunk unnamed-chunk-38"  />
+<img src="figs/package_overview-unnamed-chunk-38-1.png" alt="plot of chunk unnamed-chunk-38"  />
 <p class="caption">plot of chunk unnamed-chunk-38</p>
 </div>
 
@@ -460,7 +460,7 @@ plot(processed_marine_ecoregion)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-40-1.png" alt="plot of chunk unnamed-chunk-40"  />
+<img src="figs/package_overview-unnamed-chunk-40-1.png" alt="plot of chunk unnamed-chunk-40"  />
 <p class="caption">plot of chunk unnamed-chunk-40</p>
 </div>
 
@@ -490,7 +490,7 @@ plot(points, add =T)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-42-1.png" alt="plot of chunk unnamed-chunk-42"  />
+<img src="figs/package_overview-unnamed-chunk-42-1.png" alt="plot of chunk unnamed-chunk-42"  />
 <p class="caption">plot of chunk unnamed-chunk-42</p>
 </div>
 
@@ -543,7 +543,7 @@ plot(processed_bilayer_shapefile[[2]])
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-46-1.png" alt="plot of chunk unnamed-chunk-46"  />
+<img src="figs/package_overview-unnamed-chunk-46-1.png" alt="plot of chunk unnamed-chunk-46"  />
 <p class="caption">plot of chunk unnamed-chunk-46</p>
 </div>
 
@@ -613,7 +613,7 @@ plot(processed_singlelayer_buffer)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-51-1.png" alt="plot of chunk unnamed-chunk-51"  />
+<img src="figs/package_overview-unnamed-chunk-51-1.png" alt="plot of chunk unnamed-chunk-51"  />
 <p class="caption">plot of chunk unnamed-chunk-51</p>
 </div>
 
@@ -631,7 +631,7 @@ plot(processed_singlelayer_negative_buffer)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-53-1.png" alt="plot of chunk unnamed-chunk-53"  />
+<img src="figs/package_overview-unnamed-chunk-53-1.png" alt="plot of chunk unnamed-chunk-53"  />
 <p class="caption">plot of chunk unnamed-chunk-53</p>
 </div>
 
@@ -664,7 +664,7 @@ plot(processed_bilayer_points_buffer)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-56-1.png" alt="plot of chunk unnamed-chunk-56"  />
+<img src="figs/package_overview-unnamed-chunk-56-1.png" alt="plot of chunk unnamed-chunk-56"  />
 <p class="caption">plot of chunk unnamed-chunk-56</p>
 </div>
 
@@ -688,7 +688,7 @@ plot(processed_nolandmask)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-58-1.png" alt="plot of chunk unnamed-chunk-58"  />
+<img src="figs/package_overview-unnamed-chunk-58-1.png" alt="plot of chunk unnamed-chunk-58"  />
 <p class="caption">plot of chunk unnamed-chunk-58</p>
 </div>
 
@@ -706,7 +706,7 @@ plot(processed_landmask)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-60-1.png" alt="plot of chunk unnamed-chunk-60"  />
+<img src="figs/package_overview-unnamed-chunk-60-1.png" alt="plot of chunk unnamed-chunk-60"  />
 <p class="caption">plot of chunk unnamed-chunk-60</p>
 </div>
 
@@ -726,7 +726,7 @@ plot(processed_range)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-62-1.png" alt="plot of chunk unnamed-chunk-62"  />
+<img src="figs/package_overview-unnamed-chunk-62-1.png" alt="plot of chunk unnamed-chunk-62"  />
 <p class="caption">plot of chunk unnamed-chunk-62</p>
 </div>
 
@@ -744,7 +744,7 @@ plot(processed_range_buffer)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-64-1.png" alt="plot of chunk unnamed-chunk-64"  />
+<img src="figs/package_overview-unnamed-chunk-64-1.png" alt="plot of chunk unnamed-chunk-64"  />
 <p class="caption">plot of chunk unnamed-chunk-64</p>
 </div>
 
@@ -780,7 +780,7 @@ plot(processed_singlelayer_projected)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-66-1.png" alt="plot of chunk unnamed-chunk-66"  />
+<img src="figs/package_overview-unnamed-chunk-66-1.png" alt="plot of chunk unnamed-chunk-66"  />
 <p class="caption">plot of chunk unnamed-chunk-66</p>
 </div>
 
@@ -933,7 +933,7 @@ plot(processed_bilayer_extr_check$extrapolation$strict)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-76-1.png" alt="plot of chunk unnamed-chunk-76"  />
+<img src="figs/package_overview-unnamed-chunk-76-1.png" alt="plot of chunk unnamed-chunk-76"  />
 <p class="caption">plot of chunk unnamed-chunk-76</p>
 </div>
 
@@ -984,7 +984,7 @@ plot(processed_bilayer_global)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-80-1.png" alt="plot of chunk unnamed-chunk-80"  />
+<img src="figs/package_overview-unnamed-chunk-80-1.png" alt="plot of chunk unnamed-chunk-80"  />
 <p class="caption">plot of chunk unnamed-chunk-80</p>
 </div>
 
@@ -1003,7 +1003,7 @@ plot(processed_bilayer_global_namask)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/package_overview-unnamed-chunk-82-1.png" alt="plot of chunk unnamed-chunk-82"  />
+<img src="figs/package_overview-unnamed-chunk-82-1.png" alt="plot of chunk unnamed-chunk-82"  />
 <p class="caption">plot of chunk unnamed-chunk-82</p>
 </div>
 

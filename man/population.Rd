@@ -38,7 +38,7 @@ under five Shared Socioeconomic Pathways (SSPs).
 
 \strong{Citation:}\cr
 Wang X, Meng X, Long Y (2022). "Projecting 1 km-grid population distributions from 2020 to 2100 globally under shared socioeconomic pathways." Scientific Data 9, 563.
-\url{https://doi.org/10.1038/s41597-022-01675-x}
+\doi{10.1038/s41597-022-01675-x}
 
 Note: Please cite original sources of primary datasets where appropriate.
 }

@@ -57,6 +57,7 @@
 #' @param ssp Numeric or character vector of Shared Socioeconomic Pathway families
 #'        (e.g., \code{1}, \code{2}, \code{5}). Combined with \code{rcp} as described above.
 #'        A complete code such as \code{"585"} may also be supplied directly (with \code{rcp = NULL}).
+#' @param ... Additional arguments (currently unused).
 #'
 #' @return
 #' If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables.

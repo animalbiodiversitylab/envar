@@ -164,7 +164,7 @@ plot(processed[[1]])
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-5-1.png" alt="plot of chunk unnamed-chunk-5"  />
+<img src="figs/variables-unnamed-chunk-5-1.png" alt="plot of chunk unnamed-chunk-5"  />
 <p class="caption">plot of chunk unnamed-chunk-5</p>
 </div>
 
@@ -257,7 +257,7 @@ plot(processed[[1]])
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-8-1.png" alt="plot of chunk unnamed-chunk-8"  />
+<img src="figs/variables-unnamed-chunk-8-1.png" alt="plot of chunk unnamed-chunk-8"  />
 <p class="caption">plot of chunk unnamed-chunk-8</p>
 </div>
 
@@ -309,7 +309,7 @@ plot(processed[[1]])
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-10-1.png" alt="plot of chunk unnamed-chunk-10"  />
+<img src="figs/variables-unnamed-chunk-10-1.png" alt="plot of chunk unnamed-chunk-10"  />
 <p class="caption">plot of chunk unnamed-chunk-10</p>
 </div>
 
@@ -350,7 +350,7 @@ plot(processed[[1]])
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-12-1.png" alt="plot of chunk unnamed-chunk-12"  />
+<img src="figs/variables-unnamed-chunk-12-1.png" alt="plot of chunk unnamed-chunk-12"  />
 <p class="caption">plot of chunk unnamed-chunk-12</p>
 </div>
 
@@ -387,7 +387,7 @@ plot(processed[[1]])
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-14-1.png" alt="plot of chunk unnamed-chunk-14"  />
+<img src="figs/variables-unnamed-chunk-14-1.png" alt="plot of chunk unnamed-chunk-14"  />
 <p class="caption">plot of chunk unnamed-chunk-14</p>
 </div>
 
@@ -425,7 +425,7 @@ plot(processed[[1]])
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-16-1.png" alt="plot of chunk unnamed-chunk-16"  />
+<img src="figs/variables-unnamed-chunk-16-1.png" alt="plot of chunk unnamed-chunk-16"  />
 <p class="caption">plot of chunk unnamed-chunk-16</p>
 </div>
 
@@ -451,7 +451,7 @@ plot(processed[[1]])
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-18-1.png" alt="plot of chunk unnamed-chunk-18"  />
+<img src="figs/variables-unnamed-chunk-18-1.png" alt="plot of chunk unnamed-chunk-18"  />
 <p class="caption">plot of chunk unnamed-chunk-18</p>
 </div>
 
@@ -497,7 +497,7 @@ plot(processed[[1]])
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-20-1.png" alt="plot of chunk unnamed-chunk-20"  />
+<img src="figs/variables-unnamed-chunk-20-1.png" alt="plot of chunk unnamed-chunk-20"  />
 <p class="caption">plot of chunk unnamed-chunk-20</p>
 </div>
 
@@ -538,7 +538,7 @@ plot(processed[[1]])
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-22-1.png" alt="plot of chunk unnamed-chunk-22"  />
+<img src="figs/variables-unnamed-chunk-22-1.png" alt="plot of chunk unnamed-chunk-22"  />
 <p class="caption">plot of chunk unnamed-chunk-22</p>
 </div>
 
@@ -589,7 +589,7 @@ plot(processed[[1]])
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-24-1.png" alt="plot of chunk unnamed-chunk-24"  />
+<img src="figs/variables-unnamed-chunk-24-1.png" alt="plot of chunk unnamed-chunk-24"  />
 <p class="caption">plot of chunk unnamed-chunk-24</p>
 </div>
 
@@ -631,7 +631,7 @@ plot(processed[[1]])
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-26-1.png" alt="plot of chunk unnamed-chunk-26"  />
+<img src="figs/variables-unnamed-chunk-26-1.png" alt="plot of chunk unnamed-chunk-26"  />
 <p class="caption">plot of chunk unnamed-chunk-26</p>
 </div>
 
@@ -716,7 +716,7 @@ plot(processed[[1]])
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-28-1.png" alt="plot of chunk unnamed-chunk-28"  />
+<img src="figs/variables-unnamed-chunk-28-1.png" alt="plot of chunk unnamed-chunk-28"  />
 <p class="caption">plot of chunk unnamed-chunk-28</p>
 </div>
 
@@ -742,7 +742,7 @@ plot(processed[[1]])
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-30-1.png" alt="plot of chunk unnamed-chunk-30"  />
+<img src="figs/variables-unnamed-chunk-30-1.png" alt="plot of chunk unnamed-chunk-30"  />
 <p class="caption">plot of chunk unnamed-chunk-30</p>
 </div>
 
@@ -795,7 +795,7 @@ plot(processed[[1]])
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-32-1.png" alt="plot of chunk unnamed-chunk-32"  />
+<img src="figs/variables-unnamed-chunk-32-1.png" alt="plot of chunk unnamed-chunk-32"  />
 <p class="caption">plot of chunk unnamed-chunk-32</p>
 </div>
 
@@ -834,7 +834,7 @@ plot(processed[[1]])
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-34-1.png" alt="plot of chunk unnamed-chunk-34"  />
+<img src="figs/variables-unnamed-chunk-34-1.png" alt="plot of chunk unnamed-chunk-34"  />
 <p class="caption">plot of chunk unnamed-chunk-34</p>
 </div>
 
@@ -924,7 +924,7 @@ plot(processed[[3]])
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-36-1.png" alt="plot of chunk unnamed-chunk-36"  />
+<img src="figs/variables-unnamed-chunk-36-1.png" alt="plot of chunk unnamed-chunk-36"  />
 <p class="caption">plot of chunk unnamed-chunk-36</p>
 </div>
 
@@ -978,7 +978,7 @@ plot(processed[[1]])
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-38-1.png" alt="plot of chunk unnamed-chunk-38"  />
+<img src="figs/variables-unnamed-chunk-38-1.png" alt="plot of chunk unnamed-chunk-38"  />
 <p class="caption">plot of chunk unnamed-chunk-38</p>
 </div>
 
@@ -1035,7 +1035,7 @@ plot(processed[[1]])
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-40-1.png" alt="plot of chunk unnamed-chunk-40"  />
+<img src="figs/variables-unnamed-chunk-40-1.png" alt="plot of chunk unnamed-chunk-40"  />
 <p class="caption">plot of chunk unnamed-chunk-40</p>
 </div>
 
@@ -1080,7 +1080,7 @@ plot(processed[[1]])
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-42-1.png" alt="plot of chunk unnamed-chunk-42"  />
+<img src="figs/variables-unnamed-chunk-42-1.png" alt="plot of chunk unnamed-chunk-42"  />
 <p class="caption">plot of chunk unnamed-chunk-42</p>
 </div>
 
@@ -1112,7 +1112,7 @@ plot(processed)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-44-1.png" alt="plot of chunk unnamed-chunk-44"  />
+<img src="figs/variables-unnamed-chunk-44-1.png" alt="plot of chunk unnamed-chunk-44"  />
 <p class="caption">plot of chunk unnamed-chunk-44</p>
 </div>
 
@@ -1158,7 +1158,7 @@ plot(processed)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-46-1.png" alt="plot of chunk unnamed-chunk-46"  />
+<img src="figs/variables-unnamed-chunk-46-1.png" alt="plot of chunk unnamed-chunk-46"  />
 <p class="caption">plot of chunk unnamed-chunk-46</p>
 </div>
 
@@ -1196,7 +1196,7 @@ plot(processed)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-48-1.png" alt="plot of chunk unnamed-chunk-48"  />
+<img src="figs/variables-unnamed-chunk-48-1.png" alt="plot of chunk unnamed-chunk-48"  />
 <p class="caption">plot of chunk unnamed-chunk-48</p>
 </div>
 
@@ -1229,7 +1229,7 @@ plot(processed)
 ```
 
 <div class="figure" style="text-align: center">
-<img src="figure/variables-unnamed-chunk-50-1.png" alt="plot of chunk unnamed-chunk-50"  />
+<img src="figs/variables-unnamed-chunk-50-1.png" alt="plot of chunk unnamed-chunk-50"  />
 <p class="caption">plot of chunk unnamed-chunk-50</p>
 </div>
 

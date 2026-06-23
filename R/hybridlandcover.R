@@ -43,7 +43,7 @@ hybridlandcover <- function(x, vars = NULL, year = 2000, ...) {
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
     "Using Hybrid Global Annual 1-km IGBP Land Cover Maps.\n",
-    "Citation: Luo Y, Zhu Z, Zhao W, Li M, Chen J, Zhao P, Sun L, Zhang Y, Duanmu Z, Chen J (2024). Hybrid Global Annual 1-km IGBP Land Cover Maps for the Period 2000–2020. Journal of Remote Sensing, 4, 0122.\n",
+    "Citation: Luo Y, Zhu Z, Zhao W, Li M, Chen J, Zhao P, Sun L, Zhang Y, Duanmu Z, Chen J (2024). Hybrid Global Annual 1-km IGBP Land Cover Maps for the Period 2000\u20132020. Journal of Remote Sensing, 4, 0122.\n",
     "DOI: {.url https://doi.org/10.34133/remotesensing.0122}\n"
   ))
   
