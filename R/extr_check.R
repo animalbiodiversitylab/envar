@@ -17,7 +17,8 @@
 #' }
 #'
 #' This function uses the environmental overlap mask approach from Zurell et al. (2012),
-#' implemented in the `mecofun` package. It uses 1 bin per variable for strict extrapolation 
+#' here implemented natively within `envar` (adapted from the `eo_mask` method described
+#' in that work). It uses 1 bin per variable for strict extrapolation
 #' detection and 5 bins per variable for combinatorial extrapolation detection.
 #'
 #' \strong{Citations:}\cr
