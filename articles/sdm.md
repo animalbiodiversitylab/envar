@@ -21,11 +21,23 @@ and can be accessed after loading the package in the R session.
 
 ``` r
 
-# load required R package
-require(envar) # loads envar and dplyr packages
+# if 'envar' is not installed on your computer, please run the code below before
+# proceeding:
+
+if (!require(remotes)) install.packages("remotes")
+remotes::install_github("animalbiodiversitylab/envar",
+                        upgrade="never",
+                        dependencies=TRUE,
+                        build_vignettes=FALSE)
+
+# load envar
+require(envar) # loads envar v. 0.1.0
 
 # the specific R versions used to run this tutorial can be installed with the code
 # hashed (e.g. remotes:: ...)
+
+# remotes::install_version("dplyr", version = "1.1.4")
+require(dplyr)
 
 # remotes::install_version("terra", version = "1.7-83")
 require(terra)
@@ -36,7 +48,7 @@ require(raster)
 # remotes::install_version("sf", version = "1.0-19")
 require(sf)
 
-# remotes::install_version("dismo", version = "1.3-14")
+# remotes::install_version("dismo", version = "1.3-16")
 require(dismo)
 
 # remotes::install_version("spatialEco", version = "2.0-4")
@@ -48,7 +60,7 @@ require(ENMeval)
 # remotes::install_version("PresenceAbsence", version = "1.1.11")
 require(PresenceAbsence)
 
-# load occurrence data 
+# load occurrence data
 data(Apollo)
 ```
 
@@ -89,14 +101,14 @@ template <- par_set(shape = occ_sf, buffer = 100, crs = 3035) %>%
             melc(vars = "ice")
 
 # create sampling bias raster
-dens_ras <- spatialEco::sp.kde(x = occ_sf, 
+dens_ras <- sp.kde(x = occ_sf,
                                ref = template, 
                                standardize = TRUE, 
                                mask = TRUE, 
                                res = res(template))
 
 # pick background points proportionally to the sampling effort
-bg_points <- as.data.frame(dismo::randomPoints(raster::raster(dens_ras), 10000, prob = TRUE))
+bg_points <- as.data.frame(randomPoints(raster(dens_ras), 10000, prob = TRUE))
 
 colnames(bg_points) <- c('X', 'Y')
 ```
@@ -106,9 +118,9 @@ colnames(bg_points) <- c('X', 'Y')
 plot(dens_ras)
 ```
 
-![plot of chunk unnamed-chunk-6](figure/sdm-unnamed-chunk-6-1.png)
+![plot of chunk unnamed-chunk-7](figure/sdm-unnamed-chunk-7-1.png)
 
-plot of chunk unnamed-chunk-6
+plot of chunk unnamed-chunk-7
 
 ``` r
 
@@ -116,12 +128,12 @@ head(bg_points)
 ```
 
     ##         X       Y
-    ## 1 3271304 2262151
-    ## 2 4102582 2583059
-    ## 3 3317537 2145210
-    ## 4 4203206 2923910
-    ## 5 3565016 2181471
-    ## 6 3455327 2211386
+    ## 1 4422583 2906686
+    ## 2 3698275 2521416
+    ## 3 3434477 2282095
+    ## 4 3576801 2305664
+    ## 5 3366489 2196882
+    ## 6 6430523 3751562
 
 ## Predictors
 
@@ -141,7 +153,7 @@ al.* 2025); two topographical variables (slope, northness) from
 
 # divide data in spatial blocks for model calibration
 occ_points <- cbind(st_drop_geometry(occ_sf), st_coordinates(occ_sf))
-block <- ENMeval::get.block(occ_points, bg_points, orientation = "lat_lon")
+block <- get.block(occ_points, bg_points, orientation = "lat_lon")
 
 # use 'envar' to extract predictor values at calibration points and check correlations 
 occ_points$pa <- rep(1, nrow(occ_points));bg_points$pa <- rep(0, nrow(bg_points));data<-rbind(occ_points,bg_points)
@@ -163,22 +175,22 @@ print(predictors$vif)
 ```
 
     ##          Variables      VIF
-    ## 1   bio1_1981-2010 2.853435
-    ## 9            slope 2.290477
-    ## 6             tree 1.951400
-    ## 5           meadow 1.924321
-    ## 3  bio12_1981-2010 1.900150
-    ## 2   bio4_1981-2010 1.734129
-    ## 4  bio15_1981-2010 1.200430
-    ## 8          shannon 1.075895
-    ## 7            water 1.030055
-    ## 10       northness 1.002298
+    ## 1   bio1_1981-2010 3.057390
+    ## 9            slope 2.312015
+    ## 3  bio12_1981-2010 1.923470
+    ## 6             tree 1.804266
+    ## 2   bio4_1981-2010 1.763484
+    ## 5           meadow 1.742288
+    ## 4  bio15_1981-2010 1.190188
+    ## 8          shannon 1.078137
+    ## 7            water 1.032021
+    ## 10       northness 1.001097
 
 And the Pearson pairwise correlation coefficients:
 
-![plot of chunk unnamed-chunk-10](images/Corr_plot_apollo.png)
+![plot of chunk unnamed-chunk-11](images/Corr_plot_apollo.png)
 
-plot of chunk unnamed-chunk-10
+plot of chunk unnamed-chunk-11
 
 Slope and annual mean temperature (bio1) are negatively correlated with
 Pearson’s correlations ≥ \|0.6\|. No variables have a VIF higher than 3.
@@ -213,7 +225,7 @@ ability would be higher on the train compared to the test set
 ``` r
 
 # Tune maxent models
-sdms <- ENMeval::ENMevaluate(
+sdms <- ENMevaluate(
   occs = data[data$pa == "1", c(2:(ncol(data)-1))],
   bg = data[data$pa == "0", c(2:(ncol(data)-1))],
   tune.args = list(rm = 1:8, fc = c("L", "LQ", "LQH")),
@@ -236,9 +248,9 @@ print(ordered[1, c("rm", "fc", "cbi.val.avg", "cbi.val.sd", "auc.val.avg", "auc.
 ```
 
     ##    rm  fc cbi.val.avg cbi.val.sd auc.val.avg auc.val.sd auc.diff.avg
-    ## 17  1 LQH      0.8055  0.3836687   0.8962352 0.06966646   0.05119765
+    ## 17  1 LQH     0.83225   0.329501   0.9006632 0.06856637   0.05274283
     ##    auc.diff.sd
-    ## 17  0.05698383
+    ## 17    0.056086
 
 ## Prediction in the Alps
 
@@ -274,16 +286,16 @@ extr = predictorsAlps$extrapolation$strict
 plot(extr)
 ```
 
-![plot of chunk unnamed-chunk-15](figure/sdm-unnamed-chunk-15-1.png)
+![plot of chunk unnamed-chunk-16](figure/sdm-unnamed-chunk-16-1.png)
 
-plot of chunk unnamed-chunk-15
+plot of chunk unnamed-chunk-16
 
 We can then plot the prediction of habitat suitability for *Parnassius
 apollo* over the European Alps:
 
-![plot of chunk unnamed-chunk-16](images/Prediction.png)
+![plot of chunk unnamed-chunk-17](images/Prediction.png)
 
-plot of chunk unnamed-chunk-16
+plot of chunk unnamed-chunk-17
 
 ## Conclusion
 

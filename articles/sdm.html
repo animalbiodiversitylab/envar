@@ -101,11 +101,23 @@ influence of spatial autocorrelation <span class="citation">(Boria
 package assets (<code><a href="../reference/Alps.html">Alps()</a></code>) and can be accessed after loading
 the package in the R session.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># load required R package</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://animalbiodiversitylab.github.io/envar/">envar</a></span><span class="op">)</span> <span class="co"># loads envar and dplyr packages</span></span>
+<code class="sourceCode R"><span><span class="co"># if 'envar' is not installed on your computer, please run the code below before</span></span>
+<span><span class="co"># proceeding:</span></span>
+<span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://remotes.r-lib.org" class="external-link">remotes</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
+<span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"animalbiodiversitylab/envar"</span>,</span>
+<span>                        upgrade<span class="op">=</span><span class="st">"never"</span>,</span>
+<span>                        dependencies<span class="op">=</span><span class="cn">TRUE</span>,</span>
+<span>                        build_vignettes<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># load envar</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://animalbiodiversitylab.github.io/envar/">envar</a></span><span class="op">)</span> <span class="co"># loads envar v. 0.1.0</span></span>
 <span></span>
 <span><span class="co"># the specific R versions used to run this tutorial can be installed with the code</span></span>
 <span><span class="co"># hashed (e.g. remotes:: ...)</span></span>
+<span></span>
+<span><span class="co"># remotes::install_version("dplyr", version = "1.1.4")</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># remotes::install_version("terra", version = "1.7-83")</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
@@ -116,7 +128,7 @@ the package in the R session.</p>
 <span><span class="co"># remotes::install_version("sf", version = "1.0-19")</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># remotes::install_version("dismo", version = "1.3-14")</span></span>
+<span><span class="co"># remotes::install_version("dismo", version = "1.3-16")</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/raster/sdm/" class="external-link">dismo</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># remotes::install_version("spatialEco", version = "2.0-4")</span></span>
@@ -128,7 +140,7 @@ the package in the R session.</p>
 <span><span class="co"># remotes::install_version("PresenceAbsence", version = "1.1.11")</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va">PresenceAbsence</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># load occurrence data </span></span>
+<span><span class="co"># load occurrence data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Apollo</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">Apollo</span><span class="op">)</span></span></code></pre></div>
@@ -165,32 +177,32 @@ to the sampling effort defined in the previous step, using the
 <span>            <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="st">"ice"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># create sampling bias raster</span></span>
-<span><span class="va">dens_ras</span> <span class="op">&lt;-</span> <span class="fu">spatialEco</span><span class="fu">::</span><span class="fu">sp.kde</span><span class="op">(</span>x <span class="op">=</span> <span class="va">occ_sf</span>, </span>
+<span><span class="va">dens_ras</span> <span class="op">&lt;-</span> <span class="fu">sp.kde</span><span class="op">(</span>x <span class="op">=</span> <span class="va">occ_sf</span>,</span>
 <span>                               ref <span class="op">=</span> <span class="va">template</span>, </span>
 <span>                               standardize <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>                               mask <span class="op">=</span> <span class="cn">TRUE</span>, </span>
 <span>                               res <span class="op">=</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">res</a></span><span class="op">(</span><span class="va">template</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># pick background points proportionally to the sampling effort</span></span>
-<span><span class="va">bg_points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu">dismo</span><span class="fu">::</span><span class="fu">randomPoints</span><span class="op">(</span><span class="fu">raster</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/raster.html" class="external-link">raster</a></span><span class="op">(</span><span class="va">dens_ras</span><span class="op">)</span>, <span class="fl">10000</span>, prob <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">bg_points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu">randomPoints</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/raster.html" class="external-link">raster</a></span><span class="op">(</span><span class="va">dens_ras</span><span class="op">)</span>, <span class="fl">10000</span>, prob <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">bg_points</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'X'</span>, <span class="st">'Y'</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dens_ras</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figure/sdm-unnamed-chunk-6-1.png" alt="plot of chunk unnamed-chunk-6"><p class="caption">
-plot of chunk unnamed-chunk-6
+<img src="figure/sdm-unnamed-chunk-7-1.png" alt="plot of chunk unnamed-chunk-7"><p class="caption">
+plot of chunk unnamed-chunk-7
 </p>
 </div>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bg_points</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##         X       Y</span></span>
-<span><span class="co">## 1 3271304 2262151</span></span>
-<span><span class="co">## 2 4102582 2583059</span></span>
-<span><span class="co">## 3 3317537 2145210</span></span>
-<span><span class="co">## 4 4203206 2923910</span></span>
-<span><span class="co">## 5 3565016 2181471</span></span>
-<span><span class="co">## 6 3455327 2211386</span></span></code></pre>
+<span><span class="co">## 1 4422583 2906686</span></span>
+<span><span class="co">## 2 3698275 2521416</span></span>
+<span><span class="co">## 3 3434477 2282095</span></span>
+<span><span class="co">## 4 3576801 2305664</span></span>
+<span><span class="co">## 5 3366489 2196882</span></span>
+<span><span class="co">## 6 6430523 3751562</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="predictors">Predictors<a class="anchor" aria-label="anchor" href="#predictors"></a>
@@ -210,7 +222,7 @@ two topographical variables (slope, northness) from <span class="citation">(Amat
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># divide data in spatial blocks for model calibration</span></span>
 <span><span class="va">occ_points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="va">occ_sf</span><span class="op">)</span>, <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html" class="external-link">st_coordinates</a></span><span class="op">(</span><span class="va">occ_sf</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">block</span> <span class="op">&lt;-</span> <span class="fu">ENMeval</span><span class="fu">::</span><span class="fu">get.block</span><span class="op">(</span><span class="va">occ_points</span>, <span class="va">bg_points</span>, orientation <span class="op">=</span> <span class="st">"lat_lon"</span><span class="op">)</span></span>
+<span><span class="va">block</span> <span class="op">&lt;-</span> <span class="fu">get.block</span><span class="op">(</span><span class="va">occ_points</span>, <span class="va">bg_points</span>, orientation <span class="op">=</span> <span class="st">"lat_lon"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># use 'envar' to extract predictor values at calibration points and check correlations </span></span>
 <span><span class="va">occ_points</span><span class="op">$</span><span class="va">pa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">occ_points</span><span class="op">)</span><span class="op">)</span>;<span class="va">bg_points</span><span class="op">$</span><span class="va">pa</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">bg_points</span><span class="op">)</span><span class="op">)</span>;<span class="va">data</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">occ_points</span>,<span class="va">bg_points</span><span class="op">)</span></span>
@@ -226,20 +238,20 @@ two topographical variables (slope, northness) from <span class="citation">(Amat
 <code class="sourceCode R"><span><span class="co"># View the Variance Inflation Factor values</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">predictors</span><span class="op">$</span><span class="va">vif</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##          Variables      VIF</span></span>
-<span><span class="co">## 1   bio1_1981-2010 2.853435</span></span>
-<span><span class="co">## 9            slope 2.290477</span></span>
-<span><span class="co">## 6             tree 1.951400</span></span>
-<span><span class="co">## 5           meadow 1.924321</span></span>
-<span><span class="co">## 3  bio12_1981-2010 1.900150</span></span>
-<span><span class="co">## 2   bio4_1981-2010 1.734129</span></span>
-<span><span class="co">## 4  bio15_1981-2010 1.200430</span></span>
-<span><span class="co">## 8          shannon 1.075895</span></span>
-<span><span class="co">## 7            water 1.030055</span></span>
-<span><span class="co">## 10       northness 1.002298</span></span></code></pre>
+<span><span class="co">## 1   bio1_1981-2010 3.057390</span></span>
+<span><span class="co">## 9            slope 2.312015</span></span>
+<span><span class="co">## 3  bio12_1981-2010 1.923470</span></span>
+<span><span class="co">## 6             tree 1.804266</span></span>
+<span><span class="co">## 2   bio4_1981-2010 1.763484</span></span>
+<span><span class="co">## 5           meadow 1.742288</span></span>
+<span><span class="co">## 4  bio15_1981-2010 1.190188</span></span>
+<span><span class="co">## 8          shannon 1.078137</span></span>
+<span><span class="co">## 7            water 1.032021</span></span>
+<span><span class="co">## 10       northness 1.001097</span></span></code></pre>
 <p>And the Pearson pairwise correlation coefficients:</p>
 <div class="figure" style="text-align: center">
-<img src="images/Corr_plot_apollo.png" alt="plot of chunk unnamed-chunk-10" width="100%"><p class="caption">
-plot of chunk unnamed-chunk-10
+<img src="images/Corr_plot_apollo.png" alt="plot of chunk unnamed-chunk-11" width="100%"><p class="caption">
+plot of chunk unnamed-chunk-11
 </p>
 </div>
 <p>Slope and annual mean temperature (bio1) are negatively correlated
@@ -272,7 +284,7 @@ to the test set <span class="citation">(Radosavljevic &amp; Anderson
 2014)</span>.</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Tune maxent models</span></span>
-<span><span class="va">sdms</span> <span class="op">&lt;-</span> <span class="fu">ENMeval</span><span class="fu">::</span><span class="fu">ENMevaluate</span><span class="op">(</span></span>
+<span><span class="va">sdms</span> <span class="op">&lt;-</span> <span class="fu">ENMevaluate</span><span class="op">(</span></span>
 <span>  occs <span class="op">=</span> <span class="va">data</span><span class="op">[</span><span class="va">data</span><span class="op">$</span><span class="va">pa</span> <span class="op">==</span> <span class="st">"1"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span><span class="op">:</span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>,</span>
 <span>  bg <span class="op">=</span> <span class="va">data</span><span class="op">[</span><span class="va">data</span><span class="op">$</span><span class="va">pa</span> <span class="op">==</span> <span class="st">"0"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span><span class="op">:</span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>,</span>
 <span>  tune.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>rm <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">8</span>, fc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"L"</span>, <span class="st">"LQ"</span>, <span class="st">"LQH"</span><span class="op">)</span><span class="op">)</span>,</span>
@@ -290,9 +302,9 @@ to the test set <span class="citation">(Radosavljevic &amp; Anderson
 <span><span class="co"># best model metrics</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">ordered</span><span class="op">[</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rm"</span>, <span class="st">"fc"</span>, <span class="st">"cbi.val.avg"</span>, <span class="st">"cbi.val.sd"</span>, <span class="st">"auc.val.avg"</span>, <span class="st">"auc.val.sd"</span>, <span class="st">"auc.diff.avg"</span>, <span class="st">"auc.diff.sd"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##    rm  fc cbi.val.avg cbi.val.sd auc.val.avg auc.val.sd auc.diff.avg</span></span>
-<span><span class="co">## 17  1 LQH      0.8055  0.3836687   0.8962352 0.06966646   0.05119765</span></span>
+<span><span class="co">## 17  1 LQH     0.83225   0.329501   0.9006632 0.06856637   0.05274283</span></span>
 <span><span class="co">##    auc.diff.sd</span></span>
-<span><span class="co">## 17  0.05698383</span></span></code></pre>
+<span><span class="co">## 17    0.056086</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="prediction-in-the-alps">Prediction in the Alps<a class="anchor" aria-label="anchor" href="#prediction-in-the-alps"></a>
@@ -321,15 +333,15 @@ predictor outside the range found during calibration) <span class="citation">(Zu
 <code class="sourceCode R"><span><span class="va">extr</span> <span class="op">=</span> <span class="va">predictorsAlps</span><span class="op">$</span><span class="va">extrapolation</span><span class="op">$</span><span class="va">strict</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">extr</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figure/sdm-unnamed-chunk-15-1.png" alt="plot of chunk unnamed-chunk-15"><p class="caption">
-plot of chunk unnamed-chunk-15
+<img src="figure/sdm-unnamed-chunk-16-1.png" alt="plot of chunk unnamed-chunk-16"><p class="caption">
+plot of chunk unnamed-chunk-16
 </p>
 </div>
 <p>We can then plot the prediction of habitat suitability for
 <em>Parnassius apollo</em> over the European Alps:</p>
 <div class="figure" style="text-align: center">
-<img src="images/Prediction.png" alt="plot of chunk unnamed-chunk-16" width="100%"><p class="caption">
-plot of chunk unnamed-chunk-16
+<img src="images/Prediction.png" alt="plot of chunk unnamed-chunk-17" width="100%"><p class="caption">
+plot of chunk unnamed-chunk-17
 </p>
 </div>
 </div>
