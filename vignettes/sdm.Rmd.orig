@@ -166,8 +166,7 @@ Then, we fine-tune the hyperparameters of Maxent models [@phillips2006], using t
 sdms <- ENMeval::ENMevaluate(
   occs = data[data$pa == "1", c(2:(ncol(data)-1))],
   bg = data[data$pa == "0", c(2:(ncol(data)-1))],
-  RMvalues = c(1:8),
-  fc = c("L", "LQ", "LQH"),
+  tune.args = list(rm = 1:8, fc = c("L", "LQ", "LQH")),
   partitions = "user",
   user.grp = block,
   algorithm = "maxent.jar")
