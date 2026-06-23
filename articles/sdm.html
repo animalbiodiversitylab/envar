@@ -185,12 +185,12 @@ plot of chunk unnamed-chunk-6
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bg_points</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##         X       Y</span></span>
-<span><span class="co">## 1 3562297 2252180</span></span>
-<span><span class="co">## 2 3327508 2022830</span></span>
-<span><span class="co">## 3 3749040 2548611</span></span>
-<span><span class="co">## 4 4111647 2622039</span></span>
-<span><span class="co">## 5 3520597 2178751</span></span>
-<span><span class="co">## 6 6376132 3915642</span></span></code></pre>
+<span><span class="co">## 1 3271304 2262151</span></span>
+<span><span class="co">## 2 4102582 2583059</span></span>
+<span><span class="co">## 3 3317537 2145210</span></span>
+<span><span class="co">## 4 4203206 2923910</span></span>
+<span><span class="co">## 5 3565016 2181471</span></span>
+<span><span class="co">## 6 3455327 2211386</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="predictors">Predictors<a class="anchor" aria-label="anchor" href="#predictors"></a>
@@ -226,16 +226,16 @@ two topographical variables (slope, northness) from <span class="citation">(Amat
 <code class="sourceCode R"><span><span class="co"># View the Variance Inflation Factor values</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">predictors</span><span class="op">$</span><span class="va">vif</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##          Variables      VIF</span></span>
-<span><span class="co">## 1   bio1_1981-2010 2.904302</span></span>
-<span><span class="co">## 9            slope 2.328816</span></span>
-<span><span class="co">## 3  bio12_1981-2010 1.903312</span></span>
-<span><span class="co">## 6             tree 1.889323</span></span>
-<span><span class="co">## 5           meadow 1.835929</span></span>
-<span><span class="co">## 2   bio4_1981-2010 1.781033</span></span>
-<span><span class="co">## 4  bio15_1981-2010 1.209355</span></span>
-<span><span class="co">## 8          shannon 1.088311</span></span>
-<span><span class="co">## 7            water 1.028720</span></span>
-<span><span class="co">## 10       northness 1.001287</span></span></code></pre>
+<span><span class="co">## 1   bio1_1981-2010 2.853435</span></span>
+<span><span class="co">## 9            slope 2.290477</span></span>
+<span><span class="co">## 6             tree 1.951400</span></span>
+<span><span class="co">## 5           meadow 1.924321</span></span>
+<span><span class="co">## 3  bio12_1981-2010 1.900150</span></span>
+<span><span class="co">## 2   bio4_1981-2010 1.734129</span></span>
+<span><span class="co">## 4  bio15_1981-2010 1.200430</span></span>
+<span><span class="co">## 8          shannon 1.075895</span></span>
+<span><span class="co">## 7            water 1.030055</span></span>
+<span><span class="co">## 10       northness 1.002298</span></span></code></pre>
 <p>And the Pearson pairwise correlation coefficients:</p>
 <div class="figure" style="text-align: center">
 <img src="images/Corr_plot_apollo.png" alt="plot of chunk unnamed-chunk-10" width="100%"><p class="caption">
@@ -275,32 +275,24 @@ to the test set <span class="citation">(Radosavljevic &amp; Anderson
 <span><span class="va">sdms</span> <span class="op">&lt;-</span> <span class="fu">ENMeval</span><span class="fu">::</span><span class="fu">ENMevaluate</span><span class="op">(</span></span>
 <span>  occs <span class="op">=</span> <span class="va">data</span><span class="op">[</span><span class="va">data</span><span class="op">$</span><span class="va">pa</span> <span class="op">==</span> <span class="st">"1"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span><span class="op">:</span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>,</span>
 <span>  bg <span class="op">=</span> <span class="va">data</span><span class="op">[</span><span class="va">data</span><span class="op">$</span><span class="va">pa</span> <span class="op">==</span> <span class="st">"0"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span><span class="op">:</span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>,</span>
-<span>  RMvalues <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">8</span><span class="op">)</span>,</span>
-<span>  fc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"L"</span>, <span class="st">"LQ"</span>, <span class="st">"LQH"</span><span class="op">)</span>,</span>
+<span>  tune.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>rm <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">8</span>, fc <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"L"</span>, <span class="st">"LQ"</span>, <span class="st">"LQH"</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  partitions <span class="op">=</span> <span class="st">"user"</span>,</span>
 <span>  user.grp <span class="op">=</span> <span class="va">block</span>,</span>
-<span>  algorithm <span class="op">=</span> <span class="st">"maxent.jar"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in `ENMeval::ENMevaluate()`:</span></span>
-<span><span class="co">## ! unused arguments (RMvalues = c(1:8), fc = c("L", "LQ", "LQH"))</span></span></code></pre>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># row number of the best model (best test Boyce index)</span></span>
-<span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/summarize-generics.html" class="external-link">which.max</a></span><span class="op">(</span><span class="va">sdms</span><span class="op">@</span><span class="va">results</span><span class="op">$</span><span class="va">cbi.val.avg</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in `h()`:</span></span>
-<span><span class="co">## ! error in evaluating the argument 'x' in selecting a method for function 'which.max': object 'sdms' not found</span></span></code></pre>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sdm_best</span> <span class="op">&lt;-</span> <span class="va">sdms</span><span class="op">@</span><span class="va">models</span><span class="op">[[</span><span class="va">index</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error:</span></span>
-<span><span class="co">## ! object 'sdms' not found</span></span></code></pre>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<span>  algorithm <span class="op">=</span> <span class="st">"maxent.jar"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># row number of the best model (best test Boyce index)</span></span>
+<span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/summarize-generics.html" class="external-link">which.max</a></span><span class="op">(</span><span class="va">sdms</span><span class="op">@</span><span class="va">results</span><span class="op">$</span><span class="va">cbi.val.avg</span><span class="op">)</span></span>
+<span><span class="va">sdm_best</span> <span class="op">&lt;-</span> <span class="va">sdms</span><span class="op">@</span><span class="va">models</span><span class="op">[[</span><span class="va">index</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># show tuning table</span></span>
-<span><span class="va">ordered</span> <span class="op">&lt;-</span> <span class="va">sdms</span><span class="op">@</span><span class="va">results</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">sdms</span><span class="op">@</span><span class="va">results</span><span class="op">$</span><span class="va">cbi.val.avg</span><span class="op">)</span>, <span class="op">]</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error:</span></span>
-<span><span class="co">## ! object 'sdms' not found</span></span></code></pre>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># best model metrics</span></span>
+<span><span class="va">ordered</span> <span class="op">&lt;-</span> <span class="va">sdms</span><span class="op">@</span><span class="va">results</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">sdms</span><span class="op">@</span><span class="va">results</span><span class="op">$</span><span class="va">cbi.val.avg</span><span class="op">)</span>, <span class="op">]</span></span>
+<span></span>
+<span><span class="co"># best model metrics</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">ordered</span><span class="op">[</span><span class="fl">1</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"rm"</span>, <span class="st">"fc"</span>, <span class="st">"cbi.val.avg"</span>, <span class="st">"cbi.val.sd"</span>, <span class="st">"auc.val.avg"</span>, <span class="st">"auc.val.sd"</span>, <span class="st">"auc.diff.avg"</span>, <span class="st">"auc.diff.sd"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error:</span></span>
-<span><span class="co">## ! error in evaluating the argument 'x' in selecting a method for function 'print': object of type 'closure' is not subsettable</span></span></code></pre>
+<pre><code><span><span class="co">##    rm  fc cbi.val.avg cbi.val.sd auc.val.avg auc.val.sd auc.diff.avg</span></span>
+<span><span class="co">## 17  1 LQH      0.8055  0.3836687   0.8962352 0.06966646   0.05119765</span></span>
+<span><span class="co">##    auc.diff.sd</span></span>
+<span><span class="co">## 17  0.05698383</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="prediction-in-the-alps">Prediction in the Alps<a class="anchor" aria-label="anchor" href="#prediction-in-the-alps"></a>
@@ -310,7 +302,7 @@ overfitting. This model can thus be applied to obtain a map of current
 habitat suitability for <em>Parnassius apollo</em> over the European
 Alps, after retrieving predictors for this area using the <em>envar
 R</em> package again.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># use 'envar' to define predictors over the prediction area (European Alps)</span></span>
 <span><span class="va">predictorsAlps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
 <span>                  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1"</span>, <span class="st">"bio4"</span>, <span class="st">"bio12"</span>, <span class="st">"bio15"</span><span class="op">)</span>, years <span class="op">=</span> <span class="st">"1981-2010"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
@@ -320,14 +312,12 @@ R</em> package again.</p>
 <span></span>
 <span><span class="co"># predict with the best model over the European Alps</span></span>
 <span><span class="va">predictionAlps</span> <span class="op">&lt;-</span> <span class="fu">dismo</span><span class="fu">::</span><span class="fu">predict</span><span class="op">(</span><span class="va">sdm_best</span>, <span class="va">predictorsAlps</span><span class="op">$</span><span class="va">data</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in `h()`:</span></span>
-<span><span class="co">## ! error in evaluating the argument 'object' in selecting a method for function 'predict': object 'sdm_best' not found</span></span></code></pre>
 <p>As we added the optional function “extr_check”, we checked if the
 environmental conditions found in the prediction area are consistent
 with those that were provided to the models in the training phase. Here
 we only checked for “strict” extrapolation only (i.e. at least one
 predictor outside the range found during calibration) <span class="citation">(Zurell <em>et al.</em> 2012)</span>.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">extr</span> <span class="op">=</span> <span class="va">predictorsAlps</span><span class="op">$</span><span class="va">extrapolation</span><span class="op">$</span><span class="va">strict</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">extr</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">

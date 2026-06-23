@@ -116,12 +116,12 @@ head(bg_points)
 ```
 
     ##         X       Y
-    ## 1 3562297 2252180
-    ## 2 3327508 2022830
-    ## 3 3749040 2548611
-    ## 4 4111647 2622039
-    ## 5 3520597 2178751
-    ## 6 6376132 3915642
+    ## 1 3271304 2262151
+    ## 2 4102582 2583059
+    ## 3 3317537 2145210
+    ## 4 4203206 2923910
+    ## 5 3565016 2181471
+    ## 6 3455327 2211386
 
 ## Predictors
 
@@ -163,16 +163,16 @@ print(predictors$vif)
 ```
 
     ##          Variables      VIF
-    ## 1   bio1_1981-2010 2.904302
-    ## 9            slope 2.328816
-    ## 3  bio12_1981-2010 1.903312
-    ## 6             tree 1.889323
-    ## 5           meadow 1.835929
-    ## 2   bio4_1981-2010 1.781033
-    ## 4  bio15_1981-2010 1.209355
-    ## 8          shannon 1.088311
-    ## 7            water 1.028720
-    ## 10       northness 1.001287
+    ## 1   bio1_1981-2010 2.853435
+    ## 9            slope 2.290477
+    ## 6             tree 1.951400
+    ## 5           meadow 1.924321
+    ## 3  bio12_1981-2010 1.900150
+    ## 2   bio4_1981-2010 1.734129
+    ## 4  bio15_1981-2010 1.200430
+    ## 8          shannon 1.075895
+    ## 7            water 1.030055
+    ## 10       northness 1.002298
 
 And the Pearson pairwise correlation coefficients:
 
@@ -216,50 +216,29 @@ ability would be higher on the train compared to the test set
 sdms <- ENMeval::ENMevaluate(
   occs = data[data$pa == "1", c(2:(ncol(data)-1))],
   bg = data[data$pa == "0", c(2:(ncol(data)-1))],
-  RMvalues = c(1:8),
-  fc = c("L", "LQ", "LQH"),
+  tune.args = list(rm = 1:8, fc = c("L", "LQ", "LQH")),
   partitions = "user",
   user.grp = block,
   algorithm = "maxent.jar")
-```
-
-    ## Error in `ENMeval::ENMevaluate()`:
-    ## ! unused arguments (RMvalues = c(1:8), fc = c("L", "LQ", "LQH"))
-
-``` r
 
 # row number of the best model (best test Boyce index)
 index <- which.max(sdms@results$cbi.val.avg)
-```
-
-    ## Error in `h()`:
-    ## ! error in evaluating the argument 'x' in selecting a method for function 'which.max': object 'sdms' not found
-
-``` r
-
 sdm_best <- sdms@models[[index]]
 ```
-
-    ## Error:
-    ## ! object 'sdms' not found
 
 ``` r
 
 # show tuning table
 ordered <- sdms@results[order(sdms@results$cbi.val.avg), ]
-```
-
-    ## Error:
-    ## ! object 'sdms' not found
-
-``` r
 
 # best model metrics
 print(ordered[1, c("rm", "fc", "cbi.val.avg", "cbi.val.sd", "auc.val.avg", "auc.val.sd", "auc.diff.avg", "auc.diff.sd")])
 ```
 
-    ## Error:
-    ## ! error in evaluating the argument 'x' in selecting a method for function 'print': object of type 'closure' is not subsettable
+    ##    rm  fc cbi.val.avg cbi.val.sd auc.val.avg auc.val.sd auc.diff.avg
+    ## 17  1 LQH      0.8055  0.3836687   0.8962352 0.06966646   0.05119765
+    ##    auc.diff.sd
+    ## 17  0.05698383
 
 ## Prediction in the Alps
 
@@ -281,9 +260,6 @@ predictorsAlps <- par_set(shape = Alps, crs = 3035) %>%
 # predict with the best model over the European Alps
 predictionAlps <- dismo::predict(sdm_best, predictorsAlps$data)
 ```
-
-    ## Error in `h()`:
-    ## ! error in evaluating the argument 'object' in selecting a method for function 'predict': object 'sdm_best' not found
 
 As we added the optional function “extr_check”, we checked if the
 environmental conditions found in the prediction area are consistent
