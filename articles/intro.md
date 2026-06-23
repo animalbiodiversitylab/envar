@@ -111,9 +111,10 @@ strict and/or combinatorial extrapolation has to be checked (argument
 calibration points as data.frame with X and Y columns (argument
 “calib_points”) and the CRS of those coordinates (argument “calib_crs”)
 if different from the default (EPSG:4326). Extrapolation is checked
-creating an environmental overlap mask, through the *mecofun R* package
-(Zurell *et al.* 2012). To check extrapolation we assume that a dataset
-of 2648 occurrences of the *Parnassius apollo* butterfly (dataset
+creating an environmental overlap mask, using a method adapted from
+Zurell et al. (2012) (Zurell *et al.* 2012) and implemented natively
+within `envar`. To check extrapolation we assume that a dataset of 2648
+occurrences of the *Parnassius apollo* butterfly (dataset
 [`Apollo()`](https://animalbiodiversitylab.github.io/envar/reference/Apollo.md)
 already included in the package) was used to train any model and that we
 want to apply the model to the European Alps later on.

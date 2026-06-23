@@ -1074,8 +1074,9 @@ strict and/or combinatorial extrapolation has to be checked (argument
 calibration points as data.frame with X and Y columns (argument
 “calib_points”) and the CRS of those coordinates (argument “calib_crs”)
 if different from the default (EPSG:4326). Extrapolation is checked
-creating an environmental overlap mask, through the *mecofun R* package
-(Zurell *et al.* 2012).
+creating an environmental overlap mask, using a method adapted from
+Zurell et al. (2012) (Zurell *et al.* 2012) and implemented natively
+within `envar`.
 
 ### 7.1. With rasters
 

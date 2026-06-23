@@ -114,7 +114,8 @@ Options are `"strict"`, `"combinatorial"`, or `c("strict", "combinatorial")`
 <li><p><strong>Combinatorial extrapolation</strong>: Each variable is within the calibration range,
     but the combination of predictors is new.</p></li>
 </ul><p>This function uses the environmental overlap mask approach from Zurell et al. (2012),
-implemented in the `mecofun` package. It uses 1 bin per variable for strict extrapolation
+here implemented natively within `envar` (adapted from the `eo_mask` method described
+in that work). It uses 1 bin per variable for strict extrapolation
 detection and 5 bins per variable for combinatorial extrapolation detection.</p>
 <p><strong>Citations:</strong><br>
 Elith J, Kearney M, Phillips S (2010). "The art of modelling range-shifting species." Methods in Ecology and Evolution 1, 330-342.
