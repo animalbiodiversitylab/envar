@@ -32,6 +32,10 @@ geososlandcover(x, vars, scenario = "A1B", year = 2010, discover = TRUE, ...)
 
   Numeric or character. The year of the product: 2010, 2050, or 2100.
 
+- discover:
+
+  Logical. Kept for compatibility (currently unused).
+
 - ...:
 
   Additional arguments (currently unused).

@@ -102,7 +102,8 @@ of x, y, and extracted values.
 
 **Citation:**  
 Lembrechts JJ et al. (2022)."Global maps of soil temperature." Global
-Change Biology 28, 3110-3144. <https://doi.org/10.1111/gcb.16060>
+Change Biology 28, 3110-3144.
+[doi:10.1111/gcb.16060](https://doi.org/10.1111/gcb.16060)
 
 Note: Please cite original sources of primary datasets where
 appropriate.

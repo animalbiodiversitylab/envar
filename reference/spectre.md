@@ -92,7 +92,7 @@ of x, y, and extracted values.
 Branco VV, Capinha C, Rocha J, Correia L, Cardoso P (2024). "SPECTRE:
 standardized global spatial data on terrestrial SPecies and ECosystems
 ThREats." Global Ecology and Biogeography, 34, e13949.
-<https://doi.org/10.1111/geb.13949>
+[doi:10.1111/geb.13949](https://doi.org/10.1111/geb.13949)
 
 Note: Many SPECTRE variables are derived from external primary datasets.
 Users should consult and cite the original sources listed in the SPECTRE

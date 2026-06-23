@@ -70,7 +70,7 @@ plot(processed_singlelayer_lc)
 ```
 
 ![plot of chunk
-unnamed-chunk-5](figure/package_overview-unnamed-chunk-5-1.png)
+unnamed-chunk-5](figs/package_overview-unnamed-chunk-5-1.png)
 
 plot of chunk unnamed-chunk-5
 
@@ -94,7 +94,7 @@ plot(processed_bilayer_global)
 ```
 
 ![plot of chunk
-unnamed-chunk-7](figure/package_overview-unnamed-chunk-7-1.png)
+unnamed-chunk-7](figs/package_overview-unnamed-chunk-7-1.png)
 
 plot of chunk unnamed-chunk-7
 
@@ -113,7 +113,7 @@ plot(processed_bilayer_global_1)
 ```
 
 ![plot of chunk
-unnamed-chunk-9](figure/package_overview-unnamed-chunk-9-1.png)
+unnamed-chunk-9](figs/package_overview-unnamed-chunk-9-1.png)
 
 plot of chunk unnamed-chunk-9
 
@@ -157,7 +157,7 @@ plot(processed_bilayer_country)
 ```
 
 ![plot of chunk
-unnamed-chunk-12](figure/package_overview-unnamed-chunk-12-1.png)
+unnamed-chunk-12](figs/package_overview-unnamed-chunk-12-1.png)
 
 plot of chunk unnamed-chunk-12
 
@@ -175,7 +175,7 @@ plot(processed_singlelayer_africa)
 ```
 
 ![plot of chunk
-unnamed-chunk-14](figure/package_overview-unnamed-chunk-14-1.png)
+unnamed-chunk-14](figs/package_overview-unnamed-chunk-14-1.png)
 
 plot of chunk unnamed-chunk-14
 
@@ -201,7 +201,7 @@ plot(processed_singlelayer_europe)
 ```
 
 ![plot of chunk
-unnamed-chunk-16](figure/package_overview-unnamed-chunk-16-1.png)
+unnamed-chunk-16](figs/package_overview-unnamed-chunk-16-1.png)
 
 plot of chunk unnamed-chunk-16
 
@@ -231,7 +231,7 @@ plot(processed_bilayer_country_small)
 ```
 
 ![plot of chunk
-unnamed-chunk-18](figure/package_overview-unnamed-chunk-18-1.png)
+unnamed-chunk-18](figs/package_overview-unnamed-chunk-18-1.png)
 
 plot of chunk unnamed-chunk-18
 
@@ -249,7 +249,7 @@ plot(processed_bilayer_country_large)
 ```
 
 ![plot of chunk
-unnamed-chunk-20](figure/package_overview-unnamed-chunk-20-1.png)
+unnamed-chunk-20](figs/package_overview-unnamed-chunk-20-1.png)
 
 plot of chunk unnamed-chunk-20
 
@@ -275,7 +275,7 @@ plot(processed_ecoregion)
 ```
 
 ![plot of chunk
-unnamed-chunk-22](figure/package_overview-unnamed-chunk-22-1.png)
+unnamed-chunk-22](figs/package_overview-unnamed-chunk-22-1.png)
 
 plot of chunk unnamed-chunk-22
 
@@ -291,7 +291,7 @@ plot(processed_biome)
 ```
 
 ![plot of chunk
-unnamed-chunk-24](figure/package_overview-unnamed-chunk-24-1.png)
+unnamed-chunk-24](figs/package_overview-unnamed-chunk-24-1.png)
 
 plot of chunk unnamed-chunk-24
 
@@ -307,7 +307,7 @@ plot(processed_realm)
 ```
 
 ![plot of chunk
-unnamed-chunk-26](figure/package_overview-unnamed-chunk-26-1.png)
+unnamed-chunk-26](figs/package_overview-unnamed-chunk-26-1.png)
 
 plot of chunk unnamed-chunk-26
 
@@ -335,7 +335,7 @@ plot(processed_zooregion)
 ```
 
 ![plot of chunk
-unnamed-chunk-28](figure/package_overview-unnamed-chunk-28-1.png)
+unnamed-chunk-28](figs/package_overview-unnamed-chunk-28-1.png)
 
 plot of chunk unnamed-chunk-28
 
@@ -355,7 +355,7 @@ plot(processed_zoorealm)
 ```
 
 ![plot of chunk
-unnamed-chunk-30](figure/package_overview-unnamed-chunk-30-1.png)
+unnamed-chunk-30](figs/package_overview-unnamed-chunk-30-1.png)
 
 plot of chunk unnamed-chunk-30
 
@@ -380,7 +380,7 @@ plot(processed_mountain_region)
 ```
 
 ![plot of chunk
-unnamed-chunk-32](figure/package_overview-unnamed-chunk-32-1.png)
+unnamed-chunk-32](figs/package_overview-unnamed-chunk-32-1.png)
 
 plot of chunk unnamed-chunk-32
 
@@ -404,7 +404,7 @@ plot(processed_mountain_region_cmec)
 ```
 
 ![plot of chunk
-unnamed-chunk-34](figure/package_overview-unnamed-chunk-34-1.png)
+unnamed-chunk-34](figs/package_overview-unnamed-chunk-34-1.png)
 
 plot of chunk unnamed-chunk-34
 
@@ -474,7 +474,7 @@ plot(processed_glacier_region)
 ```
 
 ![plot of chunk
-unnamed-chunk-36](figure/package_overview-unnamed-chunk-36-1.png)
+unnamed-chunk-36](figs/package_overview-unnamed-chunk-36-1.png)
 
 plot of chunk unnamed-chunk-36
 
@@ -501,7 +501,7 @@ plot(processed_freshwater_ecoregion)
 ```
 
 ![plot of chunk
-unnamed-chunk-38](figure/package_overview-unnamed-chunk-38-1.png)
+unnamed-chunk-38](figs/package_overview-unnamed-chunk-38-1.png)
 
 plot of chunk unnamed-chunk-38
 
@@ -530,7 +530,7 @@ plot(processed_marine_ecoregion)
 ```
 
 ![plot of chunk
-unnamed-chunk-40](figure/package_overview-unnamed-chunk-40-1.png)
+unnamed-chunk-40](figs/package_overview-unnamed-chunk-40-1.png)
 
 plot of chunk unnamed-chunk-40
 
@@ -563,7 +563,7 @@ plot(points, add =T)
 ```
 
 ![plot of chunk
-unnamed-chunk-42](figure/package_overview-unnamed-chunk-42-1.png)
+unnamed-chunk-42](figs/package_overview-unnamed-chunk-42-1.png)
 
 plot of chunk unnamed-chunk-42
 
@@ -615,7 +615,7 @@ plot(processed_bilayer_shapefile[[2]])
 ```
 
 ![plot of chunk
-unnamed-chunk-46](figure/package_overview-unnamed-chunk-46-1.png)
+unnamed-chunk-46](figs/package_overview-unnamed-chunk-46-1.png)
 
 plot of chunk unnamed-chunk-46
 
@@ -692,7 +692,7 @@ plot(processed_singlelayer_buffer)
 ```
 
 ![plot of chunk
-unnamed-chunk-51](figure/package_overview-unnamed-chunk-51-1.png)
+unnamed-chunk-51](figs/package_overview-unnamed-chunk-51-1.png)
 
 plot of chunk unnamed-chunk-51
 
@@ -710,7 +710,7 @@ plot(processed_singlelayer_negative_buffer)
 ```
 
 ![plot of chunk
-unnamed-chunk-53](figure/package_overview-unnamed-chunk-53-1.png)
+unnamed-chunk-53](figs/package_overview-unnamed-chunk-53-1.png)
 
 plot of chunk unnamed-chunk-53
 
@@ -751,7 +751,7 @@ plot(processed_bilayer_points_buffer)
 ```
 
 ![plot of chunk
-unnamed-chunk-56](figure/package_overview-unnamed-chunk-56-1.png)
+unnamed-chunk-56](figs/package_overview-unnamed-chunk-56-1.png)
 
 plot of chunk unnamed-chunk-56
 
@@ -783,7 +783,7 @@ plot(processed_nolandmask)
 ```
 
 ![plot of chunk
-unnamed-chunk-58](figure/package_overview-unnamed-chunk-58-1.png)
+unnamed-chunk-58](figs/package_overview-unnamed-chunk-58-1.png)
 
 plot of chunk unnamed-chunk-58
 
@@ -801,7 +801,7 @@ plot(processed_landmask)
 ```
 
 ![plot of chunk
-unnamed-chunk-60](figure/package_overview-unnamed-chunk-60-1.png)
+unnamed-chunk-60](figs/package_overview-unnamed-chunk-60-1.png)
 
 plot of chunk unnamed-chunk-60
 
@@ -830,7 +830,7 @@ plot(processed_range)
 ```
 
 ![plot of chunk
-unnamed-chunk-62](figure/package_overview-unnamed-chunk-62-1.png)
+unnamed-chunk-62](figs/package_overview-unnamed-chunk-62-1.png)
 
 plot of chunk unnamed-chunk-62
 
@@ -849,7 +849,7 @@ plot(processed_range_buffer)
 ```
 
 ![plot of chunk
-unnamed-chunk-64](figure/package_overview-unnamed-chunk-64-1.png)
+unnamed-chunk-64](figs/package_overview-unnamed-chunk-64-1.png)
 
 plot of chunk unnamed-chunk-64
 
@@ -910,7 +910,7 @@ plot(processed_singlelayer_projected)
 ```
 
 ![plot of chunk
-unnamed-chunk-66](figure/package_overview-unnamed-chunk-66-1.png)
+unnamed-chunk-66](figs/package_overview-unnamed-chunk-66-1.png)
 
 plot of chunk unnamed-chunk-66
 
@@ -1097,7 +1097,7 @@ plot(processed_bilayer_extr_check$extrapolation$strict)
 ```
 
 ![plot of chunk
-unnamed-chunk-76](figure/package_overview-unnamed-chunk-76-1.png)
+unnamed-chunk-76](figs/package_overview-unnamed-chunk-76-1.png)
 
 plot of chunk unnamed-chunk-76
 
@@ -1157,7 +1157,7 @@ plot(processed_bilayer_global)
 ```
 
 ![plot of chunk
-unnamed-chunk-80](figure/package_overview-unnamed-chunk-80-1.png)
+unnamed-chunk-80](figs/package_overview-unnamed-chunk-80-1.png)
 
 plot of chunk unnamed-chunk-80
 
@@ -1176,7 +1176,7 @@ plot(processed_bilayer_global_namask)
 ```
 
 ![plot of chunk
-unnamed-chunk-82](figure/package_overview-unnamed-chunk-82-1.png)
+unnamed-chunk-82](figs/package_overview-unnamed-chunk-82-1.png)
 
 plot of chunk unnamed-chunk-82
 

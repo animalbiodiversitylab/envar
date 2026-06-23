@@ -197,7 +197,7 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
-![plot of chunk unnamed-chunk-5](figure/variables-unnamed-chunk-5-1.png)
+![plot of chunk unnamed-chunk-5](figs/variables-unnamed-chunk-5-1.png)
 
 plot of chunk unnamed-chunk-5
 
@@ -298,7 +298,7 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
-![plot of chunk unnamed-chunk-8](figure/variables-unnamed-chunk-8-1.png)
+![plot of chunk unnamed-chunk-8](figs/variables-unnamed-chunk-8-1.png)
 
 plot of chunk unnamed-chunk-8
 
@@ -358,8 +358,7 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
-![plot of chunk
-unnamed-chunk-10](figure/variables-unnamed-chunk-10-1.png)
+![plot of chunk unnamed-chunk-10](figs/variables-unnamed-chunk-10-1.png)
 
 plot of chunk unnamed-chunk-10
 
@@ -407,8 +406,7 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
-![plot of chunk
-unnamed-chunk-12](figure/variables-unnamed-chunk-12-1.png)
+![plot of chunk unnamed-chunk-12](figs/variables-unnamed-chunk-12-1.png)
 
 plot of chunk unnamed-chunk-12
 
@@ -457,8 +455,7 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
-![plot of chunk
-unnamed-chunk-14](figure/variables-unnamed-chunk-14-1.png)
+![plot of chunk unnamed-chunk-14](figs/variables-unnamed-chunk-14-1.png)
 
 plot of chunk unnamed-chunk-14
 
@@ -501,8 +498,7 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
-![plot of chunk
-unnamed-chunk-16](figure/variables-unnamed-chunk-16-1.png)
+![plot of chunk unnamed-chunk-16](figs/variables-unnamed-chunk-16-1.png)
 
 plot of chunk unnamed-chunk-16
 
@@ -531,8 +527,7 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
-![plot of chunk
-unnamed-chunk-18](figure/variables-unnamed-chunk-18-1.png)
+![plot of chunk unnamed-chunk-18](figs/variables-unnamed-chunk-18-1.png)
 
 plot of chunk unnamed-chunk-18
 
@@ -581,8 +576,7 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
-![plot of chunk
-unnamed-chunk-20](figure/variables-unnamed-chunk-20-1.png)
+![plot of chunk unnamed-chunk-20](figs/variables-unnamed-chunk-20-1.png)
 
 plot of chunk unnamed-chunk-20
 
@@ -628,8 +622,7 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
-![plot of chunk
-unnamed-chunk-22](figure/variables-unnamed-chunk-22-1.png)
+![plot of chunk unnamed-chunk-22](figs/variables-unnamed-chunk-22-1.png)
 
 plot of chunk unnamed-chunk-22
 
@@ -686,8 +679,7 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
-![plot of chunk
-unnamed-chunk-24](figure/variables-unnamed-chunk-24-1.png)
+![plot of chunk unnamed-chunk-24](figs/variables-unnamed-chunk-24-1.png)
 
 plot of chunk unnamed-chunk-24
 
@@ -732,8 +724,7 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
-![plot of chunk
-unnamed-chunk-26](figure/variables-unnamed-chunk-26-1.png)
+![plot of chunk unnamed-chunk-26](figs/variables-unnamed-chunk-26-1.png)
 
 plot of chunk unnamed-chunk-26
 
@@ -843,8 +834,7 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
-![plot of chunk
-unnamed-chunk-28](figure/variables-unnamed-chunk-28-1.png)
+![plot of chunk unnamed-chunk-28](figs/variables-unnamed-chunk-28-1.png)
 
 plot of chunk unnamed-chunk-28
 
@@ -872,8 +862,7 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
-![plot of chunk
-unnamed-chunk-30](figure/variables-unnamed-chunk-30-1.png)
+![plot of chunk unnamed-chunk-30](figs/variables-unnamed-chunk-30-1.png)
 
 plot of chunk unnamed-chunk-30
 
@@ -928,8 +917,7 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
-![plot of chunk
-unnamed-chunk-32](figure/variables-unnamed-chunk-32-1.png)
+![plot of chunk unnamed-chunk-32](figs/variables-unnamed-chunk-32-1.png)
 
 plot of chunk unnamed-chunk-32
 
@@ -971,8 +959,7 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
-![plot of chunk
-unnamed-chunk-34](figure/variables-unnamed-chunk-34-1.png)
+![plot of chunk unnamed-chunk-34](figs/variables-unnamed-chunk-34-1.png)
 
 plot of chunk unnamed-chunk-34
 
@@ -1088,8 +1075,7 @@ freshwater(vars = c("elevation", "slope", "tmin"), algorithm = "mn", month=12)
 plot(processed[[3]])
 ```
 
-![plot of chunk
-unnamed-chunk-36](figure/variables-unnamed-chunk-36-1.png)
+![plot of chunk unnamed-chunk-36](figs/variables-unnamed-chunk-36-1.png)
 
 plot of chunk unnamed-chunk-36
 
@@ -1154,8 +1140,7 @@ processed <- par_set(marine_ecoregion = "East African Coral Coast", res = 6) %>%
 plot(processed[[1]])
 ```
 
-![plot of chunk
-unnamed-chunk-38](figure/variables-unnamed-chunk-38-1.png)
+![plot of chunk unnamed-chunk-38](figs/variables-unnamed-chunk-38-1.png)
 
 plot of chunk unnamed-chunk-38
 
@@ -1216,8 +1201,7 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
-![plot of chunk
-unnamed-chunk-40](figure/variables-unnamed-chunk-40-1.png)
+![plot of chunk unnamed-chunk-40](figs/variables-unnamed-chunk-40-1.png)
 
 plot of chunk unnamed-chunk-40
 
@@ -1272,8 +1256,7 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed[[1]])
 ```
 
-![plot of chunk
-unnamed-chunk-42](figure/variables-unnamed-chunk-42-1.png)
+![plot of chunk unnamed-chunk-42](figs/variables-unnamed-chunk-42-1.png)
 
 plot of chunk unnamed-chunk-42
 
@@ -1308,8 +1291,7 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed)
 ```
 
-![plot of chunk
-unnamed-chunk-44](figure/variables-unnamed-chunk-44-1.png)
+![plot of chunk unnamed-chunk-44](figs/variables-unnamed-chunk-44-1.png)
 
 plot of chunk unnamed-chunk-44
 
@@ -1357,8 +1339,7 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed)
 ```
 
-![plot of chunk
-unnamed-chunk-46](figure/variables-unnamed-chunk-46-1.png)
+![plot of chunk unnamed-chunk-46](figs/variables-unnamed-chunk-46-1.png)
 
 plot of chunk unnamed-chunk-46
 
@@ -1400,8 +1381,7 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed)
 ```
 
-![plot of chunk
-unnamed-chunk-48](figure/variables-unnamed-chunk-48-1.png)
+![plot of chunk unnamed-chunk-48](figs/variables-unnamed-chunk-48-1.png)
 
 plot of chunk unnamed-chunk-48
 
@@ -1443,8 +1423,7 @@ processed <- par_set(shape = Alps, crs = 3035) %>%
 plot(processed)
 ```
 
-![plot of chunk
-unnamed-chunk-50](figure/variables-unnamed-chunk-50-1.png)
+![plot of chunk unnamed-chunk-50](figs/variables-unnamed-chunk-50-1.png)
 
 plot of chunk unnamed-chunk-50
 

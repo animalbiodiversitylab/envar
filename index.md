@@ -98,9 +98,9 @@ specific to each source are printed in the console during the download
 process. To cite the package, please use:
 
 > Simoncini A, Bertoncini M, Cerofolini A, Dalpasso A, Falaschi M, Lo
-> Parrino E (2025) envar: an R package to streamline the retrieval and
+> Parrino E (2026) envar: an R package to streamline the retrieval and
 > processing of environmental variables for macroecology and
-> biogeography. Submitted to Ecological Informatics.
+> biogeography. Under review at Ecological Informatics.
 
 ## Usage
 

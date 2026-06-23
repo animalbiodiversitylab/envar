@@ -36,13 +36,14 @@ Source:
 [`inst/CITATION`](https://github.com/animalbiodiversitylab/envar/blob/main/inst/CITATION)
 
 Simoncini, A., Bertoncini, M., Cerofolini, A., Dalpasso, A., Ficetola,
-G.F., Falaschi, M., & Lo Parrino, E. (2025). 'envar': an R package to
+G.F., Falaschi, M., & Lo Parrino, E. (2026). 'envar': an R package to
 streamline the retrieval and processing of environmental variables for
-macroecology and biogeography. Ecography, submitted.
+macroecology and biogeography. Ecological Informatics, under review.
 
     @Article{,
       title = {'envar': an R package to streamline the retrieval and processing of environmental variables for macroecology and biogeography},
       author = {Andrea Simoncini and Michele Bertoncini and Andrea Cerofolini and Andrea Dalpasso and Gentile Francesco Ficetola and Mattia Falaschi and Elia {Lo Parrino}},
-      journal = {Ecography},
-      year = {submitted},
+      journal = {Ecological Informatics},
+      year = {2026},
+      note = {Under review},
     }

@@ -118,7 +118,7 @@ colnames(bg_points) <- c('X', 'Y')
 plot(dens_ras)
 ```
 
-![plot of chunk unnamed-chunk-7](figure/sdm-unnamed-chunk-7-1.png)
+![plot of chunk unnamed-chunk-7](figs/sdm-unnamed-chunk-7-1.png)
 
 plot of chunk unnamed-chunk-7
 
@@ -286,7 +286,7 @@ extr = predictorsAlps$extrapolation$strict
 plot(extr)
 ```
 
-![plot of chunk unnamed-chunk-16](figure/sdm-unnamed-chunk-16-1.png)
+![plot of chunk unnamed-chunk-16](figs/sdm-unnamed-chunk-16-1.png)
 
 plot of chunk unnamed-chunk-16
 

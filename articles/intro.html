@@ -188,12 +188,12 @@ occurrences of the <em>Parnassius apollo</em> butterfly (dataset
 any model and that we want to apply the model to the European Alps later
 on.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span>, res <span class="op">=</span> <span class="fl">2</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span>, res <span class="op">=</span> <span class="fl">2</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>             <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1"</span>, <span class="st">"bio4"</span>, <span class="st">"bio10"</span>, <span class="st">"bio12"</span>, <span class="st">"bio19"</span><span class="op">)</span>,</span>
-<span>                    years <span class="op">=</span> <span class="st">"1981-2010"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>             <span class="fu"><a href="../reference/topography.html">topography</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"elevation"</span>, <span class="st">"slope"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>             <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trees"</span>, <span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>             <span class="fu"><a href="../reference/corr_check.html">corr_check</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> </span>
+<span>                    years <span class="op">=</span> <span class="st">"1981-2010"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>             <span class="fu"><a href="../reference/topography.html">topography</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"elevation"</span>, <span class="st">"slope"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>             <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"trees"</span>, <span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>             <span class="fu"><a href="../reference/corr_check.html">corr_check</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>             <span class="fu"><a href="../reference/extr_check.html">extr_check</a></span><span class="op">(</span>calib_points <span class="op">=</span> <span class="va">Apollo</span>, type <span class="op">=</span> <span class="st">"strict"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -218,7 +218,7 @@ extrapolation.</p>
 <code class="sourceCode R"><span><span class="co"># Plot the first two variables</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">$</span><span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figure/intro-unnamed-chunk-6-1.png" alt="plot of chunk unnamed-chunk-6"><p class="caption">
+<img src="figs/intro-unnamed-chunk-6-1.png" alt="plot of chunk unnamed-chunk-6"><p class="caption">
 plot of chunk unnamed-chunk-6
 </p>
 </div>
@@ -283,7 +283,7 @@ carefully predictions in areas where extrapolation is found.</p>
 <code class="sourceCode R"><span><span class="co"># visualize the raster map of where extrapolation occurs (1 = extrapolation, 0 = no extrapolation)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">$</span><span class="va">extrapolation</span><span class="op">$</span><span class="va">strict</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
-<img src="figure/intro-unnamed-chunk-11-1.png" alt="plot of chunk unnamed-chunk-11"><p class="caption">
+<img src="figs/intro-unnamed-chunk-11-1.png" alt="plot of chunk unnamed-chunk-11"><p class="caption">
 plot of chunk unnamed-chunk-11
 </p>
 </div>

@@ -153,7 +153,7 @@ extrapolation.
 terra::plot(processed$data[[1:2]])
 ```
 
-![plot of chunk unnamed-chunk-6](figure/intro-unnamed-chunk-6-1.png)
+![plot of chunk unnamed-chunk-6](figs/intro-unnamed-chunk-6-1.png)
 
 plot of chunk unnamed-chunk-6
 
@@ -233,7 +233,7 @@ carefully predictions in areas where extrapolation is found.
 terra::plot(processed$extrapolation$strict)
 ```
 
-![plot of chunk unnamed-chunk-11](figure/intro-unnamed-chunk-11-1.png)
+![plot of chunk unnamed-chunk-11](figs/intro-unnamed-chunk-11-1.png)
 
 plot of chunk unnamed-chunk-11
 

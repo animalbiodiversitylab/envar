@@ -63,6 +63,10 @@ worldclim(
   complete code such as `"585"` may also be supplied directly (with
   `rcp = NULL`).
 
+- ...:
+
+  Additional arguments (currently unused).
+
 ## Value
 
 If \`par_set()\` contained a raster/polygon/points with buffer: a
