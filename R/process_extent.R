@@ -1111,7 +1111,15 @@ process_extent <- function(shape = NULL,
   # ---- 10. CONTINENT (lowest priority) ----
   if (!is.null(continent)) {
     extent_info$type <- "admin"
-    
+
+    if (!(continent == "Europe" || continent == "europe") &&
+        !requireNamespace("rnaturalearthdata", quietly = TRUE)) {
+      cli::cli_abort(paste0(
+        "The {.pkg rnaturalearthdata} package is required to resolve ",
+        "country and continent boundaries. Please install it."
+      ))
+    }
+
     cli::cli_alert_info(paste0(
       "Using the GADM (Global Administrative Areas) shapefile for Europe.\n",
       "Website: {.url https://gadm.org/data.html}\n"

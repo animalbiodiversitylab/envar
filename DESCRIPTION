@@ -30,7 +30,6 @@ Imports:
     httr,
     sf,
     rnaturalearth,
-    rnaturalearthdata,
     usdm,
     corrplot,
     cli,
@@ -47,9 +46,10 @@ Config/Needs/website:
     usdm,
     corrplot,
     rangeBuilder
-Suggests: 
+Suggests:
     knitr,
-    rmarkdown
+    rmarkdown,
+    rnaturalearthdata
 VignetteBuilder: knitr
 URL: https://animalbiodiversitylab.github.io/envar/, https://github.com/animalbiodiversitylab/envar
 BugReports: https://github.com/animalbiodiversitylab/envar/issues
