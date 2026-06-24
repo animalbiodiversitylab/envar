@@ -25,6 +25,18 @@ The same NOTE lists four "possibly misspelled words" in the Description
 correctly: the first three are standard terms in the field, and "socio" is the
 first half of the compound "socio-economic".
 
+The incoming-feasibility check also flags `https://www.gbif.org` as a possibly
+invalid URL (HTTP 403). The URL is valid and opens normally in a browser; GBIF
+returns 403 to the automated request made by the URL checker. It appears in the
+`sdm` vignette and in the documentation of the bundled `Apollo` dataset, whose
+source is GBIF.
+
+On some platforms `R CMD check` reports that the installed package size exceeds
+5 Mb (approximately 7.7 Mb: `data/` ~2.4 Mb, `doc/` ~3.9 Mb). This comes from the
+example datasets used in the documentation and vignettes (notably the `Europe`
+boundaries) and the pre-computed vignette figures. The datasets are stored with
+`xz` compression (`LazyDataCompression: xz`).
+
 ## Notes
 
 * All examples that download data from remote services are wrapped in

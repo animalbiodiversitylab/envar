@@ -8,7 +8,7 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Provides a unified interface to download, harmonise and extract a wide range of environmental and socio-economic variables from established open data sources (such as 'WorldClim', 'CHELSA', 'Bio-ORACLE', 'SoilGrids' and others) for use in macroecology and biogeography. The package handles spatial subsetting to a study area, reprojection to a common coordinate reference system, and extraction of values at sampling points, so that predictors from heterogeneous sources can be assembled within a single reproducible workflow. Helper functions for collinearity checking and variable exploration are also included.
+Provides a unified interface to download, harmonise and extract a wide range of environmental and socio-economic variables from established open data sources (such as 'WorldClim', 'CHELSA' and 'Bio-ORACLE', among others) for use in macroecology and biogeography. The package handles spatial subsetting to a study area, reprojection to a common coordinate reference system, and extraction of values at sampling points, so that predictors from heterogeneous sources can be assembled within a single reproducible workflow. Helper functions for collinearity checking and variable exploration are also included.
 }
 \seealso{
 Useful links:

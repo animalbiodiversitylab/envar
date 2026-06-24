@@ -433,7 +433,9 @@ normalize_crs <- function(crs) {
     return("EPSG:4326")
   }
   
-  crs_str <- as.character(crs)
+  # Use a fixed (non-scientific) representation so large numeric codes such as
+  # 100000 are not turned into "1e+05" by as.character().
+  crs_str <- if (is.numeric(crs)) format(crs, scientific = FALSE, trim = TRUE) else as.character(crs)
   crs_str <- trimws(crs_str)
   
   # 1. If it already has EPSG: or ESRI: prefix, return with standardized casing

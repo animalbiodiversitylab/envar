@@ -497,37 +497,4 @@ extr_check <- function(x,
   return(output)
 }
 
-
-#' Normalize CRS to standard format (internal helper)
-#' @noRd
-normalize_crs <- function(crs) {
-  if (is.null(crs)) {
-    return("EPSG:4326")
-  }
-  
-  crs_str <- as.character(crs)
-  crs_str <- trimws(crs_str)
-  
-  # If it already has EPSG: or ESRI: prefix, return with standardized casing
-  if (grepl("^(EPSG|ESRI):", crs_str, ignore.case = TRUE)) {
-    parts <- strsplit(crs_str, ":")[[1]]
-    return(paste0(toupper(parts[1]), ":", parts[2]))
-  }
-  
-  # If it is just a number
-  if (grepl("^[0-9]+$", crs_str)) {
-    code_num <- as.numeric(crs_str)
-    
-    # Define ranges commonly reserved for ESRI authorities
-    is_esri <- (code_num >= 53000 & code_num <= 54999) | (code_num >= 100000)
-    
-    if (is_esri) {
-      return(paste0("ESRI:", crs_str))
-    } else {
-      return(paste0("EPSG:", crs_str))
-    }
-  }
-  
-  # Otherwise return as-is (could be PROJ4 or WKT)
-  return(crs_str)
-}
+# normalize_crs() is defined once in R/par_set.R and shared across the package.
