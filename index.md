@@ -87,8 +87,10 @@ to rapidly fix the issue.
 ## Dependencies
 
 `envar` depends on `terra`, `dplyr`, `httr`, `sf`, `rnaturalearth`,
-`rnaturalearthdata`, `exactextractr`, `usdm`, `corrplot`, `cli`, `fs`,
-`rangeBuilder`, and `utils`.
+`usdm`, `corrplot`, `cli`, `fs`, `digest`, `rangeBuilder`, and `utils`.
+The `rnaturalearthdata` package is also used (when selecting a study
+area by country or continent) and is installed automatically with
+`rnaturalearth`.
 
 ## Citation
 
