@@ -1,12 +1,5 @@
 # Package index
 
-## Explore download options
-
-Function for exploring the variables available for download
-
-- [`var_explore()`](https://animalbiodiversitylab.github.io/envar/reference/var_explore.md)
-  : Explore available variables and parameters
-
 ## Set overall parameters
 
 Function for creating new download task and process it
