@@ -51,11 +51,6 @@ navbar:
         
 reference:
   
-  - title: Explore download options
-    desc: Function for exploring the variables available for download
-    contents:
-      - var_explore
-      
   - title: Set overall parameters
     desc: Function for creating new download task and process it
     contents:
