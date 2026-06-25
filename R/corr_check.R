@@ -131,7 +131,15 @@ corr_check <- function(x, pearson = NULL, vif = NULL) {
   # -------------------------------------------------------------------------
   
   df_analysis <- stats::na.omit(df_analysis)
-  
+
+  if (nrow(df_analysis) < 2) {
+    cli::cli_abort(c(
+      "Not enough complete observations for correlation analysis.",
+      "x" = "After removing missing values, {nrow(df_analysis)} row{?s} remain.",
+      "i" = "The layers/points may be all NA over the study area (e.g. a CRS mismatch or an area with no data)."
+    ))
+  }
+
   # Remove constant variables
   vars_sd <- apply(df_analysis, 2, stats::sd)
   const <- names(vars_sd)[vars_sd == 0]
