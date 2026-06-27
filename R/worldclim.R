@@ -355,8 +355,30 @@ worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NU
       cli::cli_abort(c(
         "Future WorldClim projections require both {.arg gcm} and {.arg ssp}.",
         "x" = "Missing: {.arg {missing}}.",
-        "i" = "e.g. {.code worldclim(vars = \"bio1\", years = \"2041-2060\", gcm = \"GFDL-ESM4\", ssp = 5, rcp = 8.5)}.",
+        "i" = "e.g. {.code worldclim(vars = \"bio1\", years = \"2041-2060\", gcm = \"ACCESS-CM2\", ssp = 5, rcp = 8.5)}.",
         "i" = "{.arg ssp} and {.arg rcp} combine into the scenario (ssp = 5, rcp = 8.5 -> ssp585); or pass a full code like {.val 585} to {.arg ssp} alone."
+      ))
+    }
+
+    # WorldClim 2.1 only hosts CMIP6 downscaled data for a specific set of GCMs;
+    # an unlisted name (e.g. a CHELSA-only model such as GFDL-ESM4) would 404 and
+    # fail opaquely, so validate up front with a helpful message.
+    valid_gcms <- c(
+      "ACCESS-CM2", "ACCESS-ESM1-5", "BCC-CSM2-MR", "CanESM5", "CMCC-ESM2",
+      "CNRM-CM6-1", "CNRM-CM6-1-HR", "CNRM-ESM2-1", "EC-Earth3-Veg",
+      "FIO-ESM-2-0", "GISS-E2-1-G", "HadGEM3-GC31-LL", "INM-CM5-0",
+      "IPSL-CM6A-LR", "MIROC6", "MIROC-ES2L", "MPI-ESM1-2-HR", "MPI-ESM1-2-LR",
+      "MRI-ESM2-0", "UKESM1-0-LL"
+    )
+    bad_gcm <- setdiff(as.character(gcm), valid_gcms)
+    if (length(bad_gcm) > 0) {
+      sugg <- unique(unlist(lapply(bad_gcm, suggest_matches, choices = valid_gcms)))
+      bullets <- c("x" = "{cli::qty(bad_gcm)}Not hosted by WorldClim: {.val {bad_gcm}}.")
+      if (length(sugg) > 0) bullets <- c(bullets, "i" = "Did you mean {.val {sugg}}?")
+      bullets <- c(bullets, "i" = "Valid WorldClim CMIP6 GCMs: {.val {valid_gcms}}.")
+      cli::cli_abort(c(
+        "{cli::qty(bad_gcm)}Invalid {.arg gcm} for WorldClim future projections.",
+        bullets
       ))
     }
 
