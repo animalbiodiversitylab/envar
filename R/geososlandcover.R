@@ -61,8 +61,15 @@ geososlandcover <- function(x, vars, scenario = "A1B", year = 2010, discover = T
     "DOI: {.url https://doi.org/10.1080/24694452.2017.1303357}\n"
   ))
   
+  # GEOSOS land cover is categorical (class codes 1-6); force nearest-neighbour
+  # resampling so classes are never interpolated into meaningless fractional
+  # codes. Restored on exit so other functions/options are unaffected.
+  old_resample <- getOption("envar.resample_method")
+  options(envar.resample_method = "near")
+  on.exit(options(envar.resample_method = old_resample), add = TRUE)
+
   par_list <- get_par(x)
-  
+
   # Determine input type
   if (!is.null(par_list$grid) && inherits(par_list$grid, "SpatRaster")) {
     grid <- par_list$grid
@@ -204,10 +211,19 @@ geososlandcover <- function(x, vars, scenario = "A1B", year = 2010, discover = T
       
       if (!crs_match) {
         cli::cli_alert_info("Source data is in different CRS. Reprojecting to target CRS...")
+        # Crop the (global) source raster to the study area *in its own CRS* before
+        # reprojecting. Projecting the whole global raster straight into a regional
+        # target CRS (e.g. EPSG:3035) makes nearly every point fail to transform
+        # (GDAL "failed to transform" warnings) and is very slow; cropping to the
+        # area of interest first restricts the reprojection to that area.
+        grid_in_src <- try(terra::project(grid, source_crs), silent = TRUE)
+        if (!inherits(grid_in_src, "try-error")) {
+          layer <- terra::crop(layer, terra::ext(grid_in_src), snap = "out")
+        }
         # Use "near" method for categorical land cover data
         layer <- terra::project(layer, target_crs, method = "near")
       }
-      
+
       cli::cli_alert_info("Processing layer {.val {user_name}}...")
       
       result <- process_raster_layer(
@@ -265,6 +281,14 @@ geososlandcover <- function(x, vars, scenario = "A1B", year = 2010, discover = T
       
       if (!crs_match) {
         cli::cli_alert_info("Reprojecting layer to match points CRS...")
+        # Crop to the points' area (in the source CRS) before reprojecting, so only
+        # the area of interest is reprojected (not the whole globe). Generous
+        # padding keeps each point's cell intact, so extracted values are unchanged.
+        pts_src <- try(sf::st_transform(sf::st_as_sf(points), source_crs), silent = TRUE)
+        if (!inherits(pts_src, "try-error")) {
+          cropped <- try(terra::crop(layer, terra::ext(terra::vect(pts_src)) + 10000, snap = "out"), silent = TRUE)
+          if (!inherits(cropped, "try-error")) layer <- cropped
+        }
         layer <- terra::project(layer, target_crs, method = "near")
         # Write temporary reprojected file for process_points
         temp_reproj <- file.path(envar_grids_dir(), paste0("reproj_", basename(dest_file)))
@@ -309,9 +333,10 @@ geososlandcover <- function(x, vars, scenario = "A1B", year = 2010, discover = T
   cli::cli_alert_info("Starting the download of GEOSOS Land Cover data...")
   
   for (canon in requested_codes) {
-    filename <- paste0("geosos_", label_suffix, ".tif")
     user_name <- code_to_user_name[[canon]]
-    dest <- file.path(envar_grids_dir(), paste0(user_name, ".tif"))
+    # Cache filename encodes the dataset + scenario/year so different scenarios
+    # (and other functions) never collide in the shared cache.
+    dest <- file.path(envar_grids_dir(), paste0("geosos_", user_name, "_", label_suffix, ".tif"))
     
     handle_file(url_to_use, dest, canon, user_name)
   }

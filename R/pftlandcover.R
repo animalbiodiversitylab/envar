@@ -82,6 +82,13 @@ pftlandcover <- function(x, vars = NULL, year = 2025, ssp = 585, ...) {
   # --------------------------------------------------------------------
   # Standard Setup
   # --------------------------------------------------------------------
+  # This dataset is categorical (class codes); force nearest-neighbour resampling
+  # so class codes are preserved rather than interpolated into invalid values.
+  # Restored on exit so other functions/options are unaffected.
+  old_resample <- getOption("envar.resample_method")
+  options(envar.resample_method = "near")
+  on.exit(options(envar.resample_method = old_resample), add = TRUE)
+
   par_list <- get_par(x)
   
   # Determine input type
@@ -353,10 +360,11 @@ pftlandcover <- function(x, vars = NULL, year = 2025, ssp = 585, ...) {
     # Get the user's original name for this canonical code
     user_name <- code_to_user_name[[canon]]
     
-    # Destination for the extracted TIF - use user_name for extr_check compatibility
+    # Destination for the extracted TIF. The cache filename encodes the dataset +
+    # year + ssp so different scenarios (and other functions) never collide.
     grids_dir <- envar_grids_dir()
     fs::dir_create(grids_dir)
-    dest <- file.path(grids_dir, paste0(user_name, ".tif"))
+    dest <- file.path(grids_dir, paste0("pftlandcover_", user_name, "_", year, "_ssp", ssp, ".tif"))
     
     # Pass the ZIP url, but dest is the TIF
     handle_file(zip_url, dest, canon, user_name, internal_filename)

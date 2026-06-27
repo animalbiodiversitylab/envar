@@ -76,7 +76,14 @@ climatezones <- function(x, vars = "zones", years = "1991-2020", ssp = NULL, ...
     "Citation: Beck HE, McVicar TR, Vergopolan N, Berg A, Lutsko NJ, Dufour A, Zeng Z, Jiang X, van Dijk AIJM, Miralles DG (2023). High-resolution (1 km) K\u00f6ppen-Geiger maps for 1901-2099 based on constrained CMIP6 projections. Scientific Data 10, 724.\n",
     "DOI: {.url https://doi.org/10.1038/s41597-023-02549-6}\n"
   ))
-  
+
+  # This dataset is categorical (Koppen-Geiger class codes); force nearest-neighbour
+  # resampling so class codes are preserved rather than interpolated into invalid
+  # values. Restored on exit so other functions/options are unaffected.
+  old_resample <- getOption("envar.resample_method")
+  options(envar.resample_method = "near")
+  on.exit(options(envar.resample_method = old_resample), add = TRUE)
+
   par_list <- get_par(x)
   
   # Determine input type

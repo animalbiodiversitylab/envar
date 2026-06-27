@@ -46,6 +46,13 @@ soil <- function(x, vars = NULL, ...) {
     "DOI: {.url https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/}\n"
   ))
   
+  # This dataset is categorical (soil-type class codes); force nearest-neighbour
+  # resampling so class codes are preserved rather than interpolated into invalid
+  # values. Restored on exit so other functions/options are unaffected.
+  old_resample <- getOption("envar.resample_method")
+  options(envar.resample_method = "near")
+  on.exit(options(envar.resample_method = old_resample), add = TRUE)
+
   par_list <- get_par(x)
   
   # Determine input type

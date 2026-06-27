@@ -348,6 +348,21 @@ par_set <- function(country = NULL,
           "x" = "Found columns: {.field {names(pointsdf)}}."
         ))
       }
+      # Footgun guard: if the coordinates look like longitude/latitude (degrees)
+      # but the target CRS is projected, st_as_sf() *labels* them as that CRS
+      # without reprojecting, silently mislocating the points. Warn only; the
+      # behaviour is unchanged.
+      is_geographic <- tryCatch(isTRUE(sf::st_crs(crs)$IsGeographic),
+                                error = function(e) NA)
+      looks_lonlat <- all(abs(pointsdf$X) <= 180, na.rm = TRUE) &&
+                      all(abs(pointsdf$Y) <= 90, na.rm = TRUE)
+      if (isFALSE(is_geographic) && isTRUE(looks_lonlat)) {
+        cli::cli_warn(c(
+          "{.arg pointsdf} coordinates look like longitude/latitude (degrees), but {.arg crs} ({.val {crs}}) is a projected CRS.",
+          "!" = "They will be labelled as {.val {crs}} without reprojection, which can mislocate the points.",
+          "i" = "If the coordinates are WGS84, use {.code crs = 4326}."
+        ))
+      }
       # Note: We assume pointsdf input is usually WGS84 or matches the desired CRS if not specified
       shape <- sf::st_as_sf(pointsdf, coords = c("X", "Y"), crs = crs)
       cli::cli_alert_info("Converted pointsdf to sf object with CRS: {crs}")

@@ -52,6 +52,13 @@ hybridlandcover <- function(x, vars = NULL, year = 2000, ...) {
     cli::cli_abort("Year must be an integer between 2000 and 2020.")
   }
   
+  # This dataset is categorical (class codes); force nearest-neighbour resampling
+  # so class codes are preserved rather than interpolated into invalid values.
+  # Restored on exit so other functions/options are unaffected.
+  old_resample <- getOption("envar.resample_method")
+  options(envar.resample_method = "near")
+  on.exit(options(envar.resample_method = old_resample), add = TRUE)
+
   par_list <- get_par(x)
   
   # Determine input type
@@ -269,7 +276,9 @@ hybridlandcover <- function(x, vars = NULL, year = 2000, ...) {
     
     # Get the user's original name for this canonical code
     user_name <- code_to_user_name[[canon]]
-    dest <- file.path(envar_grids_dir(), paste0(user_name, ".tif"))
+    # Cache filename encodes the dataset + year so different years (and other
+    # functions) never collide in the shared cache.
+    dest <- file.path(envar_grids_dir(), paste0("hybridlandcover_", user_name, "_", year, ".tif"))
     
     handle_file(url, dest, canon, user_name)
   }

@@ -74,7 +74,14 @@ gcamlandcover <- function(x, vars = "landcover", ssp = 126, year = 2020, ...) {
     "Citation: Zhang T, Cheng C, Wu X (2023). Mapping the spatial heterogeneity of global land use and land cover from 2020 to 2100 at a 1 km resolution. Scientific Data 10, 748.\n",
     "DOI: {.url https://doi.org/10.1038/s41597-023-02637-7}\n"
   ))
-  
+
+  # This dataset is categorical (class codes); force nearest-neighbour resampling
+  # so class codes are preserved rather than interpolated into invalid values.
+  # Restored on exit so other functions/options are unaffected.
+  old_resample <- getOption("envar.resample_method")
+  options(envar.resample_method = "near")
+  on.exit(options(envar.resample_method = old_resample), add = TRUE)
+
   par_list <- get_par(x)
   
   # Determine input type
@@ -201,10 +208,18 @@ gcamlandcover <- function(x, vars = "landcover", ssp = 126, year = 2020, ...) {
       
       if (!crs_match) {
         cli::cli_alert_info("Source data (World Mercator) differs from target CRS. Reprojecting...")
+        # Crop the (global) source raster to the study area *in its own CRS* before
+        # reprojecting, so only the area of interest is reprojected. Projecting the
+        # whole global raster straight into a regional target CRS (e.g. EPSG:3035)
+        # makes nearly every point fail to transform (GDAL warnings) and is slow.
+        grid_in_src <- try(terra::project(grid, source_crs), silent = TRUE)
+        if (!inherits(grid_in_src, "try-error")) {
+          layer <- terra::crop(layer, terra::ext(grid_in_src), snap = "out")
+        }
         # Use "near" (Nearest Neighbor) for categorical land cover data
         layer <- terra::project(layer, target_crs, method = "near")
       }
-      
+
       cli::cli_alert_info("Processing layer {.val {user_name}}...")
       
       result <- process_raster_layer(
@@ -263,6 +278,14 @@ gcamlandcover <- function(x, vars = "landcover", ssp = 126, year = 2020, ...) {
       
       if (!crs_match) {
         cli::cli_alert_info("Reprojecting layer to match points CRS...")
+        # Crop to the points' area (in the source CRS) before reprojecting, so only
+        # the area of interest is reprojected (not the whole globe). Generous
+        # padding keeps each point's cell intact, so extracted values are unchanged.
+        pts_src <- try(sf::st_transform(sf::st_as_sf(points), source_crs), silent = TRUE)
+        if (!inherits(pts_src, "try-error")) {
+          cropped <- try(terra::crop(layer, terra::ext(terra::vect(pts_src)) + 10000, snap = "out"), silent = TRUE)
+          if (!inherits(cropped, "try-error")) layer <- cropped
+        }
         layer <- terra::project(layer, target_crs, method = "near")
         # Write temporary reprojected file
         temp_reproj <- file.path(fs::path_temp("envar/futurelandcover"), paste0("reproj_", basename(dest_file)))
