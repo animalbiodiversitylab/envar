@@ -78,12 +78,13 @@ appropriate.
 
 ``` r
 if (FALSE) { # \dontrun{
+# GDP rasters are coarse (~9 km), so set res >= 10 in par_set().
 # Get GDP for SSP1 and SSP5 in 2050
-processed <- par_set(country= "France", crs=3035) %>% 
+processed <- par_set(country= "France", crs=3035, res = 10) %>%
   gdpfuture(vars="gdp", year=2050, ssp=c(1, 5))
 
 # Get time series for SSP2
-processed <- par_set(country= "India") %>% 
+processed <- par_set(country= "India", res = 10) %>%
   gdpfuture(vars="gdp", year=c(2020, 2030, 2040), ssp=2)
 } # }
 ```
