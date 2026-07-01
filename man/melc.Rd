@@ -2,7 +2,7 @@
 % Please edit documentation in R/melc.R
 \name{melc}
 \alias{melc}
-\title{Download and process Global 1 km Land Cover variables}
+\title{Download and process MacroEcological Land Cover (MELC)}
 \usage{
 melc(x, vars, discover = TRUE, ...)
 }
@@ -22,9 +22,9 @@ If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` sta
 }
 \description{
 This function downloads, processes, and extracts variables from the
-Global 1 km Land Cover dataset. Each variable corresponds to a global 
-raster representing a specific land cover class or diversity index derived 
-from very high-resolution imagery.
+MELC 1 km Land Cover dataset, designed for biogeography and ecological modelling. 
+Each variable corresponds to a global raster representing a specific land cover class or diversity index derived 
+from very high-resolution imagery of the ESA.
 }
 \details{
 \strong{Available variables} (working synonyms in parentheses):

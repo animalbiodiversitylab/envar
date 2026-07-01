@@ -52,7 +52,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' processed <- par_set(country= "Italy", crs=3035) %>% 
+#' processed <- par_set(country = "Italy", crs = 3035) %>% 
 #' accessibility(vars=c("large cities", "ports1"))
 #'   }
 #' @export

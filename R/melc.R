@@ -1,11 +1,11 @@
 # R/melc.R
 
-#' Download and process Global 1 km Land Cover variables
+#' Download and process MacroEcological Land Cover (MELC) 
 #'
 #' This function downloads, processes, and extracts variables from the
-#' Global 1 km Land Cover dataset. Each variable corresponds to a global 
-#' raster representing a specific land cover class or diversity index derived 
-#' from very high-resolution imagery.
+#' MELC 1 km Land Cover dataset, designed for biogeography and ecological modelling. 
+#' Each variable corresponds to a global raster representing a specific land cover class or diversity index derived 
+#' from very high-resolution imagery of the ESA.
 #'
 #' @details
 #' \strong{Available variables} (working synonyms in parentheses):
@@ -62,7 +62,7 @@ melc <- function(x, vars, discover=TRUE, ...) {
   # Citation displayed on execution
   # --------------------------------------------------------------------
   cli::cli_alert_info(paste0(
-    "Using Global 1 km Land Cover variables.\n",
+    "Using MacroEcological Land Cover.\n",
     "Citation: Lo Parrino E, Simoncini A, Ficetola GF, Falaschi M (2025). Global 1 km land cover for macroecological modelling from very high resolution imagery. Figshare.\n",
     "DOI: {.url https://doi.org/10.6084/m9.figshare.30665069}\n"
   ))

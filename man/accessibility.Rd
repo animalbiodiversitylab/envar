@@ -60,7 +60,7 @@ Note: Data extent is [-180, 180, -60, 85].
 }
 \examples{
 \dontrun{
-processed <- par_set(country= "Italy", crs=3035) \%>\% 
+processed <- par_set(country = "Italy", crs = 3035) \%>\% 
 accessibility(vars=c("large cities", "ports1"))
   }
 }
