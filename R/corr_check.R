@@ -15,12 +15,12 @@
 #'   (e.g., output from `extr_check()`).
 #' @param pearson Numeric or `NULL`. Threshold for the absolute Pearson correlation
 #'   coefficient above which variables are flagged with a warning. By default
-#'   (`NULL`) no correlation warning is emitted; supply a value (e.g. `0.6`) to be
-#'   warned about variable pairs whose absolute correlation exceeds it.
+#'   (`NULL`) a default threshold of `0.7` is used; supply a value (e.g. `0.6`) to
+#'   be warned about variable pairs whose absolute correlation exceeds it instead.
 #' @param vif Numeric or `NULL`. Threshold for the Variance Inflation Factor above
-#'   which variables are flagged with a warning. By default (`NULL`) no VIF warning
-#'   is emitted; supply a value (e.g. `3`) to be warned about variables whose VIF
-#'   exceeds it.
+#'   which variables are flagged with a warning. By default (`NULL`) a default
+#'   threshold of `3` is used; supply a value (e.g. `5`) to be warned about
+#'   variables whose VIF exceeds it instead.
 #'
 #' @details
 #' Regardless of whether `pearson`/`vif` thresholds are set, the function always
@@ -33,8 +33,8 @@
 #'   \item `data`: The input environmental data used.
 #'   \item `correlation_matrix`: Pearson correlation matrix.
 #'   \item `vif`: Variance Inflation Factor data frame.
-#'   \item `summary`: Character vector highlighting high correlation or VIF (only
-#'     populated for the thresholds that were supplied).
+#'   \item `summary`: Character vector highlighting high correlation or VIF, based
+#'     on the supplied thresholds (or the defaults of `0.7` and `3`).
 #'   \item `plot_path`: Path to the saved correlation plot.
 #'   \item `vif_path`: Path to the saved VIF table.
 #'   \item Any additional elements from input list (e.g., `extrapolation` from `extr_check()`).
@@ -60,7 +60,7 @@
 #'   extr_check(calib_points = my_points) %>%
 #'   corr_check()
 #'
-#' # Example 4: Opt-in warnings for high correlation (>0.7) and VIF (>5)
+#' # Example 4: Custom thresholds for high correlation (>0.7) and VIF (>5)
 #' result <- par_set(country = "Italy") %>%
 #'   chelsa(vars = c("bio1", "bio12")) %>%
 #'   corr_check(pearson = 0.7, vif = 5)
@@ -78,7 +78,11 @@ corr_check <- function(x, pearson = NULL, vif = NULL) {
   if (!is.null(vif) && (!is.numeric(vif) || length(vif) != 1)) {
     cli::cli_abort("{.arg vif} must be a single numeric value or {.code NULL}.")
   }
-  
+
+  # Fall back to default thresholds when the user does not supply them.
+  pearson_thr <- if (is.null(pearson)) 0.7 else pearson
+  vif_thr <- if (is.null(vif)) 3 else vif
+
   input_data <- NULL
   input_list <- NULL
   is_list_input <- FALSE
@@ -192,44 +196,37 @@ corr_check <- function(x, pearson = NULL, vif = NULL) {
   })
 
   # -------------------------------------------------------------------------
-  # Summary statistics and opt-in warnings
+  # Summary statistics and warnings
   # -------------------------------------------------------------------------
-  # Variables are only flagged when the corresponding threshold is supplied.
+  # Variables are flagged against the user-supplied thresholds, or the default
+  # thresholds (Pearson 0.7, VIF 3) when the arguments are left as NULL.
   cor_diag0 <- cor_mat
   diag(cor_diag0) <- 0
 
-  high_cor <- if (!is.null(pearson)) {
-    names(which(apply(abs(cor_diag0), 1, max) > pearson))
-  } else {
-    character(0)
-  }
-  high_vif <- if (!is.null(vif) && !is.na(vif_val$VIF[1])) {
-    as.character(vif_val$Variables[vif_val$VIF > vif])
+  high_cor <- names(which(apply(abs(cor_diag0), 1, max) > pearson_thr))
+  high_vif <- if (!is.na(vif_val$VIF[1])) {
+    as.character(vif_val$Variables[vif_val$VIF > vif_thr])
   } else {
     character(0)
   }
 
   summary_txt <- character(0)
   if (length(high_cor) > 0) {
-    summary_txt <- c(summary_txt, paste0("High Cor (>", pearson, "): ", paste(high_cor, collapse = ", ")))
+    summary_txt <- c(summary_txt, paste0("High Cor (>", pearson_thr, "): ", paste(high_cor, collapse = ", ")))
   }
   if (length(high_vif) > 0) {
-    summary_txt <- c(summary_txt, paste0("High VIF (>", vif, "): ", paste(high_vif, collapse = ", ")))
+    summary_txt <- c(summary_txt, paste0("High VIF (>", vif_thr, "): ", paste(high_vif, collapse = ", ")))
   }
   if (length(summary_txt) == 0) {
-    summary_txt <- if (is.null(pearson) && is.null(vif)) {
-      "No thresholds set (specify 'pearson' and/or 'vif' to enable warnings)."
-    } else {
-      "No issues detected."
-    }
+    summary_txt <- "No issues detected."
   }
 
   cli::cli_alert_success("Correlation analysis completed.")
   if (length(high_cor) > 0) {
-    cli::cli_alert_warning("Variables with high correlation (>{pearson}): {.val {high_cor}}")
+    cli::cli_alert_warning("Variables with high correlation (>{pearson_thr}): {.val {high_cor}}")
   }
   if (length(high_vif) > 0) {
-    cli::cli_alert_warning("Variables with high VIF (>{vif}): {.val {high_vif}}")
+    cli::cli_alert_warning("Variables with high VIF (>{vif_thr}): {.val {high_vif}}")
   }
   
   # -------------------------------------------------------------------------

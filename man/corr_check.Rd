@@ -12,13 +12,13 @@ corr_check(x, pearson = NULL, vif = NULL)
 
 \item{pearson}{Numeric or `NULL`. Threshold for the absolute Pearson correlation
 coefficient above which variables are flagged with a warning. By default
-(`NULL`) no correlation warning is emitted; supply a value (e.g. `0.6`) to be
-warned about variable pairs whose absolute correlation exceeds it.}
+(`NULL`) a default threshold of `0.7` is used; supply a value (e.g. `0.6`) to
+be warned about variable pairs whose absolute correlation exceeds it instead.}
 
 \item{vif}{Numeric or `NULL`. Threshold for the Variance Inflation Factor above
-which variables are flagged with a warning. By default (`NULL`) no VIF warning
-is emitted; supply a value (e.g. `3`) to be warned about variables whose VIF
-exceeds it.}
+which variables are flagged with a warning. By default (`NULL`) a default
+threshold of `3` is used; supply a value (e.g. `5`) to be warned about
+variables whose VIF exceeds it instead.}
 }
 \value{
 A `list` object containing:
@@ -26,8 +26,8 @@ A `list` object containing:
   \item `data`: The input environmental data used.
   \item `correlation_matrix`: Pearson correlation matrix.
   \item `vif`: Variance Inflation Factor data frame.
-  \item `summary`: Character vector highlighting high correlation or VIF (only
-    populated for the thresholds that were supplied).
+  \item `summary`: Character vector highlighting high correlation or VIF, based
+    on the supplied thresholds (or the defaults of `0.7` and `3`).
   \item `plot_path`: Path to the saved correlation plot.
   \item `vif_path`: Path to the saved VIF table.
   \item Any additional elements from input list (e.g., `extrapolation` from `extr_check()`).
@@ -72,7 +72,7 @@ result <- par_set(country = "Italy") \%>\%
   extr_check(calib_points = my_points) \%>\%
   corr_check()
 
-# Example 4: Opt-in warnings for high correlation (>0.7) and VIF (>5)
+# Example 4: Custom thresholds for high correlation (>0.7) and VIF (>5)
 result <- par_set(country = "Italy") \%>\%
   chelsa(vars = c("bio1", "bio12")) \%>\%
   corr_check(pearson = 0.7, vif = 5)
