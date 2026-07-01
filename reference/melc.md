@@ -1,9 +1,10 @@
-# Download and process Global 1 km Land Cover variables
+# Download and process MacroEcological Land Cover (MELC)
 
-This function downloads, processes, and extracts variables from the
-Global 1 km Land Cover dataset. Each variable corresponds to a global
-raster representing a specific land cover class or diversity index
-derived from very high-resolution imagery.
+This function downloads, processes, and extracts variables from the MELC
+1 km Land Cover dataset, designed for biogeography and ecological
+modelling. Each variable corresponds to a global raster representing a
+specific land cover class or diversity index derived from very
+high-resolution imagery of the ESA.
 
 ## Usage
 

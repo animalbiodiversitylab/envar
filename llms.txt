@@ -176,7 +176,7 @@ Functions for downloading variables from multiple sources
 - [`protection()`](https://animalbiodiversitylab.github.io/envar/reference/protection.md)
   : Download and process WDPA Protected Area layers
 - [`melc()`](https://animalbiodiversitylab.github.io/envar/reference/melc.md)
-  : Download and process Global 1 km Land Cover variables
+  : Download and process MacroEcological Land Cover (MELC)
 - [`earthenvlandcover()`](https://animalbiodiversitylab.github.io/envar/reference/earthenvlandcover.md)
   : Download and process EarthEnv land cover variables
 - [`geososlandcover()`](https://animalbiodiversitylab.github.io/envar/reference/geososlandcover.md)

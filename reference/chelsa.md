@@ -275,7 +275,29 @@ https://chelsa-climate.org/
 
 ``` r
 if (FALSE) { # \dontrun{
-processed <- par_set(country= "Italy", crs=3035) %>%
-chelsa(vars=c("pr", "tas"), years = 2018, months = 1)
+
+# climatic values for one specific year/month
+processed <- par_set(zooregion = "Madagascan") %>%
+chelsa(vars=c("tas"), years = 2018, months = 1)
+
+# climatic values for a long period (real "climate"), if months are not specified
+# all the months are downloaded (12 layers per variable)
+processed <- par_set(country = "Iceland") %>%
+chelsa(vars=c("pr", "tas"), years = "1981-2010", months = 1)
+
+# bioclimatic variables are available only over these extended periods, and not
+# for the single years
+processed <- par_set(country = "Iceland") %>%
+chelsa(vars=c("bio1"), years = "1981-2010", months = 1)
+
+# to download a specified set of variables, leave only "bio" and then the
+# package will ask which variables to download (all 19 or a selection) in the console
+processed <- par_set(country = "Iceland") %>%
+chelsa(vars=c("bio"), years = "1981-2010", months = 1)
+
+# climatic values for the future (SSP, RCP and GCM must be specified)
+processed <- par_set(country = "Italy", crs = 3035) %>%
+chelsa(vars=c("pr", "tas"), years = "2041-2070", months = 1,
+ ssp = 5, rcp = 8.5, gcm = "GFDL-ESM4")
    } # }
 ```
