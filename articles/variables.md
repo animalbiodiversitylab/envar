@@ -459,7 +459,7 @@ plot(processed[[1]])
 
 plot of chunk unnamed-chunk-14
 
-### ESA land cover
+### Macroecological Land Cover
 
 This function downloads, processes, and extracts variables from the
 Global 1 km Land Cover dataset (Lo Parrino *et al.* 2025). Each variable
@@ -1295,54 +1295,6 @@ plot(processed)
 
 plot of chunk unnamed-chunk-44
 
-### GDP future
-
-This function downloads, processes, and extracts variables from the
-global gridded GDP projections compatible with the five Shared
-Socioeconomic Pathways (SSPs) for the period 1850–2100 (Wang & Sun
-2022).
-
-**Available variables (1 total)**
-
-Economic Metrics:
-
-- 1 - **gdp** - gross domestic product, future gdp, economic projection,
-  economy, ssp gdp
-
-Scenarios (SSP):
-
-The `ssp` argument accepts integers 1 through 5, corresponding to:
-
-- SSP1: Sustainability
-- SSP2: Middle of the Road
-- SSP3: Regional Rivalry
-- SSP4: Inequality
-- SSP5: Fossil-fueled Development
-
-Years available: Decadal intervals from 1850 to 2100 (e.g., 2020, 2030,
-2040…).
-
-``` r
-
-processed <- par_set(shape = Alps, crs = 3035) %>% 
-  gdpfuture(vars = "gdp", year = 2050, ssp = c(1, 5))
-```
-
-    ## Error in `process_raster_layer()` at envar/R/gdpfuture.R:211:7:
-    ## ! A source raster (~9.28 km) is coarser than the requested resolution
-    ##   (`res = 1`, ~1 km).
-    ## ℹ Resampling it onto a finer grid would only invent detail. Increase `res` in
-    ##   `par_set()` to at least 10 to match (or exceed) the native resolution.
-
-``` r
-
-plot(processed)
-```
-
-![plot of chunk unnamed-chunk-46](figs/variables-unnamed-chunk-46-1.png)
-
-plot of chunk unnamed-chunk-46
-
 ### Population
 
 This function downloads, processes, and extracts variables from the
@@ -1533,9 +1485,6 @@ and ecosystem modelling. *Global Ecology and Biogeography*, *24*,
 Wang, X., Meng, X. & Long, Y. (2022). Projecting 1 km-grid population
 distributions from 2020 to 2100 globally under shared socioeconomic
 pathways. *Scientific Data*, *9*, 563.
-
-Wang, T. & Sun, F. (2022). Global gridded GDP data set consistent with
-the shared socioeconomic pathways. *Scientific Data*, *9*, 221.
 
 Wilson, A.M. & Jetz, W. (2016). Remotely sensed high-resolution global
 cloud dynamics for predicting ecosystem and biodiversity distributions.

@@ -55,8 +55,6 @@ Functions for downloading variables from multiple sources
   : Download and process Soil Bioclimatic and Temperature layers
 - [`gdppast()`](https://animalbiodiversitylab.github.io/envar/reference/gdppast.md)
   : Download and process Historical Real GDP and Electricity Consumption
-- [`gdpfuture()`](https://animalbiodiversitylab.github.io/envar/reference/gdpfuture.md)
-  : Download and process Future GDP Projections (SSP1-5)
 - [`population()`](https://animalbiodiversitylab.github.io/envar/reference/population.md)
   : Download and process Global Population Projections (SSP)
 - [`habitat()`](https://animalbiodiversitylab.github.io/envar/reference/habitat.md)

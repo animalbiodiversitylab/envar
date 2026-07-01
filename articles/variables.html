@@ -569,7 +569,7 @@ plot of chunk unnamed-chunk-14
 </div>
 </div>
 <div class="section level3">
-<h3 id="esa-land-cover">ESA land cover<a class="anchor" aria-label="anchor" href="#esa-land-cover"></a>
+<h3 id="macroecological-land-cover">Macroecological Land Cover<a class="anchor" aria-label="anchor" href="#macroecological-land-cover"></a>
 </h3>
 <p>This function downloads, processes, and extracts variables from the
 Global 1 km Land Cover dataset <span class="citation">(Lo Parrino <em>et
@@ -1413,46 +1413,6 @@ plot of chunk unnamed-chunk-44
 </div>
 </div>
 <div class="section level3">
-<h3 id="gdp-future">GDP future<a class="anchor" aria-label="anchor" href="#gdp-future"></a>
-</h3>
-<p>This function downloads, processes, and extracts variables from the
-global gridded GDP projections compatible with the five Shared
-Socioeconomic Pathways (SSPs) for the period 1850–2100 <span class="citation">(Wang &amp; Sun 2022)</span>.</p>
-<p><strong>Available variables (1 total)</strong></p>
-<p>Economic Metrics:</p>
-<ul>
-<li>1 - <strong>gdp</strong> - gross domestic product, future gdp,
-economic projection, economy, ssp gdp</li>
-</ul>
-<p>Scenarios (SSP):</p>
-<p>The <code>ssp</code> argument accepts integers 1 through 5,
-corresponding to:</p>
-<ul>
-<li>SSP1: Sustainability</li>
-<li>SSP2: Middle of the Road</li>
-<li>SSP3: Regional Rivalry</li>
-<li>SSP4: Inequality</li>
-<li>SSP5: Fossil-fueled Development</li>
-</ul>
-<p>Years available: Decadal intervals from 1850 to 2100 (e.g., 2020,
-2030, 2040…).</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
-<span>  <span class="fu"><a href="../reference/gdpfuture.html">gdpfuture</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="st">"gdp"</span>, year <span class="op">=</span> <span class="fl">2050</span>, ssp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in `process_raster_layer()` at envar/R/gdpfuture.R:211:7:</span></span>
-<span><span class="co">## ! A source raster (~9.28 km) is coarser than the requested resolution</span></span>
-<span><span class="co">##   (`res = 1`, ~1 km).</span></span>
-<span><span class="co">## ℹ Resampling it onto a finer grid would only invent detail. Increase `res` in</span></span>
-<span><span class="co">##   `par_set()` to at least 10 to match (or exceed) the native resolution.</span></span></code></pre>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">)</span></span></code></pre></div>
-<div class="figure" style="text-align: center">
-<img src="figs/variables-unnamed-chunk-46-1.png" alt="plot of chunk unnamed-chunk-46"><p class="caption">
-plot of chunk unnamed-chunk-46
-</p>
-</div>
-</div>
-<div class="section level3">
 <h3 id="population">Population<a class="anchor" aria-label="anchor" href="#population"></a>
 </h3>
 <p>This function downloads, processes, and extracts variables from the
@@ -1478,10 +1438,10 @@ the specific data required.</p>
 <li>SSP4</li>
 <li>SSP5</li>
 </ul>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/population.html">population</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="st">"population"</span>, year <span class="op">=</span> <span class="fl">2050</span>, ssp <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/variables-unnamed-chunk-48-1.png" alt="plot of chunk unnamed-chunk-48"><p class="caption">
@@ -1519,10 +1479,10 @@ seascape, landscape, 5, v, V (IUCN Category V)</li>
 <li>8 - <strong>WDPA_ALL</strong> - all, combined, full, total, all
 protected areas (Combined/Full WDPA)</li>
 </ul>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/protection.html">protection</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"national park"</span>, <span class="st">"WDPA_ALL"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/variables-unnamed-chunk-50-1.png" alt="plot of chunk unnamed-chunk-50"><p class="caption">
@@ -1667,11 +1627,6 @@ and ecosystem modelling. <em>Global Ecology and Biogeography</em>,
 Wang, X., Meng, X. &amp; Long, Y. (2022). Projecting 1 km-grid
 population distributions from 2020 to 2100 globally under shared
 socioeconomic pathways. <em>Scientific Data</em>, <em>9</em>, 563.
-</div>
-<div id="ref-wang2022gdp" class="csl-entry">
-Wang, T. &amp; Sun, F. (2022). Global gridded GDP data set consistent
-with the shared socioeconomic pathways. <em>Scientific Data</em>,
-<em>9</em>, 221.
 </div>
 <div id="ref-wilson2016" class="csl-entry">
 Wilson, A.M. &amp; Jetz, W. (2016). Remotely sensed high-resolution
