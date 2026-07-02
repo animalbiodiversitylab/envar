@@ -65,10 +65,12 @@ positional uncertainty a problem for species distribution modelling?"
 Ecography 37, 191-203. https://doi.org/10.1111/j.1600-0587.2013.00205.x
 
 Regardless of whether \`pearson\`/\`vif\` thresholds are set, the
-function always writes two files to the current working directory: the
-correlation plot (\`Corr_plot.png\`) and a table of VIF values
-(\`VIF_table.csv\`). Their paths are returned as \`plot_path\` and
-\`vif_path\`.
+function writes two files: the correlation plot (\`Corr_plot.png\`) and
+a table of VIF values (\`VIF_table.csv\`). In an interactive R session
+it asks, at the console, for the directory in which to store them every
+time it is called. In non-interactive sessions (e.g. scripts or \`R CMD
+check\`) a temporary directory is used and no prompt is shown. Their
+paths are returned as \`plot_path\` and \`vif_path\`.
 
 ## Examples
 
