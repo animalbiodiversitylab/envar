@@ -192,10 +192,10 @@ And the Pearson pairwise correlation coefficients:
 
 plot of chunk unnamed-chunk-11
 
-Slope and annual mean temperature (bio1) are negatively correlated with
-Pearson’s correlations ≥ \|0.6\|. No variables have a VIF higher than 3.
-Thus, we remove one of these variables; the one with a lower direct
-impact on the species physiology and distribution (slope).
+Annual mean temperature has a VIF \> 3 and is correlated with slope
+although not at the standard threshold of Pearson’s r \> \|0.7\|. Thus,
+we remove one of these variables; the one with a lower direct impact on
+the species physiology and distribution (slope).
 
 ``` r
 

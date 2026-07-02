@@ -254,10 +254,10 @@ two topographical variables (slope, northness) from <span class="citation">(Amat
 plot of chunk unnamed-chunk-11
 </p>
 </div>
-<p>Slope and annual mean temperature (bio1) are negatively correlated
-with Pearson’s correlations ≥ |0.6|. No variables have a VIF higher than
-3. Thus, we remove one of these variables; the one with a lower direct
-impact on the species physiology and distribution (slope).</p>
+<p>Annual mean temperature has a VIF &gt; 3 and is correlated with slope
+although not at the standard threshold of Pearson’s r &gt; |0.7|. Thus,
+we remove one of these variables; the one with a lower direct impact on
+the species physiology and distribution (slope).</p>
 <div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># remove slope to avoid correlation issues</span></span>
 <span><span class="va">predictors</span><span class="op">$</span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">predictors</span><span class="op">$</span><span class="va">data</span><span class="op">[</span>, <span class="op">!</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">predictors</span><span class="op">$</span><span class="va">data</span><span class="op">)</span> <span class="op"><a href="https://rspatial.github.io/terra/reference/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"slope"</span><span class="op">)</span><span class="op">]</span></span>
