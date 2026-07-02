@@ -23,10 +23,12 @@
 #'   variables whose VIF exceeds it instead.
 #'
 #' @details
-#' Regardless of whether `pearson`/`vif` thresholds are set, the function always
-#' writes two files to the current working directory: the correlation plot
-#' (`Corr_plot.png`) and a table of VIF values (`VIF_table.csv`). Their paths are
-#' returned as `plot_path` and `vif_path`.
+#' Regardless of whether `pearson`/`vif` thresholds are set, the function writes
+#' two files: the correlation plot (`Corr_plot.png`) and a table of VIF values
+#' (`VIF_table.csv`). In an interactive R session it asks, at the console, for the
+#' directory in which to store them every time it is called. In non-interactive
+#' sessions (e.g. scripts or `R CMD check`) a temporary directory is used and no
+#' prompt is shown. Their paths are returned as `plot_path` and `vif_path`.
 #'
 #' @return A `list` object containing:
 #' \itemize{
@@ -161,8 +163,11 @@ corr_check <- function(x, pearson = NULL, vif = NULL) {
   # Correlation matrix
   cor_mat <- stats::cor(df_analysis, method = "pearson")
   
+  # Resolve (once per session) the directory to store the output files in.
+  out_dir <- envar_corr_dir()
+
   # Plot
-  plot_path <- file.path(getwd(), "Corr_plot.png")
+  plot_path <- file.path(out_dir, "Corr_plot.png")
   grDevices::png(plot_path, width = 2000, height = 2000, res = 300)
   tryCatch({
     corrplot::corrplot(cor_mat, method = "circle", type = "lower", diag = FALSE, addCoef.col = "black")
@@ -186,8 +191,8 @@ corr_check <- function(x, pearson = NULL, vif = NULL) {
   
   vif_val <- vif_val[order(vif_val$VIF, decreasing = TRUE), ]
 
-  # Always store the VIF table in the working directory
-  vif_path <- file.path(getwd(), "VIF_table.csv")
+  # Store the VIF table in the directory chosen for this session.
+  vif_path <- file.path(out_dir, "VIF_table.csv")
   tryCatch({
     utils::write.csv(vif_val, vif_path, row.names = FALSE)
     cli::cli_alert_info("VIF table saved to {.file {vif_path}}.")
@@ -254,4 +259,64 @@ corr_check <- function(x, pearson = NULL, vif = NULL) {
   }
   
   return(output)
+}
+
+
+#' Directory used by corr_check() to store its output files
+#'
+#' Determines where [corr_check()] writes `Corr_plot.png` and `VIF_table.csv`.
+#' In an interactive session it asks the user, at the console, for a directory
+#' every time it is called. In non-interactive sessions (scripts, `R CMD check`,
+#' ...) it silently uses a temporary directory and never writes to the working
+#' directory.
+#'
+#' @return Path to the (existing) directory in which to store the files.
+#' @noRd
+envar_corr_dir <- function() {
+  if (interactive()) {
+    # Print the explanation on its own line, then use a short single-line
+    # readline() prompt so the console shows a wide input field to type into.
+    cat("Directory to store correlation info (empty for working directory):\n")
+    ans <- readline(prompt = "Path: ")
+
+    # Clean the input: trim spaces, drop any surrounding single/double quotes
+    # (e.g. '~/data' or "~/data"), then expand '~' to the home directory.
+    ans <- trimws(ans)
+    ans <- gsub("^['\"]+|['\"]+$", "", ans)
+    ans <- trimws(ans)
+
+    if (!nzchar(ans)) {
+      # User confirmed (empty input at the interactive prompt): use the working
+      # directory. Allowed because this only happens interactively.
+      dir <- getwd()
+    } else {
+      dir <- path.expand(ans)
+      # A relative entry (e.g. "Download") would otherwise be resolved by R
+      # against the current working directory. Anchor it to the user's home
+      # directory instead so files never land in an unexpected place.
+      is_absolute <- grepl("^(/|\\\\|[A-Za-z]:)", dir)
+      if (!is_absolute) {
+        dir <- file.path(path.expand("~"), dir)
+      }
+    }
+    cli::cli_alert_info("Correlation files will be stored in {.file {dir}}.")
+  } else {
+    # Never prompt and never write to the working directory in non-interactive
+    # sessions (e.g. R CMD check): use a temporary directory.
+    dir <- tempdir()
+  }
+
+  # Make sure the directory exists; fall back to a temp dir if it cannot be
+  # created (e.g. a mistyped or non-writable path).
+  if (!dir.exists(dir)) {
+    created <- suppressWarnings(dir.create(dir, recursive = TRUE))
+    if (!created && !dir.exists(dir)) {
+      cli::cli_alert_warning(
+        "Could not use {.file {dir}}; storing the files in a temporary directory instead."
+      )
+      dir <- tempdir()
+    }
+  }
+
+  dir
 }
