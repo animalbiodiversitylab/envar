@@ -210,7 +210,7 @@
 #' mediterranean <- par_set(marine_realm = "Temperate Northern Atlantic")
 #' 
 #' # Using pelagic provinces
-#' atlantic_pelagic <- par_set(pelagic_realm = "Atlantic")
+#' atlantic_pelagic <- par_set(pelagic_realm = "Atlantic Warm Water")
 #' 
 #' # Clip marine realm to land only
 #' land_only <- par_set(marine_realm = "Temperate Northern Atlantic", land = TRUE)

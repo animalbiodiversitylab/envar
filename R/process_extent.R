@@ -1203,10 +1203,17 @@ convert_buffer_to_units <- function(buffer_km, crs) {
   is_geographic <- get_crs_type(crs_obj)
   
   if (isTRUE(is_geographic)) {
-    # For geographic CRS, convert km to degrees (approximate)
-    # 1 degree â‰ˆ 111 km at equator
-    buffer_dist <- buffer_km / 111
-    cli::cli_alert_info("Buffer: {buffer_km} km converted to {round(buffer_dist, 6)} degrees (geographic CRS)")
+    if (isTRUE(sf::sf_use_s2())) {
+      # With s2 enabled (sf's default), st_buffer() measures distance in METERS
+      # on geographic coordinates -- pass meters, not degrees.
+      buffer_dist <- buffer_km * 1000
+      cli::cli_alert_info("Buffer: {buffer_km} km converted to {buffer_dist} meters (geographic CRS, s2)")
+    } else {
+      # GEOS planar fallback on lon/lat interprets the distance in degrees.
+      # 1 degree ~= 111 km at the equator.
+      buffer_dist <- buffer_km / 111
+      cli::cli_alert_info("Buffer: {buffer_km} km converted to {round(buffer_dist, 6)} degrees (geographic CRS, GEOS)")
+    }
   } else {
     # For projected CRS, convert km to meters
     buffer_dist <- buffer_km * 1000
