@@ -37,13 +37,16 @@ Source:
 
 Simoncini, A., Bertoncini, M., Cerofolini, A., Dalpasso, A., Ficetola,
 G.F., Falaschi, M., & Lo Parrino, E. (2026). 'envar': an R package to
-streamline the retrieval and processing of environmental variables for
-macroecology and biogeography. Ecological Informatics, under review.
+retrieve and process environmental variables for macroecology and
+biogeography. Ecological Informatics, under review.
+https://doi.org/10.22541/au.176918612.23247936/v1
 
     @Article{,
-      title = {'envar': an R package to streamline the retrieval and processing of environmental variables for macroecology and biogeography},
+      title = {'envar': an R package to retrieve and process environmental variables for macroecology and biogeography},
       author = {Andrea Simoncini and Michele Bertoncini and Andrea Cerofolini and Andrea Dalpasso and Gentile Francesco Ficetola and Mattia Falaschi and Elia {Lo Parrino}},
       journal = {Ecological Informatics},
       year = {2026},
       note = {Under review},
+      doi = {10.22541/au.176918612.23247936/v1},
+      url = {https://doi.org/10.22541/au.176918612.23247936/v1},
     }
