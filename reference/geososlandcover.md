@@ -73,7 +73,7 @@ https://doi.org/10.1080/24694452.2017.1303357
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 # Example 1: Download land cover for Italy in 2050 under scenario A1B
 processed <- par_set(country = "Italy", crs = 3035) %>% 
   geososlandcover(vars = c("land cover"), year = 2050, scenario = "A1B")
@@ -82,5 +82,5 @@ processed <- par_set(country = "Italy", crs = 3035) %>%
 points_df <- data.frame(ID = 1:2, x = c(12, 13), y = c(42, 43))
 extracted <- par_set(data = points_df, crs = 4326) %>%
   geososlandcover(vars = "lc", year = 2010)
-} # }
+# }
 ```

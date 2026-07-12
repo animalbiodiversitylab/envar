@@ -126,26 +126,35 @@ https://doi.org/10.1111/j.1472-4642.2012.00887.x</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="co"># Example 1: Check extrapolation after getting environmental variables</span></span></span>
-<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tree"</span>, <span class="st">"water"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="st">"bio1"</span>, years <span class="op">=</span> <span class="st">"1981-2010"</span>, month <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu">extr_check</span><span class="op">(</span>calib_points <span class="op">=</span> <span class="va">my_occurrence_data</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Example 2: Chain with corr_check()</span></span></span>
-<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">Apollo</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,<span class="op">]</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="st">"bio1"</span>, years <span class="op">=</span> <span class="st">"1981-2010"</span>, month <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="corr_check.html">corr_check</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu">extr_check</span><span class="op">(</span>calib_points <span class="op">=</span> <span class="va">calibration_data</span>, type <span class="op">=</span> <span class="st">"strict"</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Example 3: Check only combinatorial extrapolation</span></span></span>
-<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Germany"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="worldclim.html">worldclim</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1"</span>, <span class="st">"bio12"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu">extr_check</span><span class="op">(</span>calib_points <span class="op">=</span> <span class="va">occ_points</span>, type <span class="op">=</span> <span class="st">"combinatorial"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
-</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># extr_check() runs offline on the small example raster bundled with the</span></span>
+<span><span class="co"># package (a real WorldClim extract for Switzerland). Here we flag cells whose</span></span>
+<span><span class="co"># climate is novel relative to the Apollo occurrences that fall in Switzerland:</span></span>
+<span><span class="va">switzerland</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"switzerland.tif"</span>, package <span class="op">=</span> <span class="st">"envar"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">calib</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">Apollo</span>, <span class="va">X</span> <span class="op">&gt;=</span> <span class="fl">5.9</span> <span class="op">&amp;</span> <span class="va">X</span> <span class="op">&lt;=</span> <span class="fl">10.5</span> <span class="op">&amp;</span> <span class="va">Y</span> <span class="op">&gt;=</span> <span class="fl">45.8</span> <span class="op">&amp;</span> <span class="va">Y</span> <span class="op">&lt;=</span> <span class="fl">47.8</span><span class="op">)</span></span>
+<span><span class="va">checked</span> <span class="op">&lt;-</span> <span class="fu">extr_check</span><span class="op">(</span><span class="va">switzerland</span>, calib_points <span class="op">=</span> <span class="va">calib</span>, type <span class="op">=</span> <span class="st">"strict"</span><span class="op">)</span></span>
+<span><span class="va">checked</span><span class="op">$</span><span class="va">extrapolation</span></span>
+<span></span>
+<span><span class="co"># \donttest{</span></span>
+<span><span class="co"># Example 1: Check extrapolation after getting environmental variables</span></span>
+<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tree"</span>, <span class="st">"water"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="st">"bio1"</span>, years <span class="op">=</span> <span class="st">"1981-2010"</span>, month <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">extr_check</span><span class="op">(</span>calib_points <span class="op">=</span> <span class="va">my_occurrence_data</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Example 2: Chain with corr_check()</span></span>
+<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">Apollo</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,<span class="op">]</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="st">"bio1"</span>, years <span class="op">=</span> <span class="st">"1981-2010"</span>, month <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="corr_check.html">corr_check</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">extr_check</span><span class="op">(</span>calib_points <span class="op">=</span> <span class="va">calibration_data</span>, type <span class="op">=</span> <span class="st">"strict"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Example 3: Check only combinatorial extrapolation</span></span>
+<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Germany"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="worldclim.html">worldclim</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1"</span>, <span class="st">"bio12"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">extr_check</span><span class="op">(</span>calib_points <span class="op">=</span> <span class="va">occ_points</span>, type <span class="op">=</span> <span class="st">"combinatorial"</span><span class="op">)</span></span>
+<span><span class="co"># }</span></span></code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
@@ -156,7 +165,7 @@ https://doi.org/10.1111/j.1472-4642.2012.00887.x</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

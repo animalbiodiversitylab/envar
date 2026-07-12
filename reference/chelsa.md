@@ -274,7 +274,7 @@ https://chelsa-climate.org/
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 
 # climatic values for one specific year/month
 processed <- par_set(zooregion = "Madagascan") %>%
@@ -299,5 +299,5 @@ chelsa(vars=c("bio"), years = "1981-2010", months = 1)
 processed <- par_set(country = "Italy", crs = 3035) %>%
 chelsa(vars=c("pr", "tas"), years = "2041-2070", months = 1,
  ssp = 5, rcp = 8.5, gcm = "GFDL-ESM4")
-   } # }
+   # }
 ```

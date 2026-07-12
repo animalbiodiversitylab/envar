@@ -52,8 +52,8 @@ https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-wor
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 processed <- par_set(country= "Italy", crs=3035) %>% 
 soil(vars=c("soil"))
-  } # }
+  # }
 ```

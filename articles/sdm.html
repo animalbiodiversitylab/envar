@@ -82,6 +82,63 @@
     
     
 <div class="section level2">
+<h2 id="a-runnable-mini-example">A runnable mini-example<a class="anchor" aria-label="anchor" href="#a-runnable-mini-example"></a>
+</h2>
+<p>The full workflow below downloads environmental layers over the
+European Alps, which needs network access, so those chunks are
+<strong>shown but not executed</strong> when the article is built. To
+keep the modelling steps reproducible and automatically tested,
+<em>envar</em> ships a small <strong>real</strong> WorldClim <span class="citation">(Fick &amp; Hijmans 2017)</span> extract for
+Switzerland (<code>bio1</code>, <code>bio12</code>,
+<code>elevation</code>, <code>slope</code> at ~9 km). The chunk below
+loads it <strong>in place of a download</strong> and fits a compact but
+complete SDM for the Apollo butterfly: it screens predictors for
+collinearity, flags extrapolation, fits a GLM to presence/background
+data, and maps predicted suitability.</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://animalbiodiversitylab.github.io/envar/">envar</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># The predictors would normally come from a download pipeline; here we load the</span></span>
+<span><span class="co"># equivalent bundled layers:</span></span>
+<span><span class="va">switzerland</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"switzerland.tif"</span>, package <span class="op">=</span> <span class="st">"envar"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Presences: the Apollo occurrences that fall within Switzerland.</span></span>
+<span><span class="va">presence</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">Apollo</span>, <span class="va">X</span> <span class="op">&gt;=</span> <span class="fl">5.9</span> <span class="op">&amp;</span> <span class="va">X</span> <span class="op">&lt;=</span> <span class="fl">10.5</span> <span class="op">&amp;</span> <span class="va">Y</span> <span class="op">&gt;=</span> <span class="fl">45.8</span> <span class="op">&amp;</span> <span class="va">Y</span> <span class="op">&lt;=</span> <span class="fl">47.8</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># The two envar checks that make an SDM more trustworthy: screen predictors for</span></span>
+<span><span class="co"># collinearity, then flag where the study area is outside the calibration range.</span></span>
+<span><span class="va">checked</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/corr_check.html">corr_check</a></span><span class="op">(</span><span class="va">switzerland</span><span class="op">)</span></span>
+<span><span class="va">checked</span><span class="op">$</span><span class="va">summary</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "High Cor (&gt;0.7): bio1, elevation" "High VIF (&gt;3): elevation, bio1"</span></span></code></pre>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">checked</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extr_check.html">extr_check</a></span><span class="op">(</span><span class="va">checked</span>, calib_points <span class="op">=</span> <span class="va">presence</span>, type <span class="op">=</span> <span class="st">"strict"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Assemble a presence / background table and fit a simple GLM (dropping</span></span>
+<span><span class="co"># elevation, which corr_check flags as collinear with bio1):</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">background</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/sample.html" class="external-link">spatSample</a></span><span class="op">(</span><span class="va">switzerland</span>, <span class="fl">500</span>, <span class="st">"random"</span>,</span>
+<span>                                as.points <span class="op">=</span> <span class="cn">TRUE</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">pres_xy</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/vect.html" class="external-link">vect</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/coerce.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">presence</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>                       type <span class="op">=</span> <span class="st">"points"</span>, crs <span class="op">=</span> <span class="st">"EPSG:4326"</span><span class="op">)</span></span>
+<span><span class="va">tab</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>pa <span class="op">=</span> <span class="fl">1</span>, <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/extract.html" class="external-link">extract</a></span><span class="op">(</span><span class="va">switzerland</span>, <span class="va">pres_xy</span><span class="op">)</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>pa <span class="op">=</span> <span class="fl">0</span>, <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/extract.html" class="external-link">extract</a></span><span class="op">(</span><span class="va">switzerland</span>, <span class="va">background</span><span class="op">)</span><span class="op">[</span>, <span class="op">-</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">tab</span>   <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/na.omit.html" class="external-link">na.omit</a></span><span class="op">(</span><span class="va">tab</span><span class="op">)</span></span>
+<span><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html" class="external-link">glm</a></span><span class="op">(</span><span class="va">pa</span> <span class="op">~</span> <span class="va">bio1</span> <span class="op">+</span> <span class="va">bio12</span> <span class="op">+</span> <span class="va">slope</span>, data <span class="op">=</span> <span class="va">tab</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Predict habitat suitability over the study area and map it next to the</span></span>
+<span><span class="co"># extrapolation mask:</span></span>
+<span><span class="va">suitability</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">switzerland</span>, <span class="va">model</span>, type <span class="op">=</span> <span class="st">"response"</span><span class="op">)</span></span>
+<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">suitability</span>, <span class="va">checked</span><span class="op">$</span><span class="va">extrapolation</span><span class="op">)</span>,</span>
+<span>            main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Apollo suitability (GLM)"</span>, <span class="st">"strict extrapolation"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="sdm_files/figure-html/mini-example-1.png" class="r-plt" alt="" width="624"></p>
+<p>The rest of this article develops the same pipeline at full scale
+over the European Alps.</p>
+</div>
+<div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
 <p>In this tutorial we show how <em>envar</em> can be used to streamline
@@ -100,7 +157,7 @@ influence of spatial autocorrelation <span class="citation">(Boria
 <em>et al.</em> 2014)</span>. The resulting dataset is included in the
 package assets (<code><a href="../reference/Alps.html">Alps()</a></code>) and can be accessed after loading
 the package in the R session.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># if 'envar' is not installed on your computer, please run the code below before</span></span>
 <span><span class="co"># proceeding:</span></span>
 <span></span>
@@ -142,7 +199,7 @@ the package in the R session.</p>
 <span></span>
 <span><span class="co"># load occurrence data</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">Apollo</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">Apollo</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##          X        Y</span></span>
 <span><span class="co">## 1 13.49513 47.10400</span></span>
@@ -167,7 +224,7 @@ sampling effort, via the <em>spatialEco</em> package <span class="citation">(Eva
 to the sampling effort defined in the previous step, using the
 <em>dismo</em> package <span class="citation">(Hijmans <em>et al.</em>
 2017)</span>.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># create a layer of sampling effort, as we need a template raster</span></span>
 <span><span class="va">occ_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_as_sf.html" class="external-link">st_as_sf</a></span><span class="op">(</span><span class="va">Apollo</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"X"</span>, <span class="st">"Y"</span><span class="op">)</span>, crs<span class="op">=</span><span class="fl">4326</span><span class="op">)</span></span>
 <span><span class="va">occ_sf</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">occ_sf</span>, <span class="fl">3035</span><span class="op">)</span></span>
@@ -187,14 +244,14 @@ to the sampling effort defined in the previous step, using the
 <span><span class="va">bg_points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu">randomPoints</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/raster/man/raster.html" class="external-link">raster</a></span><span class="op">(</span><span class="va">dens_ras</span><span class="op">)</span>, <span class="fl">10000</span>, prob <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">bg_points</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">'X'</span>, <span class="st">'Y'</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">dens_ras</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/sdm-unnamed-chunk-7-1.png" alt="plot of chunk unnamed-chunk-7"><p class="caption">
 plot of chunk unnamed-chunk-7
 </p>
 </div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bg_points</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##         X       Y</span></span>
 <span><span class="co">## 1 4422583 2906686</span></span>
@@ -219,7 +276,7 @@ period from CHELSA <span class="citation">(Karger <em>et al.</em>
 trees, and water) and a measure of landscape diversity (Shannon’s index)
 from <span class="citation">(Lo Parrino <em>et al.</em> 2025)</span>;
 two topographical variables (slope, northness) from <span class="citation">(Amatulli <em>et al.</em> 2018)</span>.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># divide data in spatial blocks for model calibration</span></span>
 <span><span class="va">occ_points</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_geometry.html" class="external-link">st_drop_geometry</a></span><span class="op">(</span><span class="va">occ_sf</span><span class="op">)</span>, <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html" class="external-link">st_coordinates</a></span><span class="op">(</span><span class="va">occ_sf</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">block</span> <span class="op">&lt;-</span> <span class="fu">get.block</span><span class="op">(</span><span class="va">occ_points</span>, <span class="va">bg_points</span>, orientation <span class="op">=</span> <span class="st">"lat_lon"</span><span class="op">)</span></span>
@@ -234,7 +291,7 @@ two topographical variables (slope, northness) from <span class="citation">(Amat
 <span>              <span class="fu"><a href="../reference/topography.html">topography</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"slope"</span>, <span class="st">"northness"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>              <span class="fu"><a href="../reference/corr_check.html">corr_check</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p>We can then check the Variance Inflation Factor (VIF):</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># View the Variance Inflation Factor values</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">predictors</span><span class="op">$</span><span class="va">vif</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##          Variables      VIF</span></span>
@@ -258,7 +315,7 @@ plot of chunk unnamed-chunk-11
 although not at the standard threshold of Pearson’s r &gt; |0.7|. Thus,
 we remove one of these variables; the one with a lower direct impact on
 the species physiology and distribution (slope).</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># remove slope to avoid correlation issues</span></span>
 <span><span class="va">predictors</span><span class="op">$</span><span class="va">data</span> <span class="op">&lt;-</span> <span class="va">predictors</span><span class="op">$</span><span class="va">data</span><span class="op">[</span>, <span class="op">!</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">predictors</span><span class="op">$</span><span class="va">data</span><span class="op">)</span> <span class="op"><a href="https://rspatial.github.io/terra/reference/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"slope"</span><span class="op">)</span><span class="op">]</span></span>
 <span></span>
@@ -282,7 +339,7 @@ training calibration sets. A higher value would imply a greater
 overfitting, as predictive ability would be higher on the train compared
 to the test set <span class="citation">(Radosavljevic &amp; Anderson
 2014)</span>.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Tune maxent models</span></span>
 <span><span class="va">sdms</span> <span class="op">&lt;-</span> <span class="fu">ENMevaluate</span><span class="op">(</span></span>
 <span>  occs <span class="op">=</span> <span class="va">data</span><span class="op">[</span><span class="va">data</span><span class="op">$</span><span class="va">pa</span> <span class="op">==</span> <span class="st">"1"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span><span class="op">:</span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/dimensions.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">-</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>,</span>
@@ -295,7 +352,7 @@ to the test set <span class="citation">(Radosavljevic &amp; Anderson
 <span><span class="co"># row number of the best model (best test Boyce index)</span></span>
 <span><span class="va">index</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/summarize-generics.html" class="external-link">which.max</a></span><span class="op">(</span><span class="va">sdms</span><span class="op">@</span><span class="va">results</span><span class="op">$</span><span class="va">cbi.val.avg</span><span class="op">)</span></span>
 <span><span class="va">sdm_best</span> <span class="op">&lt;-</span> <span class="va">sdms</span><span class="op">@</span><span class="va">models</span><span class="op">[[</span><span class="va">index</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># show tuning table</span></span>
 <span><span class="va">ordered</span> <span class="op">&lt;-</span> <span class="va">sdms</span><span class="op">@</span><span class="va">results</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">sdms</span><span class="op">@</span><span class="va">results</span><span class="op">$</span><span class="va">cbi.val.avg</span><span class="op">)</span>, <span class="op">]</span></span>
 <span></span>
@@ -314,7 +371,7 @@ overfitting. This model can thus be applied to obtain a map of current
 habitat suitability for <em>Parnassius apollo</em> over the European
 Alps, after retrieving predictors for this area using the <em>envar
 R</em> package again.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># use 'envar' to define predictors over the prediction area (European Alps)</span></span>
 <span><span class="va">predictorsAlps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>                  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1"</span>, <span class="st">"bio4"</span>, <span class="st">"bio12"</span>, <span class="st">"bio15"</span><span class="op">)</span>, years <span class="op">=</span> <span class="st">"1981-2010"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
@@ -329,7 +386,7 @@ environmental conditions found in the prediction area are consistent
 with those that were provided to the models in the training phase. Here
 we only checked for “strict” extrapolation only (i.e. at least one
 predictor outside the range found during calibration) <span class="citation">(Zurell <em>et al.</em> 2012)</span>.</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">extr</span> <span class="op">=</span> <span class="va">predictorsAlps</span><span class="op">$</span><span class="va">extrapolation</span><span class="op">$</span><span class="va">strict</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">extr</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
@@ -375,6 +432,11 @@ ecological niche models. <em>Ecological Modelling</em>, <em>275</em>,
 <div id="ref-evans2021" class="csl-entry">
 Evans, J.S. &amp; Ram, K. (2021). Package <span>‘spatialEco.’</span>
 <em>R CRAN</em>.
+</div>
+<div id="ref-fick2017" class="csl-entry">
+Fick, S.E. &amp; Hijmans, R.J. (2017). WorldClim 2: New 1-km spatial
+resolution climate surfaces for global land areas. <em>International
+Journal of Climatology</em>, <em>37</em>, 4302–4315.
 </div>
 <div id="ref-fielding1997" class="csl-entry">
 Fielding, A.H. &amp; Bell, J.F. (1997). A review of methods for the
@@ -458,7 +520,7 @@ mapped distributions. <em>Diversity and Distributions</em>, <em>18</em>,
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer>

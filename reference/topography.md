@@ -92,9 +92,9 @@ appropriate.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 # Example 1: Download elevation and slope for Italy
 processed <- par_set(country = "Italy", crs = 3035) %>% 
   topography(vars = c("elevation", "slope"))
-  } # }
+  # }
 ```

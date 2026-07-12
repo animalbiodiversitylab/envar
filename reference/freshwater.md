@@ -147,7 +147,7 @@ appropriate.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 # Topography with algorithm filtering (keeping only the average band)
 processed <- par_set(country = "Switzerland", crs = 3035) %>% 
   freshwater(vars = c("elevation", "slope"), algorithm = "avg")
@@ -155,5 +155,5 @@ processed <- par_set(country = "Switzerland", crs = 3035) %>%
 # Monthly Climate (January and July)
 processed <- par_set(country = "Italy", crs = 3035) %>% 
   freshwater(vars = "tmin", month = c(1, 7))
-} # }
+# }
 ```

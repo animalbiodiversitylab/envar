@@ -90,8 +90,8 @@ https://www.earthenv.org/
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 processed <- par_set(country= "Italy", crs=3035) %>% 
 earthenvlandcover(vars=c("snow ice"))
-  } # }
+  # }
 ```

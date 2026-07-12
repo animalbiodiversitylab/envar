@@ -56,8 +56,8 @@ Note: You must specify the \`year\` argument (integer between 2000 and
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 processed <- par_set(country= "Italy", crs=3035) %>% 
   hybridlandcover(vars="landcover", year=2015)
-  } # }
+  # }
 ```

@@ -101,8 +101,8 @@ supplementary materials.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 processed <- par_set(country= "Italy", crs=3035) %>% 
   spectre(vars=c("forest loss", "light at night"))
-  } # }
+  # }
 ```

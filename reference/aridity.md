@@ -69,8 +69,8 @@ Note: Data is downloaded from Figshare (Article ID 7504448).
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 processed <- par_set(country= "Italy", crs=3035) %>% 
 aridity(vars=c("aridity index annual", "et0 january"))
-  } # }
+  # }
 ```

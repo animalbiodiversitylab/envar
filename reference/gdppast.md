@@ -67,7 +67,7 @@ appropriate.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 # Get GDP for 2000 and 2010
 processed <- par_set(country= "Italy", crs=3035) %>% 
   gdppast(vars="gdp", year=c(2000, 2010))
@@ -75,5 +75,5 @@ processed <- par_set(country= "Italy", crs=3035) %>%
 # Get Electricity and GDP for 2019
 processed <- par_set(country= "Vietnam") %>% 
   gdppast(vars=c("electricity", "gdp"), year=2019)
-} # }
+# }
 ```

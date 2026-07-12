@@ -113,8 +113,8 @@ Climatology 37: 4302-4315. https://doi.org/10.1002/joc.5086
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 processed <- par_set(country = "Italy", crs = 3035) %>% 
   worldclim(vars = c("tmin", "bio1"), years = "1970-2000")
-  } # }
+  # }
 ```

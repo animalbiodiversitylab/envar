@@ -63,8 +63,8 @@ appropriate.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 processed <- par_set(country = "Italy", crs = 3035) %>% 
   population(vars = "population", year = 2050, ssp = 2)
-  } # }
+  # }
 ```

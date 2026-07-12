@@ -1,5 +1,68 @@
 # Species distribution modelling
 
+## A runnable mini-example
+
+The full workflow below downloads environmental layers over the European
+Alps, which needs network access, so those chunks are **shown but not
+executed** when the article is built. To keep the modelling steps
+reproducible and automatically tested, *envar* ships a small **real**
+WorldClim (Fick & Hijmans 2017) extract for Switzerland (`bio1`,
+`bio12`, `elevation`, `slope` at ~9 km). The chunk below loads it **in
+place of a download** and fits a compact but complete SDM for the Apollo
+butterfly: it screens predictors for collinearity, flags extrapolation,
+fits a GLM to presence/background data, and maps predicted suitability.
+
+``` r
+
+library(envar)
+
+# The predictors would normally come from a download pipeline; here we load the
+# equivalent bundled layers:
+switzerland <- terra::rast(
+  system.file("extdata", "switzerland.tif", package = "envar")
+)
+
+# Presences: the Apollo occurrences that fall within Switzerland.
+presence <- subset(Apollo, X >= 5.9 & X <= 10.5 & Y >= 45.8 & Y <= 47.8)
+
+# The two envar checks that make an SDM more trustworthy: screen predictors for
+# collinearity, then flag where the study area is outside the calibration range.
+checked <- corr_check(switzerland)
+checked$summary
+```
+
+    ## [1] "High Cor (>0.7): bio1, elevation" "High VIF (>3): elevation, bio1"
+
+``` r
+
+checked <- extr_check(checked, calib_points = presence, type = "strict")
+
+# Assemble a presence / background table and fit a simple GLM (dropping
+# elevation, which corr_check flags as collinear with bio1):
+set.seed(1)
+background <- terra::spatSample(switzerland, 500, "random",
+                                as.points = TRUE, na.rm = TRUE)
+pres_xy <- terra::vect(as.matrix(presence[, c("X", "Y")]),
+                       type = "points", crs = "EPSG:4326")
+tab <- rbind(
+  data.frame(pa = 1, terra::extract(switzerland, pres_xy)[, -1]),
+  data.frame(pa = 0, terra::extract(switzerland, background)[, -1])
+)
+tab   <- na.omit(tab)
+model <- glm(pa ~ bio1 + bio12 + slope, data = tab, family = binomial)
+
+# Predict habitat suitability over the study area and map it next to the
+# extrapolation mask:
+suitability <- terra::predict(switzerland, model, type = "response")
+terra::plot(c(suitability, checked$extrapolation),
+            main = c("Apollo suitability (GLM)", "strict extrapolation"))
+```
+
+![](sdm_files/figure-html/mini-example-1.png)
+
+The rest of this article develops the same pipeline at full scale over
+the European Alps.
+
 ## Introduction
 
 In this tutorial we show how *envar* can be used to streamline a species
@@ -318,6 +381,10 @@ filtering to reduce sampling bias can improve the performance of
 ecological niche models. *Ecological Modelling*, *275*, 73–77.
 
 Evans, J.S. & Ram, K. (2021). Package ‘spatialEco.’ *R CRAN*.
+
+Fick, S.E. & Hijmans, R.J. (2017). WorldClim 2: New 1-km spatial
+resolution climate surfaces for global land areas. *International
+Journal of Climatology*, *37*, 4302–4315.
 
 Fielding, A.H. & Bell, J.F. (1997). A review of methods for the
 assessment of prediction errors in conservation presence/absence models.

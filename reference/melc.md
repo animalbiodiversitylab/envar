@@ -96,8 +96,8 @@ https://figshare.com/s/4e7dee46628b530aee03
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 processed <- par_set(country= "Italy", crs=3035) %>% 
   melc(vars=c("tree", "water"))
-} # }
+# }
 ```

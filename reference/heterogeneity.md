@@ -83,9 +83,9 @@ appropriate.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 # Example 1: Download Shannon Index and Coefficient of Variation for the Alps
 processed <- par_set(shape = Alps, crs = 3035) %>% 
   heterogeneity(vars = c("shannon", "cv"))
-  } # }
+  # }
 ```

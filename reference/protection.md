@@ -69,9 +69,9 @@ when using these data for commercial or research purposes.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 # Example 1: Download National Parks and All Protected Areas for Italy
 processed <- par_set(country= "Italy", crs=3035) %>% 
 protection(vars=c("national park", "WDPA_ALL"))
-  } # }
+  # }
 ```

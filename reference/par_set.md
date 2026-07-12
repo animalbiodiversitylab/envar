@@ -354,7 +354,7 @@ behaviour described above).
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 # Basic usage with a country
 italy_grid <- par_set(country = "Italy")
 
@@ -404,5 +404,5 @@ atlantic_pelagic <- par_set(pelagic_realm = "Atlantic Warm Water")
 
 # Clip marine realm to land only
 land_only <- par_set(marine_realm = "Temperate Northern Atlantic", land = TRUE)
-} # }
+# }
 ```

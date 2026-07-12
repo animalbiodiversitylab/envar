@@ -99,8 +99,8 @@ Note: Data extent is \[-180, 180, -60, 85\].
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 processed <- par_set(country = "Italy", crs = 3035) %>% 
 accessibility(vars=c("large cities", "ports1"))
-  } # }
+  # }
 ```

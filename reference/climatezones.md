@@ -97,8 +97,8 @@ https://doi.org/10.1038/s41597-023-02549-6
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 processed <- par_set(country= "Italy", crs=3035) %>% 
 climatezones(vars="zones", years="1991-2020")
-  } # }
+  # }
 ```

@@ -93,7 +93,17 @@ https://doi.org/10.1111/j.1472-4642.2012.00887.x
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# extr_check() runs offline on the small example raster bundled with the
+# package (a real WorldClim extract for Switzerland). Here we flag cells whose
+# climate is novel relative to the Apollo occurrences that fall in Switzerland:
+switzerland <- terra::rast(
+  system.file("extdata", "switzerland.tif", package = "envar")
+)
+calib <- subset(Apollo, X >= 5.9 & X <= 10.5 & Y >= 45.8 & Y <= 47.8)
+checked <- extr_check(switzerland, calib_points = calib, type = "strict")
+checked$extrapolation
+
+# \donttest{
 # Example 1: Check extrapolation after getting environmental variables
 result <- par_set(country = "Italy") %>%
   melc(vars = c("tree", "water")) %>%
@@ -111,5 +121,5 @@ result <- par_set(pointsdf = Apollo[1:10,]) %>%
 result <- par_set(country = "Germany") %>%
   worldclim(vars = c("bio1", "bio12")) %>%
   extr_check(calib_points = occ_points, type = "combinatorial")
-} # }
+# }
 ```

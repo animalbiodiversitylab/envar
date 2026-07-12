@@ -112,31 +112,45 @@ prompt is shown. Their paths are returned as `plot_path` and `vif_path`.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="co"># Example 1: Basic usage after environmental variable extraction</span></span></span>
-<span class="r-in"><span><span class="va">processed_bilayer_corr_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs<span class="op">=</span><span class="fl">3035</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span></span>
-<span class="r-in"><span>  <span class="fu"><a href="melc.html">melc</a></span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span></span>
-<span class="r-in"><span>  <span class="fu"><a href="chelsa.html">chelsa</a></span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months<span class="op">=</span> <span class="fl">12</span>, year<span class="op">=</span><span class="fl">2015</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span></span>
-<span class="r-in"><span>  <span class="fu">corr_check</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Example 2: Chain with extr_check() (corr_check before extr_check)</span></span></span>
-<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span></span>
-<span class="r-in"><span>  <span class="fu"><a href="chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1"</span>, <span class="st">"bio12"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span></span>
-<span class="r-in"><span>  <span class="fu">corr_check</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="extr_check.html">extr_check</a></span><span class="op">(</span>calib_points <span class="op">=</span> <span class="va">my_points</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Example 3: Chain with extr_check() (extr_check before corr_check)</span></span></span>
-<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1"</span>, <span class="st">"bio12"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="extr_check.html">extr_check</a></span><span class="op">(</span>calib_points <span class="op">=</span> <span class="va">my_points</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu">corr_check</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Example 4: Custom thresholds for high correlation (&gt;0.7) and VIF (&gt;5)</span></span></span>
-<span class="r-in"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1"</span>, <span class="st">"bio12"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span></span>
-<span class="r-in"><span>  <span class="fu">corr_check</span><span class="op">(</span>pearson <span class="op">=</span> <span class="fl">0.7</span>, vif <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
-</code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># corr_check() runs offline on the small example raster bundled with the</span></span>
+<span><span class="co"># package (a real WorldClim extract for Switzerland), so it needs no download:</span></span>
+<span><span class="va">switzerland</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"switzerland.tif"</span>, package <span class="op">=</span> <span class="st">"envar"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span><span class="va">cc</span> <span class="op">&lt;-</span> <span class="fu">corr_check</span><span class="op">(</span><span class="va">switzerland</span><span class="op">)</span></span>
+<span><span class="va">cc</span><span class="op">$</span><span class="va">summary</span></span>
+<span></span>
+<span><span class="co"># It also accepts a plain data.frame of predictor values:</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">example_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>bio1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">40</span><span class="op">)</span>, bio12 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">example_df</span><span class="op">$</span><span class="va">bio11</span> <span class="op">&lt;-</span> <span class="va">example_df</span><span class="op">$</span><span class="va">bio1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">40</span>, sd <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span>  <span class="co"># correlated with bio1</span></span>
+<span><span class="fu">corr_check</span><span class="op">(</span><span class="va">example_df</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span></span>
+<span></span>
+<span><span class="co"># \donttest{</span></span>
+<span><span class="co"># The typical workflow chains corr_check() after downloading variables.</span></span>
+<span><span class="co"># Example 1: Basic usage after environmental variable extraction</span></span>
+<span><span class="va">processed_bilayer_corr_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs<span class="op">=</span><span class="fl">3035</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="melc.html">melc</a></span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="chelsa.html">chelsa</a></span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months<span class="op">=</span> <span class="fl">12</span>, year<span class="op">=</span><span class="fl">2015</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">corr_check</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Example 2: Chain with extr_check() (corr_check before extr_check)</span></span>
+<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu"><a href="chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1"</span>, <span class="st">"bio12"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span>
+<span>  <span class="fu">corr_check</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="extr_check.html">extr_check</a></span><span class="op">(</span>calib_points <span class="op">=</span> <span class="va">my_points</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Example 3: Chain with extr_check() (extr_check before corr_check)</span></span>
+<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1"</span>, <span class="st">"bio12"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="extr_check.html">extr_check</a></span><span class="op">(</span>calib_points <span class="op">=</span> <span class="va">my_points</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">corr_check</span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Example 4: Custom thresholds for high correlation (&gt;0.7) and VIF (&gt;5)</span></span>
+<span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1"</span>, <span class="st">"bio12"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu">corr_check</span><span class="op">(</span>pearson <span class="op">=</span> <span class="fl">0.7</span>, vif <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<span><span class="co"># }</span></span></code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
@@ -147,7 +161,7 @@ prompt is shown. Their paths are returned as `plot_path` and `vif_path`.</p>
 </div>
 
 <div class="pkgdown-footer-right">
-  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.0.</p>
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
     </footer></div>

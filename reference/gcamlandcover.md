@@ -85,7 +85,7 @@ Scientific Data 10, 748. https://doi.org/10.1038/s41597-023-02637-7
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 # Get Baseline (2020)
 processed <- par_set(country= "Italy", crs=4326) %>% 
   gcamlandcover(year = 2020)
@@ -93,5 +93,5 @@ processed <- par_set(country= "Italy", crs=4326) %>%
 # Get Future (SSP5-8.5 in 2050)
 processed <- par_set(country= "Italy", crs=4326) %>% 
   gcamlandcover(ssp = 585, year = 2050)
-} # }
+# }
 ```

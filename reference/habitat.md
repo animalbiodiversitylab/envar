@@ -120,7 +120,7 @@ appropriate.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 # Example 1: Level 1 extraction (Forest and Artificial)
 processed <- par_set(country = "Italy", crs = 3035) %>% 
   habitat(vars = c("Forest", "Artificial"), level = 1)
@@ -128,5 +128,5 @@ processed <- par_set(country = "Italy", crs = 3035) %>%
 # Example 2: Level 2 extraction (Specific biomes)
 processed_l2 <- par_set(country = "Brazil", crs = 3035) %>% 
   habitat(vars = c("Mangrove", "Tropical moist lowland forest"), level = 2)
-  } # }
+  # }
 ```

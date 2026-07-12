@@ -1,5 +1,55 @@
 # Variables
 
+### A runnable mini-example
+
+Each source below is downloaded on demand, which needs network access,
+so those chunks are **shown but not executed** when the article is
+built. Whatever the source, every variable comes back as a named layer
+in a `SpatRaster`. To show what that looks like offline, *envar* ships a
+small **real** WorldClim (Fick & Hijmans 2017) extract for Switzerland
+holding four such variables — mean annual temperature (`bio1`), annual
+precipitation (`bio12`), `elevation` and `slope` at ~9 km. The chunk
+below loads it **in place of a download** and inspects the variables it
+contains.
+
+``` r
+
+library(envar)
+
+# A downloaded stack behaves exactly like this bundled one:
+switzerland <- terra::rast(
+  system.file("extdata", "switzerland.tif", package = "envar")
+)
+
+# The layer names are the variable names you requested via `vars = c(...)`:
+names(switzerland)
+```
+
+    ## [1] "bio1"      "bio12"     "elevation" "slope"
+
+``` r
+
+# Per-variable summary statistics over the study area:
+terra::global(switzerland, c("min", "mean", "max"), na.rm = TRUE)
+```
+
+    ##              min        mean     max
+    ## bio1       -5.92    5.224702   11.05
+    ## bio12     307.00 1235.081608 1994.00
+    ## elevation 302.00 1304.183922 3337.00
+    ## slope       0.05    1.612203    5.76
+
+``` r
+
+# Plot every variable layer:
+terra::plot(switzerland)
+```
+
+![](variables_files/figure-html/mini-example-1.png)
+
+The catalogue below lists every variable available from every source,
+together with the `vars = c(...)` codes used to request them.
+
 ## Introduction
 
 This document provides a comprehensive reference for all the

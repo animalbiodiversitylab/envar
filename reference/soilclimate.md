@@ -111,8 +111,8 @@ appropriate.
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+# \donttest{
 processed <- par_set(country= "Italy", crs=3035) %>% 
 soilclimate(vars=c("SBIO1", "SBIO10"), depth="5-15")
-   } # }
+   # }
 ```
