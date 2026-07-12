@@ -66,7 +66,7 @@ https://doi.org/10.1371/journal.pbio.1002415
 Note: Please cite original sources of primary datasets where appropriate.
 }
 \examples{
-\dontrun{
+\donttest{
 processed <- par_set(country= "Italy", crs=3035) \%>\% 
 cloudcover(vars=c("mean annual", "january"))
   }

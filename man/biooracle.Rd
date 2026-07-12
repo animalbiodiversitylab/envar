@@ -83,7 +83,7 @@ with \code{res = 6}; any other value (including the default) raises an error.
 }
 
 \examples{
-\dontrun{
+\donttest{
 # Example 1: Current conditions (Baseline)
 current_env <- par_set(country = "Italy", crs = 3035, res = 6) \%>\%
   biooracle(vars = c("temperature", "salinity"),

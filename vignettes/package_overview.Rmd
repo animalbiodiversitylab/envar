@@ -14,11 +14,43 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown_notangle}
 ---
 
+## A runnable mini-example
 
+The download chunks in this article need network access, so they are **shown but
+not executed** when the article is built. Every one of them returns the same
+kind of object: a `SpatRaster` of stacked environmental layers over a study
+area. So that the processing steps stay reproducible and automatically tested,
+_envar_ bundles one such stack — a small **real** WorldClim [@fick2017] extract
+for Switzerland (`bio1`, `bio12`, `elevation`, `slope` at ~9 km). The chunk
+below loads it **in place of a download** and demonstrates the study-area
+operations covered in this overview: aggregating the grid, reprojecting to
+another CRS, and checking collinearity.
 
+```{r mini-example, message=FALSE, fig.height=3, fig.width=6.5}
+library(envar)
 
+# This stack stands in for the output of a download pipeline such as
+#   par_set(country = "Switzerland", crs = 3035, res = 2) %>%
+#     worldclim(vars = c("bio1", "bio12")) %>% topography(vars = "elevation")
+switzerland <- terra::rast(
+  system.file("extdata", "switzerland.tif", package = "envar")
+)
+switzerland
 
-# 1. Introduction 
+# Aggregate to a coarser grid, as par_set(res = ...) would do internally:
+terra::aggregate(switzerland, fact = 2, fun = "mean")
+
+# Reproject to a projected CRS in metres, as par_set(crs = 3035) would do internally:
+terra::project(switzerland, "EPSG:3035")
+
+# Check collinearity across the study area:
+corr_check(switzerland)$summary
+```
+
+The rest of this overview walks through how the study area and each layer are
+obtained in the first place.
+
+# 1. Introduction
 
 _envar_ is an _R_ package that enables the download of a wide range of environmental variables and their processing. In this tutorial we explore all the potential uses of the package, to give an idea of the breadth of uses and of the potential challenges and shortcuts. First we illustrate the five ways in which it is possible to define a study area: 1) global data, 2) a country or continent is specified, 3) an ecological boundary is specified, 4) a polygon shapefile is loaded, 5) a point shapefile is loaded, 6) a point data.frame is loaded, 7) a buffer is specified in addition to another element, or 8) a species range is created. Then, we illustrate how to project to a different reference system, aggregate the results to a different resolution, how to check for correlation and extrapolation, how to set NAs consistently across raster layers, and how to optionally save the results locally.
 

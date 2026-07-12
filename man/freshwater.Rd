@@ -98,7 +98,7 @@ https://doi.org/10.1038/sdata.2015.73
 Note: Please cite original sources of primary datasets where appropriate.
 }
 \examples{
-\dontrun{
+\donttest{
 # Topography with algorithm filtering (keeping only the average band)
 processed <- par_set(country = "Switzerland", crs = 3035) \%>\% 
   freshwater(vars = c("elevation", "slope"), algorithm = "avg")

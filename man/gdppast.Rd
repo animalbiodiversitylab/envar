@@ -50,7 +50,7 @@ https://doi.org/10.1038/s41597-022-01322-5
 Note: Please cite original sources of primary datasets where appropriate.
 }
 \examples{
-\dontrun{
+\donttest{
 # Get GDP for 2000 and 2010
 processed <- par_set(country= "Italy", crs=3035) \%>\% 
   gdppast(vars="gdp", year=c(2000, 2010))

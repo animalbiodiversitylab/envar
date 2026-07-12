@@ -63,7 +63,7 @@ Zhang T, Cheng C, Wu X (2023). "Mapping the spatial heterogeneity of global land
 https://doi.org/10.1038/s41597-023-02637-7
 }
 \examples{
-\dontrun{
+\donttest{
 # Get Baseline (2020)
 processed <- par_set(country= "Italy", crs=4326) \%>\% 
   gcamlandcover(year = 2020)

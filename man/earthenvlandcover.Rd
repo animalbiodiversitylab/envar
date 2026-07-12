@@ -53,7 +53,7 @@ Note: Users should verify the terms of use for EarthEnv data provided
 at https://www.earthenv.org/
 }
 \examples{
-\dontrun{
+\donttest{
 processed <- par_set(country= "Italy", crs=3035) \%>\% 
 earthenvlandcover(vars=c("snow ice"))
   }

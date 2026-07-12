@@ -38,7 +38,7 @@
 #' If `par_set()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Example 1: Download land cover for Italy in 2050 under scenario A1B
 #' processed <- par_set(country = "Italy", crs = 3035) %>% 
 #'   geososlandcover(vars = c("land cover"), year = 2050, scenario = "A1B")
@@ -96,6 +96,7 @@ geososlandcover <- function(x, vars, scenario = "A1B", year = 2010, discover = T
   
   processed_stack <- NULL
   extracted_df <- NULL
+  fn_env <- environment()
   
   # --------------------------------------------------------------------
   # Argument Validation and URL Construction
@@ -235,9 +236,9 @@ geososlandcover <- function(x, vars, scenario = "A1B", year = 2010, discover = T
         layer1 <- result$layer
         new_extent <- result$extent
         
-        current_global_extent <<- new_extent
+        fn_env$current_global_extent <- new_extent
         if (!is.null(processed_stack)) {
-          processed_stack <<- align_stack_to_extent(processed_stack, new_extent)
+          fn_env$processed_stack <- align_stack_to_extent(processed_stack, new_extent)
         }
       } else {
         layer1 <- result
@@ -246,9 +247,9 @@ geososlandcover <- function(x, vars, scenario = "A1B", year = 2010, discover = T
       names(layer1) <- paste0(user_name, "_", label_suffix)
       
       if (is.null(processed_stack)) {
-        processed_stack <<- layer1
+        fn_env$processed_stack <- layer1
       } else {
-        processed_stack <<- c(processed_stack, layer1)
+        fn_env$processed_stack <- c(processed_stack, layer1)
       }
       
       cli::cli_alert_success("Processed and added {.val {names(layer1)}} to stack.")
@@ -312,9 +313,9 @@ geososlandcover <- function(x, vars, scenario = "A1B", year = 2010, discover = T
       }
       
       if (is.null(extracted_df)) {
-        extracted_df <<- extracted
+        fn_env$extracted_df <- extracted
       } else {
-        extracted_df <<- merge(extracted_df, extracted[, c(1, ncol(extracted))], by = "ID", all = TRUE)
+        fn_env$extracted_df <- merge(extracted_df, extracted[, c(1, ncol(extracted))], by = "ID", all = TRUE)
       }
       
       cli::cli_alert_success("Extracted {.val {user_name}} successfully.")

@@ -44,7 +44,7 @@ Note: If the `vars` argument is left empty, the function will default
 to downloading the land cover map.
 }
 \examples{
-\dontrun{
+\donttest{
 # Download SSP5-RCP8.5 projection for 2050
 processed <- par_set(country= "Italy", crs=3035) \%>\% 
   pftlandcover(vars="landcover", year=2050, ssp=585)

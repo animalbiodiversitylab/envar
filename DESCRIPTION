@@ -12,8 +12,10 @@ Authors@R:
       person(given = "Elia", family = "Lo Parrino", role ="aut", comment = c(ORCID = "0000-0001-9619-9568")))
 Description: Provides a unified interface to download, harmonise and extract a
     wide range of environmental and socio-economic variables from established
-    open data sources (such as 'WorldClim', 'CHELSA' and 'Bio-ORACLE', among
-    others) for use in macroecology and biogeography. The package handles
+    open data web services (such as 'WorldClim' <https://www.worldclim.org/>,
+    'CHELSA' <https://chelsa-climate.org/> and 'Bio-ORACLE'
+    <https://www.bio-oracle.org/>, among others) for use in macroecology and
+    biogeography. The package handles
     spatial subsetting to a study area, reprojection to a common coordinate
     reference system, and extraction of values at sampling points, so that
     predictors from heterogeneous sources can be assembled within a single

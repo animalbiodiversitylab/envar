@@ -61,7 +61,7 @@ https://doi.org/10.1038/sdata.2018.40
 Note: Please cite original sources of primary datasets where appropriate.
 }
 \examples{
-\dontrun{
+\donttest{
 # Example 1: Download elevation and slope for Italy
 processed <- par_set(country = "Italy", crs = 3035) \%>\% 
   topography(vars = c("elevation", "slope"))

@@ -14,9 +14,47 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown_notangle}
 ---
 
+## A runnable mini-example
 
+Downloading global environmental layers needs network access, so the download
+chunks in this article are **shown but not executed** when the article is built
+(that is also why the boxes further down display code without output). To keep
+the package fully reproducible and automatically tested, _envar_ ships a small
+**real** example raster: a WorldClim [@fick2017] extract for Switzerland with
+mean annual temperature (`bio1`), annual precipitation (`bio12`), `elevation`
+and `slope` at ~9 km resolution. The chunk below loads it **in place of a
+download** and runs the heart of the workflow — the collinearity and
+extrapolation checks — end to end. It is a miniature of the full Alpine example
+shown later.
 
+```{r mini-example, message=FALSE, fig.height=3, fig.width=6.5}
+library(envar)
 
+# In a real analysis these layers would come from a download pipeline such as
+#   par_set(country = "Switzerland") %>%
+#     worldclim(vars = c("bio1", "bio12")) %>% topography(vars = "elevation")
+# Here we simply load the equivalent layers bundled with the package:
+example_file <- system.file("extdata", "switzerland.tif", package = "envar")
+switzerland  <- terra::rast(example_file)
+switzerland
+
+# Check collinearity among the layers (bio1 and elevation are strongly related):
+checked <- corr_check(switzerland)
+checked$summary
+
+# Flag environmental extrapolation relative to the Apollo butterfly
+# occurrences that fall within Switzerland (used here as calibration points):
+calib   <- subset(Apollo, X >= 5.9 & X <= 10.5 & Y >= 45.8 & Y <= 47.8)
+checked <- extr_check(checked, calib_points = calib, type = "strict")
+
+# Map mean annual temperature next to where extrapolation occurs
+# (1 = novel conditions, 0 = analog conditions):
+terra::plot(c(switzerland[["bio1"]], checked$extrapolation),
+            main = c("bio1 (mean annual temp.)", "strict extrapolation"))
+```
+
+The sections below expand each of these steps into the full, download-based
+workflow.
 
 ## Package aims
 
@@ -63,7 +101,6 @@ Then, the "%>%" is used to concatenate different commands. The next step is to s
 A correlation analysis can be performed with the to `corr_check()` function to identify and remove highly correlated variables. This function must always be called as the last one in the pipeline.
 
 It is also possible to call the `extr_check()` function at the bottom of the code to enable an automatic test of extrapolation, regardless of whether you requested already a `corr_check()`. Ecological models often produce spurious predictions when predicting in environmental conditions not present in the calibration range [@elith2010]. This problem can arise under two conditions: 1) at least a variable has values outside the calibration range - strict extrapolation -, or 2) all variables fall in the calibration range, but novel combinations of predictor values are met - combinatorial extrapolation - [@zurell2012]. Inside the function it is possible to specify if strict and/or combinatorial extrapolation has to be checked (argument “type” - default to strict only), and it is necessary to specify the calibration points as data.frame with X and Y columns (argument “calib_points”) and the CRS of those coordinates (argument “calib_crs”) if different from the default (EPSG:4326). Extrapolation is checked creating an environmental overlap mask, using a method adapted from Zurell et al. (2012) [@zurell2012] and implemented natively within `envar`. To check extrapolation we assume that a dataset of 2648 occurrences of the _Parnassius apollo_ butterfly (dataset `Apollo()` already included in the package) was used to train any model and that we want to apply the model to the European Alps later on.
-
 
 ``` r
 processed <- par_set(shape = Alps, crs = 3035, res = 2, buffer = 10) %>% 

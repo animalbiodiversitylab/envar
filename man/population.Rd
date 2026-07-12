@@ -43,7 +43,7 @@ Wang X, Meng X, Long Y (2022). "Projecting 1 km-grid population distributions fr
 Note: Please cite original sources of primary datasets where appropriate.
 }
 \examples{
-\dontrun{
+\donttest{
 processed <- par_set(country = "Italy", crs = 3035) \%>\% 
   population(vars = "population", year = 2050, ssp = 2)
   }

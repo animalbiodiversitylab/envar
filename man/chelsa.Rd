@@ -190,7 +190,7 @@ Note: Users should verify the terms of use for CHELSA data provided
 at https://chelsa-climate.org/
 }
 \examples{
-\dontrun{
+\donttest{
 
 # climatic values for one specific year/month
 processed <- par_set(zooregion = "Madagascan") \%>\%

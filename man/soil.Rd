@@ -38,7 +38,7 @@ FAO, IIASA (2023). "Harmonized World Soil Database v2.0." Food and Agriculture O
 https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/
 }
 \examples{
-\dontrun{
+\donttest{
 processed <- par_set(country= "Italy", crs=3035) \%>\% 
 soil(vars=c("soil"))
   }

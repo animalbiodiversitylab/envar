@@ -164,7 +164,7 @@
 #'     \item \code{path}: User-specified path to store the result.
 #'   }
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Basic usage with a country
 #' italy_grid <- par_set(country = "Italy")
 #' 

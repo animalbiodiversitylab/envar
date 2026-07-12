@@ -59,7 +59,7 @@ https://doi.org/10.6084/m9.figshare.30665069
 Note: Users should verify the terms of use provided at https://figshare.com/s/4e7dee46628b530aee03
 }
 \examples{
-\dontrun{
+\donttest{
 processed <- par_set(country= "Italy", crs=3035) \%>\% 
   melc(vars=c("tree", "water"))
 }

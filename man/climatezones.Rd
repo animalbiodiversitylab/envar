@@ -70,7 +70,7 @@ Beck HE, McVicar TR, Vergopolan N, Berg A, Lutsko NJ, Dufour A, Zeng Z, Jiang X,
 https://doi.org/10.1038/s41597-023-02549-6
 }
 \examples{
-\dontrun{
+\donttest{
 processed <- par_set(country= "Italy", crs=3035) \%>\% 
 climatezones(vars="zones", years="1991-2020")
   }

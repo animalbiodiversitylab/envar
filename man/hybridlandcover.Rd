@@ -40,7 +40,7 @@ https://doi.org/10.34133/remotesensing.0122
 Note: You must specify the `year` argument (integer between 2000 and 2020).
 }
 \examples{
-\dontrun{
+\donttest{
 processed <- par_set(country= "Italy", crs=3035) \%>\% 
   hybridlandcover(vars="landcover", year=2015)
   }

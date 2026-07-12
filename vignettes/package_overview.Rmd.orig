@@ -14,6 +14,44 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown_notangle}
 ---
 
+## A runnable mini-example
+
+The download chunks in this article need network access, so they are **shown but
+not executed** when the article is built. Every one of them returns the same
+kind of object: a `SpatRaster` of stacked environmental layers over a study
+area. So that the processing steps stay reproducible and automatically tested,
+_envar_ bundles one such stack — a small **real** WorldClim [@fick2017] extract
+for Switzerland (`bio1`, `bio12`, `elevation`, `slope` at ~9 km). The chunk
+below loads it **in place of a download** and demonstrates the study-area
+operations covered in this overview: aggregating the grid, reprojecting to
+another CRS, and checking collinearity.
+
+```{r mini-example, message=FALSE, fig.height=3, fig.width=6.5}`r ''`
+library(envar)
+
+# This stack stands in for the output of a download pipeline such as
+#   par_set(country = "Switzerland", crs = 3035, res = 2) %>%
+#     worldclim(vars = c("bio1", "bio12")) %>% topography(vars = "elevation")
+switzerland <- terra::rast(
+  system.file("extdata", "switzerland.tif", package = "envar")
+)
+switzerland
+
+# Aggregate to a coarser grid, as par_set(res = ...) would:
+terra::aggregate(switzerland, fact = 2, fun = "mean")
+
+# Reproject to a projected CRS in metres, as par_set(crs = 3035) would:
+terra::project(switzerland, "EPSG:3035")
+
+# Check collinearity across the study area:
+corr_check(switzerland)$summary
+
+# Visualise the effect of aggregating the study grid:
+terra::plot(c(switzerland[["bio12"]],
+              terra::aggregate(switzerland[["bio12"]], 3, "mean")),
+            main = c("bio12, ~9 km", "bio12, aggregated ~27 km"))
+```
+
 ```{r, include = FALSE}
 h = 3.2
 w = 5.0

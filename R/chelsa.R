@@ -166,7 +166,7 @@
 #' If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `par_set()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' 
 #' # climatic values for one specific year/month
 #' processed <- par_set(zooregion = "Madagascan") %>%
@@ -237,6 +237,7 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
   
   processed_stack <- NULL
   extracted_df <- NULL
+  fn_env <- environment()
   
   # --------------------------------------------------------------------
   # Helper: Download, process, and clean up a single file
@@ -283,11 +284,11 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
         new_extent <- result$extent
         
         # Update the cumulative global extent
-        current_global_extent <<- new_extent
+        fn_env$current_global_extent <- new_extent
         
         # If we have existing layers and extent changed, crop them
         if (!is.null(processed_stack)) {
-          processed_stack <<- align_stack_to_extent(processed_stack, new_extent)
+          fn_env$processed_stack <- align_stack_to_extent(processed_stack, new_extent)
         }
       } else {
         # For regional processing, result is just the layer
@@ -298,9 +299,9 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
       names(layer1) <- user_name
       
       if (is.null(processed_stack)) {
-        processed_stack <<- layer1
+        fn_env$processed_stack <- layer1
       } else {
-        processed_stack <<- c(processed_stack, layer1)
+        fn_env$processed_stack <- c(processed_stack, layer1)
       }
       
       cli::cli_alert_success("Processed and added {.val {user_name}} to stack.")
@@ -330,9 +331,9 @@ chelsa <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NULL,
       }
       
       if (is.null(extracted_df)) {
-        extracted_df <<- extracted
+        fn_env$extracted_df <- extracted
       } else {
-        extracted_df <<- merge(extracted_df, extracted[, c(1, ncol(extracted))], by = "ID", all = TRUE)
+        fn_env$extracted_df <- merge(extracted_df, extracted[, c(1, ncol(extracted))], by = "ID", all = TRUE)
       }
       
       cli::cli_alert_success("Extracted {.val {user_name}} successfully.")

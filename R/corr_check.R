@@ -43,7 +43,22 @@
 #' }
 #'
 #' @examples
-#' \dontrun{
+#' # corr_check() runs offline on the small example raster bundled with the
+#' # package (a real WorldClim extract for Switzerland), so it needs no download:
+#' switzerland <- terra::rast(
+#'   system.file("extdata", "switzerland.tif", package = "envar")
+#' )
+#' cc <- corr_check(switzerland)
+#' cc$summary
+#'
+#' # It also accepts a plain data.frame of predictor values:
+#' set.seed(1)
+#' example_df <- data.frame(bio1 = rnorm(40), bio12 = rnorm(40))
+#' example_df$bio11 <- example_df$bio1 + rnorm(40, sd = 0.2)  # correlated with bio1
+#' corr_check(example_df)$summary
+#'
+#' \donttest{
+#' # The typical workflow chains corr_check() after downloading variables.
 #' # Example 1: Basic usage after environmental variable extraction
 #' processed_bilayer_corr_check <- par_set(country = "Italy", crs=3035, buffer = 10) %>% 
 #'   melc(vars=c("ice")) %>% 

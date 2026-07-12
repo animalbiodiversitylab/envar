@@ -48,7 +48,7 @@ Note: Users should ensure they comply with the terms of use of the WDPA
 when using these data for commercial or research purposes.
 }
 \examples{
-\dontrun{
+\donttest{
 # Example 1: Download National Parks and All Protected Areas for Italy
 processed <- par_set(country= "Italy", crs=3035) \%>\% 
 protection(vars=c("national park", "WDPA_ALL"))

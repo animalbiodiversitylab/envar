@@ -87,7 +87,7 @@
 #' If `par_set()` contained a raster/polygon/points with buffer: a `SpatRaster` stack of processed variables. If `par_set()` contained spatial points or data.frame of points without buffer: a `data.frame` of x, y, and extracted values.
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' # Topography with algorithm filtering (keeping only the average band)
 #' processed <- par_set(country = "Switzerland", crs = 3035) %>% 
 #'   freshwater(vars = c("elevation", "slope"), algorithm = "avg")
@@ -137,6 +137,7 @@ freshwater <- function(x, vars, year = NULL, month = NULL, algorithm = NULL, ...
   
   processed_stack <- NULL
   extracted_df <- NULL
+  fn_env <- environment()
   
   # --------------------------------------------------------------------
   # Friendly-name -> canonical code mapping
@@ -294,9 +295,9 @@ freshwater <- function(x, vars, year = NULL, month = NULL, algorithm = NULL, ...
       if (is_global) {
         layer1 <- result$layer
         new_extent <- result$extent
-        current_global_extent <<- new_extent
+        fn_env$current_global_extent <- new_extent
         if (!is.null(processed_stack)) {
-          processed_stack <<- align_stack_to_extent(processed_stack, new_extent)
+          fn_env$processed_stack <- align_stack_to_extent(processed_stack, new_extent)
         }
       } else {
         layer1 <- result
@@ -307,9 +308,9 @@ freshwater <- function(x, vars, year = NULL, month = NULL, algorithm = NULL, ...
       }
       
       if (is.null(processed_stack)) {
-        processed_stack <<- layer1
+        fn_env$processed_stack <- layer1
       } else {
-        processed_stack <<- c(processed_stack, layer1)
+        fn_env$processed_stack <- c(processed_stack, layer1)
       }
       
       cli::cli_alert_success("Processed and added {.val {user_name}} to stack.")
@@ -368,9 +369,9 @@ freshwater <- function(x, vars, year = NULL, month = NULL, algorithm = NULL, ...
       }
       
       if (is.null(extracted_df)) {
-        extracted_df <<- extracted
+        fn_env$extracted_df <- extracted
       } else {
-        extracted_df <<- merge(extracted_df, extracted[, c(1, ncol(extracted))], by = "ID", all = TRUE)
+        fn_env$extracted_df <- merge(extracted_df, extracted[, c(1, ncol(extracted))], by = "ID", all = TRUE)
       }
       
       cli::cli_alert_success("Extracted {.val {user_name}} successfully.")

@@ -49,7 +49,7 @@ Li X, Chen G, Liu X, Liang X, Wang S, Chen Y, Pei F, Xu X (2017). "A new global 
 https://doi.org/10.1080/24694452.2017.1303357
 }
 \examples{
-\dontrun{
+\donttest{
 # Example 1: Download land cover for Italy in 2050 under scenario A1B
 processed <- par_set(country = "Italy", crs = 3035) \%>\% 
   geososlandcover(vars = c("land cover"), year = 2050, scenario = "A1B")

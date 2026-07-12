@@ -59,7 +59,7 @@ https://doi.org/10.1038/s41597-019-0265-5
 Note: Data extent is [-180, 180, -60, 85].
 }
 \examples{
-\dontrun{
+\donttest{
 processed <- par_set(country = "Italy", crs = 3035) \%>\% 
 accessibility(vars=c("large cities", "ports1"))
   }

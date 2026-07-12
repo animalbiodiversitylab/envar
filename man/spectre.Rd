@@ -74,7 +74,7 @@ Users should consult and cite the original sources listed in the SPECTRE
 supplementary materials.
 }
 \examples{
-\dontrun{
+\donttest{
 processed <- par_set(country= "Italy", crs=3035) \%>\% 
   spectre(vars=c("forest loss", "light at night"))
   }

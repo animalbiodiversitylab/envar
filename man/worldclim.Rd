@@ -86,7 +86,7 @@ Fick SE, Hijmans RJ (2017). "WorldClim 2: new 1-km spatial resolution climate su
 https://doi.org/10.1002/joc.5086
 }
 \examples{
-\dontrun{
+\donttest{
 processed <- par_set(country = "Italy", crs = 3035) \%>\% 
   worldclim(vars = c("tmin", "bio1"), years = "1970-2000")
   }

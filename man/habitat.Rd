@@ -68,7 +68,7 @@ https://doi.org/10.1038/s41597-020-00599-8
 Note: Please cite original sources of primary datasets where appropriate.
 }
 \examples{
-\dontrun{
+\donttest{
 # Example 1: Level 1 extraction (Forest and Artificial)
 processed <- par_set(country = "Italy", crs = 3035) \%>\% 
   habitat(vars = c("Forest", "Artificial"), level = 1)

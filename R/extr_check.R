@@ -55,7 +55,17 @@
 #' }
 #'
 #' @examples
-#' \dontrun{
+#' # extr_check() runs offline on the small example raster bundled with the
+#' # package (a real WorldClim extract for Switzerland). Here we flag cells whose
+#' # climate is novel relative to the Apollo occurrences that fall in Switzerland:
+#' switzerland <- terra::rast(
+#'   system.file("extdata", "switzerland.tif", package = "envar")
+#' )
+#' calib <- subset(Apollo, X >= 5.9 & X <= 10.5 & Y >= 45.8 & Y <= 47.8)
+#' checked <- extr_check(switzerland, calib_points = calib, type = "strict")
+#' checked$extrapolation
+#'
+#' \donttest{
 #' # Example 1: Check extrapolation after getting environmental variables
 #' result <- par_set(country = "Italy") %>%
 #'   melc(vars = c("tree", "water")) %>%
@@ -107,6 +117,7 @@ extr_check <- function(x,
   study_data <- NULL
   study_raster <- NULL
   extracted_df <- NULL
+  fn_env <- environment()
   is_raster_output <- FALSE
   
   # Case 1: Input is a list (from corr_check or similar)
@@ -271,7 +282,7 @@ extr_check <- function(x,
           
         }, error = function(e) {
           cli::cli_alert_warning("Failed to extract '{var_name}': {e$message}")
-          extraction_success <<- FALSE
+          fn_env$extraction_success <- FALSE
         })
       }
       

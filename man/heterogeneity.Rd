@@ -57,7 +57,7 @@ https://doi.org/10.1111/geb.12365
 Note: Please cite original sources of primary datasets where appropriate.
 }
 \examples{
-\dontrun{
+\donttest{
 # Example 1: Download Shannon Index and Coefficient of Variation for the Alps
 processed <- par_set(shape = Alps, crs = 3035) \%>\% 
   heterogeneity(vars = c("shannon", "cv"))

@@ -14,8 +14,37 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown_notangle}
 ---
 
+## A runnable mini-example
 
+Each source below is downloaded on demand, which needs network access, so those
+chunks are **shown but not executed** when the article is built. Whatever the
+source, every variable comes back as a named layer in a `SpatRaster`. To show
+what that looks like offline, _envar_ ships a small **real** WorldClim
+[@fick2017] extract for Switzerland holding four such variables — mean annual
+temperature (`bio1`), annual precipitation (`bio12`), `elevation` and `slope` at
+~9 km. The chunk below loads it **in place of a download** and inspects the
+variables it contains.
 
+```{r mini-example, message=FALSE, fig.height=4, fig.width=6.5}
+library(envar)
+
+# A downloaded stack behaves exactly like this bundled one:
+switzerland <- terra::rast(
+  system.file("extdata", "switzerland.tif", package = "envar")
+)
+
+# The layer names are the variable names you requested via `vars = c(...)`:
+names(switzerland)
+
+# Per-variable summary statistics over the study area:
+terra::global(switzerland, c("min", "mean", "max"), na.rm = TRUE)
+
+# Plot every variable layer:
+terra::plot(switzerland)
+```
+
+The catalogue below lists every variable available from every source, together
+with the `vars = c(...)` codes used to request them.
 
 
 # Introduction

@@ -68,7 +68,7 @@ Lembrechts JJ et al. (2022)."Global maps of soil temperature." Global Change Bio
 Note: Please cite original sources of primary datasets where appropriate.
 }
 \examples{
-\dontrun{
+\donttest{
 processed <- par_set(country= "Italy", crs=3035) \%>\% 
 soilclimate(vars=c("SBIO1", "SBIO10"), depth="5-15")
    }
