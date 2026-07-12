@@ -14,39 +14,6 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown_notangle}
 ---
 
-## A runnable mini-example
-
-Each source below is downloaded on demand, which needs network access, so those
-chunks are **shown but not executed** when the article is built. Whatever the
-source, every variable comes back as a named layer in a `SpatRaster`. To show
-what that looks like offline, _envar_ ships a small **real** WorldClim
-[@fick2017] extract for Switzerland holding four such variables — mean annual
-temperature (`bio1`), annual precipitation (`bio12`), `elevation` and `slope` at
-~9 km. The chunk below loads it **in place of a download** and inspects the
-variables it contains.
-
-```{r mini-example, message=FALSE, fig.height=4, fig.width=6.5}
-library(envar)
-
-# A downloaded stack behaves exactly like this bundled one:
-switzerland <- terra::rast(
-  system.file("extdata", "switzerland.tif", package = "envar")
-)
-
-# The layer names are the variable names you requested via `vars = c(...)`:
-names(switzerland)
-
-# Per-variable summary statistics over the study area:
-terra::global(switzerland, c("min", "mean", "max"), na.rm = TRUE)
-
-# Plot every variable layer:
-terra::plot(switzerland)
-```
-
-The catalogue below lists every variable available from every source, together
-with the `vars = c(...)` codes used to request them.
-
-
 # Introduction
 
 This document provides a comprehensive reference for all the environmental variables available in the _envar R_ package and the sources from which they can be retrieved. Each section describes a data source, lists the available variables with their synonyms, provides usage examples, and includes proper citations. Sources are grouped based on the category to which they belong (e.g., land cover, climate, etc.). For each source, the available variables are listed alongside synonyms that can be used inside the vars argument interchangeably (except for the chelsa and worldclim functions that do not allow the use of synonyms and the exact codes must be used).
@@ -1219,5 +1186,34 @@ plot(processed)
 # Conclusion
 
 This tutorial provided an overview of all the available sources and functions. Remember to always cite the proper reference for the source used. For further details on the use of specific sources, check the function documentation **[here](https://animalbiodiversitylab.github.io/envar/reference/)** or from R after loading the package with ? (e.g., ?spectre).
+
+# Appendix: A runnable mini-example
+
+Each source above is downloaded on demand, which needs network access, so those
+chunks are **shown but not executed** when the article is built through GitHub pages at each deploy. However, whatever the
+source, every variable comes back as a named layer in a `SpatRaster`. To show
+what that looks like offline, here we show a **real** WorldClim
+[@fick2017] extract for Switzerland holding four such variables — mean annual
+temperature (`bio1`), annual precipitation (`bio12`), `elevation` and `slope` at
+~9 km. The chunk below loads it **in place of a download** and inspects the
+variables it contains.
+
+```{r mini-example, message=FALSE, fig.height=4, fig.width=6.5}
+library(envar)
+
+# A downloaded stack behaves exactly like this bundled one:
+switzerland <- terra::rast(
+  system.file("extdata", "switzerland.tif", package = "envar")
+)
+
+# The layer names are the variable names you requested via `vars = c(...)`:
+names(switzerland)
+
+# Per-variable summary statistics over the study area:
+terra::global(switzerland, c("min", "mean", "max"), na.rm = TRUE)
+
+# Plot every variable layer:
+terra::plot(switzerland)
+```
 
 # References

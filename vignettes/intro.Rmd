@@ -14,48 +14,6 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown_notangle}
 ---
 
-## A runnable mini-example
-
-Downloading global environmental layers needs network access, so the download
-chunks in this article are **shown but not executed** when the article is built
-(that is also why the boxes further down display code without output). To keep
-the package fully reproducible and automatically tested, _envar_ ships a small
-**real** example raster: a WorldClim [@fick2017] extract for Switzerland with
-mean annual temperature (`bio1`), annual precipitation (`bio12`), `elevation`
-and `slope` at ~9 km resolution. The chunk below loads it **in place of a
-download** and runs the heart of the workflow — the collinearity and
-extrapolation checks — end to end. It is a miniature of the full Alpine example
-shown later.
-
-```{r mini-example, message=FALSE, fig.height=3, fig.width=6.5}
-library(envar)
-
-# In a real analysis these layers would come from a download pipeline such as
-#   par_set(country = "Switzerland") %>%
-#     worldclim(vars = c("bio1", "bio12")) %>% topography(vars = "elevation")
-# Here we simply load the equivalent layers bundled with the package:
-example_file <- system.file("extdata", "switzerland.tif", package = "envar")
-switzerland  <- terra::rast(example_file)
-switzerland
-
-# Check collinearity among the layers (bio1 and elevation are strongly related):
-checked <- corr_check(switzerland)
-checked$summary
-
-# Flag environmental extrapolation relative to the Apollo butterfly
-# occurrences that fall within Switzerland (used here as calibration points):
-calib   <- subset(Apollo, X >= 5.9 & X <= 10.5 & Y >= 45.8 & Y <= 47.8)
-checked <- extr_check(checked, calib_points = calib, type = "strict")
-
-# Map mean annual temperature next to where extrapolation occurs
-# (1 = novel conditions, 0 = analog conditions):
-terra::plot(c(switzerland[["bio1"]], checked$extrapolation),
-            main = c("bio1 (mean annual temp.)", "strict extrapolation"))
-```
-
-The sections below expand each of these steps into the full, download-based
-workflow.
-
 ## Package aims
 
 When conducting an ecological analysis, the response of one or more variable(s) is modeled as a function of one or more predictor(s). When variables are not directly collected in the field or through remote sensing, and information on the spatial location of samples is available, global and already published maps can be used to define variable values. This process is often time-consuming and requires the standardization of different sources to the same study area and/or the extraction of value across study points and/or the conversion to a common coordinate reference system. _envar_ is an _R_ package that allows the download of a wide range of environmental variables from different pre-existing sources, to make the whole process of retrieving variables easier and faster, and integrated within the R environment. The user can thus avoid to manually download and process different variables from different sources, and instead focus on the analysis itself and integrate the downloaded and processed variables within a single R pipeline. 
@@ -206,6 +164,40 @@ terra::plot(processed$extrapolation$strict)
 ## Conclusion
 
 We have shown a single full example of use of the _envar R_ package. Instead of specifying a shape, we could have chosen a country/continent or defined a data.frame of points. For an overview of all the possible use-cases see the **[package overview vignette](https://animalbiodiversitylab.github.io/envar/articles/package_overview)** and for a full list of all the available sources and variables see the **[reference](https://animalbiodiversitylab.github.io/envar/reference/)**.
+
+## Annex: a runnable mini-example
+
+Downloading global environmental layers needs network access, so the download
+chunks in this article are **shown but not executed** when the article is built through GitHub pages. To keep
+the package fully reproducible and automatically tested, here you can also find a test that does not include any download: a WorldClim [@fick2017] extract for Switzerland with mean annual temperature (`bio1`), annual precipitation (`bio12`), `elevation` and `slope` at ~9 km resolution. The chunk below loads it **in place of a
+download** and runs the heart of the workflow — the collinearity and
+extrapolation checks — end to end. It is a miniature of what shown above.
+
+```{r mini-example, message=FALSE, fig.height=3, fig.width=6.5}
+library(envar)
+
+# In a real analysis these layers would come from a download pipeline such as
+#   par_set(country = "Switzerland") %>%
+#     worldclim(vars = c("bio1", "bio12")) %>% topography(vars = "elevation")
+# Here we simply load the equivalent layers bundled with the package:
+example_file <- system.file("extdata", "switzerland.tif", package = "envar")
+switzerland  <- terra::rast(example_file)
+switzerland
+
+# Check collinearity among the layers (bio1 and elevation are strongly related):
+checked <- corr_check(switzerland)
+checked$summary
+
+# Flag environmental extrapolation relative to the Apollo butterfly
+# occurrences that fall within Switzerland (used here as calibration points):
+calib   <- subset(Apollo, X >= 5.9 & X <= 10.5 & Y >= 45.8 & Y <= 47.8)
+checked <- extr_check(checked, calib_points = calib, type = "strict")
+
+# Map mean annual temperature next to where extrapolation occurs
+# (1 = novel conditions, 0 = analog conditions):
+terra::plot(c(switzerland[["bio1"]], checked$extrapolation),
+            main = c("bio1 (mean annual temp.)", "strict extrapolation"))
+```
 
 ## References
 
