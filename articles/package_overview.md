@@ -1,84 +1,5 @@
 # Package overview
 
-### A runnable mini-example
-
-The download chunks in this article need network access, so they are
-**shown but not executed** when the article is built. Every one of them
-returns the same kind of object: a `SpatRaster` of stacked environmental
-layers over a study area. So that the processing steps stay reproducible
-and automatically tested, *envar* bundles one such stack — a small
-**real** WorldClim (Fick & Hijmans 2017) extract for Switzerland
-(`bio1`, `bio12`, `elevation`, `slope` at ~9 km). The chunk below loads
-it **in place of a download** and demonstrates the study-area operations
-covered in this overview: aggregating the grid, reprojecting to another
-CRS, and checking collinearity.
-
-``` r
-
-library(envar)
-
-# This stack stands in for the output of a download pipeline such as
-#   par_set(country = "Switzerland", crs = 3035, res = 2) %>%
-#     worldclim(vars = c("bio1", "bio12")) %>% topography(vars = "elevation")
-switzerland <- terra::rast(
-  system.file("extdata", "switzerland.tif", package = "envar")
-)
-switzerland
-```
-
-    ## class       : SpatRaster
-    ## size        : 24, 55, 4  (nrow, ncol, nlyr)
-    ## resolution  : 0.08333333, 0.08333333  (x, y)
-    ## extent      : 5.916667, 10.5, 45.83333, 47.83333  (xmin, xmax, ymin, ymax)
-    ## coord. ref. : lon/lat WGS 84 (EPSG:4326)
-    ## source      : switzerland.tif
-    ## names       :  bio1, bio12, elevation, slope
-    ## min values  : -5.92,   307,       302,  0.05
-    ## max values  : 11.05,  1994,      3337,  5.76
-
-``` r
-
-# Aggregate to a coarser grid, as par_set(res = ...) would do internally:
-terra::aggregate(switzerland, fact = 2, fun = "mean")
-```
-
-    ## class       : SpatRaster
-    ## size        : 12, 28, 4  (nrow, ncol, nlyr)
-    ## resolution  : 0.1666667, 0.1666667  (x, y)
-    ## extent      : 5.916667, 10.58333, 45.83333, 47.83333  (xmin, xmax, ymin, ymax)
-    ## coord. ref. : lon/lat WGS 84 (EPSG:4326)
-    ## source(s)   : memory
-    ## names       :    bio1,  bio12, elevation,  slope
-    ## min values  : -3.1025, 641.25,    340.25,  0.195
-    ## max values  : 10.0575,   1861,   2873.75, 4.7075
-
-``` r
-
-# Reproject to a projected CRS in metres, as par_set(crs = 3035) would do internally:
-terra::project(switzerland, "EPSG:3035")
-```
-
-    ## class       : SpatRaster
-    ## size        : 33, 52, 4  (nrow, ncol, nlyr)
-    ## resolution  : 6908.209, 6908.209  (x, y)
-    ## extent      : 4003502, 4362729, 2527109, 2755080  (xmin, xmax, ymin, ymax)
-    ## coord. ref. : ETRS89-extended / LAEA Europe (EPSG:3035)
-    ## source(s)   : memory
-    ## names       :      bio1,       bio12,   elevation,    slope
-    ## min values  : -5.047194,  450.110199,  314.793427,  0.14869
-    ## max values  :     10.99, 1915.514648, 3185.633301, 5.188708
-
-``` r
-
-# Check collinearity across the study area:
-corr_check(switzerland)$summary
-```
-
-    ## [1] "High Cor (>0.7): bio1, elevation" "High VIF (>3): elevation, bio1"
-
-The rest of this overview walks through how the study area and each
-layer are obtained in the first place.
-
 ## 1. Introduction
 
 *envar* is an *R* package that enables the download of a wide range of
@@ -1301,7 +1222,85 @@ can be checked at the
 or at the detailed explanation of all **[sources and
 variables](https://animalbiodiversitylab.github.io/envar/articles/variables)**.
 
-## 11. References
+## 11. Annex: A runnable mini-example
+
+The download chunks in this article need network access, so they are
+**shown but not executed** when the article is built through GitHub
+pages at every deploy. Every one of them returns the same kind of
+object: a `SpatRaster` of stacked environmental layers over a study
+area. So that the processing steps stay reproducible and automatically
+tested, here you can find an example without any download but with a
+test raster — a small **real** WorldClim (Fick & Hijmans 2017) extract
+for Switzerland (`bio1`, `bio12`, `elevation`, `slope` at ~9 km). The
+chunk below loads it **in place of a download** and demonstrates the
+study-area operations covered in this overview: aggregating the grid,
+reprojecting to another CRS, and checking collinearity.
+
+``` r
+
+library(envar)
+
+# This stack stands in for the output of a download pipeline such as
+#   par_set(country = "Switzerland", crs = 3035, res = 2) %>%
+#     worldclim(vars = c("bio1", "bio12")) %>% topography(vars = "elevation")
+switzerland <- terra::rast(
+  system.file("extdata", "switzerland.tif", package = "envar")
+)
+
+switzerland
+```
+
+    ## class       : SpatRaster
+    ## size        : 24, 55, 4  (nrow, ncol, nlyr)
+    ## resolution  : 0.08333333, 0.08333333  (x, y)
+    ## extent      : 5.916667, 10.5, 45.83333, 47.83333  (xmin, xmax, ymin, ymax)
+    ## coord. ref. : lon/lat WGS 84 (EPSG:4326)
+    ## source      : switzerland.tif
+    ## names       :  bio1, bio12, elevation, slope
+    ## min values  : -5.92,   307,       302,  0.05
+    ## max values  : 11.05,  1994,      3337,  5.76
+
+``` r
+
+# Aggregate to a coarser grid, as par_set(res = ...) would do internally:
+terra::aggregate(switzerland, fact = 2, fun = "mean")
+```
+
+    ## class       : SpatRaster
+    ## size        : 12, 28, 4  (nrow, ncol, nlyr)
+    ## resolution  : 0.1666667, 0.1666667  (x, y)
+    ## extent      : 5.916667, 10.58333, 45.83333, 47.83333  (xmin, xmax, ymin, ymax)
+    ## coord. ref. : lon/lat WGS 84 (EPSG:4326)
+    ## source(s)   : memory
+    ## names       :    bio1,  bio12, elevation,  slope
+    ## min values  : -3.1025, 641.25,    340.25,  0.195
+    ## max values  : 10.0575,   1861,   2873.75, 4.7075
+
+``` r
+
+# Reproject to a projected CRS in metres, as par_set(crs = 3035) would do internally:
+terra::project(switzerland, "EPSG:3035")
+```
+
+    ## class       : SpatRaster
+    ## size        : 33, 52, 4  (nrow, ncol, nlyr)
+    ## resolution  : 6908.209, 6908.209  (x, y)
+    ## extent      : 4003502, 4362729, 2527109, 2755080  (xmin, xmax, ymin, ymax)
+    ## coord. ref. : ETRS89-extended / LAEA Europe (EPSG:3035)
+    ## source(s)   : memory
+    ## names       :      bio1,       bio12,   elevation,    slope
+    ## min values  : -5.047194,  450.110199,  314.793427,  0.14869
+    ## max values  :     10.99, 1915.514648, 3185.633301, 5.188708
+
+``` r
+
+# Check collinearity across the study area:
+corr_check(switzerland)$summary
+```
+
+    ## [1] "High Cor (>0.7): bio1, elevation" "High VIF (>3): elevation, bio1"
+
+## 12. References
 
 Abell, R., Thieme, M.L., Revenga, C., Bryer, M., Kottelat, M.,
 Bogutskaya, N., Coad, B., Mandrak, N., Balderas, S.C. & Bussing, W.

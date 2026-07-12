@@ -1,69 +1,5 @@
 # Get started
 
-## A runnable mini-example
-
-Downloading global environmental layers needs network access, so the
-download chunks in this article are **shown but not executed** when the
-article is built (that is also why the boxes further down display code
-without output). To keep the package fully reproducible and
-automatically tested, *envar* ships a small **real** example raster: a
-WorldClim (Fick & Hijmans 2017) extract for Switzerland with mean annual
-temperature (`bio1`), annual precipitation (`bio12`), `elevation` and
-`slope` at ~9 km resolution. The chunk below loads it **in place of a
-download** and runs the heart of the workflow — the collinearity and
-extrapolation checks — end to end. It is a miniature of the full Alpine
-example shown later.
-
-``` r
-
-library(envar)
-
-# In a real analysis these layers would come from a download pipeline such as
-#   par_set(country = "Switzerland") %>%
-#     worldclim(vars = c("bio1", "bio12")) %>% topography(vars = "elevation")
-# Here we simply load the equivalent layers bundled with the package:
-example_file <- system.file("extdata", "switzerland.tif", package = "envar")
-switzerland  <- terra::rast(example_file)
-switzerland
-```
-
-    ## class       : SpatRaster
-    ## size        : 24, 55, 4  (nrow, ncol, nlyr)
-    ## resolution  : 0.08333333, 0.08333333  (x, y)
-    ## extent      : 5.916667, 10.5, 45.83333, 47.83333  (xmin, xmax, ymin, ymax)
-    ## coord. ref. : lon/lat WGS 84 (EPSG:4326)
-    ## source      : switzerland.tif
-    ## names       :  bio1, bio12, elevation, slope
-    ## min values  : -5.92,   307,       302,  0.05
-    ## max values  : 11.05,  1994,      3337,  5.76
-
-``` r
-
-# Check collinearity among the layers (bio1 and elevation are strongly related):
-checked <- corr_check(switzerland)
-checked$summary
-```
-
-    ## [1] "High Cor (>0.7): bio1, elevation" "High VIF (>3): elevation, bio1"
-
-``` r
-
-# Flag environmental extrapolation relative to the Apollo butterfly
-# occurrences that fall within Switzerland (used here as calibration points):
-calib   <- subset(Apollo, X >= 5.9 & X <= 10.5 & Y >= 45.8 & Y <= 47.8)
-checked <- extr_check(checked, calib_points = calib, type = "strict")
-
-# Map mean annual temperature next to where extrapolation occurs
-# (1 = novel conditions, 0 = analog conditions):
-terra::plot(c(switzerland[["bio1"]], checked$extrapolation),
-            main = c("bio1 (mean annual temp.)", "strict extrapolation"))
-```
-
-![](intro_files/figure-html/mini-example-1.png)
-
-The sections below expand each of these steps into the full,
-download-based workflow.
-
 ## Package aims
 
 When conducting an ecological analysis, the response of one or more
@@ -311,6 +247,66 @@ use-cases see the **[package overview
 vignette](https://animalbiodiversitylab.github.io/envar/articles/package_overview)**
 and for a full list of all the available sources and variables see the
 **[reference](https://animalbiodiversitylab.github.io/envar/reference/)**.
+
+## Annex: a runnable mini-example
+
+Downloading global environmental layers needs network access, so the
+download chunks in this article are **shown but not executed** when the
+article is built through GitHub pages. To keep the package fully
+reproducible and automatically tested, here you can also find a test
+that does not include any download: a WorldClim (Fick & Hijmans 2017)
+extract for Switzerland with mean annual temperature (`bio1`), annual
+precipitation (`bio12`), `elevation` and `slope` at ~9 km resolution.
+The chunk below loads it **in place of a download** and runs the heart
+of the workflow — the collinearity and extrapolation checks — end to
+end. It is a miniature of what shown above.
+
+``` r
+
+library(envar)
+
+# In a real analysis these layers would come from a download pipeline such as
+#   par_set(country = "Switzerland") %>%
+#     worldclim(vars = c("bio1", "bio12")) %>% topography(vars = "elevation")
+# Here we simply load the equivalent layers bundled with the package:
+example_file <- system.file("extdata", "switzerland.tif", package = "envar")
+switzerland  <- terra::rast(example_file)
+switzerland
+```
+
+    ## class       : SpatRaster
+    ## size        : 24, 55, 4  (nrow, ncol, nlyr)
+    ## resolution  : 0.08333333, 0.08333333  (x, y)
+    ## extent      : 5.916667, 10.5, 45.83333, 47.83333  (xmin, xmax, ymin, ymax)
+    ## coord. ref. : lon/lat WGS 84 (EPSG:4326)
+    ## source      : switzerland.tif
+    ## names       :  bio1, bio12, elevation, slope
+    ## min values  : -5.92,   307,       302,  0.05
+    ## max values  : 11.05,  1994,      3337,  5.76
+
+``` r
+
+# Check collinearity among the layers (bio1 and elevation are strongly related):
+checked <- corr_check(switzerland)
+checked$summary
+```
+
+    ## [1] "High Cor (>0.7): bio1, elevation" "High VIF (>3): elevation, bio1"
+
+``` r
+
+# Flag environmental extrapolation relative to the Apollo butterfly
+# occurrences that fall within Switzerland (used here as calibration points):
+calib   <- subset(Apollo, X >= 5.9 & X <= 10.5 & Y >= 45.8 & Y <= 47.8)
+checked <- extr_check(checked, calib_points = calib, type = "strict")
+
+# Map mean annual temperature next to where extrapolation occurs
+# (1 = novel conditions, 0 = analog conditions):
+terra::plot(c(switzerland[["bio1"]], checked$extrapolation),
+            main = c("bio1 (mean annual temp.)", "strict extrapolation"))
+```
+
+![](intro_files/figure-html/mini-example-1.png)
 
 ## References
 

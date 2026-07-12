@@ -82,59 +82,6 @@
     
     
 <div class="section level2">
-<h2 id="a-runnable-mini-example">A runnable mini-example<a class="anchor" aria-label="anchor" href="#a-runnable-mini-example"></a>
-</h2>
-<p>Downloading global environmental layers needs network access, so the
-download chunks in this article are <strong>shown but not
-executed</strong> when the article is built (that is also why the boxes
-further down display code without output). To keep the package fully
-reproducible and automatically tested, <em>envar</em> ships a small
-<strong>real</strong> example raster: a WorldClim <span class="citation">(Fick &amp; Hijmans 2017)</span> extract for
-Switzerland with mean annual temperature (<code>bio1</code>), annual
-precipitation (<code>bio12</code>), <code>elevation</code> and
-<code>slope</code> at ~9 km resolution. The chunk below loads it
-<strong>in place of a download</strong> and runs the heart of the
-workflow — the collinearity and extrapolation checks — end to end. It is
-a miniature of the full Alpine example shown later.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://animalbiodiversitylab.github.io/envar/">envar</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># In a real analysis these layers would come from a download pipeline such as</span></span>
-<span><span class="co">#   par_set(country = "Switzerland") %&gt;%</span></span>
-<span><span class="co">#     worldclim(vars = c("bio1", "bio12")) %&gt;% topography(vars = "elevation")</span></span>
-<span><span class="co"># Here we simply load the equivalent layers bundled with the package:</span></span>
-<span><span class="va">example_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"switzerland.tif"</span>, package <span class="op">=</span> <span class="st">"envar"</span><span class="op">)</span></span>
-<span><span class="va">switzerland</span>  <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">example_file</span><span class="op">)</span></span>
-<span><span class="va">switzerland</span></span></code></pre></div>
-<pre><code><span><span class="co">## class       : SpatRaster</span></span>
-<span><span class="co">## size        : 24, 55, 4  (nrow, ncol, nlyr)</span></span>
-<span><span class="co">## resolution  : 0.08333333, 0.08333333  (x, y)</span></span>
-<span><span class="co">## extent      : 5.916667, 10.5, 45.83333, 47.83333  (xmin, xmax, ymin, ymax)</span></span>
-<span><span class="co">## coord. ref. : lon/lat WGS 84 (EPSG:4326)</span></span>
-<span><span class="co">## source      : switzerland.tif</span></span>
-<span><span class="co">## names       :  bio1, bio12, elevation, slope</span></span>
-<span><span class="co">## min values  : -5.92,   307,       302,  0.05</span></span>
-<span><span class="co">## max values  : 11.05,  1994,      3337,  5.76</span></span></code></pre>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Check collinearity among the layers (bio1 and elevation are strongly related):</span></span>
-<span><span class="va">checked</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/corr_check.html">corr_check</a></span><span class="op">(</span><span class="va">switzerland</span><span class="op">)</span></span>
-<span><span class="va">checked</span><span class="op">$</span><span class="va">summary</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "High Cor (&gt;0.7): bio1, elevation" "High VIF (&gt;3): elevation, bio1"</span></span></code></pre>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Flag environmental extrapolation relative to the Apollo butterfly</span></span>
-<span><span class="co"># occurrences that fall within Switzerland (used here as calibration points):</span></span>
-<span><span class="va">calib</span>   <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">Apollo</span>, <span class="va">X</span> <span class="op">&gt;=</span> <span class="fl">5.9</span> <span class="op">&amp;</span> <span class="va">X</span> <span class="op">&lt;=</span> <span class="fl">10.5</span> <span class="op">&amp;</span> <span class="va">Y</span> <span class="op">&gt;=</span> <span class="fl">45.8</span> <span class="op">&amp;</span> <span class="va">Y</span> <span class="op">&lt;=</span> <span class="fl">47.8</span><span class="op">)</span></span>
-<span><span class="va">checked</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extr_check.html">extr_check</a></span><span class="op">(</span><span class="va">checked</span>, calib_points <span class="op">=</span> <span class="va">calib</span>, type <span class="op">=</span> <span class="st">"strict"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Map mean annual temperature next to where extrapolation occurs</span></span>
-<span><span class="co"># (1 = novel conditions, 0 = analog conditions):</span></span>
-<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">switzerland</span><span class="op">[[</span><span class="st">"bio1"</span><span class="op">]</span><span class="op">]</span>, <span class="va">checked</span><span class="op">$</span><span class="va">extrapolation</span><span class="op">)</span>,</span>
-<span>            main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1 (mean annual temp.)"</span>, <span class="st">"strict extrapolation"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="intro_files/figure-html/mini-example-1.png" class="r-plt" alt="" width="624"></p>
-<p>The sections below expand each of these steps into the full,
-download-based workflow.</p>
-</div>
-<div class="section level2">
 <h2 id="package-aims">Package aims<a class="anchor" aria-label="anchor" href="#package-aims"></a>
 </h2>
 <p>When conducting an ecological analysis, the response of one or more
@@ -158,7 +105,7 @@ within a single R pipeline.</p>
 <h2 id="first-use-installation">First use: installation<a class="anchor" aria-label="anchor" href="#first-use-installation"></a>
 </h2>
 <p>First, we install the package with the following code.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install using the "remotes" package</span></span>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://remotes.r-lib.org" class="external-link">remotes</a></span><span class="op">)</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"remotes"</span><span class="op">)</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"animalbiodiversitylab/envar"</span>, </span>
@@ -180,7 +127,7 @@ within a single R pipeline.</p>
 will be automatically loaded to ensure the full functionality of the
 package. However, other packages are often required for plotting and
 further analyses and we also load them here for later use.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://animalbiodiversitylab.github.io/envar/">envar</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span></code></pre></div>
@@ -240,7 +187,7 @@ check extrapolation we assume that a dataset of 2648 occurrences of the
 <em>Parnassius apollo</em> butterfly (dataset <code><a href="../reference/Apollo.html">Apollo()</a></code>
 already included in the package) was used to train any model and that we
 want to apply the model to the European Alps later on.</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span>, res <span class="op">=</span> <span class="fl">2</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>             <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1"</span>, <span class="st">"bio4"</span>, <span class="st">"bio10"</span>, <span class="st">"bio12"</span>, <span class="st">"bio19"</span><span class="op">)</span>,</span>
 <span>                    years <span class="op">=</span> <span class="st">"1981-2010"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -267,7 +214,7 @@ the Pearson’s pairwise correlation was saved. An “extrapolation” object
 will then be one layer - two if both strict and extrapolation are
 checked - reporting as 1 cells of extrapolation and 0 cells of no
 extrapolation.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot the first two variables</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">$</span><span class="va">data</span><span class="op">[[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
@@ -275,7 +222,7 @@ extrapolation.</p>
 plot of chunk unnamed-chunk-6
 </p>
 </div>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># View the Pearson's pairwise correlation matrix</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">processed</span><span class="op">$</span><span class="va">correlation_matrix</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                 bio1_1981-2010 bio4_1981-2010 bio10_1981-2010 bio12_1981-2010</span></span>
@@ -298,7 +245,7 @@ plot of chunk unnamed-chunk-6
 <span><span class="co">## slope               0.399967493  0.83277881  1.00000000  0.223848319  0.2433729</span></span>
 <span><span class="co">## trees              -0.003624083 -0.12081588  0.22384832  1.000000000 -0.3266344</span></span>
 <span><span class="co">## ice                 0.229900683  0.48571755  0.24337291 -0.326634442  1.0000000</span></span></code></pre>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># View the Variance Inflation Factor values</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">processed</span><span class="op">$</span><span class="va">vif</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##         Variables         VIF</span></span>
@@ -325,14 +272,14 @@ this is not a proximal variable (i.e., the effect of elevation on
 species distributions is mediated by other co-varying factors such as
 climate) we can remove it. To obtain a set of uncorrelated variables we
 might thus want to sub-set our variables as follows.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># define a set of uncorrelated variables</span></span>
 <span><span class="va">uncorrelated_vars</span> <span class="op">&lt;-</span> <span class="va">processed</span><span class="op">$</span><span class="va">data</span><span class="op">[[</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1_1981-2010"</span>, <span class="st">"bio12_1981-2010"</span>, <span class="st">"trees"</span>, <span class="st">"ice"</span><span class="op">)</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <p>We can also see where extrapolation occurs in our study area. This
 map can be used alongside any ecological prediction (e.g., species
 distribution models applied over the European Alps), to interpret more
 carefully predictions in areas where extrapolation is found.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># visualize the raster map of where extrapolation occurs (1 = extrapolation, 0 = no extrapolation)</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">$</span><span class="va">extrapolation</span><span class="op">$</span><span class="va">strict</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
@@ -350,6 +297,57 @@ country/continent or defined a data.frame of points. For an overview of
 all the possible use-cases see the <strong><a href="https://animalbiodiversitylab.github.io/envar/articles/package_overview">package
 overview vignette</a></strong> and for a full list of all the available
 sources and variables see the <strong><a href="https://animalbiodiversitylab.github.io/envar/reference/">reference</a></strong>.</p>
+</div>
+<div class="section level2">
+<h2 id="annex-a-runnable-mini-example">Annex: a runnable mini-example<a class="anchor" aria-label="anchor" href="#annex-a-runnable-mini-example"></a>
+</h2>
+<p>Downloading global environmental layers needs network access, so the
+download chunks in this article are <strong>shown but not
+executed</strong> when the article is built through GitHub pages. To
+keep the package fully reproducible and automatically tested, here you
+can also find a test that does not include any download: a WorldClim
+<span class="citation">(Fick &amp; Hijmans 2017)</span> extract for
+Switzerland with mean annual temperature (<code>bio1</code>), annual
+precipitation (<code>bio12</code>), <code>elevation</code> and
+<code>slope</code> at ~9 km resolution. The chunk below loads it
+<strong>in place of a download</strong> and runs the heart of the
+workflow — the collinearity and extrapolation checks — end to end. It is
+a miniature of what shown above.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://animalbiodiversitylab.github.io/envar/">envar</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># In a real analysis these layers would come from a download pipeline such as</span></span>
+<span><span class="co">#   par_set(country = "Switzerland") %&gt;%</span></span>
+<span><span class="co">#     worldclim(vars = c("bio1", "bio12")) %&gt;% topography(vars = "elevation")</span></span>
+<span><span class="co"># Here we simply load the equivalent layers bundled with the package:</span></span>
+<span><span class="va">example_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"switzerland.tif"</span>, package <span class="op">=</span> <span class="st">"envar"</span><span class="op">)</span></span>
+<span><span class="va">switzerland</span>  <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span><span class="va">example_file</span><span class="op">)</span></span>
+<span><span class="va">switzerland</span></span></code></pre></div>
+<pre><code><span><span class="co">## class       : SpatRaster</span></span>
+<span><span class="co">## size        : 24, 55, 4  (nrow, ncol, nlyr)</span></span>
+<span><span class="co">## resolution  : 0.08333333, 0.08333333  (x, y)</span></span>
+<span><span class="co">## extent      : 5.916667, 10.5, 45.83333, 47.83333  (xmin, xmax, ymin, ymax)</span></span>
+<span><span class="co">## coord. ref. : lon/lat WGS 84 (EPSG:4326)</span></span>
+<span><span class="co">## source      : switzerland.tif</span></span>
+<span><span class="co">## names       :  bio1, bio12, elevation, slope</span></span>
+<span><span class="co">## min values  : -5.92,   307,       302,  0.05</span></span>
+<span><span class="co">## max values  : 11.05,  1994,      3337,  5.76</span></span></code></pre>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Check collinearity among the layers (bio1 and elevation are strongly related):</span></span>
+<span><span class="va">checked</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/corr_check.html">corr_check</a></span><span class="op">(</span><span class="va">switzerland</span><span class="op">)</span></span>
+<span><span class="va">checked</span><span class="op">$</span><span class="va">summary</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "High Cor (&gt;0.7): bio1, elevation" "High VIF (&gt;3): elevation, bio1"</span></span></code></pre>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Flag environmental extrapolation relative to the Apollo butterfly</span></span>
+<span><span class="co"># occurrences that fall within Switzerland (used here as calibration points):</span></span>
+<span><span class="va">calib</span>   <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">Apollo</span>, <span class="va">X</span> <span class="op">&gt;=</span> <span class="fl">5.9</span> <span class="op">&amp;</span> <span class="va">X</span> <span class="op">&lt;=</span> <span class="fl">10.5</span> <span class="op">&amp;</span> <span class="va">Y</span> <span class="op">&gt;=</span> <span class="fl">45.8</span> <span class="op">&amp;</span> <span class="va">Y</span> <span class="op">&lt;=</span> <span class="fl">47.8</span><span class="op">)</span></span>
+<span><span class="va">checked</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/extr_check.html">extr_check</a></span><span class="op">(</span><span class="va">checked</span>, calib_points <span class="op">=</span> <span class="va">calib</span>, type <span class="op">=</span> <span class="st">"strict"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Map mean annual temperature next to where extrapolation occurs</span></span>
+<span><span class="co"># (1 = novel conditions, 0 = analog conditions):</span></span>
+<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">switzerland</span><span class="op">[[</span><span class="st">"bio1"</span><span class="op">]</span><span class="op">]</span>, <span class="va">checked</span><span class="op">$</span><span class="va">extrapolation</span><span class="op">)</span>,</span>
+<span>            main <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1 (mean annual temp.)"</span>, <span class="st">"strict extrapolation"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="intro_files/figure-html/mini-example-1.png" class="r-plt" alt="" width="624"></p>
 </div>
 <div class="section level2 unnumbered">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>

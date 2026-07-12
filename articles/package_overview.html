@@ -81,71 +81,6 @@
 
     
     
-<div class="section level3">
-<h3 id="a-runnable-mini-example">A runnable mini-example<a class="anchor" aria-label="anchor" href="#a-runnable-mini-example"></a>
-</h3>
-<p>The download chunks in this article need network access, so they are
-<strong>shown but not executed</strong> when the article is built. Every
-one of them returns the same kind of object: a <code>SpatRaster</code>
-of stacked environmental layers over a study area. So that the
-processing steps stay reproducible and automatically tested,
-<em>envar</em> bundles one such stack — a small <strong>real</strong>
-WorldClim <span class="citation">(Fick &amp; Hijmans 2017)</span>
-extract for Switzerland (<code>bio1</code>, <code>bio12</code>,
-<code>elevation</code>, <code>slope</code> at ~9 km). The chunk below
-loads it <strong>in place of a download</strong> and demonstrates the
-study-area operations covered in this overview: aggregating the grid,
-reprojecting to another CRS, and checking collinearity.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://animalbiodiversitylab.github.io/envar/">envar</a></span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># This stack stands in for the output of a download pipeline such as</span></span>
-<span><span class="co">#   par_set(country = "Switzerland", crs = 3035, res = 2) %&gt;%</span></span>
-<span><span class="co">#     worldclim(vars = c("bio1", "bio12")) %&gt;% topography(vars = "elevation")</span></span>
-<span><span class="va">switzerland</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"switzerland.tif"</span>, package <span class="op">=</span> <span class="st">"envar"</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">switzerland</span></span></code></pre></div>
-<pre><code><span><span class="co">## class       : SpatRaster</span></span>
-<span><span class="co">## size        : 24, 55, 4  (nrow, ncol, nlyr)</span></span>
-<span><span class="co">## resolution  : 0.08333333, 0.08333333  (x, y)</span></span>
-<span><span class="co">## extent      : 5.916667, 10.5, 45.83333, 47.83333  (xmin, xmax, ymin, ymax)</span></span>
-<span><span class="co">## coord. ref. : lon/lat WGS 84 (EPSG:4326)</span></span>
-<span><span class="co">## source      : switzerland.tif</span></span>
-<span><span class="co">## names       :  bio1, bio12, elevation, slope</span></span>
-<span><span class="co">## min values  : -5.92,   307,       302,  0.05</span></span>
-<span><span class="co">## max values  : 11.05,  1994,      3337,  5.76</span></span></code></pre>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Aggregate to a coarser grid, as par_set(res = ...) would do internally:</span></span>
-<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="va">switzerland</span>, fact <span class="op">=</span> <span class="fl">2</span>, fun <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## class       : SpatRaster</span></span>
-<span><span class="co">## size        : 12, 28, 4  (nrow, ncol, nlyr)</span></span>
-<span><span class="co">## resolution  : 0.1666667, 0.1666667  (x, y)</span></span>
-<span><span class="co">## extent      : 5.916667, 10.58333, 45.83333, 47.83333  (xmin, xmax, ymin, ymax)</span></span>
-<span><span class="co">## coord. ref. : lon/lat WGS 84 (EPSG:4326)</span></span>
-<span><span class="co">## source(s)   : memory</span></span>
-<span><span class="co">## names       :    bio1,  bio12, elevation,  slope</span></span>
-<span><span class="co">## min values  : -3.1025, 641.25,    340.25,  0.195</span></span>
-<span><span class="co">## max values  : 10.0575,   1861,   2873.75, 4.7075</span></span></code></pre>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Reproject to a projected CRS in metres, as par_set(crs = 3035) would do internally:</span></span>
-<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/project.html" class="external-link">project</a></span><span class="op">(</span><span class="va">switzerland</span>, <span class="st">"EPSG:3035"</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## class       : SpatRaster</span></span>
-<span><span class="co">## size        : 33, 52, 4  (nrow, ncol, nlyr)</span></span>
-<span><span class="co">## resolution  : 6908.209, 6908.209  (x, y)</span></span>
-<span><span class="co">## extent      : 4003502, 4362729, 2527109, 2755080  (xmin, xmax, ymin, ymax)</span></span>
-<span><span class="co">## coord. ref. : ETRS89-extended / LAEA Europe (EPSG:3035)</span></span>
-<span><span class="co">## source(s)   : memory</span></span>
-<span><span class="co">## names       :      bio1,       bio12,   elevation,    slope</span></span>
-<span><span class="co">## min values  : -5.047194,  450.110199,  314.793427,  0.14869</span></span>
-<span><span class="co">## max values  :     10.99, 1915.514648, 3185.633301, 5.188708</span></span></code></pre>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Check collinearity across the study area:</span></span>
-<span><span class="fu"><a href="../reference/corr_check.html">corr_check</a></span><span class="op">(</span><span class="va">switzerland</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] "High Cor (&gt;0.7): bio1, elevation" "High VIF (&gt;3): elevation, bio1"</span></span></code></pre>
-<p>The rest of this overview walks through how the study area and each
-layer are obtained in the first place.</p>
-</div>
 <div class="section level2">
 <h2 id="introduction">1. Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
@@ -172,7 +107,7 @@ package (<code>dplyr</code>) will be automatically loaded to ensure the
 full functionality of the package. However, other packages are often
 required for plotting and further analyses and we also load them here
 for later use.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://animalbiodiversitylab.github.io/envar/">envar</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://rspatial.org/" class="external-link">terra</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/sf/" class="external-link">sf</a></span><span class="op">)</span></span></code></pre></div>
@@ -195,7 +130,7 @@ single source, in this case the 1 km land cover based on ESA <span class="citati
 is downloaded and maintains its original extent. If not aggregated, the
 original grid resolution of any source is always 30 arcseconds
 (0.00833°, or ~ 1 km) at the equator.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_singlelayer_lc</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
 <p>The print in the console is omitted in this tutorial to avoid output
@@ -207,7 +142,7 @@ variable that is being downloaded and success messages are issued when
 each variable has been correctly processed. The output is a SpatRaster
 object from the <em>terra</em> package, which can be plotted and further
 processed.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_singlelayer_lc</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-5-1.png" alt="plot of chunk unnamed-chunk-5"><p class="caption">
@@ -222,11 +157,11 @@ plot of chunk unnamed-chunk-5
 the output automatically crops all layers to the smallest shared extent.
 If more than two sources are reported, the code updates step-by-step the
 shared extent across all layers.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_bilayer_global</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_bilayer_global</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-7-1.png" alt="plot of chunk unnamed-chunk-7"><p class="caption">
@@ -234,18 +169,18 @@ plot of chunk unnamed-chunk-7
 </p>
 </div>
 <p>The same occurs if the order of downloaded variables is inverted:</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_bilayer_global_1</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_bilayer_global_1</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-9-1.png" alt="plot of chunk unnamed-chunk-9"><p class="caption">
 plot of chunk unnamed-chunk-9
 </p>
 </div>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># define the extents of the first SpatRaster object and of the second to check if they are the same</span></span>
 <span></span>
 <span><span class="va">ext1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/math-generics.html" class="external-link">round</a></span><span class="op">(</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/ext.html" class="external-link">ext</a></span><span class="op">(</span><span class="va">processed_bilayer_global</span><span class="op">)</span>, <span class="fl">1</span><span class="op">)</span></span>
@@ -254,7 +189,7 @@ plot of chunk unnamed-chunk-9
 <span><span class="co"># print the resulting extents </span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">ext1</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## SpatExtent : -180, 180, -60, 84 (xmin, xmax, ymin, ymax)</span></span></code></pre>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">ext2</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## SpatExtent : -180, 180, -60, 84 (xmin, xmax, ymin, ymax)</span></span></code></pre>
 </div>
@@ -267,11 +202,11 @@ plot of chunk unnamed-chunk-9
 </h4>
 <p>A country can be specified by name (case‑insensitive). The output is
 cropped/masked to that country.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_bilayer_country</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, years <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_bilayer_country</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-12-1.png" alt="plot of chunk unnamed-chunk-12"><p class="caption">
@@ -282,10 +217,10 @@ plot of chunk unnamed-chunk-12
 <div class="section level4">
 <h4 id="continent">3.2.2. Continent<a class="anchor" aria-label="anchor" href="#continent"></a>
 </h4>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_singlelayer_africa</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>continent <span class="op">=</span> <span class="st">"Africa"</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"forest"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_singlelayer_africa</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-14-1.png" alt="plot of chunk unnamed-chunk-14"><p class="caption">
@@ -301,10 +236,10 @@ continent = “Europe” is specified, a shapefile of geographic Europe is
 used (including Russia only up to the Ural mountains and excluding
 overseas territories), based on data from the Global Administrative
 Areas <strong><a href="https://gadm.org" class="external-link">GADM</a></strong>.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_singlelayer_europe</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>continent <span class="op">=</span> <span class="st">"Europe"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"forest"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_singlelayer_europe</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-16-1.png" alt="plot of chunk unnamed-chunk-16"><p class="caption">
@@ -324,24 +259,24 @@ values: small (1:100 million), medium (the default; 1:50 m), and large
 scale and finer with a large scale. The default is “medium” to download
 data at a resolution that is sufficiently detailed but lighter and
 faster than high-resolution.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># download variables over a country shape at "small" scale</span></span>
 <span><span class="va">processed_bilayer_country_small</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, scale <span class="op">=</span> <span class="st">"small"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, years <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_bilayer_country_small</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-18-1.png" alt="plot of chunk unnamed-chunk-18"><p class="caption">
 plot of chunk unnamed-chunk-18
 </p>
 </div>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># download variables over a country shape at "large" scale</span></span>
 <span><span class="va">processed_bilayer_country_large</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, scale <span class="op">=</span> <span class="st">"large"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, years <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_bilayer_country_large</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-20-1.png" alt="plot of chunk unnamed-chunk-20"><p class="caption">
@@ -360,30 +295,30 @@ plot of chunk unnamed-chunk-20
 of Dinerstein and colleagues published on BioScience <span class="citation">(Dinerstein <em>et al.</em> 2017)</span>. Insert the
 full name of the ecoregion/biome/realm; to check the names visit the
 interactive <strong><a href="https://ecoregions.appspot.com/" class="external-link">website</a></strong>.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_ecoregion</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>ecoregion <span class="op">=</span> <span class="st">"Lower Gangetic Plains moist deciduous forests"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tree"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_ecoregion</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-22-1.png" alt="plot of chunk unnamed-chunk-22"><p class="caption">
 plot of chunk unnamed-chunk-22
 </p>
 </div>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_biome</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>biome <span class="op">=</span> <span class="st">"Tundra"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_biome</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-24-1.png" alt="plot of chunk unnamed-chunk-24"><p class="caption">
 plot of chunk unnamed-chunk-24
 </p>
 </div>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_realm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>realm <span class="op">=</span> <span class="st">"Neotropic"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tree"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_realm</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-26-1.png" alt="plot of chunk unnamed-chunk-26"><p class="caption">
@@ -403,10 +338,10 @@ name of the zoogeographic region/realm.</p>
 “Panamanian”, “Oriental”, “Saharo-Arabian”, “Mexican”, “Chinese”, “North
 American”, “Eurasian”, “Tibetan”, “Japanese”, “Arctico-Siberian”, and
 “Polynesian”.</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_zooregion</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>zooregion <span class="op">=</span> <span class="st">"Madagascan"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tree"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_zooregion</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-28-1.png" alt="plot of chunk unnamed-chunk-28"><p class="caption">
@@ -417,10 +352,10 @@ plot of chunk unnamed-chunk-28
 “Australian”, “Afrotropical”, “Madagascan”, “Oceanina”, “Oriental”,
 “Panamanian”, “Saharo-Arabian”, “Nearctic”, “Sino-Japanese”, and
 “Palearctic”.</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_zoorealm</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>zoorealm <span class="op">=</span> <span class="st">"Neotropical"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tree"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_zoorealm</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-30-1.png" alt="plot of chunk unnamed-chunk-30"><p class="caption">
@@ -436,10 +371,10 @@ a classification of mountain systems <span class="citation">(Snethlage
 <em>et al.</em> 2022)</span>. We make available through the package the
 large scale selection of non-overlapping mountain systems (291). To see
 the available mountain regions and their names check the <strong><a href="https://www.earthenv.org/mountains" class="external-link">website</a></strong>.</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_mountain_region</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>mountain_region <span class="op">=</span> <span class="st">"European Alps"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tree"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_mountain_region</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-32-1.png" alt="plot of chunk unnamed-chunk-32"><p class="caption">
@@ -456,10 +391,10 @@ of Copenhagen has developed another classification of mountain regions
 available through the package the mountain regions so defined (135). To
 see the available mountain regions and their names check the original
 publication.</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_mountain_region_cmec</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>mountain_region_cmec <span class="op">=</span> <span class="st">"Alps and central European outliers"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tree"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_mountain_region_cmec</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-34-1.png" alt="plot of chunk unnamed-chunk-34"><p class="caption">
@@ -539,10 +474,10 @@ must be one of the following:</p>
 <li>Subantarctic and Antarctic Islands</li>
 <li>Antarctic Mainland</li>
 </ol>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_glacier_region</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>glacier_region_19 <span class="op">=</span> <span class="st">"Central Europe"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_glacier_region</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-36-1.png" alt="plot of chunk unnamed-chunk-36"><p class="caption">
@@ -561,10 +496,10 @@ of the name the user must insert the ecoregion ID. Check the interactive
 interface <strong><a href="https://www.feow.org/ecoregions/interactive-map" class="external-link">here</a></strong>
 to find out the available freshwater ecoregions and their IDs. We
 consider the Florida Peninsula (ID = 156) as an example here.</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_freshwater_ecoregion</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>freshwater_ecoregion <span class="op">=</span> <span class="fl">156</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"tree"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_freshwater_ecoregion</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-38-1.png" alt="plot of chunk unnamed-chunk-38"><p class="caption">
@@ -585,10 +520,10 @@ and “marine_province” for MEOW, and “pelagic_province”, “pelagic_biome
 and “pelagic_realm” for PPOW. You can explore the MEOW available names
 <strong><a href="https://databasin.org/maps/new/#datasets=3b6b12e7bcca419990c9081c0af254a2" class="external-link">here</a></strong>
 and the PPOW available names through the relative publication.</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_marine_ecoregion</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>marine_ecoregion <span class="op">=</span> <span class="st">"East African Coral Coast"</span>, res <span class="op">=</span> <span class="fl">6</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/biooracle.html">biooracle</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"o2"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_marine_ecoregion</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-40-1.png" alt="plot of chunk unnamed-chunk-40"><p class="caption">
@@ -607,7 +542,7 @@ plot of chunk unnamed-chunk-40
 will be a data.frame containing columns: ID (integer going from 1 to the
 length of the dataset), X (longitude), Y (latitude), and the extracted
 values over the specified points.</p>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">points</span> <span class="op">&lt;-</span> <span class="fu">sf</span><span class="fu">::</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_sample.html" class="external-link">st_sample</a></span><span class="op">(</span><span class="va">Alps</span>, size <span class="op">=</span> <span class="fl">100</span>, type <span class="op">=</span> <span class="st">"random"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">processed_singlelayer_points</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">points</span>, crs<span class="op">=</span><span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -616,7 +551,7 @@ values over the specified points.</p>
 <span><span class="va">processed_bilayer_points</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">points</span>, crs<span class="op">=</span><span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># visualize the points shapefile</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">Alps</span><span class="op">$</span><span class="va">geometry</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">points</span>, add <span class="op">=</span><span class="cn">T</span><span class="op">)</span></span></code></pre></div>
@@ -625,7 +560,7 @@ values over the specified points.</p>
 plot of chunk unnamed-chunk-42
 </p>
 </div>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># visualize the resulting data.frame with the extracted values when only one source was used</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">processed_singlelayer_points</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   ID       X       Y ice</span></span>
@@ -635,7 +570,7 @@ plot of chunk unnamed-chunk-42
 <span><span class="co">## 4  4 4074334 2309450   0</span></span>
 <span><span class="co">## 5  5 4255502 2642772   0</span></span>
 <span><span class="co">## 6  6 3962724 2486021   0</span></span></code></pre>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># visualize the resulting data.frame with the extracted values when two or more sources were used</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">processed_bilayer_points</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   ID       X       Y ice pr_2015_12</span></span>
@@ -652,11 +587,11 @@ plot of chunk unnamed-chunk-42
 <p>The user can load a shapefile of type POLYGON and use it to crop/mask
 the downloaded variables. Here we use the already included European Alps
 shapefile (<code><a href="../reference/Alps.html">Alps()</a></code>).</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_bilayer_shapefile</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_bilayer_shapefile</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-46-1.png" alt="plot of chunk unnamed-chunk-46"><p class="caption">
@@ -673,7 +608,7 @@ only two columns that represent coordinates. Column names must be
 <strong>X</strong> and <strong>Y</strong>, reporting the longitude and
 latitude, respectively. The CRS is assigned based on user input
 (default: 4326).</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">points3035</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_transform.html" class="external-link">st_transform</a></span><span class="op">(</span><span class="va">points</span>, <span class="fl">3035</span><span class="op">)</span></span>
 <span><span class="va">points3035df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rspatial.github.io/terra/reference/as.data.frame.html" class="external-link">as.data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://r-spatial.github.io/sf/reference/st_coordinates.html" class="external-link">st_coordinates</a></span><span class="op">(</span><span class="va">points3035</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
@@ -683,7 +618,7 @@ latitude, respectively. The CRS is assigned based on user input
 <span><span class="va">processed_bilayer_pointsdf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">points3035df</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># visualize the resulting data.frame when using only one source</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">processed_singlelayer_pointsdf</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   ID       X       Y ice</span></span>
@@ -693,7 +628,7 @@ latitude, respectively. The CRS is assigned based on user input
 <span><span class="co">## 4  4 4074334 2309450   0</span></span>
 <span><span class="co">## 5  5 4255502 2642772   0</span></span>
 <span><span class="co">## 6  6 3962724 2486021   0</span></span></code></pre>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># visualize the resulting data.frame when using multiple sources</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">processed_bilayer_pointsdf</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   ID       X       Y ice pr_2015_12</span></span>
@@ -718,10 +653,10 @@ in degrees so that the buffer is circular on the 3D surface (and the
 buffer might thus appear non-circular if plotted in 2D). However, it is
 recommended to always specify a projected CRS when using buffers to
 avoid potential distortions.</p>
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_singlelayer_buffer</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs <span class="op">=</span> <span class="fl">3035</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_singlelayer_buffer</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-51-1.png" alt="plot of chunk unnamed-chunk-51"><p class="caption">
@@ -729,10 +664,10 @@ plot of chunk unnamed-chunk-51
 </p>
 </div>
 <p>Negative buffer example:</p>
-<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_singlelayer_negative_buffer</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs <span class="op">=</span> <span class="fl">3035</span>, buffer <span class="op">=</span> <span class="op">-</span><span class="fl">10</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_singlelayer_negative_buffer</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-53-1.png" alt="plot of chunk unnamed-chunk-53"><p class="caption">
@@ -741,7 +676,7 @@ plot of chunk unnamed-chunk-53
 </div>
 <p>A buffer at global scale (no shape or data.frame or country defined)
 triggers an error (not shown here):</p>
-<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_singlelayer_global_buffer</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -761,11 +696,11 @@ reached by the species via dispersal. Additionally, picking
 pseudo-absence/background points in a buffer around presences allows to
 better simulate the spatial sampling effort patterns and replicate
 them.</p>
-<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_bilayer_points_buffer</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">points3035df</span>, crs <span class="op">=</span> <span class="fl">3035</span>, buffer <span class="op">=</span> <span class="fl">50</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_bilayer_points_buffer</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-56-1.png" alt="plot of chunk unnamed-chunk-56"><p class="caption">
@@ -790,10 +725,10 @@ from the Natural Earth database, it is possible to use the argument
 “scale” as for countries/continents, to refine the precision of
 coastline definition (check paragraph 3.2.3. “Set the scale” above).</p>
 <p>Without land mask:</p>
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_nolandmask</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>glacier_region_19 <span class="op">=</span> <span class="st">"Central Europe"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/earthenvlandcover.html">earthenvlandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
-<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_nolandmask</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-58-1.png" alt="plot of chunk unnamed-chunk-58"><p class="caption">
@@ -801,10 +736,10 @@ plot of chunk unnamed-chunk-58
 </p>
 </div>
 <p>With land mask:</p>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_landmask</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>glacier_region_19 <span class="op">=</span> <span class="st">"Central Europe"</span>, land <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/earthenvlandcover.html">earthenvlandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
-<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_landmask</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-60-1.png" alt="plot of chunk unnamed-chunk-60"><p class="caption">
@@ -825,10 +760,10 @@ option works only if occurrence points are specified as X and Y
 coordinates in the pointsdf argument. We use the Apollo dataset as an
 example, a dataset of occurrences of the <em>Parnassius apollo</em>
 butterfly; the dataset is already included in the package.</p>
-<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">Apollo</span>, alpha_hull <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_range</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-62-1.png" alt="plot of chunk unnamed-chunk-62"><p class="caption">
@@ -838,10 +773,10 @@ plot of chunk unnamed-chunk-62
 <p>It can also be used in conjunction with a buffer. In this case, an
 alpha hulll will be created and then expanded by the specified
 buffer.</p>
-<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_range_buffer</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">Apollo</span>, alpha_hull <span class="op">=</span> <span class="cn">TRUE</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_range_buffer</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-64-1.png" alt="plot of chunk unnamed-chunk-64"><p class="caption">
@@ -881,10 +816,10 @@ character representing the code of the PRS must be provided. If nothing
 is specified, 4326 is assumed. The crs can also be specified with the
 prefix ‘ESRI’ or ‘EPSG’ according to the system, e.g. “EPSG:4326” or
 “ESRI:54009”.</p>
-<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_singlelayer_projected</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs<span class="op">=</span><span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span> <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">processed_singlelayer_projected</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## class       : SpatRaster </span></span>
 <span><span class="co">## dimensions  : 1249, 1194, 1  (nrow, ncol, nlyr)</span></span>
@@ -895,7 +830,7 @@ prefix ‘ESRI’ or ‘EPSG’ according to the system, e.g. “EPSG:4326” o
 <span><span class="co">## name        :      ice </span></span>
 <span><span class="co">## min value   :  0.00000 </span></span>
 <span><span class="co">## max value   : 99.62711</span></span></code></pre>
-<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_singlelayer_projected</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-66-1.png" alt="plot of chunk unnamed-chunk-66"><p class="caption">
@@ -913,10 +848,10 @@ resolution; any value &gt; 1 aggregates the raster by that factor. For
 instance, <code>res = 10</code> aggregates the native grid to a
 resolution of ~10 km at the equator. Aggregation is done by computing
 the mean value of all cells that are part of the new larger cell.</p>
-<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_singlelayer_aggregated</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>res <span class="op">=</span> <span class="fl">100</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">processed_singlelayer_aggregated</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## class       : SpatRaster </span></span>
 <span><span class="co">## dimensions  : 173, 432, 1  (nrow, ncol, nlyr)</span></span>
@@ -939,7 +874,7 @@ bottom of the code to enable an automatic test of correlation among the
 downloaded variables over the defined spatial area and resolution. Doing
 this will produce a list containing the processed SpatRaster, Pearson
 pairwise correlations, VIF statistics, and a saved correlation plot.</p>
-<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_bilayer_corr_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span>, res <span class="op">=</span> <span class="fl">2</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>             <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1"</span>, <span class="st">"bio4"</span>, <span class="st">"bio10"</span>, <span class="st">"bio12"</span>, <span class="st">"bio19"</span><span class="op">)</span>,</span>
 <span>                    years <span class="op">=</span> <span class="st">"1981-2010"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
@@ -955,7 +890,7 @@ that reports if and which variables have a Pearson’s correlation
 coefficient higher than |0.6| and/or a VIF higher than 3. Lastly, the
 “plot_path” specifies the local directory to which a plot of the
 Pearson’s pairwise correlation was saved.</p>
-<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># View the Pearson's pairwise correlation matrix</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">processed_bilayer_corr_check</span><span class="op">$</span><span class="va">correlation_matrix</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                 bio1_1981-2010 bio4_1981-2010 bio10_1981-2010 bio12_1981-2010</span></span>
@@ -978,7 +913,7 @@ Pearson’s pairwise correlation was saved.</p>
 <span><span class="co">## slope               0.399967493  0.83277881  1.00000000  0.223848319  0.2433729</span></span>
 <span><span class="co">## trees              -0.003624083 -0.12081588  0.22384832  1.000000000 -0.3266344</span></span>
 <span><span class="co">## ice                 0.229900683  0.48571755  0.24337291 -0.326634442  1.0000000</span></span></code></pre>
-<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># View the Variance Inflation Factor values</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">processed_bilayer_corr_check</span><span class="op">$</span><span class="va">vif</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##         Variables         VIF</span></span>
@@ -1006,12 +941,12 @@ plot of chunk unnamed-chunk-72
 to a SpatRaster object, but instead of a set of rasters, the first
 element of the resulting list will be a data.frame with the extracted
 values.</p>
-<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_bilayer_points_corr_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">points</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/corr_check.html">corr_check</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">processed_bilayer_points_corr_check</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   ID         X        Y ice pr_2015_12</span></span>
 <span><span class="co">## 1  1  7.061866 44.61497   0          2</span></span>
@@ -1049,12 +984,12 @@ from Zurell et al. (2012) <span class="citation">(Zurell <em>et al.</em>
 <p>The output is a list with a SpatRaster with one layer - two if both
 strict and extrapolation are checked - reporting as 1 cells of
 extrapolation and 0 cells of no extrapolation.</p>
-<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_bilayer_extr_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/extr_check.html">extr_check</a></span><span class="op">(</span>calib_points <span class="op">=</span> <span class="va">Apollo</span>, calib_crs <span class="op">=</span> <span class="fl">4326</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"combinatorial"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_bilayer_extr_check</span><span class="op">$</span><span class="va">extrapolation</span><span class="op">$</span><span class="va">strict</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-76-1.png" alt="plot of chunk unnamed-chunk-76"><p class="caption">
@@ -1070,13 +1005,13 @@ e.g. paragraphs 3.4.1 or 3.5), then, when using
 <code><a href="../reference/extr_check.html">extr_check()</a></code>, one column is added to the data.frame - two
 if both strict and extrapolation are checked -. This/these additional
 column(s) will report extrapolation as 1 and no extrapolation as 0.</p>
-<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># for example, we use only the first 10 points of the Apollo dataset as a simulated data set to calibrate a model and then we want to apply it to a whole set of points covering a wider environmental range.</span></span>
 <span><span class="va">processed_points_extr_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">Apollo</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/extr_check.html">extr_check</a></span><span class="op">(</span>calib_points <span class="op">=</span> <span class="va">Apollo</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>,<span class="op">]</span>, calib_crs <span class="op">=</span> <span class="fl">4326</span>, type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"strict"</span>, <span class="st">"combinatorial"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/headtail.html" class="external-link">head</a></span><span class="op">(</span><span class="va">processed_points_extr_check</span><span class="op">$</span><span class="va">extrapolation</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   ID        X        Y  ice pr_2015_12 strict combinatorial</span></span>
 <span><span class="co">## 1  1 13.49513 47.10400 0.00          8      0             0</span></span>
@@ -1099,11 +1034,11 @@ thus be needless to keep information on climate over the sea. We can
 thus set the “set_na” argument to TRUE (default to FALSE, i.e., no NA
 mask is applied).</p>
 <p>Without NA mask:</p>
-<div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_bilayer_global</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_bilayer_global</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-80-1.png" alt="plot of chunk unnamed-chunk-80"><p class="caption">
@@ -1111,11 +1046,11 @@ plot of chunk unnamed-chunk-80
 </p>
 </div>
 <p>With NA mask:</p>
-<div class="sourceCode" id="cb100"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_bilayer_global_namask</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>set_na<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb101"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_bilayer_global_namask</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/package_overview-unnamed-chunk-82-1.png" alt="plot of chunk unnamed-chunk-82"><p class="caption">
@@ -1133,7 +1068,7 @@ plot of chunk unnamed-chunk-82
 stored locally), the retrieved and processed variables will be stored
 locally. Remember to specify the full path, including the filename and
 extension.</p>
-<div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_stored_raster</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span>, path <span class="op">=</span> <span class="st">"../Out/storedraster.tif"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></span></code></pre></div>
@@ -1143,7 +1078,7 @@ extension.</p>
 </h3>
 <p>The same can be done if the output is a data.frame. In this case, the
 file written has to be a .csv file; specify the path accordingly.</p>
-<div class="sourceCode" id="cb103"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_stored_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>pointsdf <span class="op">=</span> <span class="va">Apollo</span>, path <span class="op">=</span> <span class="st">"../Out/storedtable.csv"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/melc.html">melc</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
 <span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"pr"</span><span class="op">)</span>, months <span class="op">=</span> <span class="fl">12</span>, year <span class="op">=</span> <span class="fl">2015</span><span class="op">)</span></span></code></pre></div>
@@ -1163,7 +1098,72 @@ or at the detailed explanation of all <strong><a href="https://animalbiodiversit
 and variables</a></strong>.</p>
 </div>
 <div class="section level2">
-<h2 class="unnumbered" id="references">11. References<a class="anchor" aria-label="anchor" href="#references"></a>
+<h2 id="annex-a-runnable-mini-example">11. Annex: A runnable mini-example<a class="anchor" aria-label="anchor" href="#annex-a-runnable-mini-example"></a>
+</h2>
+<p>The download chunks in this article need network access, so they are
+<strong>shown but not executed</strong> when the article is built
+through GitHub pages at every deploy. Every one of them returns the same
+kind of object: a <code>SpatRaster</code> of stacked environmental
+layers over a study area. So that the processing steps stay reproducible
+and automatically tested, here you can find an example without any
+download but with a test raster — a small <strong>real</strong>
+WorldClim <span class="citation">(Fick &amp; Hijmans 2017)</span>
+extract for Switzerland (<code>bio1</code>, <code>bio12</code>,
+<code>elevation</code>, <code>slope</code> at ~9 km). The chunk below
+loads it <strong>in place of a download</strong> and demonstrates the
+study-area operations covered in this overview: aggregating the grid,
+reprojecting to another CRS, and checking collinearity.</p>
+<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://animalbiodiversitylab.github.io/envar/">envar</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># This stack stands in for the output of a download pipeline such as</span></span>
+<span><span class="co">#   par_set(country = "Switzerland", crs = 3035, res = 2) %&gt;%</span></span>
+<span><span class="co">#     worldclim(vars = c("bio1", "bio12")) %&gt;% topography(vars = "elevation")</span></span>
+<span><span class="va">switzerland</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"switzerland.tif"</span>, package <span class="op">=</span> <span class="st">"envar"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">switzerland</span></span></code></pre></div>
+<pre><code><span><span class="co">## class       : SpatRaster</span></span>
+<span><span class="co">## size        : 24, 55, 4  (nrow, ncol, nlyr)</span></span>
+<span><span class="co">## resolution  : 0.08333333, 0.08333333  (x, y)</span></span>
+<span><span class="co">## extent      : 5.916667, 10.5, 45.83333, 47.83333  (xmin, xmax, ymin, ymax)</span></span>
+<span><span class="co">## coord. ref. : lon/lat WGS 84 (EPSG:4326)</span></span>
+<span><span class="co">## source      : switzerland.tif</span></span>
+<span><span class="co">## names       :  bio1, bio12, elevation, slope</span></span>
+<span><span class="co">## min values  : -5.92,   307,       302,  0.05</span></span>
+<span><span class="co">## max values  : 11.05,  1994,      3337,  5.76</span></span></code></pre>
+<div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Aggregate to a coarser grid, as par_set(res = ...) would do internally:</span></span>
+<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/aggregate.html" class="external-link">aggregate</a></span><span class="op">(</span><span class="va">switzerland</span>, fact <span class="op">=</span> <span class="fl">2</span>, fun <span class="op">=</span> <span class="st">"mean"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## class       : SpatRaster</span></span>
+<span><span class="co">## size        : 12, 28, 4  (nrow, ncol, nlyr)</span></span>
+<span><span class="co">## resolution  : 0.1666667, 0.1666667  (x, y)</span></span>
+<span><span class="co">## extent      : 5.916667, 10.58333, 45.83333, 47.83333  (xmin, xmax, ymin, ymax)</span></span>
+<span><span class="co">## coord. ref. : lon/lat WGS 84 (EPSG:4326)</span></span>
+<span><span class="co">## source(s)   : memory</span></span>
+<span><span class="co">## names       :    bio1,  bio12, elevation,  slope</span></span>
+<span><span class="co">## min values  : -3.1025, 641.25,    340.25,  0.195</span></span>
+<span><span class="co">## max values  : 10.0575,   1861,   2873.75, 4.7075</span></span></code></pre>
+<div class="sourceCode" id="cb100"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Reproject to a projected CRS in metres, as par_set(crs = 3035) would do internally:</span></span>
+<span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/project.html" class="external-link">project</a></span><span class="op">(</span><span class="va">switzerland</span>, <span class="st">"EPSG:3035"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## class       : SpatRaster</span></span>
+<span><span class="co">## size        : 33, 52, 4  (nrow, ncol, nlyr)</span></span>
+<span><span class="co">## resolution  : 6908.209, 6908.209  (x, y)</span></span>
+<span><span class="co">## extent      : 4003502, 4362729, 2527109, 2755080  (xmin, xmax, ymin, ymax)</span></span>
+<span><span class="co">## coord. ref. : ETRS89-extended / LAEA Europe (EPSG:3035)</span></span>
+<span><span class="co">## source(s)   : memory</span></span>
+<span><span class="co">## names       :      bio1,       bio12,   elevation,    slope</span></span>
+<span><span class="co">## min values  : -5.047194,  450.110199,  314.793427,  0.14869</span></span>
+<span><span class="co">## max values  :     10.99, 1915.514648, 3185.633301, 5.188708</span></span></code></pre>
+<div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Check collinearity across the study area:</span></span>
+<span><span class="fu"><a href="../reference/corr_check.html">corr_check</a></span><span class="op">(</span><span class="va">switzerland</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "High Cor (&gt;0.7): bio1, elevation" "High VIF (&gt;3): elevation, bio1"</span></span></code></pre>
+</div>
+<div class="section level2">
+<h2 class="unnumbered" id="references">12. References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent">
 <div id="ref-abell2008" class="csl-entry">
