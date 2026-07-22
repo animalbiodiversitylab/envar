@@ -1222,7 +1222,7 @@ can be checked at the
 or at the detailed explanation of all **[sources and
 variables](https://animalbiodiversitylab.github.io/envar/articles/variables)**.
 
-## 11. Annex: A runnable mini-example
+## 11. Appendix: A runnable mini-example
 
 The download chunks in this article need network access, so they are
 **shown but not executed** when the article is built through GitHub

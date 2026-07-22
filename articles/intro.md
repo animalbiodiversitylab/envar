@@ -248,7 +248,7 @@ vignette](https://animalbiodiversitylab.github.io/envar/articles/package_overvie
 and for a full list of all the available sources and variables see the
 **[reference](https://animalbiodiversitylab.github.io/envar/reference/)**.
 
-## Annex: a runnable mini-example
+## Appendix: A runnable mini-example
 
 Downloading global environmental layers needs network access, so the
 download chunks in this article are **shown but not executed** when the
