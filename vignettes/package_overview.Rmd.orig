@@ -687,7 +687,7 @@ Results cannot be stored locally if the correlation or extrapolation check is/ar
 In this tutorial we have gone through all the potential ways in which the user can tailor the download and processing of data. For simplicity we have relied only on a few sources, but many more are available and can be checked at the **[reference](https://animalbiodiversitylab.github.io/envar/reference/)** or at the detailed explanation of all **[sources and variables](https://animalbiodiversitylab.github.io/envar/articles/variables)**.
 
 
-# 11. Annex: A runnable mini-example
+# 11. Appendix: A runnable mini-example
 
 The download chunks in this article need network access, so they are **shown but
 not executed** when the article is built through GitHub pages at every deploy. Every one of them returns the same
