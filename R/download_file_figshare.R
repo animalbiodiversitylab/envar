@@ -10,7 +10,18 @@
 #' redirects and sends the headers Figshare expects.
 #' @noRd
 download_file_figshare <- function(url, dest_file, max_retries = 2) {
-  
+
+  # Use Figshare's canonical download host (ndownloader.figshare.com) rather
+  # than the website path (figshare.com/ndownloader/...). The website path is
+  # served through an AWS WAF that issues a bot "challenge" (HTTP 202,
+  # x-amzn-waf-action: challenge) or a hard 403 block that non-browser clients
+  # cannot pass. The canonical host is served directly (nginx) with no WAF and
+  # redirects straight to the file. This rewrite also covers portal hosts such
+  # as springernature.figshare.com. Any query string (e.g. ?private_link=...)
+  # is preserved.
+  url <- sub("^(https?://)([a-z0-9-]+\\.)?figshare\\.com/ndownloader/",
+             "\\1ndownloader.figshare.com/", url)
+
   # If caching is enabled and a complete copy already exists, reuse it.
   if (isTRUE(getOption("envar.cache", TRUE)) &&
       file.exists(dest_file) && isTRUE(file.info(dest_file)$size > 0)) {
@@ -25,8 +36,10 @@ download_file_figshare <- function(url, dest_file, max_retries = 2) {
   part_file <- paste0(dest_file, ".part")
   
   for (i in 1:max_retries) {
-    # Simulate a browser
-    user_agent_string <- "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+    # Identify honestly. A spoofed browser User-Agent is treated by Figshare's
+    # WAF as a bad bot (a "browser" that never solves the JS challenge) and is
+    # hard-blocked with HTTP 403; a plain, honest User-Agent is served normally.
+    user_agent_string <- "envar R package (https://github.com/animalbiodiversitylab/envar)"
     
     success <- FALSE
     
