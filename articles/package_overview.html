@@ -34,7 +34,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">envar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -724,10 +724,16 @@ as NA when “land” is set to TRUE. As the land outlines are retrieved
 from the Natural Earth database, it is possible to use the argument
 “scale” as for countries/continents, to refine the precision of
 coastline definition (check paragraph 3.2.3. “Set the scale” above).</p>
+<p>Note that the land mask only makes a difference for sources that
+provide values over the sea in the first place. Several sources
+(e.g. the land cover ones) are land-only by construction and already
+return NA over the sea, so applying the mask to them changes nothing.
+Here we use the mean annual air temperature (bio1) of the CHELSA
+1981-2010 climatology, which is also interpolated over the sea.</p>
 <p>Without land mask:</p>
 <div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_nolandmask</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>glacier_region_19 <span class="op">=</span> <span class="st">"Central Europe"</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/earthenvlandcover.html">earthenvlandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1"</span><span class="op">)</span>, years <span class="op">=</span> <span class="st">"1981-2010"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_nolandmask</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
@@ -738,7 +744,7 @@ plot of chunk unnamed-chunk-58
 <p>With land mask:</p>
 <div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed_landmask</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>glacier_region_19 <span class="op">=</span> <span class="st">"Central Europe"</span>, land <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
-<span>  <span class="fu"><a href="../reference/earthenvlandcover.html">earthenvlandcover</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ice"</span><span class="op">)</span><span class="op">)</span> </span></code></pre></div>
+<span>  <span class="fu"><a href="../reference/chelsa.html">chelsa</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1"</span><span class="op">)</span>, years <span class="op">=</span> <span class="st">"1981-2010"</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb65"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed_landmask</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">

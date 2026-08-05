@@ -15,7 +15,7 @@ spatial extent, resolution, and coordinate reference system (CRS) for the study 
 
     <a class="navbar-brand me-2" href="../index.html">envar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,7 +83,7 @@ spatial extent, resolution, and coordinate reference system (CRS) for the study 
 <span>  set_na <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  scale <span class="op">=</span> <span class="st">"medium"</span>,</span>
 <span>  land <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  cache <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span>  cache <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -266,14 +266,22 @@ Note: This does not apply to point extractions (<code>pointsdf</code> without bu
 
 
 <dt id="arg-cache">cache<a class="anchor" aria-label="anchor" href="#arg-cache"></a></dt>
-<dd><p>Logical, with default <code>TRUE</code>. If <code>TRUE</code>, each source file
-downloaded by the downstream functions (e.g. <code><a href="chelsa.html">chelsa()</a></code>, <code><a href="worldclim.html">worldclim()</a></code>,
-<code><a href="topography.html">topography()</a></code>) is stored in a persistent per-user cache directory. If the
-download pipeline is interrupted (for example by a lost connection) and then
-re-launched, it resumes from where it stopped, reusing files that were already
-retrieved instead of downloading them again. Set to <code>FALSE</code> to use a
-temporary directory that is cleared at the end of the R session. The cache can
-be emptied at any time with <code><a href="clear_cache.html">clear_cache</a></code>.</p></dd>
+<dd><p>Logical or <code>NULL</code> (the default). If <code>TRUE</code>, each source file
+  downloaded by the downstream functions (e.g. <code><a href="chelsa.html">chelsa()</a></code>, <code><a href="worldclim.html">worldclim()</a></code>,
+  <code><a href="topography.html">topography()</a></code>) is stored in a persistent per-user cache directory (the one
+  returned by <code><a href="https://rdrr.io/r/tools/userdir.html" class="external-link">R_user_dir</a></code>). If the
+  download pipeline is interrupted (for example by a lost connection) and then
+  re-launched, it resumes from where it stopped, reusing files that were already
+  retrieved instead of downloading them again. Set to <code>FALSE</code> to use a
+  temporary directory that is cleared at the end of the R session. The cache can
+  be emptied at any time with <code><a href="clear_cache.html">clear_cache</a></code>.</p>
+<p>Because that directory lives in the user's home filespace, nothing is written
+  there without the user's agreement. With the default <code>NULL</code>, an interactive
+  session asks once whether the cache may be used and remembers the answer for the
+  rest of the session, while a non-interactive session (scripts, <code>R CMD check</code>,
+  vignette building) always uses a temporary directory. To skip the question, pass
+  <code>cache = TRUE</code>/<code>FALSE</code> explicitly or set <code>options(envar.cache = TRUE)</code>
+  (for example in your <code>.Rprofile</code>).</p></dd>
 
 </dl></div>
     <div class="section level2">

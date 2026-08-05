@@ -13,7 +13,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">envar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,10 +45,19 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.0" id="envar-010">envar 0.1.0<a class="anchor" aria-label="anchor" href="#envar-010"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.1" id="envar-011">envar 0.1.1<a class="anchor" aria-label="anchor" href="#envar-011"></a></h2>
+<ul><li><p><code><a href="../reference/par_set.html">par_set()</a></code> no longer writes to the user’s home filespace without permission. The <code>cache</code> argument now defaults to <code>NULL</code>, which asks once per interactive session whether the persistent download cache (in <code><a href="https://rdrr.io/r/tools/userdir.html" class="external-link">tools::R_user_dir()</a></code>) may be used, and always answers “no” in non-interactive sessions, where a session temporary directory is used instead. Pass <code>cache = TRUE</code>/<code>FALSE</code>, or set <code>options(envar.cache = )</code>, to skip the question.</p></li>
+<li><p><code><a href="../reference/chelsa.html">chelsa()</a></code> now fails with an informative message when <code>vars = "bio"</code> (which asks in the console which bioclimatic variables to download) is used in a non-interactive session, instead of failing later with an unrelated error. The corresponding example has been removed from the documentation.</p></li>
+<li><p><code><a href="../reference/roads.html">roads()</a></code> gains the two aggregated variables <code>"primary"</code> (sum of road classes 4 and 5) and <code>"other"</code> (sum of road classes 1, 2 and 3), alongside the existing <code>"all"</code> and the five single classes. Because <code>"primary"</code> now names the aggregated group, the single class 2 is requested with <code>"class2"</code> or <code>"primary class"</code>. The download links of the aggregated layers were updated.</p></li>
+<li><p>The <code><a href="../reference/roads.html">roads()</a></code> documentation and the “Available variables” article now describe how the road classes are derived from OpenStreetMap and what the aggregated layers contain.</p></li>
+<li><p>The land mask example in the “Package overview” article now uses a CHELSA climatology, which provides values over the sea, so that the effect of <code>land = TRUE</code> is actually visible.</p></li>
+</ul></div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.1.0" id="envar-010">envar 0.1.0<a class="anchor" aria-label="anchor" href="#envar-010"></a></h2><p class="text-muted">CRAN release: 2026-07-31</p>
 <ul><li>Initial creation of the package.</li>
 </ul></div>
-  </main></div>
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside></div>
 
 
     <footer><div class="pkgdown-footer-left">

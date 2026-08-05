@@ -34,7 +34,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">envar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -1449,6 +1449,87 @@ plot of chunk unnamed-chunk-48
 </p>
 </div>
 </div>
+<div class="section level3">
+<h3 id="roads">Roads<a class="anchor" aria-label="anchor" href="#roads"></a>
+</h3>
+<p>This function downloads, processes, and extracts road density
+variables from a global dataset of road density at 1 km grid resolution,
+derived from the OpenStreetMap database (<a href="https://www.openstreetmap.org/" class="external-link uri">https://www.openstreetmap.org/</a>) accessed through the
+GeoFabrik (<a href="https://www.geofabrik.de/" class="external-link uri">https://www.geofabrik.de/</a>) functionalities. The roads
+were downloaded from OpenStreetMap as of 30 January 2026. Every layer
+reports the <strong>length in metres of roads within each cell</strong>,
+i.e. road density per 1 km grid cell, and the extent of the data is
+[-180, 180, -60, 84].</p>
+<p>Out of the original OpenStreetMap categories, roads were classified
+into five classes, which were then grouped into three further aggregated
+layers. Any of these eight layers can be requested through the
+<code>vars</code> argument.</p>
+<p><strong>Available variables (8 total)</strong></p>
+<p>Single road classes:</p>
+<ul>
+<li>1 - <strong>class1</strong> - class 1, roads 1, road class 1,
+highways, highway, motorway (sum of the original OpenStreetMap
+categories “motorway” and “motorway_link”)</li>
+<li>2 - <strong>class2</strong> - class 2, roads 2, road class 2,
+primary class, trunk (sum of “primary”, “primary_link”, “trunk” and
+“trunk_link”)</li>
+<li>3 - <strong>class3</strong> - class 3, roads 3, road class 3,
+secondary roads, secondary (sum of “secondary” and
+“secondary_link”)</li>
+<li>4 - <strong>class4</strong> - class 4, roads 4, road class 4,
+tertiary roads, tertiary (sum of “tertiary” and “tertiary_link”)</li>
+<li>5 - <strong>class5</strong> - class 5, roads 5, road class 5,
+quaternary, local roads, local, residential (sum of “residential”,
+“living_street”, “unknown” and “unclassified”)</li>
+</ul>
+<p>Aggregated groups of classes:</p>
+<ul>
+<li>6 - <strong>primary</strong> - primary roads, primary group, classes
+4 and 5 (sum of classes 4 and 5)</li>
+<li>7 - <strong>other</strong> - other roads, other group, classes 1 2
+and 3 (sum of classes 1, 2 and 3)</li>
+<li>8 - <strong>all</strong> - all roads, total, total roads, all
+classes, combined (sum of all five classes)</li>
+</ul>
+<p>Two details are worth keeping in mind when choosing among these
+layers. First, the aggregated layer <strong>primary</strong> groups the
+<em>minor</em>-road classes 4 and 5, and is therefore not the same thing
+as the single class <strong>class2</strong> (the OpenStreetMap “primary”
+category); conversely, the aggregated layer <strong>other</strong>
+groups the <em>major</em>-road classes 1, 2 and 3. This is the naming
+used by the authors of the dataset, so <code>vars = "primary"</code>
+returns the group and <code>vars = "primary class"</code> (or
+<code>"class2"</code>) returns the single class. Second, in the three
+aggregated layers the cells with no road cover are already stored as NA
+rather than as 0, which keeps the files small and speeds up download and
+analyses; the five single-class layers instead keep their original
+values. As a consequence, <code>all</code> is exactly the sum of
+<code>primary</code> and <code>other</code>, and a cell that is NA in
+<code>all</code> simply carries no mapped road at all.</p>
+<p>If <code>vars</code> is not specified, only <code>all</code> is
+downloaded. The layers are hosted in an embargoed Figshare repository
+and are retrieved through private links: access is provided for the use
+of this package while the repository is under embargo, so please check
+with the data authors before redistributing them.</p>
+<p>In the example below we download the total road density over
+Switzerland, projected to EPSG:3035. The Alpine valleys and the densely
+settled Swiss Plateau stand out clearly.</p>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Switzerland"</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/roads.html">roads</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="st">"all"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">)</span></span></code></pre></div>
+<div class="figure" style="text-align: center">
+<img src="figs/variables-roads-plot-1.png" alt="plot of chunk roads-plot"><p class="caption">
+plot of chunk roads-plot
+</p>
+</div>
+<p>Single classes and groups can also be combined in a single call, and
+each layer is returned with the name that was requested:</p>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Switzerland"</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span></span>
+<span>  <span class="fu"><a href="../reference/roads.html">roads</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"highways"</span>, <span class="st">"primary"</span>, <span class="st">"other"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level2">
 <h2 id="protected-areas">Protected areas<a class="anchor" aria-label="anchor" href="#protected-areas"></a>
@@ -1479,10 +1560,10 @@ seascape, landscape, 5, v, V (IUCN Category V)</li>
 <li>8 - <strong>WDPA_ALL</strong> - all, combined, full, total, all
 protected areas (Combined/Full WDPA)</li>
 </ul>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/par_set.html">par_set</a></span><span class="op">(</span>shape <span class="op">=</span> <span class="va">Alps</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="../reference/pipe.html">%&gt;%</a></span> </span>
 <span>  <span class="fu"><a href="../reference/protection.html">protection</a></span><span class="op">(</span>vars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"national park"</span>, <span class="st">"WDPA_ALL"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">processed</span><span class="op">)</span></span></code></pre></div>
 <div class="figure" style="text-align: center">
 <img src="figs/variables-unnamed-chunk-50-1.png" alt="plot of chunk unnamed-chunk-50"><p class="caption">
@@ -1514,7 +1595,7 @@ variables — mean annual temperature (<code>bio1</code>), annual
 precipitation (<code>bio12</code>), <code>elevation</code> and
 <code>slope</code> at ~9 km. The chunk below loads it <strong>in place
 of a download</strong> and inspects the variables it contains.</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://animalbiodiversitylab.github.io/envar/">envar</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># A downloaded stack behaves exactly like this bundled one:</span></span>
@@ -1525,7 +1606,7 @@ of a download</strong> and inspects the variables it contains.</p>
 <span><span class="co"># The layer names are the variable names you requested via `vars = c(...)`:</span></span>
 <span><span class="fu"><a href="https://rspatial.github.io/terra/reference/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">switzerland</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "bio1"      "bio12"     "elevation" "slope"</span></span></code></pre>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Per-variable summary statistics over the study area:</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/global.html" class="external-link">global</a></span><span class="op">(</span><span class="va">switzerland</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"min"</span>, <span class="st">"mean"</span>, <span class="st">"max"</span><span class="op">)</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##              min        mean     max</span></span>
@@ -1533,7 +1614,7 @@ of a download</strong> and inspects the variables it contains.</p>
 <span><span class="co">## bio12     307.00 1235.081608 1994.00</span></span>
 <span><span class="co">## elevation 302.00 1304.183922 3337.00</span></span>
 <span><span class="co">## slope       0.05    1.612203    5.76</span></span></code></pre>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Plot every variable layer:</span></span>
 <span><span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/plot.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">switzerland</span><span class="op">)</span></span></code></pre></div>
 <p><img src="variables_files/figure-html/mini-example-1.png" class="r-plt" alt="" width="624"></p>

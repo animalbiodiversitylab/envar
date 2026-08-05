@@ -36,7 +36,7 @@ par_set(
   set_na = FALSE,
   scale = "medium",
   land = FALSE,
-  cache = TRUE
+  cache = NULL
 )
 ```
 
@@ -264,18 +264,28 @@ par_set(
 
 - cache:
 
-  Logical, with default `TRUE`. If `TRUE`, each source file downloaded
-  by the downstream functions (e.g.
+  Logical or `NULL` (the default). If `TRUE`, each source file
+  downloaded by the downstream functions (e.g.
   [`chelsa()`](https://animalbiodiversitylab.github.io/envar/reference/chelsa.md),
   [`worldclim()`](https://animalbiodiversitylab.github.io/envar/reference/worldclim.md),
   [`topography()`](https://animalbiodiversitylab.github.io/envar/reference/topography.md))
-  is stored in a persistent per-user cache directory. If the download
-  pipeline is interrupted (for example by a lost connection) and then
-  re-launched, it resumes from where it stopped, reusing files that were
-  already retrieved instead of downloading them again. Set to `FALSE` to
-  use a temporary directory that is cleared at the end of the R session.
-  The cache can be emptied at any time with
+  is stored in a persistent per-user cache directory (the one returned
+  by [`R_user_dir`](https://rdrr.io/r/tools/userdir.html)). If the
+  download pipeline is interrupted (for example by a lost connection)
+  and then re-launched, it resumes from where it stopped, reusing files
+  that were already retrieved instead of downloading them again. Set to
+  `FALSE` to use a temporary directory that is cleared at the end of the
+  R session. The cache can be emptied at any time with
   [`clear_cache`](https://animalbiodiversitylab.github.io/envar/reference/clear_cache.md).
+
+  Because that directory lives in the user's home filespace, nothing is
+  written there without the user's agreement. With the default `NULL`,
+  an interactive session asks once whether the cache may be used and
+  remembers the answer for the rest of the session, while a
+  non-interactive session (scripts, `R CMD check`, vignette building)
+  always uses a temporary directory. To skip the question, pass
+  `cache = TRUE`/`FALSE` explicitly or set `options(envar.cache = TRUE)`
+  (for example in your `.Rprofile`).
 
 ## Value
 

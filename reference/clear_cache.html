@@ -17,7 +17,7 @@ a fresh download of every variable."><meta property="og:image" content="https://
 
     <a class="navbar-brand me-2" href="../index.html">envar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +64,20 @@ a fresh download of every variable.</p>
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     <p>Invisibly, the path of the cache directory that was cleared.</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>The cache is stored in the per-user cache directory returned by
+[tools::R_user_dir()] and is only ever written after the user has agreed to
+it (see the `cache` argument of [par_set()]).</p>
+    </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># \donttest{</span></span>
+<span><span class="co"># Empty the persistent download cache, if the user enabled one</span></span>
+<span><span class="fu">clear_cache</span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="co"># }</span></span></code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

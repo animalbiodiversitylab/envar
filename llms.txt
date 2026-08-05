@@ -210,6 +210,8 @@ Functions for downloading variables from multiple sources
   : Download and process Global Population Projections (SSP)
 - [`habitat()`](https://animalbiodiversitylab.github.io/envar/reference/habitat.md)
   : Download and process IUCN Habitat Classification layers
+- [`roads()`](https://animalbiodiversitylab.github.io/envar/reference/roads.md)
+  : Download and process Global Road Density layers
 
 ## Correlation
 

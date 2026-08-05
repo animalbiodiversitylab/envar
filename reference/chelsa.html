@@ -15,7 +15,7 @@ CHELSA (Climatologies at High Resolution for the Earth's Land Surface Areas) dat
 
     <a class="navbar-brand me-2" href="../index.html">envar</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -220,11 +220,6 @@ at https://chelsa-climate.org/</p>
 <span><span class="co"># for the single years</span></span>
 <span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Iceland"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
 <span><span class="fu">chelsa</span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio1"</span><span class="op">)</span>, years <span class="op">=</span> <span class="st">"1981-2010"</span>, months <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># to download a specified set of variables, leave only "bio" and then the</span></span>
-<span><span class="co"># package will ask which variables to download (all 19 or a selection) in the console</span></span>
-<span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Iceland"</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
-<span><span class="fu">chelsa</span><span class="op">(</span>vars<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"bio"</span><span class="op">)</span>, years <span class="op">=</span> <span class="st">"1981-2010"</span>, months <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># climatic values for the future (SSP, RCP and GCM must be specified)</span></span>
 <span><span class="va">processed</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs <span class="op">=</span> <span class="fl">3035</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span></span>
