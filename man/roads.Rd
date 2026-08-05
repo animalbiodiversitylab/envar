@@ -22,18 +22,58 @@ If `par_set()` contained spatial points or data.frame of points without buffer: 
 }
 \description{
 This function downloads, processes, and extracts road density variables.
-Each variable corresponds to a global raster (~1 km resolution) representing
-road density for a single road class, or for all classes combined.
+Each variable corresponds to a global raster (~1 km resolution) reporting the
+total length of roads (in metres) within each grid cell, for a single road
+class or for a group of classes.
 }
 \details{
+\strong{The dataset}\cr
+Road density at 1 km grid resolution over the globe, derived from the
+OpenStreetMap database (\url{https://www.openstreetmap.org/}) accessed through
+the GeoFabrik (\url{https://www.geofabrik.de/}) functionalities, as of
+30 January 2026. Out of the original OpenStreetMap categories, roads were
+classified into five classes:
+
+\itemize{
+  \item \strong{class1} - highway (sum of the original categories "motorway"
+    and "motorway_link")
+  \item \strong{class2} - primary (sum of "primary", "primary_link", "trunk"
+    and "trunk_link")
+  \item \strong{class3} - secondary (sum of "secondary" and "secondary_link")
+  \item \strong{class4} - tertiary (sum of "tertiary" and "tertiary_link")
+  \item \strong{class5} - quaternary and other (sum of "residential",
+    "living_street", "unknown" and "unclassified")
+}
+
+These five classes are further grouped into three aggregated layers:
+
+\itemize{
+  \item \strong{primary} - sum of classes 4 and 5
+  \item \strong{other} - sum of classes 1, 2 and 3
+  \item \strong{all} - sum of all five classes
+}
+
+Note that the aggregated layer \code{"primary"} is a group of the minor-road
+classes (4 and 5) and is \emph{not} the same as the single class
+\code{"class2"} (the OpenStreetMap "primary" category), while the aggregated
+layer \code{"other"} groups the major-road classes (1, 2 and 3). In the three
+aggregated layers, cells with no road cover are already stored as \code{NA}
+(rather than 0) to streamline download and analyses; the five single-class
+layers keep their original values.
+
+All layers report the length in metres of roads within each ~1 km cell
+(i.e. road density per grid cell).
+
 \strong{Available variables} (working synonyms in parentheses):
 
 \itemize{
-  \item "class1" ("class 1", "roads 1", "road class 1", "highways", "highway")
-  \item "class2" ("class 2", "roads 2", "road class 2", "primary roads", "primary")
+  \item "class1" ("class 1", "roads 1", "road class 1", "highways", "highway", "motorway")
+  \item "class2" ("class 2", "roads 2", "road class 2", "primary class", "trunk")
   \item "class3" ("class 3", "roads 3", "road class 3", "secondary roads", "secondary")
   \item "class4" ("class 4", "roads 4", "road class 4", "tertiary roads", "tertiary")
-  \item "class5" ("class 5", "roads 5", "road class 5", "local roads", "local")
+  \item "class5" ("class 5", "roads 5", "road class 5", "quaternary", "local roads", "local", "residential")
+  \item "primary" ("primary roads", "primary group", "classes 4 and 5")
+  \item "other" ("other roads", "other group", "classes 1 2 and 3")
   \item "all" ("all roads", "total", "total roads", "all classes", "combined")
 }
 
@@ -56,5 +96,9 @@ roads()
 # Example 2: Download single road classes
 processed <- par_set(country = "Italy", crs = 3035) \%>\%
 roads(vars = c("highways", "class5"))
+
+# Example 3: Download the two aggregated groups of classes
+processed <- par_set(country = "Italy", crs = 3035) \%>\%
+roads(vars = c("primary", "other"))
   }
 }

@@ -153,7 +153,7 @@ soil <- function(x, vars = NULL, ...) {
     
     # Resume support: reuse the cached raster if it (and its header) are already
     # present and caching is enabled; otherwise download and unzip.
-    if (isTRUE(getOption("envar.cache", TRUE)) &&
+    if (isTRUE(getOption("envar.cache", FALSE)) &&
         fs::file_exists(cached_raster) && fs::file_exists(cached_hdr)) {
       cli::cli_alert_success(
         "Using cached copy of {.file {basename(cached_raster)}} (skipping download)."

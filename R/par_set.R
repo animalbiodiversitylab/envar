@@ -134,14 +134,23 @@
 #' @param path directory to store the result of the download/processing. Default to \code{NULL} (no output is stored locally).
 #'   It works only if no \code{corr_check()} is specified. Specify the path including the file name and the extension (e.g. \code{"../Out/rastername.tif"} if the final
 #'   export is a \code{SpatRaster}; or \code{"../Out/extracteddataframe.csv"} if the output is a \code{data.frame}).
-#' @param cache Logical, with default \code{TRUE}. If \code{TRUE}, each source file
+#' @param cache Logical or \code{NULL} (the default). If \code{TRUE}, each source file
 #'   downloaded by the downstream functions (e.g. \code{chelsa()}, \code{worldclim()},
-#'   \code{topography()}) is stored in a persistent per-user cache directory. If the
+#'   \code{topography()}) is stored in a persistent per-user cache directory (the one
+#'   returned by \code{\link[tools]{R_user_dir}}). If the
 #'   download pipeline is interrupted (for example by a lost connection) and then
 #'   re-launched, it resumes from where it stopped, reusing files that were already
 #'   retrieved instead of downloading them again. Set to \code{FALSE} to use a
 #'   temporary directory that is cleared at the end of the R session. The cache can
 #'   be emptied at any time with \code{\link{clear_cache}}.
+#'
+#'   Because that directory lives in the user's home filespace, nothing is written
+#'   there without the user's agreement. With the default \code{NULL}, an interactive
+#'   session asks once whether the cache may be used and remembers the answer for the
+#'   rest of the session, while a non-interactive session (scripts, \code{R CMD check},
+#'   vignette building) always uses a temporary directory. To skip the question, pass
+#'   \code{cache = TRUE}/\code{FALSE} explicitly or set \code{options(envar.cache = TRUE)}
+#'   (for example in your \code{.Rprofile}).
 #'
 #' @section Resampling and reprojection:
 #' Downstream functions align every layer to the target grid defined here using
@@ -246,23 +255,23 @@ par_set <- function(country = NULL,
                     set_na = FALSE,
                     scale = "medium",
                     land = FALSE,
-                    cache = TRUE) {
+                    cache = NULL) {
 
   if (is.null(res)) {
     res <- 1
   }
 
-  # Validate and activate the download cache (see envar_grids_dir()).
-  if (!is.logical(cache) || length(cache) != 1 || is.na(cache)) {
-    cli::cli_abort("{.arg cache} must be a single logical value (TRUE or FALSE).")
-  }
-  options(envar.cache = cache)
+  # Validate and activate the download cache (see envar_grids_dir()). Nothing is
+  # written to the user's home filespace unless the user agreed to it, so with
+  # the default `cache = NULL` the question is asked once per interactive
+  # session and answered FALSE in non-interactive ones.
+  cache <- resolve_cache_consent(cache)
   if (isTRUE(cache)) {
     cli::cli_alert_info(
       "Download cache is ON: processed source files are stored and reused on re-runs. Set {.code cache = FALSE} to disable, or call {.fn clear_cache} to empty it."
     )
   }
-  
+
   if (!is.numeric(res) || length(res) != 1 || is.na(res) || res < 1) {
     cli::cli_abort(c(
       "{.arg res} must be a single number greater than or equal to 1.",

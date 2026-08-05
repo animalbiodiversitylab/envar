@@ -3,18 +3,58 @@
 #' Download and process Global Road Density layers
 #'
 #' This function downloads, processes, and extracts road density variables.
-#' Each variable corresponds to a global raster (~1 km resolution) representing
-#' road density for a single road class, or for all classes combined.
+#' Each variable corresponds to a global raster (~1 km resolution) reporting the
+#' total length of roads (in metres) within each grid cell, for a single road
+#' class or for a group of classes.
 #'
 #' @details
+#' \strong{The dataset}\cr
+#' Road density at 1 km grid resolution over the globe, derived from the
+#' OpenStreetMap database (\url{https://www.openstreetmap.org/}) accessed through
+#' the GeoFabrik (\url{https://www.geofabrik.de/}) functionalities, as of
+#' 30 January 2026. Out of the original OpenStreetMap categories, roads were
+#' classified into five classes:
+#'
+#' \itemize{
+#'   \item \strong{class1} - highway (sum of the original categories "motorway"
+#'     and "motorway_link")
+#'   \item \strong{class2} - primary (sum of "primary", "primary_link", "trunk"
+#'     and "trunk_link")
+#'   \item \strong{class3} - secondary (sum of "secondary" and "secondary_link")
+#'   \item \strong{class4} - tertiary (sum of "tertiary" and "tertiary_link")
+#'   \item \strong{class5} - quaternary and other (sum of "residential",
+#'     "living_street", "unknown" and "unclassified")
+#' }
+#'
+#' These five classes are further grouped into three aggregated layers:
+#'
+#' \itemize{
+#'   \item \strong{primary} - sum of classes 4 and 5
+#'   \item \strong{other} - sum of classes 1, 2 and 3
+#'   \item \strong{all} - sum of all five classes
+#' }
+#'
+#' Note that the aggregated layer \code{"primary"} is a group of the minor-road
+#' classes (4 and 5) and is \emph{not} the same as the single class
+#' \code{"class2"} (the OpenStreetMap "primary" category), while the aggregated
+#' layer \code{"other"} groups the major-road classes (1, 2 and 3). In the three
+#' aggregated layers, cells with no road cover are already stored as \code{NA}
+#' (rather than 0) to streamline download and analyses; the five single-class
+#' layers keep their original values.
+#'
+#' All layers report the length in metres of roads within each ~1 km cell
+#' (i.e. road density per grid cell).
+#'
 #' \strong{Available variables} (working synonyms in parentheses):
 #'
 #' \itemize{
-#'   \item "class1" ("class 1", "roads 1", "road class 1", "highways", "highway")
-#'   \item "class2" ("class 2", "roads 2", "road class 2", "primary roads", "primary")
+#'   \item "class1" ("class 1", "roads 1", "road class 1", "highways", "highway", "motorway")
+#'   \item "class2" ("class 2", "roads 2", "road class 2", "primary class", "trunk")
 #'   \item "class3" ("class 3", "roads 3", "road class 3", "secondary roads", "secondary")
 #'   \item "class4" ("class 4", "roads 4", "road class 4", "tertiary roads", "tertiary")
-#'   \item "class5" ("class 5", "roads 5", "road class 5", "local roads", "local")
+#'   \item "class5" ("class 5", "roads 5", "road class 5", "quaternary", "local roads", "local", "residential")
+#'   \item "primary" ("primary roads", "primary group", "classes 4 and 5")
+#'   \item "other" ("other roads", "other group", "classes 1 2 and 3")
 #'   \item "all" ("all roads", "total", "total roads", "all classes", "combined")
 #' }
 #'
@@ -48,6 +88,10 @@
 #' # Example 2: Download single road classes
 #' processed <- par_set(country = "Italy", crs = 3035) %>%
 #' roads(vars = c("highways", "class5"))
+#'
+#' # Example 3: Download the two aggregated groups of classes
+#' processed <- par_set(country = "Italy", crs = 3035) %>%
+#' roads(vars = c("primary", "other"))
 #'   }
 #' @export
 
@@ -96,12 +140,19 @@ roads <- function(x, vars = "all", ...) {
   # --------------------------------------------------------------------
   # Friendly-name -> canonical code mapping
   # --------------------------------------------------------------------
+  # Note on the two group layers: "primary" is the sum of classes 4 and 5 and
+  # "other" the sum of classes 1, 2 and 3, as defined by the data authors. The
+  # bare word "primary" therefore names the group, not class2 (the OpenStreetMap
+  # "primary" category), which keeps the unambiguous "primary class" synonym.
   roads_lookup <- list(
-    "class1" = c("class 1", "roads 1", "road 1", "road class 1", "highways", "highway", "1"),
-    "class2" = c("class 2", "roads 2", "road 2", "road class 2", "primary roads", "primary", "2"),
+    "class1" = c("class 1", "roads 1", "road 1", "road class 1", "highways", "highway", "motorway", "1"),
+    "class2" = c("class 2", "roads 2", "road 2", "road class 2", "primary class", "class primary", "trunk", "2"),
     "class3" = c("class 3", "roads 3", "road 3", "road class 3", "secondary roads", "secondary", "3"),
     "class4" = c("class 4", "roads 4", "road 4", "road class 4", "tertiary roads", "tertiary", "4"),
-    "class5" = c("class 5", "roads 5", "road 5", "road class 5", "local roads", "local", "5"),
+    "class5" = c("class 5", "roads 5", "road 5", "road class 5", "quaternary", "quaternary and other",
+                 "local roads", "local", "residential", "5"),
+    "primary" = c("primary roads", "primary group", "primary classes", "classes 4 and 5"),
+    "other"   = c("other roads", "other group", "other classes", "classes 1 2 and 3"),
     "all"    = c("all roads", "total", "total roads", "all classes", "all road classes", "combined", "tot")
   )
 
@@ -112,7 +163,9 @@ roads <- function(x, vars = "all", ...) {
     "class3" = "https://figshare.com/ndownloader/files/67129010?private_link=227b75fbee9f8030e005",
     "class4" = "https://figshare.com/ndownloader/files/67129013?private_link=227b75fbee9f8030e005",
     "class5" = "https://figshare.com/ndownloader/files/67129019?private_link=227b75fbee9f8030e005",
-    "all"    = "https://figshare.com/ndownloader/files/67129022?private_link=227b75fbee9f8030e005"
+    "primary" = "https://figshare.com/ndownloader/files/67236713?private_link=227b75fbee9f8030e005",
+    "other"   = "https://figshare.com/ndownloader/files/67236707?private_link=227b75fbee9f8030e005",
+    "all"    = "https://figshare.com/ndownloader/files/67236710?private_link=227b75fbee9f8030e005"
   )
 
   # Normalizer: convert to lowercase, remove punctuation, normalize whitespace

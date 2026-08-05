@@ -1016,12 +1016,56 @@ SSP Scenarios:
 * SSP5
 
 ```{r,results = "hide", message = FALSE, warning = FALSE}
-processed <- par_set(shape = Alps, crs = 3035) %>% 
+processed <- par_set(shape = Alps, crs = 3035) %>%
   population(vars = "population", year = 2050, ssp = 2)
 ```
 
 ```{r}
 plot(processed)
+```
+
+## Roads
+
+This function downloads, processes, and extracts road density variables from a global dataset of road density at 1 km grid resolution, derived from the OpenStreetMap database (<https://www.openstreetmap.org/>) accessed through the GeoFabrik (<https://www.geofabrik.de/>) functionalities. The roads were downloaded from OpenStreetMap as of 30 January 2026. Every layer reports the **length in metres of roads within each cell**, i.e. road density per 1 km grid cell, and the extent of the data is [-180, 180, -60, 84].
+
+Out of the original OpenStreetMap categories, roads were classified into five classes, which were then grouped into three further aggregated layers. Any of these eight layers can be requested through the `vars` argument.
+
+**Available variables (8 total)**
+
+Single road classes:
+
+* 1 - **class1** - class 1, roads 1, road class 1, highways, highway, motorway (sum of the original OpenStreetMap categories "motorway" and "motorway_link")
+* 2 - **class2** - class 2, roads 2, road class 2, primary class, trunk (sum of "primary", "primary_link", "trunk" and "trunk_link")
+* 3 - **class3** - class 3, roads 3, road class 3, secondary roads, secondary (sum of "secondary" and "secondary_link")
+* 4 - **class4** - class 4, roads 4, road class 4, tertiary roads, tertiary (sum of "tertiary" and "tertiary_link")
+* 5 - **class5** - class 5, roads 5, road class 5, quaternary, local roads, local, residential (sum of "residential", "living_street", "unknown" and "unclassified")
+
+Aggregated groups of classes:
+
+* 6 - **primary** - primary roads, primary group, classes 4 and 5 (sum of classes 4 and 5)
+* 7 - **other** - other roads, other group, classes 1 2 and 3 (sum of classes 1, 2 and 3)
+* 8 - **all** - all roads, total, total roads, all classes, combined (sum of all five classes)
+
+Two details are worth keeping in mind when choosing among these layers. First, the aggregated layer **primary** groups the *minor*-road classes 4 and 5, and is therefore not the same thing as the single class **class2** (the OpenStreetMap "primary" category); conversely, the aggregated layer **other** groups the *major*-road classes 1, 2 and 3. This is the naming used by the authors of the dataset, so `vars = "primary"` returns the group and `vars = "primary class"` (or `"class2"`) returns the single class. Second, in the three aggregated layers the cells with no road cover are already stored as NA rather than as 0, which keeps the files small and speeds up download and analyses; the five single-class layers instead keep their original values. As a consequence, `all` is exactly the sum of `primary` and `other`, and a cell that is NA in `all` simply carries no mapped road at all.
+
+If `vars` is not specified, only `all` is downloaded. The layers are hosted in an embargoed Figshare repository and are retrieved through private links: access is provided for the use of this package while the repository is under embargo, so please check with the data authors before redistributing them.
+
+In the example below we download the total road density over Switzerland, projected to EPSG:3035. The Alpine valleys and the densely settled Swiss Plateau stand out clearly.
+
+```{r roads, results = "hide", message = FALSE, warning = FALSE}
+processed <- par_set(country = "Switzerland", crs = 3035) %>%
+  roads(vars = "all")
+```
+
+```{r roads-plot}
+plot(processed)
+```
+
+Single classes and groups can also be combined in a single call, and each layer is returned with the name that was requested:
+
+```{r,eval = FALSE}
+processed <- par_set(country = "Switzerland", crs = 3035) %>%
+  roads(vars = c("highways", "primary", "other"))
 ```
 
 # Protected areas

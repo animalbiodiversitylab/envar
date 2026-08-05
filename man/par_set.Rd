@@ -33,7 +33,7 @@ par_set(
   set_na = FALSE,
   scale = "medium",
   land = FALSE,
-  cache = TRUE
+  cache = NULL
 )
 }
 \arguments{
@@ -167,14 +167,23 @@ from Natural Earth (at the scale defined by the \code{scale} argument). This is 
 regions to land only, or for ensuring that buffered areas do not extend into the ocean. 
 Note: This does not apply to point extractions (\code{pointsdf} without buffer).}
 
-\item{cache}{Logical, with default \code{TRUE}. If \code{TRUE}, each source file
-downloaded by the downstream functions (e.g. \code{chelsa()}, \code{worldclim()},
-\code{topography()}) is stored in a persistent per-user cache directory. If the
-download pipeline is interrupted (for example by a lost connection) and then
-re-launched, it resumes from where it stopped, reusing files that were already
-retrieved instead of downloading them again. Set to \code{FALSE} to use a
-temporary directory that is cleared at the end of the R session. The cache can
-be emptied at any time with \code{\link{clear_cache}}.}
+\item{cache}{Logical or \code{NULL} (the default). If \code{TRUE}, each source file
+  downloaded by the downstream functions (e.g. \code{chelsa()}, \code{worldclim()},
+  \code{topography()}) is stored in a persistent per-user cache directory (the one
+  returned by \code{\link[tools]{R_user_dir}}). If the
+  download pipeline is interrupted (for example by a lost connection) and then
+  re-launched, it resumes from where it stopped, reusing files that were already
+  retrieved instead of downloading them again. Set to \code{FALSE} to use a
+  temporary directory that is cleared at the end of the R session. The cache can
+  be emptied at any time with \code{\link{clear_cache}}.
+
+  Because that directory lives in the user's home filespace, nothing is written
+  there without the user's agreement. With the default \code{NULL}, an interactive
+  session asks once whether the cache may be used and remembers the answer for the
+  rest of the session, while a non-interactive session (scripts, \code{R CMD check},
+  vignette building) always uses a temporary directory. To skip the question, pass
+  \code{cache = TRUE}/\code{FALSE} explicitly or set \code{options(envar.cache = TRUE)}
+  (for example in your \code{.Rprofile}).}
 }
 \value{
 A \code{list} object (class \code{envar_par}) containing:

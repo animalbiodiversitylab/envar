@@ -11,7 +11,7 @@
 download_file <- function(url, dest_file, max_retries = 2) {
 
   # If caching is enabled and a complete copy already exists, reuse it.
-  if (isTRUE(getOption("envar.cache", TRUE)) &&
+  if (isTRUE(getOption("envar.cache", FALSE)) &&
       file.exists(dest_file) && isTRUE(file.info(dest_file)$size > 0)) {
     cli::cli_alert_success(
       "Using cached copy of {.file {basename(dest_file)}} (skipping download)."

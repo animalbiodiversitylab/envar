@@ -670,12 +670,14 @@ plot(processed_bilayer_points_buffer)
 
 When downloading  data, it is possible to apply a land mask to remove all sea/ocean cells from the output. This can be done by setting the argument "land" to TRUE (default to FALSE, i.e., no land mask is applied). Here we use the glacier region centered on the European Alps to display a region with both land and sea, to show that sea is masked as NA when "land" is set to TRUE. As the land outlines are retrieved from the Natural Earth database, it is possible to use the argument "scale" as for countries/continents, to refine the precision of coastline definition (check paragraph 3.2.3. "Set the scale" above).
 
+Note that the land mask only makes a difference for sources that provide values over the sea in the first place. Several sources (e.g. the land cover ones) are land-only by construction and already return NA over the sea, so applying the mask to them changes nothing. Here we use the mean annual air temperature (bio1) of the CHELSA 1981-2010 climatology, which is also interpolated over the sea.
+
 Without land mask:
 
 
 ``` r
 processed_nolandmask <- par_set(glacier_region_19 = "Central Europe") %>%
-  earthenvlandcover(vars = c("ice")) 
+  chelsa(vars = c("bio1"), years = "1981-2010")
 ```
 
 
@@ -693,7 +695,7 @@ With land mask:
 
 ``` r
 processed_landmask <- par_set(glacier_region_19 = "Central Europe", land = TRUE) %>%
-  earthenvlandcover(vars = c("ice")) 
+  chelsa(vars = c("bio1"), years = "1981-2010")
 ```
 
 

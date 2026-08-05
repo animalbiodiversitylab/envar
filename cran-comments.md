@@ -1,76 +1,80 @@
-## Resubmission
+## Summary
 
-This is a resubmission. In response to the reviewer's comments we have made
-the following changes:
+This is a patch release (0.1.0 -> 0.1.1) that fixes the ERROR and the NOTE
+reported by the CRAN checks of version 0.1.0. We are sorry for submitting again
+so soon after the previous update; the release is made only to correct the
+check failures below.
 
-* Added angle brackets around the web-service URLs in the Description field of
-  the DESCRIPTION file (e.g. `<https://www.worldclim.org/>`), so that they are
-  auto-linked, with no space after `http:`/`https:`.
+### 1. ERROR in the examples (donttest flavour)
 
-* Each vignette now contains a short, self-contained executable code chunk (in
-  a final "Appendix" section) that runs during `R CMD build`/`check`. Because
-  the core purpose of the package is to download large environmental layers
-  from remote services -- which requires network access and is unsuitable for
-  automatic checks -- the download-based tutorials are pre-computed (the
-  `*.Rmd.orig` pattern) and shown but not executed, while this final chunk runs
-  the core functionality (collinearity and extrapolation checks, reprojection,
-  aggregation, a simple model fit) end to end on a small dataset bundled with
-  the package, with no network access.
+The `chelsa()` help page contained an example using `vars = "bio"`. That value
+asks the user, in the console, which of the 19 bioclimatic variables to
+download, so it cannot run in a non-interactive session and failed with
+"No layers were successfully processed".
 
-* Replaced every `\dontrun{}` with `\donttest{}`. Examples that do not require
-  a download (e.g. `corr_check()`, `extr_check()`) are now executable and run
-  on the small bundled dataset; only the examples that download data from
-  remote third-party services remain wrapped in `\donttest{}`.
+* The example has been removed from the documentation.
+* In addition, `chelsa()` now checks `interactive()` before prompting and, in a
+  non-interactive session, fails immediately with an informative message asking
+  the user to name the variables explicitly (`vars = c("bio1", "bio12")`).
 
-* Removed all modifications of the global environment within functions (no
-  `<<-` assignments remain).
+### 2. NOTE: new files in the user's home filespace (`~/.cache/R/envar`)
 
-## Submission summary
+Version 0.1.0 stored the files it downloads in the per-user cache directory
+returned by `tools::R_user_dir()` by default, so running the examples created
+`~/.cache/R/envar/grids`.
 
-`envar` provides a unified interface to download, harmonise and extract a wide
-range of environmental and socio-economic variables from established open data
-sources for use in macroecology and biogeography.
+Nothing is now written outside the session temporary directory unless the user
+has agreed to it:
+
+* the `cache` argument of `par_set()` defaults to `NULL`, which means "ask";
+* in an interactive session the user is asked once per session whether the
+  persistent cache may be used, and the answer is remembered for that session;
+* in a **non-interactive** session (scripts, `R CMD check`, vignette building)
+  the answer is always "no" and a session temporary directory is used, so no
+  file is ever created in the user's home filespace;
+* `cache = TRUE`/`cache = FALSE`, or `options(envar.cache = )`, can be used to
+  answer explicitly and skip the question.
+
+This was verified by running a download non-interactively with `HOME` pointed at
+an empty directory: nothing at all was created under `HOME`.
+
+### 3. NOTE: new files in `~/tmp/scratch` (r-devel-linux-x86_64-debian-gcc)
+
+The directories listed in this NOTE are the per-session temporary directories of
+that check machine (`Rtmp*`) together with `xvfb-run.*` files, which the package
+does not create. `envar` writes its temporary files only inside `tempdir()`,
+which was double-checked for this release: every path is built with
+`fs::path_temp()`/`tempdir()`, and no code outside the cache helper described
+above touches any other location.
 
 ## Test environments
 
-* win-builder, R-devel (Windows Server 2022)
-* win-builder, R-release 4.6.1 (Windows Server 2022)
-* win-builder, R-oldrelease 4.5.3 (Windows Server 2022)
-* local: Windows 11, R 4.4.2
+* local: Ubuntu 22.04, R 4.4.1 -- `R CMD check --as-cran`
 
 ## R CMD check results
 
-On all three win-builder environments (R-devel, R-release 4.6.1 and
-R-oldrelease 4.5.3) `R CMD check` returns no ERRORs and no WARNINGs, and a
-single NOTE:
+0 ERRORs, 0 WARNINGs, 3 NOTEs:
 
-* "New submission" -- this is a new package.
+* "Days since last update: 4" -- this submission only fixes the check failures
+  of 0.1.0 reported above.
 
-The same NOTE lists four "possibly misspelled words" in the Description
-(`biogeography`, `macroecology`, `reprojection`, `socio`). These are spelled
-correctly: the first three are standard terms in the field, and "socio" is the
-first half of the compound "socio-economic".
+* "installed size is 8.0Mb" (`data` 2.4Mb, `doc` 4.1Mb) -- the bundled datasets
+  are stored with `xz` compression (`LazyDataCompression: xz`) and `doc`
+  contains the pre-computed figures of the four vignettes.
 
-On R-oldrelease the incoming-feasibility check additionally flagged
-`https://www.gbif.org` as a possibly invalid URL (HTTP 403); it did not appear
-on R-devel or R-release. The URL is valid and opens normally in a browser; GBIF
-returns 403 to the automated request made by the URL checker. It appears in the
-`sdm` vignette and in the documentation of the bundled `Apollo` dataset, whose
-source is GBIF.
-
-The installed package size checked OK on all three win-builder environments. On
-some other platforms it may be reported as slightly above 5 Mb (~7.7 Mb, mostly
-`data/` and the pre-computed vignette figures under `doc/`); the datasets are
-stored with `xz` compression (`LazyDataCompression: xz`).
+* `https://www.gbif.org` reported as possibly invalid (HTTP 403). The URL is
+  valid and opens normally in a browser; GBIF returns 403 to the automated
+  request made by the URL checker. It appears in the `sdm` vignette and in the
+  documentation of the bundled `Apollo` dataset, whose source is GBIF.
 
 ## Notes
 
-* Examples that download data from remote services are wrapped in `\donttest{}`
-  because they require network access and large downloads from third-party
-  hosts. The vignettes are pre-computed (the `*.Rmd.orig` pattern) so that no
-  network access or large downloads occur during `R CMD build`/`check`; each
-  vignette additionally includes one executable chunk that exercises the core
-  functionality offline on a bundled dataset.
+* Examples that download data from remote services remain wrapped in
+  `\donttest{}` because they require network access and large downloads from
+  third-party hosts. The vignettes are pre-computed (the `*.Rmd.orig` pattern)
+  so that no network access or large download occurs during `R CMD
+  build`/`check`; each vignette additionally includes one executable chunk that
+  exercises the core functionality offline on a bundled dataset.
 
 * `rnaturalearthdata` is listed in `Suggests`: it is only needed to resolve
   study areas given by country or continent name, every such code path is
