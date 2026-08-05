@@ -55,7 +55,7 @@ above touches any other location.
 
 0 ERRORs, 0 WARNINGs, 3 NOTEs:
 
-* "Days since last update: 4" -- this submission only fixes the check failures
+* "Days since last update: 5" -- this submission only fixes the check failures
   of 0.1.0 reported above.
 
 * "installed size is 8.0Mb" (`data` 2.4Mb, `doc` 4.1Mb) -- the bundled datasets
