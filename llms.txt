@@ -25,6 +25,17 @@ started](https://animalbiodiversitylab.github.io/envar/articles/intro)**.
 
 ## Installation
 
+#### Official version
+
+The latest official version of the *envar R* package can be installed
+from the Comprehensive R Archive Network (CRAN) using the following *R*
+code.
+
+``` r
+
+install.packages("envar", dependencies = TRUE)
+```
+
 #### Developmental version
 
 The latest development version can be installed directly from the GitHub
