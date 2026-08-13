@@ -33,7 +33,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/animalbiodiversitylab/envar/blob/main/inst/CITATION)
+[`inst/CITATION`](https://github.com/animalbiodiversitylab/envar/blob/v0.1.1/inst/CITATION)
 
 Simoncini, A., Bertoncini, M., Cerofolini, A., Dalpasso, A., Ficetola,
 G.F., Falaschi, M., & Lo Parrino, E. (2026). 'envar': an R package to
