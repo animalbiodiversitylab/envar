@@ -69,6 +69,13 @@ Function for identifying correlated variables
 - [`corr_check()`](https://animalbiodiversitylab.github.io/envar/reference/corr_check.md)
   : Check Variable Correlation and Multi-collinearity
 
+## Metadata
+
+Function for storing the provenance of a pipeline
+
+- [`metadata()`](https://animalbiodiversitylab.github.io/envar/reference/metadata.md)
+  : Store a Provenance Summary of an \`envar\` Pipeline
+
 ## Cache
 
 Manage the persistent download cache

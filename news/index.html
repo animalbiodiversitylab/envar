@@ -41,9 +41,13 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Changelog</h1>
-      <small>Source: <a href="https://github.com/animalbiodiversitylab/envar/blob/v0.1.1/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
+      <small>Source: <a href="https://github.com/animalbiodiversitylab/envar/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="development version" id="envar-development-version">envar (development version)<a class="anchor" aria-label="anchor" href="#envar-development-version"></a></h2>
+<ul><li>New <code><a href="../reference/metadata.html">metadata()</a></code> function. Added at the end of a pipeline, it writes a provenance summary of the whole download: the source URLs and the date each file was downloaded, the variables produced, the temporal period they refer to, the native resolution of every source dataset, the resolution, CRS and extent of the output, and the processing settings used (those of <code><a href="../reference/par_set.html">par_set()</a></code> and the arguments of every dataset function called). The summary is written as a readable report (<code>envar_metadata.txt</code>) and as a table (<code>envar_metadata.csv</code>) and is also returned with the pipeline object. As in <code><a href="../reference/corr_check.html">corr_check()</a></code>, an interactive session asks at the console where to store the files, so a pipeline containing both functions asks once for each of them.</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="envar-011">envar 0.1.1<a class="anchor" aria-label="anchor" href="#envar-011"></a></h2>
 <ul><li><p><code><a href="../reference/par_set.html">par_set()</a></code> no longer writes to the user’s home filespace without permission. The <code>cache</code> argument now defaults to <code>NULL</code>, which asks once per interactive session whether the persistent download cache (in <code><a href="https://rdrr.io/r/tools/userdir.html" class="external-link">tools::R_user_dir()</a></code>) may be used, and always answers “no” in non-interactive sessions, where a session temporary directory is used instead. Pass <code>cache = TRUE</code>/<code>FALSE</code>, or set <code>options(envar.cache = )</code>, to skip the question.</p></li>

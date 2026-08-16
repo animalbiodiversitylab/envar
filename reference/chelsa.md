@@ -290,6 +290,11 @@ chelsa(vars=c("pr", "tas"), years = "1981-2010", months = 1)
 processed <- par_set(country = "Iceland") %>%
 chelsa(vars=c("bio1"), years = "1981-2010", months = 1)
 
+# to download a specified set of variables, leave only "bio" and then the
+# package will ask which variables to download (all 19 or a selection) in the console
+processed <- par_set(country = "Iceland") %>%
+chelsa(vars=c("bio"), years = "1981-2010", months = 1)
+
 # climatic values for the future (SSP, RCP and GCM must be specified)
 processed <- par_set(country = "Italy", crs = 3035) %>%
 chelsa(vars=c("pr", "tas"), years = "2041-2070", months = 1,
