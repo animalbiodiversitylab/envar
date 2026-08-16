@@ -30,6 +30,10 @@ devtools::load_all()
 
 # envar <img src="man/figures/logo.png" align="right" height="153" alt="" />
 
+<!-- badges: start -->
+[![DOI](https://zenodo.org/badge/1104775724.svg)](https://doi.org/10.5281/zenodo.21915323)
+<!-- badges: end -->
+
 ## Download environmental variables in R
 
 The _envar R_ package streamlines the retrieval and processing of environmental variables for ecological modelling. Preparing variables for macroecology and biogeography is time-consuming and requires the standardization of different sources to the same study area and/or the extraction of value across study points and/or the conversion to a common coordinate reference system. _envar_ is an _R_ package that allows the download of a wide range of environmental variables from different pre-existing sources, to make the whole process of retrieving variables easier and faster, and well integrated within the R environment. 

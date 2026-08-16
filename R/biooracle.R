@@ -89,6 +89,12 @@ biooracle <- function(x, vars, realm = "surface", years = "2000-2010",
   
   par_list <- get_par(x)
 
+  # Register this call so that metadata() can report where the data came
+  # from, when it was downloaded and with which settings it was processed.
+  # It is registered after get_par(), so that an upstream function in the
+  # pipeline is always registered first.
+  prov_record_call("biooracle")
+
   # --------------------------------------------------------------------
   # Enforce Bio-ORACLE native resolution
   # --------------------------------------------------------------------

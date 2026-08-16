@@ -280,18 +280,32 @@ corr_check <- function(x, pearson = NULL, vif = NULL) {
 #' Directory used by corr_check() to store its output files
 #'
 #' Determines where [corr_check()] writes `Corr_plot.png` and `VIF_table.csv`.
-#' In an interactive session it asks the user, at the console, for a directory
-#' every time it is called. In non-interactive sessions (scripts, `R CMD check`,
-#' ...) it silently uses a temporary directory and never writes to the working
-#' directory.
+#' See [envar_output_dir()] for the behaviour.
 #'
 #' @return Path to the (existing) directory in which to store the files.
 #' @noRd
 envar_corr_dir <- function() {
+  envar_output_dir("correlation")
+}
+
+
+#' Directory used to store the files written by corr_check() and metadata()
+#'
+#' In an interactive session it asks the user, at the console, for a directory
+#' every time it is called, so a pipeline containing both [corr_check()] and
+#' [metadata()] asks once for each of them. In non-interactive sessions
+#' (scripts, `R CMD check`, ...) it silently uses a temporary directory and
+#' never writes to the working directory.
+#'
+#' @param label Word used in the prompt, e.g. `"correlation"` or `"metadata"`.
+#' @return Path to the (existing) directory in which to store the files.
+#' @noRd
+envar_output_dir <- function(label = "correlation") {
   if (interactive()) {
     # Print the explanation on its own line, then use a short single-line
     # readline() prompt so the console shows a wide input field to type into.
-    cat("Directory to store correlation info (empty for working directory):\n")
+    cat(paste0("Directory to store ", label,
+               " info (empty for working directory):\n"))
     ans <- readline(prompt = "Path: ")
 
     # Clean the input: trim spaces, drop any surrounding single/double quotes
@@ -314,7 +328,7 @@ envar_corr_dir <- function() {
         dir <- file.path(path.expand("~"), dir)
       }
     }
-    cli::cli_alert_info("Correlation files will be stored in {.file {dir}}.")
+    cli::cli_alert_info("The {label} files will be stored in {.file {dir}}.")
   } else {
     # Never prompt and never write to the working directory in non-interactive
     # sessions (e.g. R CMD check): use a temporary directory.

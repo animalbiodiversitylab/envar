@@ -1,0 +1,48 @@
+==============================================================================
+envar metadata summary
+==============================================================================
+  Generated                 : 2026-08-14 16:10:38 CEST
+  Pipeline started          : 2026-08-14 15:38:15 CEST
+  envar version             : 0.1.1
+  R version                 : 4.4.1
+  terra version             : 1.7.83
+
+STUDY AREA AND PROCESSING SETTINGS
+------------------------------------------------------------------------------
+  Study area                : country = Italy
+  Buffer                    : 0 km
+  Alpha hull                : FALSE
+  Target CRS                : EPSG:4326 (WGS 84)
+  Resolution setting        : res = 1 (multiplier of the 30 arc-second base grid, ~1 km)
+  Boundary scale            : medium
+  Common NA mask (set_na)   : FALSE
+  Clipped to land (land)    : FALSE
+  Download cache            : TRUE
+  Output written to (path)  : not set
+  Resampling method         : auto (auto: bilinear for continuous layers, nearest neighbour for categorical ones)
+
+OUTPUT
+------------------------------------------------------------------------------
+  Type                      : SpatRaster stack (1 layer(s))
+  Output resolution         : 0.008333333 x 0.008333333 degrees (~0.928 km)
+  Output CRS                : EPSG:4326 (WGS 84)
+  Extent                    : xmin 6.627734375, xmax 18.48606723, ymin 36.6878418, ymax 47.07950805
+  Dimensions                : 1247 rows x 1423 columns x 1 layers
+  Variables (1)             : pr_1991_12
+
+DATA SOURCES
+------------------------------------------------------------------------------
+  [1] chelsa()  -  called on 2026-08-14 15:38:15
+  Source                    : CHELSA - Climatologies at High Resolution for the Earth's Land Surface Areas
+  Reference                 : Karger DN, Conrad O, Bohner J et al. (2017). Climatologies at high resolution for the earth's land surface areas. Scientific Data 4, 170122. doi:10.1038/sdata.2017.122; BIOCLIM+: Brun P, Zimmermann NE, Hari C, Pellissier L, Karger DN (2022). Earth System Science Data 14, 5573-5603. doi:10.5194/essd-14-5573-2022
+  Variables requested       : pr
+  Temporal period           : years = 1991; months = 12
+  Native resolution         : 0.0083333333 x 0.0083333333 degrees (~0.928 km) in EPSG:4326 (WGS 84)
+  Files retrieved           : 1 file(s): 2026-08-14 15:48:22
+    Source URLs:
+      - https://os.unil.cloud.switch.ch/chelsa02/chelsa/global/monthly/pr/1991/CHELSA_pr_12_1991_V.2.1.tif
+
+==============================================================================
+Cite the original data sources listed above when publishing results, and
+cite the package itself as shown by citation('envar').
+==============================================================================

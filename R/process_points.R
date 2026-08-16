@@ -9,7 +9,11 @@ process_points <- function(file, points) {
   
   # Read raster
   r <- terra::rast(file)
-  
+
+  # Register the grid of the source file so that metadata() can report the
+  # native resolution of the dataset the values were extracted from.
+  prov_add_native(r)
+
   # Ensure points are sf
   if (!inherits(points, "sf")) {
     cli::cli_abort("points must be an sf object")

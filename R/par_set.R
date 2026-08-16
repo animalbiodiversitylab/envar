@@ -257,6 +257,12 @@ par_set <- function(country = NULL,
                     land = FALSE,
                     cache = NULL) {
 
+  # Start a fresh provenance record for the pipeline that begins here, storing
+  # the settings it was given. Everything downloaded from now on (including the
+  # study-area boundaries fetched below) is attributed to this pipeline and can
+  # be written out with metadata().
+  prov_reset(prov_capture_args(sys.function(), environment()))
+
   if (is.null(res)) {
     res <- 1
   }
@@ -266,6 +272,10 @@ par_set <- function(country = NULL,
   # the default `cache = NULL` the question is asked once per interactive
   # session and answered FALSE in non-interactive ones.
   cache <- resolve_cache_consent(cache)
+
+  # Store the two settings that are resolved rather than taken as given.
+  prov_update_par(res = res, cache = cache)
+
   if (isTRUE(cache)) {
     cli::cli_alert_info(
       "Download cache is ON: processed source files are stored and reused on re-runs. Set {.code cache = FALSE} to disable, or call {.fn clear_cache} to empty it."

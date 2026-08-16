@@ -22,3 +22,7 @@
 ^cran-comments\.md$
 ^CRAN-SUBMISSION$
 ^\.git$
+^\.Rhistory$
+^vignettes/\.Rhistory$
+^envar_metadata\.csv$
+^envar_metadata\.txt$

@@ -16,6 +16,7 @@ download_file <- function(url, dest_file, max_retries = 2) {
     cli::cli_alert_success(
       "Using cached copy of {.file {basename(dest_file)}} (skipping download)."
     )
+    prov_add_download(url, dest_file, cached = TRUE)
     return(TRUE)
   }
 
@@ -67,6 +68,7 @@ download_file <- function(url, dest_file, max_retries = 2) {
     # If download was successfull, get out
     if (success) {
       cli::cli_progress_done() # Finalize progress bar
+      prov_add_download(url, dest_file, cached = FALSE)
       return(TRUE)
     }
 

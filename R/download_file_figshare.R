@@ -28,6 +28,7 @@ download_file_figshare <- function(url, dest_file, max_retries = 2) {
     cli::cli_alert_success(
       "Using cached copy of {.file {basename(dest_file)}} (skipping download)."
     )
+    prov_add_download(url, dest_file, cached = TRUE)
     return(TRUE)
   }
   
@@ -91,6 +92,7 @@ download_file_figshare <- function(url, dest_file, max_retries = 2) {
     
     if (success) {
       cli::cli_progress_done()
+      prov_add_download(url, dest_file, cached = FALSE)
       return(TRUE)
     }
     

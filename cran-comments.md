@@ -50,10 +50,12 @@ above touches any other location.
 ## Test environments
 
 * local: Ubuntu 22.04, R 4.4.1 -- `R CMD check --as-cran`
+* win-builder: Windows Server 2022, R 4.6.1 (R-release) -- 2 NOTEs
+* macOS builder (mac.R-project.org), R-devel -- Status: OK (no NOTEs)
 
 ## R CMD check results
 
-0 ERRORs, 0 WARNINGs, 3 NOTEs:
+0 ERRORs, 0 WARNINGs, 3 NOTEs on the local check:
 
 * "Days since last update: 5" -- this submission only fixes the check failures
   of 0.1.0 reported above.
@@ -66,6 +68,14 @@ above touches any other location.
   valid and opens normally in a browser; GBIF returns 403 to the automated
   request made by the URL checker. It appears in the `sdm` vignette and in the
   documentation of the bundled `Apollo` dataset, whose source is GBIF.
+
+On win-builder the size and URL NOTEs do not appear, but a third one does:
+
+* "Examples with CPU (user + system) or elapsed time > 10s": `corr_check`, at
+  10.03s elapsed. The example runs entirely offline on the small raster bundled
+  with the package (24 x 55 cells, 4 layers) and takes 0.7s locally and about 3s
+  on the macOS builder, so it only marginally exceeds the threshold on that
+  machine.
 
 ## Notes
 

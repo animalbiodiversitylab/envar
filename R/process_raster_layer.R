@@ -24,6 +24,10 @@ process_raster_layer <- function(layer, grid, mask, res, crs, is_global = FALSE,
   
   source_crs <- terra::crs(layer)
   target_crs <- crs
+
+  # Register the grid of the source file, before any aggregation, resampling or
+  # reprojection, so that metadata() can report the native resolution.
+  prov_add_native(layer)
   
   # Check if target is geographic
   is_target_geographic <- tryCatch({

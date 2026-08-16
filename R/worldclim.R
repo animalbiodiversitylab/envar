@@ -88,6 +88,12 @@ worldclim <- function(x, vars, years = NULL, months = NULL, gcm = NULL, rcp = NU
   cli::cli_alert_info("Starting the download of WorldClim data...")
   
   par_list <- get_par(x)
+
+  # Register this call so that metadata() can report where the data came
+  # from, when it was downloaded and with which settings it was processed.
+  # It is registered after get_par(), so that an upstream function in the
+  # pipeline is always registered first.
+  prov_record_call("worldclim")
   
   # Determine input type
   if (!is.null(par_list$grid) && inherits(par_list$grid, "SpatRaster")) {

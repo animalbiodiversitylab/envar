@@ -3,6 +3,10 @@
 
 # envar <img src="man/figures/logo.png" align="right" height="153" alt="" />
 
+<!-- badges: start -->
+[![DOI](https://zenodo.org/badge/1104775724.svg)](https://doi.org/10.5281/zenodo.21915323)
+<!-- badges: end -->
+
 ## Download environmental variables in R
 
 The *envar R* package streamlines the retrieval and processing of

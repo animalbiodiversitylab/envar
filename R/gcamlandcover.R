@@ -83,6 +83,12 @@ gcamlandcover <- function(x, vars = "landcover", ssp = 126, year = 2020, ...) {
   on.exit(options(envar.resample_method = old_resample), add = TRUE)
 
   par_list <- get_par(x)
+
+  # Register this call so that metadata() can report where the data came
+  # from, when it was downloaded and with which settings it was processed.
+  # It is registered after get_par(), so that an upstream function in the
+  # pipeline is always registered first.
+  prov_record_call("gcamlandcover")
   
   # Determine input type
   if (!is.null(par_list$grid) && inherits(par_list$grid, "SpatRaster")) {
