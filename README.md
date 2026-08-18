@@ -119,6 +119,12 @@ process. To cite the package, please use:
 > environmental variables for macroecology and biogeography. Under review
 > at Ecological Informatics. <https://doi.org/10.22541/au.176918612.23247936/v1>
 
+## Suggest additional sources
+
+Users can request the addition of other sources, provided they contain
+variables at ~1-km resolution at the equator and with a global coverage,
+by e-mail to the maintainer at <simonciniandre@gmail.com>
+
 ## Usage
 
 Here we provide a short example showing how the *envar R* package can be

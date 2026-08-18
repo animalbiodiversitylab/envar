@@ -116,6 +116,10 @@ Please cite the _envar R_ package when using it in publications, and the citatio
 
 > Simoncini A, Bertoncini M, Cerofolini A, Dalpasso A, Falaschi M, Lo Parrino E (2026) envar: an R package to retrieve and process environmental variables for macroecology and biogeography. Under review at Ecological Informatics. https://doi.org/10.22541/au.176918612.23247936/v1
 
+## Suggest additional sources
+
+Users can request the addition of other sources, provided they contain variables at ~1-km resolution at the equator and with a global coverage, by e-mail to the maintainer at simonciniandre@gmail.com
+
 ## Usage
 
 Here we provide a short example showing how the _envar R_ package can be used to retrieve and process environmental variables for a specific use case. To begin with, we will load the required packages.
