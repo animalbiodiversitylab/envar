@@ -103,7 +103,9 @@ https://github.com/taiyun/corrplot</p>
 https://doi.org/10.1111/j.1600-0587.2013.00205.x</p>
 
 <p>Regardless of whether `pearson`/`vif` thresholds are set, the function writes
-two files: the correlation plot (`Corr_plot.png`) and a table of VIF values
+two files: the correlation plot (`Corr_plot.png`, a square image whose side
+grows with the number of variables, from 1200 up to 2000 pixels at 300 dpi)
+and a table of VIF values
 (`VIF_table.csv`). In an interactive R session it asks, at the console, for the
 directory in which to store them every time it is called. In non-interactive
 sessions (e.g. scripts or `R CMD check`) a temporary directory is used and no
@@ -112,21 +114,22 @@ prompt is shown. Their paths are returned as `plot_path` and `vif_path`.</p>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># corr_check() runs offline on the small example raster bundled with the</span></span>
-<span><span class="co"># package (a real WorldClim extract for Switzerland), so it needs no download:</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="co"># corr_check() accepts a plain data.frame of predictor values and runs</span></span>
+<span><span class="co"># offline, so this example needs no download:</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
+<span><span class="va">example_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>bio1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">30</span><span class="op">)</span>, bio12 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">30</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">example_df</span><span class="op">$</span><span class="va">bio11</span> <span class="op">&lt;-</span> <span class="va">example_df</span><span class="op">$</span><span class="va">bio1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">30</span>, sd <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span>  <span class="co"># correlated with bio1</span></span>
+<span><span class="fu">corr_check</span><span class="op">(</span><span class="va">example_df</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span></span>
+<span></span>
+<span><span class="co"># \donttest{</span></span>
+<span><span class="co"># It also accepts a SpatRaster: the small example raster bundled with the</span></span>
+<span><span class="co"># package (a real WorldClim extract for Switzerland) needs no download either.</span></span>
 <span><span class="va">switzerland</span> <span class="op">&lt;-</span> <span class="fu">terra</span><span class="fu">::</span><span class="fu"><a href="https://rspatial.github.io/terra/reference/rast.html" class="external-link">rast</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/system.file.html" class="external-link">system.file</a></span><span class="op">(</span><span class="st">"extdata"</span>, <span class="st">"switzerland.tif"</span>, package <span class="op">=</span> <span class="st">"envar"</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">cc</span> <span class="op">&lt;-</span> <span class="fu">corr_check</span><span class="op">(</span><span class="va">switzerland</span><span class="op">)</span></span>
 <span><span class="va">cc</span><span class="op">$</span><span class="va">summary</span></span>
 <span></span>
-<span><span class="co"># It also accepts a plain data.frame of predictor values:</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
-<span><span class="va">example_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>bio1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">40</span><span class="op">)</span>, bio12 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">40</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="va">example_df</span><span class="op">$</span><span class="va">bio11</span> <span class="op">&lt;-</span> <span class="va">example_df</span><span class="op">$</span><span class="va">bio1</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">40</span>, sd <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span>  <span class="co"># correlated with bio1</span></span>
-<span><span class="fu">corr_check</span><span class="op">(</span><span class="va">example_df</span><span class="op">)</span><span class="op">$</span><span class="va">summary</span></span>
-<span></span>
-<span><span class="co"># \donttest{</span></span>
 <span><span class="co"># The typical workflow chains corr_check() after downloading variables.</span></span>
 <span><span class="co"># Example 1: Basic usage after environmental variable extraction</span></span>
 <span><span class="va">processed_bilayer_corr_check</span> <span class="op">&lt;-</span> <span class="fu"><a href="par_set.html">par_set</a></span><span class="op">(</span>country <span class="op">=</span> <span class="st">"Italy"</span>, crs<span class="op">=</span><span class="fl">3035</span>, buffer <span class="op">=</span> <span class="fl">10</span><span class="op">)</span> <span class="op"><a href="pipe.html">%&gt;%</a></span> </span>

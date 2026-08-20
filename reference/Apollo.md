@@ -2,8 +2,8 @@
 
 A "data.frame" containing the occurrence data of Apollo butterfly
 (Parnassius apollo), downloaded from the Global Biodiversity Information
-Facility website (www.gbif.org), on December 10, 2025. Used for examples
-and testing within the envar package.
+Facility (GBIF) website on December 10, 2025. Used for examples and
+testing within the envar package.
 
 ## Usage
 

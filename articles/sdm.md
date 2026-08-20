@@ -9,13 +9,12 @@ distribution modelling framework, using as example the butterfly
 ## Occurrence points
 
 We use a set of 2648 records of the species in continental Europe
-obtained with a search on the **[Global Biodiversity Information
-Facility](https://www.gbif.org)**, filtering records with a positional
-uncertainty lower than 1 km. Additionally, we keep only one record among
-those in the same or adjacent cells, using the *GeoThinneR* package
-(Mestre-Tomás 2025), to reduce the negative influence of spatial
-autocorrelation (Boria *et al.* 2014). The resulting dataset is included
-in the package assets
+obtained with a search on the **Global Biodiversity Information Facility
+(GBIF)**, filtering records with a positional uncertainty lower than 1
+km. Additionally, we keep only one record among those in the same or
+adjacent cells, using the *GeoThinneR* package (Mestre-Tomás 2025), to
+reduce the negative influence of spatial autocorrelation (Boria *et al.*
+2014). The resulting dataset is included in the package assets
 ([`Alps()`](https://animalbiodiversitylab.github.io/envar/reference/Alps.md))
 and can be accessed after loading the package in the R session.
 

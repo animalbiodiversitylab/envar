@@ -1,6 +1,6 @@
 # Changelog
 
-## envar (development version)
+## envar 0.1.1
 
 - New
   [`metadata()`](https://animalbiodiversitylab.github.io/envar/reference/metadata.md)
@@ -18,7 +18,11 @@
   an interactive session asks at the console where to store the files,
   so a pipeline containing both functions asks once for each of them.
 
-## envar 0.1.1
+- The correlation plot written by
+  [`corr_check()`](https://animalbiodiversitylab.github.io/envar/reference/corr_check.md)
+  is no longer a fixed 2000 x 2000 pixel image: its side now grows with
+  the number of variables, from 1200 up to 2000 pixels at 300 dpi, so
+  that small sets of variables are not drawn on a mostly empty sheet.
 
 - [`par_set()`](https://animalbiodiversitylab.github.io/envar/reference/par_set.md)
   no longer writes to the user’s home filespace without permission. The
