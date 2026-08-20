@@ -29,7 +29,7 @@
 #' Apollo butterfly occurrences
 #'
 #' A "data.frame" containing the occurrence data of Apollo butterfly (Parnassius apollo),
-#' downloaded from the Global Biodiversity Information Facility website (www.gbif.org), on December 10, 2025.
+#' downloaded from the Global Biodiversity Information Facility (GBIF) website on December 10, 2025.
 #' Used for examples and testing within the envar package.
 #'
 #' @format A data.frame object :

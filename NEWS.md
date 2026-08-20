@@ -1,4 +1,4 @@
-# envar (development version)
+# envar 0.1.1
 
 * New `metadata()` function. Added at the end of a pipeline, it writes a
   provenance summary of the whole download: the source URLs and the date each
@@ -11,7 +11,10 @@
   interactive session asks at the console where to store the files, so a
   pipeline containing both functions asks once for each of them.
 
-# envar 0.1.1
+* The correlation plot written by `corr_check()` is no longer a fixed
+  2000 x 2000 pixel image: its side now grows with the number of variables,
+  from 1200 up to 2000 pixels at 300 dpi, so that small sets of variables are
+  not drawn on a mostly empty sheet.
 
 * `par_set()` no longer writes to the user's home filespace without permission.
   The `cache` argument now defaults to `NULL`, which asks once per interactive

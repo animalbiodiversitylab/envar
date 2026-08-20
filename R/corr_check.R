@@ -24,7 +24,9 @@
 #'
 #' @details
 #' Regardless of whether `pearson`/`vif` thresholds are set, the function writes
-#' two files: the correlation plot (`Corr_plot.png`) and a table of VIF values
+#' two files: the correlation plot (`Corr_plot.png`, a square image whose side
+#' grows with the number of variables, from 1200 up to 2000 pixels at 300 dpi)
+#' and a table of VIF values
 #' (`VIF_table.csv`). In an interactive R session it asks, at the console, for the
 #' directory in which to store them every time it is called. In non-interactive
 #' sessions (e.g. scripts or `R CMD check`) a temporary directory is used and no
@@ -43,21 +45,22 @@
 #' }
 #'
 #' @examples
-#' # corr_check() runs offline on the small example raster bundled with the
-#' # package (a real WorldClim extract for Switzerland), so it needs no download:
+#' # corr_check() accepts a plain data.frame of predictor values and runs
+#' # offline, so this example needs no download:
+#' set.seed(1)
+#' example_df <- data.frame(bio1 = rnorm(30), bio12 = rnorm(30))
+#' example_df$bio11 <- example_df$bio1 + rnorm(30, sd = 0.2)  # correlated with bio1
+#' corr_check(example_df)$summary
+#'
+#' \donttest{
+#' # It also accepts a SpatRaster: the small example raster bundled with the
+#' # package (a real WorldClim extract for Switzerland) needs no download either.
 #' switzerland <- terra::rast(
 #'   system.file("extdata", "switzerland.tif", package = "envar")
 #' )
 #' cc <- corr_check(switzerland)
 #' cc$summary
 #'
-#' # It also accepts a plain data.frame of predictor values:
-#' set.seed(1)
-#' example_df <- data.frame(bio1 = rnorm(40), bio12 = rnorm(40))
-#' example_df$bio11 <- example_df$bio1 + rnorm(40, sd = 0.2)  # correlated with bio1
-#' corr_check(example_df)$summary
-#'
-#' \donttest{
 #' # The typical workflow chains corr_check() after downloading variables.
 #' # Example 1: Basic usage after environmental variable extraction
 #' processed_bilayer_corr_check <- par_set(country = "Italy", crs=3035, buffer = 10) %>% 
@@ -181,9 +184,11 @@ corr_check <- function(x, pearson = NULL, vif = NULL) {
   # Resolve (once per session) the directory to store the output files in.
   out_dir <- envar_corr_dir()
 
-  # Plot
+  # Plot. The canvas grows with the number of variables (up to 2000 px) so that
+  # small matrices are not drawn on a mostly empty sheet.
   plot_path <- file.path(out_dir, "Corr_plot.png")
-  grDevices::png(plot_path, width = 2000, height = 2000, res = 300)
+  plot_px <- min(2000, max(1200, 150 * ncol(df_analysis)))
+  grDevices::png(plot_path, width = plot_px, height = plot_px, res = 300)
   tryCatch({
     corrplot::corrplot(cor_mat, method = "circle", type = "lower", diag = FALSE, addCoef.col = "black")
   }, error = function(e) {
