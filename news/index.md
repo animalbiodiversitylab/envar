@@ -2,6 +2,8 @@
 
 ## envar 0.1.1
 
+CRAN release: 2026-08-21
+
 - New
   [`metadata()`](https://animalbiodiversitylab.github.io/envar/reference/metadata.md)
   function. Added at the end of a pipeline, it writes a provenance
