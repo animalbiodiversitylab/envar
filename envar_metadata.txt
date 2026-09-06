@@ -1,8 +1,8 @@
 ==============================================================================
 envar metadata summary
 ==============================================================================
-  Generated                 : 2026-08-14 16:10:38 CEST
-  Pipeline started          : 2026-08-14 15:38:15 CEST
+  Generated                 : 2026-08-20 12:45:18 CEST
+  Pipeline started          : 2026-08-20 12:44:56 CEST
   envar version             : 0.1.1
   R version                 : 4.4.1
   terra version             : 1.7.83
@@ -12,7 +12,7 @@ STUDY AREA AND PROCESSING SETTINGS
   Study area                : country = Italy
   Buffer                    : 0 km
   Alpha hull                : FALSE
-  Target CRS                : EPSG:4326 (WGS 84)
+  Target CRS                : EPSG:3035 (ETRS89-extended / LAEA Europe)
   Resolution setting        : res = 1 (multiplier of the 30 arc-second base grid, ~1 km)
   Boundary scale            : medium
   Common NA mask (set_na)   : FALSE
@@ -23,24 +23,25 @@ STUDY AREA AND PROCESSING SETTINGS
 
 OUTPUT
 ------------------------------------------------------------------------------
-  Type                      : SpatRaster stack (1 layer(s))
-  Output resolution         : 0.008333333 x 0.008333333 degrees (~0.928 km)
-  Output CRS                : EPSG:4326 (WGS 84)
-  Extent                    : xmin 6.627734375, xmax 18.48606723, ymin 36.6878418, ymax 47.07950805
-  Dimensions                : 1247 rows x 1423 columns x 1 layers
-  Variables (1)             : pr_1991_12
+  Type                      : SpatRaster stack (2 layer(s))
+  Output resolution         : 982.90623 x 982.90623 map units (metres for most projected CRS) (~0.983 km)
+  Output CRS                : EPSG:3035 (ETRS89-extended / LAEA Europe)
+  Extent                    : xmin 4004864.838, xmax 5178454.871, ymin 1484655.857, ymax 2712305.733
+  Dimensions                : 1249 rows x 1194 columns x 2 layers
+  Variables (2)             : primary, other
 
 DATA SOURCES
 ------------------------------------------------------------------------------
-  [1] chelsa()  -  called on 2026-08-14 15:38:15
-  Source                    : CHELSA - Climatologies at High Resolution for the Earth's Land Surface Areas
-  Reference                 : Karger DN, Conrad O, Bohner J et al. (2017). Climatologies at high resolution for the earth's land surface areas. Scientific Data 4, 170122. doi:10.1038/sdata.2017.122; BIOCLIM+: Brun P, Zimmermann NE, Hari C, Pellissier L, Karger DN (2022). Earth System Science Data 14, 5573-5603. doi:10.5194/essd-14-5573-2022
-  Variables requested       : pr
-  Temporal period           : years = 1991; months = 12
+  [1] roads()  -  called on 2026-08-20 12:44:56
+  Source                    : Global road density (~1 km) derived from OpenStreetMap through GeoFabrik
+  Reference                 : OpenStreetMap contributors, accessed through GeoFabrik (https://www.geofabrik.de/). Hosted on Figshare under embargo; check with the data authors before redistributing.
+  Variables requested       : primary, other
+  Temporal period           : OpenStreetMap database as of 30 January 2026
   Native resolution         : 0.0083333333 x 0.0083333333 degrees (~0.928 km) in EPSG:4326 (WGS 84)
-  Files retrieved           : 1 file(s): 2026-08-14 15:48:22
+  Files retrieved           : 2 file(s): 2026-08-20 12:44:56 to 2026-08-20 12:44:57 (2 reused from the download cache)
     Source URLs:
-      - https://os.unil.cloud.switch.ch/chelsa02/chelsa/global/monthly/pr/1991/CHELSA_pr_12_1991_V.2.1.tif
+      - https://ndownloader.figshare.com/files/67236713?private_link=227b75fbee9f8030e005
+      - https://ndownloader.figshare.com/files/67236707?private_link=227b75fbee9f8030e005
 
 ==============================================================================
 Cite the original data sources listed above when publishing results, and
